@@ -5,6 +5,7 @@ using Blazorise.Icons.FontAwesome;
 using Fluxor;
 using Lyra.Core.API;
 using Lyra.Data.API;
+using Lyra.Data.Crypto;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using NebulaClient;
@@ -14,6 +15,8 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+Signatures.Switch(true);
 
 builder.Services.AddBlazoredLocalStorage();
 var networkid = builder.Configuration["network"];
