@@ -1,20 +1,36 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31912.275
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31911.196
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NebulaClient", "NebulaClient\NebulaClient.csproj", "{F0A0659C-1D87-4CA9-90FB-AF7E26F69F6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NebulaClient", "NebulaClient\NebulaClient.csproj", "{F0A0659C-1D87-4CA9-90FB-AF7E26F69F6A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserLibrary", "UserLibrary\UserLibrary.csproj", "{451AFFCA-515A-4760-BE9C-0695CDAE52D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F0A0659C-1D87-4CA9-90FB-AF7E26F69F6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F0A0659C-1D87-4CA9-90FB-AF7E26F69F6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0A0659C-1D87-4CA9-90FB-AF7E26F69F6A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F0A0659C-1D87-4CA9-90FB-AF7E26F69F6A}.Debug|x86.Build.0 = Debug|Any CPU
 		{F0A0659C-1D87-4CA9-90FB-AF7E26F69F6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0A0659C-1D87-4CA9-90FB-AF7E26F69F6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0A0659C-1D87-4CA9-90FB-AF7E26F69F6A}.Release|x86.ActiveCfg = Release|Any CPU
+		{F0A0659C-1D87-4CA9-90FB-AF7E26F69F6A}.Release|x86.Build.0 = Release|Any CPU
+		{451AFFCA-515A-4760-BE9C-0695CDAE52D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{451AFFCA-515A-4760-BE9C-0695CDAE52D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{451AFFCA-515A-4760-BE9C-0695CDAE52D5}.Debug|x86.ActiveCfg = Debug|x86
+		{451AFFCA-515A-4760-BE9C-0695CDAE52D5}.Debug|x86.Build.0 = Debug|x86
+		{451AFFCA-515A-4760-BE9C-0695CDAE52D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{451AFFCA-515A-4760-BE9C-0695CDAE52D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{451AFFCA-515A-4760-BE9C-0695CDAE52D5}.Release|x86.ActiveCfg = Release|x86
+		{451AFFCA-515A-4760-BE9C-0695CDAE52D5}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
