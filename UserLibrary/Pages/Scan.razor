@@ -4,6 +4,8 @@
 @using BlazorZXingJs
 @inject NavigationManager Navigation
 
+<div class="mag">
+
 <div id="formatSelectPanel">
     <label for="zxingFormatSelect">Format reader:</label>
     <select id="zxingFormatSelect" value="@_codeFormat" @onchange="ChangeCodeFormat">
@@ -68,6 +70,9 @@
 
     
 }
+
+
+</div>
 
 @code
 {

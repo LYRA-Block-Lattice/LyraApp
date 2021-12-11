@@ -30,7 +30,7 @@
         <tr>
             <td>
                 <div class="round">
-                    <MudNumericField T="decimal" Style="width: 100px; background: white; border:none;" lang="en-us" DecimalsSeparator="."
+                    <MudNumericField T="decimal"  
                                  @bind-Value="@amount1" />
                 </div>
             </td>
@@ -42,7 +42,7 @@
         </tr>
         <tr>
             <td align="center">
-                <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Secondary" 
+                <MudIconButton Icon="@Icons.Filled.SwapVert" Color="Color.Secondary" 
                     OnClick="@DoSwapTicker"
                     aria-label="add to favorite"></MudIconButton>
             </td>
@@ -55,7 +55,7 @@
         <tr>
             <td>
                 <div class="round">
-                    <MudNumericField T="decimal" Style="width: 100px; background: white; border:none;" lang="en-us" DecimalsSeparator="."
+                    <MudNumericField T="decimal"
                                  @bind-Value="@amount2" />
                 </div>
             </td>
@@ -106,7 +106,7 @@
                 @if (walletState.Value.wallet == null)
                 {
                     <a href="/wallet">
-                    <MudButton FullWidth="true" Color="Color.Primary" class="rounded-pill">
+                    <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
                         <MudIcon Name="IconName.Unlock" />
                         Open Wallet
                     </MudButton>
@@ -114,11 +114,11 @@
                 }
                 else
                 {
-                    <MudButton FullWidth="true" Disabled="@(!canswap)" Color="Color.Primary" OnClick="@DoSwap" class="rounded-pill">
+                    <MudButton Variant="Variant.Filled" FullWidth="true" Disabled="@(!canswap)" Color="Color.Primary" OnClick="@DoSwap" class="rounded-pill">
                         <MudIcon Name="IconName.SyncAlt" />                        
                         @if (swapping)
                         {
-                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                            <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
                             <MudText Class="ms-2">Processing</MudText>
                         }
                         else

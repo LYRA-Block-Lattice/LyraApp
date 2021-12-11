@@ -16,21 +16,22 @@
     @if (ui == UI.Entry)
     {
         <div style="padding: 14px; width: 370px">
-            <MudButton FullWidth="true" Color="Color.Primary" class="rounded-pill"
+            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" 
                 OnClick="@(async ()=>{ await OpenAddLiquidityUI(); })">
                 Add Liquidity
             </MudButton>
-            <p>
+            <div class="mag">
                 <div>Your Liquidity</div>
-            </p>
-            <div>(TBA)</div>
+                <div>(TBA)</div>
+            </div>
+            
         </div>
     }
 
     @if (ui == UI.Adding)
     {
         <div style="padding: 14px; width: 370px; display: flex; justify-content:left; align-items:center;">
-            <MudIcon onclick="@BackEntry" Name="@("fa-arrow-alt-circle-left")" />
+            <MudIconButton OnClick="@BackEntry" Icon="@Icons.Filled.KeyboardBackspace" Color="Color.Primary" aria-label="Back" />
             &nbsp;Add Liquidity
         </div>
         <div>
@@ -42,7 +43,7 @@
                 <tr>
                     <td>
                         <div class="round">
-                            <MudNumericField T="decimal" Style="width: 100px; background: white; border:none;" lang="en-us" DecimalsSeparator="."
+                            <MudNumericField T="decimal"
                                      @bind-Value="@amount1" />
                         </div>
                     </td>
@@ -53,7 +54,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td align="center"><MudIcon Name="@("fa-plus")" /></td>
+                    <td align="center"><span style="font-size: 200%; ">+</span></td>
                     <td></td>
                 </tr>
                 <tr>
@@ -63,7 +64,7 @@
                 <tr>
                     <td>
                         <div class="round">
-                            <MudNumericField T="decimal" Style="width: 100px; background: white; border:none;" lang="en-us" DecimalsSeparator="."
+                            <MudNumericField T="decimal"
                                      @bind-Value="@amount2" />
                         </div>
                     </td>
@@ -92,7 +93,7 @@
                             @if (walletState.Value.wallet == null)
                             {
                                 <a href="/wallet">
-                                    <MudButton FullWidth="true" class="rounded-pill"
+                                    <MudButton Variant="Variant.Filled" FullWidth="true" class="rounded-pill"
                                 Color="Color.Primary">
                                         Open Wallet to Create a Pool
                                     </MudButton>
@@ -100,7 +101,7 @@
                             }
                             else
                             {
-                                <MudButton FullWidth="true" Color="Color.Primary" Disabled="@(!alenabled)"
+                                <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" Disabled="@(!alenabled)"
                             OnClick="@(async ()=>{ await PoolDeposit(); })" class="rounded-pill">
                                     Add Liquidate
                                 </MudButton>
@@ -112,8 +113,13 @@
                     {
                         <tr>
                             <td colspan="2">
+                                <MudDivider />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
                                 <MudDivider>Or</MudDivider>
-                                <MudButton FullWidth="true" class="rounded-pill"
+                                <MudButton Variant="Variant.Filled" FullWidth="true" class="rounded-pill"
                             Color="Color.Primary" OnClick="@(async ()=>{ await PoolWithdraw(); })">
                                     Remove All My Share
                                 </MudButton>
@@ -131,7 +137,7 @@
                             @if (walletState.Value.wallet == null)
                             {
                                 <a href="/wallet">
-                                    <MudButton FullWidth="true" class="rounded-pill"
+                                    <MudButton Variant="Variant.Filled" FullWidth="true" class="rounded-pill"
                                 Color="Color.Primary">
                                         Open Wallet to Create a Pool
                                     </MudButton>
@@ -139,7 +145,7 @@
                             }
                             else
                             {
-                                <MudButton FullWidth="true" Disabled="@(!clenabled)" class="rounded-pill"
+                                <MudButton Variant="Variant.Filled" FullWidth="true" Disabled="@(!clenabled)" class="rounded-pill"
                             Color="Color.Primary" OnClick="@(async ()=>{ await CreateLiquidity(); })">
                                     Create Liquidity Pool
                                 </MudButton>

@@ -1,7 +1,7 @@
 ﻿.swc {
 	display: flex;
 	padding: 3px;
-	background: #EEEEEE;
+	background: #FFFFFF;
 	display: inline-block;
 	margin: 0 auto;
 	border-radius: 15px;
@@ -11,7 +11,7 @@
 .swt {
 	margin: 10px;
 	border-collapse: separate;
-	background: #EEEEEE;
+	background: #FFFFFF;
 	border: 3px;
 }
 
@@ -24,12 +24,11 @@
 	.swt td {
 		background-clip: padding-box;
 		color: black;
-		border: 5px solid #EEEEEE;
+		border: 5px solid #FFFFFF;
 		border-radius: 5px;
-		background: #EEEEEE;
+		background: #FFFFFF;
 	}
 
 	.swt tr td:nth-child(2) {
 		text-align: right;
-		vertical-align: middle;
 	}

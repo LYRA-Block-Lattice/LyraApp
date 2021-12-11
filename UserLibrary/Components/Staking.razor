@@ -44,7 +44,7 @@
                             <td>
                                 <a href="" @onclick="@((e) => AddStkAsync(e, stk.AccountID))" @onclick:preventDefault><u>Add Staking</u></a>
                                 &nbsp;
-                                <MudButton OnClick="@(async () => {await UnstakingConfirm(stk.AccountID);})">Unstaking</MudButton>
+                                <MudButton Variant="Variant.Filled" OnClick="@(async () => {await UnstakingConfirm(stk.AccountID);})">Unstaking</MudButton>
                             </td>
                         </tr>
                     }

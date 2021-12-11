@@ -3,9 +3,10 @@
 @using Fluxor
 @using Nebula.Store.WebWalletUseCase
 
+<div class="mag">
 @if(walletState.Value.wallet == null)
 {
-    <MudButton FullWidth="true" Color="Color.Primary" class="rounded-pill">
+    <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
         <MudIcon Name="IconName.Unlock" />
         Open Wallet
     </MudButton>
@@ -23,10 +24,33 @@ else
     }
 }
 
+</div>
+
 @code {
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
 
     [Inject]
     private IDispatcher Dispatcher { get; set; }
+
+    protected override void OnInitialized()
+    {
+        walletState.StateChanged += this.WalletChanged;
+
+        base.OnInitialized();
+    }
+
+    private void WalletChanged(object sender, WebWalletState wallet)
+    {
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        }
+        );
+    }
+    
+    public void Dispose()
+    {
+        walletState.StateChanged -= this.WalletChanged;
+    }
 }

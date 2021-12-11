@@ -41,21 +41,29 @@ else
 
     protected async override Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
+
         if(walletState.Value.wallet != null)
         {
             Navigation.NavigateTo("wallet");
+        }       
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var storeName = NebulaConsts.NebulaStorName;
+            busy = true;
+            StateHasChanged();
+
+            if (await _localStorage.ContainKeyAsync(storeName))
+                hasStore = true;
+            else
+                hasStore = false;
+
+            busy = false; 
+            StateHasChanged();
         }
-
-        var storeName = NebulaConsts.NebulaStorName;
-        busy = true;
-        StateHasChanged();
-
-        if (await _localStorage.ContainKeyAsync(storeName))
-            hasStore = true;
-        else
-            hasStore = false;
-
-        busy = false;
-        await base.OnInitializedAsync();
     }
 }

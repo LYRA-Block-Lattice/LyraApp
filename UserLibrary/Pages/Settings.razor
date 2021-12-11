@@ -4,9 +4,10 @@
 @using BlazorZXingJs
 @inject NavigationManager Navigation
 
+<div class="mag">
 @if(walletState.Value.wallet == null)
 {
-<MudButton FullWidth="true" Color="Color.Primary" class="rounded-pill">
+<MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
     <MudIcon Name="IconName.Unlock" />
     Open Wallet
 </MudButton>
@@ -23,16 +24,15 @@ else
     <p>Your are now voting for: @walletState.Value.wallet.VoteFor</p>
 
     <p>
-        Vote For Address:
-        <MudTextField T="string" Label="Address" @bind-Value="@voteAddr" />
+        <MudTextField T="string" Label="Vote For Address" @bind-Value="@voteAddr" />
     </p>
     <div>
         <p style="color: red">Please save private key properly if you want to open this wallet again.</p>
     </div>
-    <hr />
-    <button class="btn btn-primary" @onclick="Transactions">
+    <MudDivider />
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="Transactions">
         Transactions
-    </button>
+    </MudButton>
     @if (walletState.Value.txs != null)
     {
         <pre>
@@ -43,12 +43,12 @@ else
             }
                                     </pre>
     }
-    &nbsp;<button class="btn btn-primary" @onclick="SaveSettings">Save</button>
-    &nbsp;<button class="btn btn-primary" @onclick="CloseWallet">Close Wallet</button>
+    &nbsp;<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SaveSettings">Save</MudButton>
+    &nbsp;<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="CloseWallet">Close Wallet</MudButton>
 </div>
 }
 
-
+</div>
 @code {
     [Inject]
     private IState<WebWalletState> walletState { get; set; }

@@ -43,15 +43,15 @@
     <p>
         @if (walletState.Value.wallet == null)
         {
-            <a href="wallet"><MudButton FullWidth="true" Color="Color.Primary">Open wallet to create token</MudButton></a>
+            <a href="wallet"><MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary">Open wallet to create token</MudButton></a>
         }
         else
         {
-            <MudButton FullWidth="true" Color="Color.Primary" @ref="@btn"
+            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" @ref="@btn"
                 OnClick="@mint">
                 @if (loading)
                 {
-                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                     <MudText Class="ms-2">Processing</MudText>
                 }
                 else

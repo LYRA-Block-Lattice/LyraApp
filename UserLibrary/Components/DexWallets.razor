@@ -15,18 +15,10 @@
 @using UserLibrary.Data
 @inject IConfiguration Configuration
 
-<style>
-    .ant-progress-circle-wrap,
-    .ant-progress-line-wrap {
-        margin-right: 8px;
-        margin-bottom: 5px;
-    }
-</style>
-
 @if (walletState.Value.wallet == null)
 {
 
-    <a href="/wallet"><MudButton Color="Color.Primary">Open Wallet</MudButton></a>
+    <a href="/wallet"><MudButton Variant="Variant.Filled" Color="Color.Primary">Open Wallet</MudButton></a>
 }
 else
 {
@@ -40,10 +32,10 @@ else
     {
         foreach (var token in tokens)
         {
-            <MudCard>
+            <MudCard Style="width: 300px;">
                 <MudCardHeader>
                     <CardHeaderAvatar>
-                        <MudAvatar Color="Color.Secondary">I</MudAvatar>
+                        <MudAvatar Color="Color.Secondary">@token.Name.Substring(0, 1)</MudAvatar>
                     </CardHeaderAvatar>
                     <CardHeaderContent>
                         <MudText Typo="Typo.body1">@token.Name</MudText>
@@ -68,10 +60,11 @@ else
                     </MudText>
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton Color="Color.Primary" OnClick="@(()=>{ OnDepositClick(token); })">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(()=>{ OnDepositClick(token); })">
                         Deposit
                     </MudButton>
-                    <MudButton Color="Color.Primary" OnClick="@(()=>{ OnWithdrawClick(token); })">
+                    &nbsp;
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(()=>{ OnWithdrawClick(token); })">
                         Withdraw
                     </MudButton>
                 </MudCardActions>
@@ -82,7 +75,7 @@ else
         <MudDivider />
 
         <div>
-            <MudButton Color="Color.Primary" OnClick="@RefreshAllWallets">Refresh All Balance</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@RefreshAllWallets">Refresh All Balance</MudButton>
         </div>
 
     }

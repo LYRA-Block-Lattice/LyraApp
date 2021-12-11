@@ -31,6 +31,8 @@ namespace UserLibrary.Pages
         [Parameter]
         public string target { get; set; }
 
+        MudTabs tabs;
+
         bool busy, busysend;
         bool showsend;
 
@@ -75,11 +77,14 @@ namespace UserLibrary.Pages
 
         private void WalletChanged(object sender, WebWalletState wallet)
         {
-            busy = false;
-            busysend = false;
+            if(busy)
+                busy = false;
 
-            if(walletState.Value.wallet != null)
-                Snackbar.Add("Wallet Updated.", Severity.Info);
+            if(busysend)
+                busysend = false;
+
+            //if(walletState.Value.wallet != null)
+            //    Snackbar.Add("Wallet Updated.", Severity.Info);
         }
 
         private Task OnSelectedTabChanged(string name)
@@ -138,6 +143,7 @@ namespace UserLibrary.Pages
         {
             tokenName = name;
             showsend = true;
+            tabs.ActivatePanel(1);
         }
 
         private void SendTokenAsync()
