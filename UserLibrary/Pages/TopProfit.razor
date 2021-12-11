@@ -6,6 +6,8 @@
 @inject IConfiguration Configuration
 @inject NavigationManager UriHelper
 
+<div class="mag">
+
 @if (ui == UI.Loading)
 {
     <p><i>Loading...</i></p>
@@ -142,6 +144,8 @@
     <p>@error</p>
 }
 
+
+</div>
 
 @code {
     [Parameter]

@@ -32,7 +32,7 @@ else
     {
         foreach (var token in tokens)
         {
-            <MudCard Style="width: 300px;">
+            <MudCard Style="width: 300px;" Elevation="8">
                 <MudCardHeader>
                     <CardHeaderAvatar>
                         <MudAvatar Color="Color.Secondary">@token.Name.Substring(0, 1)</MudAvatar>
@@ -48,23 +48,23 @@ else
                     <MudText Typo="Typo.h5">Balances</MudText>
                     <MudText Typo="Typo.body2">
                         Spot:
-                        <MudIconButton Icon="fas fa-fighter-jet" Color="Color.Dark"
-                           OnClick="@(async ()=>{ await OnTransferClick(token, false); })"></MudIconButton>
-                        @token.MyBalance
+                        <MudIconButton Icon="@Icons.Filled.ArrowCircleDown" Color="Color.Dark"
+                           OnClick="@(async ()=>{ await OnTransferClick(token, true); })"></MudIconButton>
+                        @token.MyBalance <b>@token.Symbol</b>
                     </MudText>
                     <MudText Typo="Typo.body2">
                         DEX:
-                        <MudIconButton Icon="fas fa-fighter-jet" Color="Color.Dark"
-                           OnClick="@(async ()=>{ await OnTransferClick(token, true); })"></MudIconButton>
-                        @token.DexBalance
+                        <MudIconButton Icon="@Icons.Filled.ArrowCircleUp" Color="Color.Dark"
+                           OnClick="@(async ()=>{ await OnTransferClick(token, false); })"></MudIconButton>
+                        @token.DexBalance <b>@token.Symbol</b>
                     </MudText>
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(()=>{ OnDepositClick(token); })">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async ()=>{ await OnDepositClick(token); })">
                         Deposit
                     </MudButton>
                     &nbsp;
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(()=>{ OnWithdrawClick(token); })">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async ()=>{ await OnWithdrawClick(token); })">
                         Withdraw
                     </MudButton>
                 </MudCardActions>
@@ -75,12 +75,33 @@ else
         <MudDivider />
 
         <div>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@RefreshAllWallets">Refresh All Balance</MudButton>
+            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" 
+                OnClick="@RefreshAllWallets">
+                @if (refreshing)
+                {
+                    <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Processing</MudText>
+                }
+                else
+                {
+                    <MudText>Refresh All Balance</MudText>
+                }
+            </MudButton>
         </div>
 
     }
 }
 
+<MudDialog @bind-IsVisible="visprog">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Filled.FiberNew" Class="mr-3"/> Generate new wallet
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+    </DialogContent>
+</MudDialog>
 
 @code {
 
@@ -93,14 +114,15 @@ else
     [Inject] IDialogService DialogService { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
 
+    // progress dialog visible
+    bool visprog;
+
     double intervalBeforeMsgClose = 2000;
 
     WalletView selectedrow;
 
     string withdrawTitle;
     bool withdrawVisible = false;
-    string withdrawAddress;
-    decimal withdrawAmount;
     decimal withdrawMin, withdrawMax, withdrawDefault;
 
     int crwalletprogress;
@@ -129,6 +151,8 @@ else
     decimal transferDefault;
     bool transferToDex;
     bool _confirmLoading = false;
+
+    bool refreshing;
 
     async Task OnTransferClick(WalletView row, bool toDex)
     {
@@ -180,7 +204,10 @@ else
                 if (!result.Cancelled)
                 {
                     transferAmount = (decimal)result.Data;
-                    await Transfer();
+                    if(transferAmount > 0.00000001m && transferAmount <= args.max)
+                        await Transfer();
+                    else
+                        Snackbar.Add($"The number {transferAmount} is out of range.", Severity.Warning);
                 }
             }
 
@@ -188,16 +215,21 @@ else
         catch (Exception ex)
         {
             //Err.ProcessError(ex);
-
+            Snackbar.Add($"Error transfering funds: {ex.Message}", Severity.Error);
         }
-
     }
 
-    void OnDepositClick(WalletView row)
+    async Task OnDepositClick(WalletView row)
     {
         token = row;
 
-        title = "Deposit funds for " + token.Name;
+        var args = new DexDepositArgs
+            {
+                title = "Deposit funds for " + token.Name,
+                address = token.Address,
+                view = token
+            };
+
         symbol = token.Symbol;
         provider = token.NetworkProvider;
         contract = token.Contract.Shorten();
@@ -209,56 +241,58 @@ else
 
         if (string.IsNullOrWhiteSpace(token.Address))
         {
+            Snackbar.Add($"Generating a DEX wallet for you...", Severity.Info);
+            visprog = true;
+
             crwalletprogress = 0;
             crwalletshow = true;
             StateHasChanged();
             if (walletState.Value.wallet != null && walletState.Value.wallet.BaseBalance >= 11m)
             {
-                Task.Run(async () =>
-                    {
-                        crwalletprogress = 10;
-                        await InvokeAsync(() => StateHasChanged());
+                crwalletprogress = 10;
+                await InvokeAsync(() => StateHasChanged());
 
-                        var wallet = walletState.Value.wallet;
-                        var ret = await wallet.CreateDexWalletAsync(symbol, provider);
-                        if (ret.Successful())
+                var wallet = walletState.Value.wallet;
+                var ret = await wallet.CreateDexWalletAsync(symbol, provider);
+                if (ret.Successful())
+                {
+                    crwalletprogress = 30;
+                    await InvokeAsync(() => StateHasChanged());
+
+                    for (var i = 30; i < 100; i++)
+                    {
+                        var dw = await wallet.FindDexWalletAsync(wallet.AccountId, symbol, provider);
+
+                        if (dw == null)
                         {
-                            crwalletprogress = 30;
+                            crwalletprogress = i;
                             await InvokeAsync(() => StateHasChanged());
 
-                            for (var i = 30; i < 100; i++)
-                            {
-                                var dw = await wallet.FindDexWalletAsync(wallet.AccountId, symbol, provider);
-
-                                if (dw == null)
-                                {
-                                    crwalletprogress = i;
-                                    await InvokeAsync(() => StateHasChanged());
-
-                                    await Task.Delay(500);
-                                    continue;
-                                }
-
-                                token.Address = dw.ExtAddress;
-                                address = token.Address;
-
-                                crwalletprogress = 100;
-
-                                await InvokeAsync(() => StateHasChanged());
-
-                                break;
-                            }
+                            await Task.Delay(500);
+                            continue;
                         }
-                        else
-                        {
-                            crwalletprogress = 0;
-                        }
+
+                        token.Address = dw.ExtAddress;
+                        address = token.Address;
+                        args.address = address;
+
+                        crwalletprogress = 100;
+
                         await InvokeAsync(() => StateHasChanged());
-                    });
+
+                        break;
+                    }
+                }
+                else
+                {
+                    crwalletprogress = 0;
+                }
+                visprog = false;
+                await InvokeAsync(() => StateHasChanged());
             }
             else
             {
-                Snackbar.Add($"You need at least 11 LYR to create a DEX wallet.", Severity.Error);
+                Snackbar.Add($"You need at least 11 LYR to generate a DEX wallet.", Severity.Error);
                 return;
             }
         }
@@ -266,10 +300,19 @@ else
         {
             crwalletshow = false;
         }
-        visible = true;
+
+        var parameters = new DialogParameters { ["Args"] = args };
+
+        var dialog = DialogService.Show<DexDialogDeposit>(args.title, parameters);
+        var result = await dialog.Result;
+
+        if (!result.Cancelled)
+        {
+
+        }
     }
 
-    void OnWithdrawClick(WalletView row)
+    async Task OnWithdrawClick(WalletView row)
     {
         token = row;
         if (!string.IsNullOrWhiteSpace(token.Address)
@@ -287,34 +330,64 @@ else
             withdrawMin = row.MinWithdraw;
             withdrawMax = row.DexBalance;
             withdrawDefault = withdrawMax;
-            withdrawAmount = withdrawMax;
-            withdrawAddress = "";
 
             depfee = row.DepositFee;
             wdrfee = row.WithdrawFee;
 
-            withdrawVisible = true;
+            var args = new DexWithdrawArgs
+                {
+                    title = withdrawTitle,
+                    min = row.MinWithdraw,
+                    max = row.DexBalance,
+                    view = row
+                };
+            var parameters = new DialogParameters { ["Args"] = args };
+
+            var dialog = DialogService.Show<DexDialogWithdraw>(args.title, parameters);
+            var result = await dialog.Result;
+
+            if (!result.Cancelled)
+            {
+                bool? cfm = await DialogService.ShowMessageBox(
+                    "Warning", 
+                    $"Withdraw {args.amount} {symbol} to {args.address}", 
+                    yesText:"Confirm Withdraw", cancelText:"Cancel");
+                StateHasChanged();
+
+                if(cfm.HasValue && cfm.Value)
+                {
+                    await StartWithdraw(args.address, args.amount);
+                }
+                else
+                {
+                    Snackbar.Add($"Nothing happened.", Severity.Info);
+                }
+            }
         }
         else
         {
-            Snackbar.Add($"No Token found.", Severity.Error);
+            Snackbar.Add($"No Token found.", Severity.Warning);
         }
     }
 
-    private async Task StartWithdraw()
+    private async Task StartWithdraw(string addr, decimal amount)
     {
-        withdrawVisible = false;
-
-        StateHasChanged();
+        Snackbar.Add($"Begin Withdraw", Severity.Info);
 
         var wallet = walletState.Value.wallet;
-        var wdwret = await wallet.DexWithdrawTokenAsync(dexWalletId, withdrawAddress, withdrawAmount);
+        var wdwret = await wallet.DexWithdrawTokenAsync(dexWalletId, addr, amount);
         Snackbar.Add(wdwret.ResultCode.ToString(), wdwret.Successful() ? Severity.Success : Severity.Error);
 
         if (wdwret.Successful())
         {
             var wv = tokens.First(a => a.DexWalletID == dexWalletId);
-            wv.DexBalance -= withdrawAmount;
+            wv.DexBalance -= amount;
+
+            Snackbar.Add($"Withdraw request sent", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add($"Withdraw request failed: {wdwret.ResultCode}", Severity.Warning);
         }
 
         StateHasChanged();
@@ -342,19 +415,24 @@ else
 
     private async Task RefreshAllWallets()
     {
-        var dc = new DexClient(Configuration["network"]);
-        var ext = await dc.GetSupportedExtTokenAsync(Configuration["network"]);
-        //_tokens = ext.Asserts;
+        refreshing = true;
+        StateHasChanged();
 
-        var wallet = walletState.Value.wallet;
-        //var lc = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
-        var brks = await wallet.GetAllDexWalletsAsync(wallet.AccountId);
-        await wallet.SyncAsync(null);
-
-        tokens = new List<WalletView>();
-        foreach (var ast in ext.Asserts)
+        try
         {
-            var wv = new WalletView
+            var dc = new DexClient(Configuration["network"]);
+            var ext = await dc.GetSupportedExtTokenAsync(Configuration["network"]);
+            //_tokens = ext.Asserts;
+
+            var wallet = walletState.Value.wallet;
+            //var lc = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
+            var brks = await wallet.GetAllDexWalletsAsync(wallet.AccountId);
+            await wallet.SyncAsync(null);
+
+            tokens = new List<WalletView>();
+            foreach (var ast in ext.Asserts)
+            {
+                var wv = new WalletView
                 {
                     Name = ast.Name,
                     Symbol = ast.Symbol,
@@ -367,30 +445,37 @@ else
                     MinWithdraw = ast.MinWithdraw,
                     DailyWithdrawLimit = ast.DailyWithdrawLimit,
                 };
-            var bt = brks.FirstOrDefault(a => a.ExtSymbol == ast.Symbol) as TransactionBlock;
-            var key = $"tether/{ast.Symbol}";
-            if (bt != null)
-            {
-                if (bt.Balances.ContainsKey(key))
-                    wv.DexBalance = bt.Balances[key].ToBalanceDecimal();
+                var bt = brks.FirstOrDefault(a => a.ExtSymbol == ast.Symbol) as TransactionBlock;
+                var key = $"tether/{ast.Symbol}";
+                if (bt != null)
+                {
+                    if (bt.Balances.ContainsKey(key))
+                        wv.DexBalance = bt.Balances[key].ToBalanceDecimal();
+                    else
+                        wv.DexBalance = 0;
+                    wv.Address = (bt as IDexWallet).ExtAddress;
+                    wv.DexWalletID = bt.AccountID;
+                }
                 else
                     wv.DexBalance = 0;
-                wv.Address = (bt as IDexWallet).ExtAddress;
-                wv.DexWalletID = bt.AccountID;
-            }
-            else
-                wv.DexBalance = 0;
 
-            var lb = wallet.GetLatestBlock();
-            if (lb != null && lb.Balances.ContainsKey(key))
-            {
-                wv.MyBalance = lb.Balances[key].ToBalanceDecimal();
-            }
-            else
-                wv.MyBalance = 0;
+                var lb = wallet.GetLatestBlock();
+                if (lb != null && lb.Balances.ContainsKey(key))
+                {
+                    wv.MyBalance = lb.Balances[key].ToBalanceDecimal();
+                }
+                else
+                    wv.MyBalance = 0;
 
-            tokens.Add(wv);
+                tokens.Add(wv);
+            }
         }
+        catch(Exception ex)
+        {
+            Snackbar.Add($"Error refreshing balance: {ex.Message}", Severity.Error);
+        }
+
+        refreshing = false;
     }
 
     private void HandleOk()
@@ -416,18 +501,20 @@ else
         APIResult ret = null;
         if (transferToDex)
         {
+            Snackbar.Add($"Transfering {transferAmount} {ticker} to DEX Wallet", Severity.Info);
             await wallet.SyncAsync(null);
             ret = await wallet.DexPutTokenAsync(dexWalletId, ticker, transferAmount);
         }
         else
         {
+            Snackbar.Add($"Transfering {transferAmount} {ticker} to My Wallet", Severity.Info);
             await wallet.SyncAsync(null);
             ret = await wallet.DexGetTokenAsync(dexWalletId, transferAmount);
         }
 
         _confirmLoading = false;
 
-        Snackbar.Add(ret.ResultCode.ToString(), ret.Successful() ? Severity.Success : Severity.Error);
+        Snackbar.Add("Transfer result: "+ ret.ResultCode.ToString(), ret.Successful() ? Severity.Success : Severity.Error);
 
         if (ret.Successful())
         {
