@@ -1,0 +1,87 @@
+﻿@page "/settings"
+@using Fluxor
+@using Nebula.Store.WebWalletUseCase
+@inject NavigationManager Navigation
+
+@if(walletState.Value.wallet == null)
+{
+<MudButton FullWidth="true" Color="Color.Primary" class="rounded-pill">
+    <MudIcon Name="IconName.Unlock" />
+    Open Wallet
+</MudButton>
+}
+else
+{
+    <div>
+    <h3>Scan to Pay Me</h3>
+    <p><QRCodeWriter Text="@walletState.Value.wallet.AccountId" Width="300" Heigth="300"></QRCodeWriter></p>
+    <MudDivider />
+    <p><span title="Click to toggle to display" @onclick="ToggleKey">Your wallet's private key is (click to unhide/hide): </span><span>@altDisplay</span></p>
+    <p>Your wallet's address is: <a href="/showblock/@walletState.Value.wallet.AccountId">@walletState.Value.wallet.AccountId</a></p>
+    <p>Your wallet's balance is: @walletState.Value.balanceString</p>
+    <p>Your are now voting for: @walletState.Value.wallet.VoteFor</p>
+
+    <p>
+        Vote For Address:
+        <MudTextField T="string" Label="Address" @bind-Value="@voteAddr" />
+    </p>
+    <div>
+        <p style="color: red">Please save private key properly if you want to open this wallet again.</p>
+    </div>
+    <hr />
+    <button class="btn btn-primary" @onclick="Transactions">
+        Transactions
+    </button>
+    @if (walletState.Value.txs != null)
+    {
+        <pre>
+            @foreach (var tx in walletState.Value.txs)
+            {
+                @tx <br />
+
+            }
+                                    </pre>
+    }
+    &nbsp;<button class="btn btn-primary" @onclick="SaveSettings">Save</button>
+    &nbsp;<button class="btn btn-primary" @onclick="CloseWallet">Close Wallet</button>
+</div>
+}
+
+
+@code {
+    [Inject]
+    private IState<WebWalletState> walletState { get; set; }
+
+    [Inject]
+    private IDispatcher Dispatcher { get; set; }
+
+    [Inject]
+    private IJSRuntime JS { get; set; }
+
+    [Inject] private IDialogService DialogService { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
+
+    string voteAddr, altDisplay;
+
+    private void ToggleKey(MouseEventArgs e)
+    {
+        if (altDisplay == "************")
+            altDisplay = walletState?.Value?.wallet?.PrivateKey;
+        else
+            altDisplay = "************";
+    }
+    private void Transactions(MouseEventArgs e)
+    {
+        Dispatcher.Dispatch(new WebWalletTransactionsAction { wallet = walletState.Value.wallet });
+    }
+    private void CloseWallet(MouseEventArgs e)
+    {
+        Dispatcher.Dispatch(new WebWalletCloseAction());
+        Navigation.NavigateTo("/login");
+    }
+
+    private void SaveSettings(MouseEventArgs e)
+    {
+        Dispatcher.Dispatch(new WebWalletSaveSettingsAction { VoteFor = voteAddr });
+    }
+}

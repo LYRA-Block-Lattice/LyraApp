@@ -109,19 +109,9 @@ namespace UserLibrary.Pages
             altDisplay = "************";
         }
 
-        private void ToggleKey(MouseEventArgs e)
-        {
-            if (altDisplay == "************")
-                altDisplay = walletState?.Value?.wallet?.PrivateKey;
-            else
-                altDisplay = "************";
-        }
 
-        private void CloseWallet(MouseEventArgs e)
-        {
-            Dispatcher.Dispatch(new WebWalletCloseAction());
-            Navigation.NavigateTo("/login");
-        }
+
+
 
         private void ToggleSend()
         {
@@ -158,15 +148,9 @@ namespace UserLibrary.Pages
             Dispatcher.Dispatch(new WebWalletSendTokenAction { DstAddr = dstAddr, TokenName = tokenName, Amount = amount, wallet = walletState.Value.wallet });
         }
 
-        private void SaveSettings(MouseEventArgs e)
-        {
-            Dispatcher.Dispatch(new WebWalletSaveSettingsAction { VoteFor = voteAddr });
-        }
 
-        private void Transactions(MouseEventArgs e)
-        {
-            Dispatcher.Dispatch(new WebWalletTransactionsAction { wallet = walletState.Value.wallet });
-        }
+
+
 
         private void Return(MouseEventArgs e)
         {

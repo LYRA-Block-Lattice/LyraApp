@@ -1,0 +1,32 @@
+﻿@page "/staking"
+
+@using Fluxor
+@using Nebula.Store.WebWalletUseCase
+
+@if(walletState.Value.wallet == null)
+{
+    <MudButton FullWidth="true" Color="Color.Primary" class="rounded-pill">
+        <MudIcon Name="IconName.Unlock" />
+        Open Wallet
+    </MudButton>
+}
+else
+{
+    @if (walletState.Value.brokerAccounts != null)
+    {
+        <UserLibrary.Components.Staking />
+    }
+    else
+    {
+        Dispatcher.Dispatch(new WebWalletStakingAction { wallet = walletState.Value.wallet });
+        <p>Refreshing...</p>
+    }
+}
+
+@code {
+    [Inject]
+    private IState<WebWalletState> walletState { get; set; }
+
+    [Inject]
+    private IDispatcher Dispatcher { get; set; }
+}

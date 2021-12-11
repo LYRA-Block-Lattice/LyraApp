@@ -39,9 +39,9 @@
 
 @if (walletState.Value.wallet != null)
 {
-    <MudTabs Elevation="4" Rounded="true" Centered="true" Color="@Color.Primary" ApplyEffectsToContainer="true" PanelClass="pa-6">
+    <MudTabs Elevation="4" Rounded="true" Centered="true" Color="Color.Secondary">
         <MudTabPanel Text="Home">
-            <MudButton Color="Color.Success" OnClick="@Refresh">
+            <MudButton Color="Color.Success" OnClick="@Refresh" FullWidth>
                 @if (busy)
                 {
                     <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -52,41 +52,7 @@
                     <MudText>Receive</MudText>
                 }
             </MudButton>
-            <MudButton Color="Color.Info" OnClick="@ToggleSend">Transfer</MudButton>
 
-            @if (showsend)
-            {
-                <div class="simp">
-                    <p>
-                        Destination Wallet Address:<br />
-                        <MudTextField T="string" Label="Address" @bind-Value="@dstAddr" />
-                        <a href="/scan">
-                            <MudButton Color="Color.Primary">Scan QR-Code</MudButton>
-                        </a>
-                    </p>
-                    <p>
-                        Token Name:<br />
-                        <MudTextField T="string" Label="Name" @bind-Value="@tokenName" />
-                    </p>
-                    <p>
-                        Amount:<br />
-                        <MudNumericField T="decimal" Label="Amount" @bind-Value="@amount" />
-                    </p>
-                    <MudButton Color="Color.Primary" OnClick="@SendTokenAsync">
-                        @if (busysend)
-                        {
-                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                            <MudText Class="ms-2">Processing</MudText>
-                        }
-                        else
-                        {
-                            <MudText>Send Token</MudText>
-                        }
-                    </MudButton>
-                </div>
-
-                <MudDivider />
-            }
 
             <div class="cet">
                 @if (walletState.Value.wallet.GetLatestBlock() != null)
@@ -133,56 +99,36 @@
 
         </MudTabPanel>
 
-        <MudTabPanel Text="Staking">
-            @if (walletState.Value.brokerAccounts != null)
-            {
-                <Staking />
-            }
-            else
-            {
-                Dispatcher.Dispatch(new WebWalletStakingAction { wallet = walletState.Value.wallet });
-                <p>Refreshing...</p>
-            }
-
-        </MudTabPanel>
-        <MudTabPanel Text="DEX">
-            <UserLibrary.Components.DexWallets />
-        </MudTabPanel>
-        <MudTabPanel Text="Settings">
-
-            <div>
-                <h3>Scan to Pay Me</h3>
-                <p><QRCodeWriter Text="@walletState.Value.wallet.AccountId" Width="300" Heigth="300"></QRCodeWriter></p>
-                <MudDivider />
-                <p><span title="Click to toggle to display" @onclick="ToggleKey">Your wallet's private key is (click to unhide/hide): </span><span>@altDisplay</span></p>
-                <p>Your wallet's address is: <a href="/showblock/@walletState.Value.wallet.AccountId">@walletState.Value.wallet.AccountId</a></p>
-                <p>Your wallet's balance is: @walletState.Value.balanceString</p>
-                <p>Your are now voting for: @walletState.Value.wallet.VoteFor</p>
-
-                <p>
-                    Vote For Address:
-                    <MudTextField T="string" Label="Address" @bind-Value="@voteAddr" />
-                </p>
-                <div>
-                    <p style="color: red">Please save private key properly if you want to open this wallet again.</p>
-                </div>
-                <hr />
-                <button class="btn btn-primary" @onclick="Transactions">
-                    Transactions
-                </button>
-                @if (walletState.Value.txs != null)
-                {
-                    <pre>
-                        @foreach (var tx in walletState.Value.txs)
+        <MudTabPanel Text="Send">
+                            <div class="simp">
+                    <p>
+                        Destination Wallet Address:<br />
+                        <MudTextField T="string" Label="Address" @bind-Value="@dstAddr" />
+                        <a href="/scan">
+                            <MudButton Color="Color.Primary">Scan QR-Code</MudButton>
+                        </a>
+                    </p>
+                    <p>
+                        Token Name:<br />
+                        <MudTextField T="string" Label="Name" @bind-Value="@tokenName" />
+                    </p>
+                    <p>
+                        Amount:<br />
+                        <MudNumericField T="decimal" Label="Amount" @bind-Value="@amount" />
+                    </p>
+                    <MudButton Color="Color.Primary" OnClick="@SendTokenAsync">
+                        @if (busysend)
                         {
-                            @tx <br />
-
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Processing</MudText>
                         }
-                                </pre>
-                }
-                &nbsp;<button class="btn btn-primary" @onclick="SaveSettings">Save</button>
-                &nbsp;<button class="btn btn-primary" @onclick="CloseWallet">Close Wallet</button>
-            </div>
+                        else
+                        {
+                            <MudText>Send Token</MudText>
+                        }
+                    </MudButton>
+                </div>
+
         </MudTabPanel>
 
         @if (!string.IsNullOrWhiteSpace(Configuration["faucetPvk"]) && Configuration["network"] != "mainnet" && walletState.Value.wallet.BaseBalance == 0m && !walletState.Value.freeTokenSent) //&& walletState.Value.freeTokenTimes < 3
