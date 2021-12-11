@@ -1,15 +1,18 @@
-﻿@using UserLibrary.Data
+﻿@namespace UserLibrary.Components
+@using UserLibrary.Data
 
-<MudSelect T="Ticker" Placeholder="Choose Token"
-    SelectedValuesChanged="@OnSelect"
-    @bind-Value="Selected"
-           Style="width:200px; background: white; border:none;">
+<MudSelect T="string" Placeholder="Choose Token" @ref="@sel"
+    ValueChanged="@(async (a) => await SetValue(a))">
        
-@foreach(var token in Tokens)
+@if(Tokens != null)
     {
-        <MudSelectItem T="String" Value="@token.Name" />
+        foreach(var token in Tokens)
+        {
+            <MudSelectItem T="String" Value="@token.dbname">
+                @token.Name
+            </MudSelectItem>
+        }
     }
-
 </MudSelect>
             
 
@@ -18,8 +21,28 @@
     public List<Ticker> Tokens {  get;  set; }
 
     [Parameter] 
-    public EventCallback OnSelect { get; set; }
+    public EventCallback<Ticker> ValueChanged { get; set; }
 
-    [Parameter] 
-    public Ticker Selected {  get;  set; }
+    [Parameter]
+    public string Value
+    {
+        get { return _old; }
+        set
+        {
+            _old = value;
+            sel.Value = _old;
+        }
+    }
+
+    MudSelect<string> sel;
+    string _old;
+
+    private async Task SetValue(string value)
+    {
+        if (_old != value)
+        {
+            _old = value;
+            await ValueChanged.InvokeAsync(Tokens.FirstOrDefault(a => a.dbname == value));
+        }
+    }
 }

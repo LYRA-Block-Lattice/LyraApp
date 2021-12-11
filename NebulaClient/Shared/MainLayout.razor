@@ -1,46 +1,27 @@
 ﻿@inherits LayoutComponentBase
-
 <PageTitle>Nebula for Lyra Pay</PageTitle>
 
-<div class="page">
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
-    <div class="@sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <UserLibrary.Components.TopBar OnToggle="@TB" />
-
-        <article class="@artcss">
-            <ErrorBoundary @ref="errorBoundary">
-                @Body
-            </ErrorBoundary>            
-        </article>
-    </main>
-</div>
-
-
+<MudLayout>
+    <MudAppBar>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        My Application
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen">
+        <NavMenu/>
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
 @code {
-    private ErrorBoundary errorBoundary;
-    bool menuVisible = false;
-    string sidebar;
-    string artcss;
+    bool _drawerOpen = false;
 
-    protected override void OnParametersSet()
+    void DrawerToggle()
     {
-        errorBoundary?.Recover();
-    }
-
-    protected override void OnInitialized()
-    {
-        TB();
-        base.OnInitialized();        
-    }
-
-    void TB()
-    {
-        menuVisible = !menuVisible; 
-        sidebar = menuVisible ? "sidebar" : "sidebarhide";
-        artcss = menuVisible ? "content px-4 fw" : "content px-4 fww";
+        _drawerOpen = !_drawerOpen;
     }
 }

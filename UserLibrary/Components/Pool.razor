@@ -30,7 +30,7 @@
     @if (ui == UI.Adding)
     {
         <div style="padding: 14px; width: 370px; display: flex; justify-content:left; align-items:center;">
-            <Icon OnClick="@BackEntry" Name="@("fa-arrow-alt-circle-left")" />
+            <MudIcon onclick="@BackEntry" Name="@("fa-arrow-alt-circle-left")" />
             &nbsp;Add Liquidity
         </div>
         <div>
@@ -48,14 +48,12 @@
                     </td>
                     <td>
                         <div class="round">
-                            <TokenSelect Style="width:200px; background: white; border:none;"
-                                Tokens="@tickers"
-                                @bind-Selected="@selectedTicker1" OnSelect="@OnSelectedItemChangedHandler1" />
+                    <TokenSelect Tokens="@tickers" ValueChanged="@(a => Ticker1 = a)" />
                          </div>
                     </td>
                 </tr>
                 <tr>
-                    <td align="center"><Icon Name="@("fa-plus")" /></td>
+                    <td align="center"><MudIcon Name="@("fa-plus")" /></td>
                     <td></td>
                 </tr>
                 <tr>
@@ -71,9 +69,7 @@
                     </td>
                     <td>
                         <div class="round">
-                            <TokenSelect Style="width:200px; background: white; border:none;"
-                                Tokens="@tickers"
-                                @bind-Selected="@selectedTicker2" OnSelect="@OnSelectedItemChangedHandler2" />
+                    <TokenSelect Tokens="@tickers" ValueChanged="@(a => Ticker2 = a)" />
                         </div>
                     </td>
                 </tr>
@@ -215,6 +211,26 @@
     List<Ticker> tickers;
     Ticker selectedTicker1;
     Ticker selectedTicker2;
+
+    private Ticker Ticker1
+    {
+        get { return selectedTicker1; }
+        set
+        {
+            selectedTicker1 = value;
+            OnSelectedItemChangedHandler1();
+        }
+    }
+
+    private Ticker Ticker2
+    {
+        get { return selectedTicker2; }
+        set
+        {
+            selectedTicker2 = value;
+            OnSelectedItemChangedHandler2();
+        }
+    }
 
     bool havepool;
     bool clenabled;

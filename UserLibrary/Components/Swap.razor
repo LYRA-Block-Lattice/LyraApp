@@ -36,10 +36,7 @@
             </td>
             <td>
                 <div class="round">
-                            <TokenSelect Style="width:200px; background: white; border:none;"
-                                Tokens="@tickers"
-                                @bind-Selected="@selectedTicker1" OnSelect="@OnSelectedItemChangedHandler1" />
-
+                    <TokenSelect Tokens="@tickers" @ref="@sel1" ValueChanged="@(a => Ticker1 = a)" />
                 </div>
             </td>
         </tr>
@@ -64,9 +61,7 @@
             </td>
             <td>
                 <div class="round">
-                            <TokenSelect Style="width:200px; background: white; border:none;"
-                                Tokens="@tickers"
-                                @bind-Selected="@selectedTicker2" OnSelect="@OnSelectedItemChangedHandler2" />
+                    <TokenSelect Tokens="@tickers" @ref="@sel2" ValueChanged="@(a => Ticker2 = a)" />
                 </div>
             </td>
         </tr>
@@ -112,7 +107,7 @@
                 {
                     <a href="/wallet">
                     <MudButton FullWidth="true" Color="Color.Primary" class="rounded-pill">
-                        <Icon Name="IconName.Unlock" />
+                        <MudIcon Name="IconName.Unlock" />
                         Open Wallet
                     </MudButton>
                     </a>
@@ -120,7 +115,7 @@
                 else
                 {
                     <MudButton FullWidth="true" Disabled="@(!canswap)" Color="Color.Primary" OnClick="@DoSwap" class="rounded-pill">
-                        <Icon Name="IconName.SyncAlt" />                        
+                        <MudIcon Name="IconName.SyncAlt" />                        
                         @if (swapping)
                         {
                             <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
@@ -220,9 +215,32 @@
     }
 
     decimal balance1, balance2;
+    TokenSelect sel1, sel2;
     List<Ticker> tickers;
     Ticker selectedTicker1;
     Ticker selectedTicker2;
+
+    private Ticker Ticker1
+    {
+        get { return selectedTicker1; }
+        set
+        {
+            selectedTicker1 = value;
+            UpdateBalance();
+            ChangePool();
+        }
+    }
+
+    private Ticker Ticker2
+    {
+        get { return selectedTicker2; }
+        set
+        {
+            selectedTicker2 = value;
+            UpdateBalance();
+            ChangePool();
+        }
+    }
 
     RenderFragment pairinfo, pairliquid, pairshare;
     bool haspoolinfo = false;
@@ -240,6 +258,7 @@
     private void DoSwapTicker()
     {
         (selectedTicker1, selectedTicker2) = (selectedTicker2, selectedTicker1);
+        (sel1.Value, sel2.Value) = (sel2.Value, sel1.Value);
         (amount1, amount2) = (amount2, amount1);
         UpdateBalance();
         updateBtn1(amount1);
