@@ -16,7 +16,12 @@
 </head>
 
 <body>
-    <div id="app" style="height: 100%;">Loading... This may take a minute for the first time.</div>
+    <div id="app" style="height: 100%;">
+        <div style="position:absolute; top:30vh; width:100%; text-align:center">
+            <h1>Lyra Wallet</h1>
+            <p><i class="fas fa-spin fa-spinner"></i> The application is loading...</p>
+        </div>
+    </div>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.
@@ -26,17 +31,11 @@
 
 
     <script src="_content/Fluxor.Blazor.Web/scripts/index.js"></script>
+    <script src="_content/BlazorZXingJs/zxingjs-0.18.2/umd/index.min.js"></script>
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
 
     <script src="_framework/blazor.webassembly.js"></script>
-    <script>navigator.serviceWorker.register('service-worker.js').then(reg => {
-            setTimeout(() => {
-                reg.update();
-            }, 120000);            
-        });</script>
-
-    <script src="_content/BlazorZXingJs/zxingjs-0.18.2/umd/index.min.js"></script>
-
-    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
 </body>
 
 </html>
