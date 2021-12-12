@@ -1,8 +1,35 @@
-@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+* {
+    font-family: Inter,sans-serif;
+    box-sizing: border-box
+}
+
+@font-face {
+    font-family: 'Inter custom';
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: block;
+    src: url(/fonts/Inter-roman.var.woff2) format("woff2 supports variations(gvar)"),url(/fonts/Inter-roman.var.woff2) format("woff2-variations"),url(/fonts/Inter-roman.var.woff2) format("woff2")
+}
+
+@supports (font-variation-settings: normal) {
+    * {
+        font-family: 'Inter custom',sans-serif;
+    }
+}
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     height: 100%;
+}
+
+html body {
+    height: 100%;
+    font-size: 16px;
+    font-variant: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+    font-family: 'Inter custom',sans-serif;
+    font-variant-numeric: slashed-zero;
 }
 
 .mag {
