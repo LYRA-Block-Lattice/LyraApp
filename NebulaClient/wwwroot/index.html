@@ -18,7 +18,7 @@
 </head>
 
 <body>
-    <div id="app">Loading...</div>
+    <div id="app">Loading... This may take a minute for the first time.</div>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.
@@ -30,7 +30,11 @@
     <script src="_content/Fluxor.Blazor.Web/scripts/index.js"></script>
 
     <script src="_framework/blazor.webassembly.js"></script>
-    <script>navigator.serviceWorker.register('service-worker.js');</script>
+    <script>navigator.serviceWorker.register('service-worker.js').then(reg => {
+            setTimeout(() => {
+                reg.update();
+            }, 120000);            
+        });</script>
 
     <script src="_content/BlazorZXingJs/zxingjs-0.18.2/umd/index.min.js"></script>
 

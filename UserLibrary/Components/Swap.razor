@@ -514,17 +514,27 @@
         busy = false;
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        //this.ObserveParameter<decimal>(nameof(this.amount1))
-        //    .TakeUntil(Disposed) //you could even move this to the base class
-        //    .Subscribe();
+        if (firstRender)
+        {
+            Snackbar.Add($"Initialize Swap App... ", Severity.Info);
 
-        await base.OnInitializedAsync();
+            try
+            {
+                if (walletState.Value.wallet != null)
+                    await walletState.Value.wallet.SyncAsync(null);
+                await OpenSwapUI();
 
-        if (walletState.Value.wallet != null)
-            await walletState.Value.wallet.SyncAsync(null);
-        await OpenSwapUI();
+                Snackbar.Add($"Swap App is ready. ", Severity.Success);                
+            }
+            catch(Exception ex)
+            {
+                Snackbar.Add($"Init refresh failed: {ex.Message}", Severity.Error);
+            }
+
+            StateHasChanged();
+        }
     }
 
 
