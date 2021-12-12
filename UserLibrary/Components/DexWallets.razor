@@ -75,7 +75,7 @@ else
         <MudDivider />
 
         <div>
-            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" 
+            <MudButton Variant="Variant.Filled" Disabled="@refreshing" FullWidth="true" Color="Color.Primary" 
                 OnClick="@RefreshAllWallets">
                 @if (refreshing)
                 {

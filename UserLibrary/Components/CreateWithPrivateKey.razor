@@ -40,7 +40,7 @@
             </div>            
         }
         <div class="mid">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@RestoreWallet">
+            <MudButton Variant="Variant.Filled" Disabled="@busy" Color="Color.Primary" OnClick="@RestoreWallet">
                 @if (busy)
                 {
                     <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true"/>

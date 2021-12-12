@@ -1,4 +1,5 @@
 ﻿using Fluxor;
+using Lyra.Core.API;
 using Lyra.Data.Crypto;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -80,11 +81,69 @@ namespace UserLibrary.Pages
             if(busy)
                 busy = false;
 
-            if(busysend)
-                busysend = false;
+            if (!string.IsNullOrWhiteSpace(walletState.Value.error))
+            {
+                Snackbar.Add(walletState.Value.error, Severity.Error);
+                return;
+            }            
+        }
 
-            //if(walletState.Value.wallet != null)
-            //    Snackbar.Add("Wallet Updated.", Severity.Info);
+        private async Task SendTokenAsync()
+        {
+            busysend = true;
+            Snackbar.Add("Refresh balance...");
+            StateHasChanged();
+
+            try
+            {
+                var result = await walletState.Value.wallet.SyncAsync(null);
+                if (result != Lyra.Core.Blocks.APIResultCodes.Success)
+                {
+                    Snackbar.Add($"Unable to refresh balance: {result}. Abort send.", Severity.Error);
+                    busysend = false;
+                    StateHasChanged();
+                    return;
+                }
+
+                var oldbalance = walletState.Value.wallet.GetLatestBlock().Balances.ToDecimalDict();
+
+                Snackbar.Add($"Current balance is {oldbalance[tokenName]} {tokenName}");
+                Snackbar.Add($"Sending {amount} {tokenName}");
+
+                var result2 = await walletState.Value.wallet.SendAsync(amount, dstAddr, tokenName);
+                if (!result2.Successful())
+                {
+                    Snackbar.Add($"Unable to send token: {result2}.", Severity.Error);
+                    busysend = false;
+                    StateHasChanged();
+                    return;
+                }
+
+                Snackbar.Add($"Seccess send {amount} {tokenName}.", Severity.Success);
+                Snackbar.Add("Refresh balance...");
+                var result3 = await walletState.Value.wallet.SyncAsync(null);
+                if (result3 != Lyra.Core.Blocks.APIResultCodes.Success)
+                {
+                    Snackbar.Add($"Unable to refresh balance: {result3}.", Severity.Error);
+                    busysend = false;
+                    StateHasChanged();
+                    return;
+                }
+
+                var newbalance = walletState.Value.wallet.GetLatestBlock().Balances.ToDecimalDict();
+
+                Snackbar.Add($"The latest balance is {newbalance[tokenName]} {tokenName}");
+                busysend = false;
+                StateHasChanged();
+            }
+            catch(Exception ex)
+            {
+                Snackbar.Add($"Unexpected Error: {ex.Message}.", Severity.Error);
+                busysend = false;
+                StateHasChanged();
+            }
+
+            Dispatcher.Dispatch(new WebWalletRefreshBalanceAction { wallet = walletState.Value.wallet });
         }
 
         private Task OnSelectedTabChanged(string name)
@@ -103,6 +162,7 @@ namespace UserLibrary.Pages
             if (name == "send")
             {
                 dstAddr = target;
+                tabs.ActivatePanel(1);
             }
 
             return Task.CompletedTask;
@@ -146,13 +206,7 @@ namespace UserLibrary.Pages
             tabs.ActivatePanel(1);
         }
 
-        private void SendTokenAsync()
-        {
-            busysend = true;
-            Snackbar.Add("Sending token...", Severity.Info);
 
-            Dispatcher.Dispatch(new WebWalletSendTokenAction { DstAddr = dstAddr, TokenName = tokenName, Amount = amount, wallet = walletState.Value.wallet });
-        }
 
 
 

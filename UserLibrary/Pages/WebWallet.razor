@@ -41,7 +41,7 @@
 {
     <MudTabs @ref="tabs" Elevation="4" Rounded="true" Centered="true" Color="Color.Secondary">
         <MudTabPanel Text="Home">
-            <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="@Refresh" FullWidth>
+            <MudButton Variant="Variant.Outlined" Disabled="@busy" Color="Color.Success" OnClick="@Refresh" FullWidth>
                 @if (busy)
                 {
                     <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -114,7 +114,7 @@
                     <MudNumericField T="decimal" Label="Amount" @bind-Value="@amount" />
                     </MudItem>
                     <MudItem xs="12">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@SendTokenAsync">
+                <MudButton Variant="Variant.Filled" Disabled="@busysend" Color="Color.Primary" OnClick="@(async () => await SendTokenAsync())">
                     @if (busysend)
                     {
                         <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />

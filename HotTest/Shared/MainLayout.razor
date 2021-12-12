@@ -8,7 +8,7 @@
 <MudLayout>
     <MudAppBar Elevation="5" Dense>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        Lyra Wallet
+        <UserLibrary.Components.TopBarClient />
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen" Elevation="8">
         <MudDrawerHeader>

@@ -114,7 +114,7 @@
                 }
                 else
                 {
-                    <MudButton Variant="Variant.Filled" FullWidth="true" Disabled="@(!canswap)" Color="Color.Primary" OnClick="@DoSwap" class="rounded-pill">
+                    <MudButton Variant="Variant.Filled" FullWidth="true" Disabled="@(!canswap || swapping)" Color="Color.Primary" OnClick="@DoSwap" class="rounded-pill">
                         <MudIcon Icon="@Icons.Filled.SwapCalls" Title="Swap" />                      
                         @if (swapping)
                         {

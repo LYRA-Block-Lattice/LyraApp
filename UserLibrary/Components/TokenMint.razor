@@ -47,7 +47,7 @@
         }
         else
         {
-            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" @ref="@btn"
+            <MudButton Variant="Variant.Filled" Disabled="@loading" FullWidth="true" Color="Color.Primary" @ref="@btn"
                 OnClick="@mint">
                 @if (loading)
                 {
