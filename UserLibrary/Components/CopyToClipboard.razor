@@ -3,7 +3,7 @@
 
 <div style="width: 100%; display:flex;">
     <input style="font-weight: bold;width: 100%;" readonly type="text" value="@Text" />
-    <button type="button" class="btn btn-primary" @onclick="CopyTextToClipboard">Copy</button>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="CopyTextToClipboard">Copy</MudButton>
 </div>
 
 @code {    

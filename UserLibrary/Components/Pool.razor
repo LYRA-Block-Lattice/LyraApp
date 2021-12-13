@@ -43,7 +43,7 @@
                 <tr>
                     <td>
                         <div class="round">
-                            <MudNumericField T="decimal"
+                            <MudNumericField T="decimal" Style="font-size: 24px;"
                                      @bind-Value="@amount1" />
                         </div>
                     </td>
@@ -64,7 +64,7 @@
                 <tr>
                     <td>
                         <div class="round">
-                            <MudNumericField T="decimal"
+                            <MudNumericField T="decimal" Style="font-size: 24px;"
                                      @bind-Value="@amount2" />
                         </div>
                     </td>
@@ -101,12 +101,20 @@
                             }
                             else
                             {
-                                <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" Disabled="@(!alenabled)"
+                                <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" Disabled="@(!alenabled || adding)"
                             OnClick="@(async ()=>{ await PoolDeposit(); })" class="rounded-pill">
-                                    Add Liquidate
+                                    <MudIcon Icon="@Icons.Filled.Water" Title="Add" />                      
+                                    @if (adding)
+                                    {
+                                        <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                                        <MudText Class="ms-2">Processing</MudText>
+                                    }
+                                    else
+                                    {
+                                        <MudText>Add Liquidate</MudText>
+                                    }                                    
                                 </MudButton>
                             }
-
                         </td>
                     </tr>
                     @if (canremove)
@@ -175,6 +183,8 @@
 
     enum UI { Entry, Adding }
     UI ui;
+
+    bool adding;
 
     private decimal _amount1;
     public decimal amount1
@@ -300,16 +310,20 @@
     {
         try
         {
+            adding = true;
+            StateHasChanged();
+            Snackbar.Add($"Adding liquidate...");
+
             var result = await walletState.Value.wallet.AddLiquidateToPoolAsync(selectedTicker1.dbname, amount1, selectedTicker2.dbname, amount2);
             if (result.Successful())
             {
                 Snackbar.Add($"Add liquidate success.", Severity.Success);
                 await Task.Delay(3000);
 
-                Snackbar.Add($"Updating pool...", Severity.Info);
+                Snackbar.Add($"Updating pool...");
                 updateBtn1(amount1);
 
-                Snackbar.Add($"Updating balance...", Severity.Info);
+                Snackbar.Add($"Updating balance...");
                 await walletState.Value.wallet.SyncAsync(null);
                 UpdateBalance();
 
@@ -323,6 +337,11 @@
         catch (Exception ex)
         {
             Snackbar.Add($"Unexpected Error: {ex}", Severity.Error);
+        }
+        finally
+        {
+            adding = false;
+            StateHasChanged();
         }
     }
 

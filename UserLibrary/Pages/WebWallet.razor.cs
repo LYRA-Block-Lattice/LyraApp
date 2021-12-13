@@ -35,7 +35,6 @@ namespace UserLibrary.Pages
         MudTabs tabs;
 
         bool busy, busysend;
-        bool showsend;
 
         // for send
         public string dstAddr { get; set; }
@@ -47,8 +46,6 @@ namespace UserLibrary.Pages
 
         public string altDisplay { get; set; }
 
-        string selectedTab = "home";
-
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -57,15 +54,10 @@ namespace UserLibrary.Pages
                 Navigation.NavigateTo("login");
             }
 
-            if (action != null && action != "send")
-            {
-                selectedTab = action;
-            }
-
             if (action == "send" && target != null)
             {
                 dstAddr = target;
-                showsend = true;
+                tabs.ActivatePanel(1);
             }
 
             walletState.StateChanged += this.WalletChanged;
@@ -131,8 +123,8 @@ namespace UserLibrary.Pages
                 }
 
                 var newbalance = walletState.Value.wallet.GetLatestBlock().Balances.ToDecimalDict();
-
-                Snackbar.Add($"The latest balance is {newbalance[tokenName]} {tokenName}");
+                var changed = oldbalance[tokenName] - newbalance[tokenName];
+                Snackbar.Add($"The latest balance is {newbalance[tokenName]} {tokenName} Changed: -{changed} {tokenName}");
                 busysend = false;
                 StateHasChanged();
             }
@@ -148,8 +140,6 @@ namespace UserLibrary.Pages
 
         private Task OnSelectedTabChanged(string name)
         {
-            selectedTab = name;
-
             if (name == "free")
             {
                 Dispatcher.Dispatch(new WebWalletSendMeFreeTokenAction
@@ -174,15 +164,6 @@ namespace UserLibrary.Pages
             altDisplay = "************";
         }
 
-
-
-
-
-        private void ToggleSend()
-        {
-            showsend = !showsend;
-        }
-
         private void Refresh()
         {
             busy = true;
@@ -202,7 +183,6 @@ namespace UserLibrary.Pages
         private async Task SendX(string name)
         {
             tokenName = name;
-            showsend = true;
             tabs.ActivatePanel(1);
         }
 
