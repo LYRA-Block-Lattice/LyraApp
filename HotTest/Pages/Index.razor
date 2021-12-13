@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using Fluxor
+@using Nebula.Store.WebWalletUseCase
 
 <PageTitle>Lyra Wallet App</PageTitle>
 
@@ -6,4 +8,19 @@
     <h1>Hello, Lyrians.</h1>
 
 Welcome to Lyra Decentralised Business Ecosystem!
+
+
 </div>
+
+
+@code
+{
+    [Inject]
+    private IDispatcher Dispatcher { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra App Home" });
+        base.OnInitialized();
+    }
+}

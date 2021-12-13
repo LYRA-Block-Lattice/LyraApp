@@ -1,8 +1,10 @@
 ﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 @page "/profit"
 @page "/profit/{pftid}"
+@using Fluxor
 @using Lyra.Data.Shared
 @using Microsoft.Extensions.Configuration
+@using Nebula.Store.WebWalletUseCase
 @inject IConfiguration Configuration
 @inject NavigationManager UriHelper
 
@@ -154,6 +156,9 @@
     [SupplyParameterFromQuery]
     public string? src { get; set; }
 
+    [Inject]
+    private IDispatcher Dispatcher { get; set; }
+
     string error;
 
     List<Profiting> pfts;
@@ -169,6 +174,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Revenue Center" });
+
         try
         {
             ui = UI.Loading;
@@ -190,6 +197,8 @@
             error = ex.ToString();
             ui = UI.Error;
         }
+
+        await base.OnInitializedAsync();
     }
 
     async Task NavToPft(string pftid)

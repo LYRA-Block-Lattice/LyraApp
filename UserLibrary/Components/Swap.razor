@@ -255,6 +255,13 @@
     decimal minrecv;
     decimal lyraprice;
 
+    protected override void OnInitialized()
+    {
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Swap" });
+
+        base.OnInitialized();
+    }
+
     private void DoSwapTicker()
     {
         (selectedTicker1, selectedTicker2) = (selectedTicker2, selectedTicker1);

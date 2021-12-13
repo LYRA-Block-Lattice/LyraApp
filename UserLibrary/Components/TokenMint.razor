@@ -109,6 +109,7 @@
 
     protected async override Task OnInitializedAsync()
     {
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Mint Token" });
         await base.OnInitializedAsync();
     }
 

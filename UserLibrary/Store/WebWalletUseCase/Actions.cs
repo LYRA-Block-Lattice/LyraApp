@@ -194,7 +194,9 @@ namespace Nebula.Store.WebWalletUseCase
         public string stkid { get; set; }
     }
 
-    // DEX
-    public class WebWalletStartDexAction
-    { }
+    // change title in any page
+    public class WebWalletChangeTitleAction
+    { 
+        public string title { get; set; }
+    }
 }

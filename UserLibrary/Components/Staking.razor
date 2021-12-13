@@ -172,6 +172,12 @@
     public string pftShare { get; set; }
     public string pftSeats { get; set; }
 
+    protected override void OnInitialized()
+    {
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Staking" });
+        base.OnInitialized();
+    }
+
     private async Task AddStkAsync(MouseEventArgs e, string stkid)
     {
         try

@@ -142,7 +142,7 @@
             act = "Create new";
         }
 
-
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Create wallet with private key" });
         await base.OnInitializedAsync();
     }
 

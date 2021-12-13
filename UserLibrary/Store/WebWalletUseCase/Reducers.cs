@@ -192,6 +192,6 @@ namespace Nebula.Store.WebWalletUseCase
 	
 		// DEX
 		[ReducerMethod]
-		public static WebWalletState ReduceStartDEXAction(WebWalletState state, WebWalletStartDexAction action) => state.With(new { stage = UIStage.DEX, Message = "" });
+		public static WebWalletState ReduceChangeTitleAction(WebWalletState state, WebWalletChangeTitleAction action) => state.With(new { Title = action.title });
 	}
 }

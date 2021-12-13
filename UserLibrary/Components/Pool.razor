@@ -267,6 +267,8 @@
     {
         ui = UI.Entry;
         base.OnInitialized();
+
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Liquidate Pool" });
     }
 
     private void BackEntry()

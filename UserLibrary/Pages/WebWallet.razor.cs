@@ -61,6 +61,8 @@ namespace UserLibrary.Pages
             }
 
             walletState.StateChanged += this.WalletChanged;
+
+            Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Wallet" });
         }
 
         public void Dispose()

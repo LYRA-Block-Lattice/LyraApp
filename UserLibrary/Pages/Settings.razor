@@ -2,6 +2,7 @@
 @using Fluxor
 @using Nebula.Store.WebWalletUseCase
 @using BlazorZXingJs
+@using System.Reflection
 @inject NavigationManager Navigation
 
 <div class="mag">
@@ -48,6 +49,11 @@ else
 </div>
 }
 
+<MudDivider Style="margin: 30px" />
+<div style="font-size: xx-small">
+    Main Program Version: @(Assembly.GetEntryAssembly().GetName().Version))<br />
+    User Library Version: @(typeof(UserLibrary.Data.WalletView).Assembly.GetName().Version)
+</div>
 </div>
 @code {
     [Inject]
@@ -63,6 +69,13 @@ else
     [Inject] ISnackbar Snackbar { get; set; }
 
     string voteAddr, altDisplay;
+
+    protected override void OnInitialized()
+    {
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "App Settings" });
+
+        base.OnInitialized();
+    }
 
     private void ToggleKey(MouseEventArgs e)
     {

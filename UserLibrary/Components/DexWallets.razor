@@ -400,6 +400,8 @@ else
 
     protected async override Task OnInitializedAsync()
     {
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra DEX Wallet" });
+
         try
         {
             if (walletState.Value.wallet != null)
@@ -408,8 +410,7 @@ else
         catch (Exception e)
         {
             Console.WriteLine("Error DexWallet OnInitializedAsync " + e.ToString());
-        }
-
+        }        
         //StateHasChanged();
     }
 

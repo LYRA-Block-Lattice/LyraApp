@@ -8,7 +8,7 @@
 
 <div class="top-row px-4">
     <div class="tg">
-        Lyra Wallet @banner
+        <div>@title</div> &nbsp;|&nbsp; @banner
     </div>
     <div>
         @Configuration["network"].ToUpper()
@@ -21,6 +21,7 @@
     private IState<WebWalletState>? walletState { get; set; }
 
     RenderFragment? banner;
+    string title = "Lyra App";
 
     protected override void OnInitialized()
     {
@@ -33,6 +34,8 @@
 
     private void WalletChanged(object sender, WebWalletState wallet)
     {
+        title = wallet.Title;
+
         decimal balance1 = 0;
         if (wallet.wallet != null)
         {
