@@ -1,136 +1,159 @@
 ﻿@namespace UserLibrary.Components
 
 @using Fluxor
+@using Lyra.Core.Accounts
 @using Lyra.Core.Blocks
 @using Lyra.Data.Blocks
 @using Microsoft.AspNetCore.Components.Web
+@using Microsoft.Extensions.Configuration
 @using Microsoft.JSInterop
 @using Nebula.Store.WebWalletUseCase
+@inject IConfiguration Configuration
 
 <MudTabs SelectedTab="@selectedTab1">
-        <MudTabPanel Text="Staking Accounts">
-            <table class="table">
-                <thead>
+    <MudTabPanel Text="Staking Accounts">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Staking Amount</th>
+                    <th>Compound Mode</th>
+                    <th>Total Reward</th>
+                    <th>Start Time</th>
+                    <th>Staking Days</th>
+                    <th>Staking to Account</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var stk in walletState.Value.stkAccounts)
+                {
                     <tr>
-                        <th>Name</th>
-                        <th>Staking Amount</th>
-                        <th>Compound Mode</th>
-                        <th>Total Reward</th>
-                        <th>Start Time</th>
-                        <th>Staking Days</th>
-                        <th>Staking to Account</th>
-                        <th>Action</th>
+                        <td>@((stk as IStaking).Name)</td>
+                        @if (walletState.Value.stkBalances != null)
+                        {
+                            <td>@walletState.Value.stkBalances[(stk as TransactionBlock).AccountID]</td>
+                        }
+                        else
+                        {
+                            <td>0</td>
+                        }
+                        <td>@((stk as IStaking).CompoundMode)</td>
+                        <td>@walletState.Value.stkRewards[(stk as TransactionBlock).AccountID]</td>
+                        <td>@((stk as IStaking).Start)</td>
+                        <td>@((stk as IStaking).Days)</td>
+                        <td>@((stk as IStaking).Voting)</td>
+                        <td>
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async (e) => await AddStkAsync(e, (stk as TransactionBlock).AccountID))">Add Staking</MudButton>
+                            &nbsp;
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async () => {await UnstakingConfirm((stk as TransactionBlock).AccountID, (stk as IStaking).Start, (stk as IStaking).Days);})">Unstaking</MudButton>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var stk in walletState.Value.brokerAccounts.Where(a => a is StakingGenesis)
-                    .Cast<StakingGenesis>())
-                    {
-                        <tr>
-                            <td>@stk.Name</td>
-                            @if (walletState.Value.stkBalances != null)
-                            {
-                                <td>@walletState.Value.stkBalances[stk.AccountID]</td>
-                            }
-                            else
-                            {
-                                <td>0</td>
-                            }
-                            <td>@stk.CompoundMode</td>
-                            <td>@walletState.Value.stkRewards[stk.AccountID]</td>
-                            <td>@stk.TimeStamp</td>
-                            <td>@stk.Days</td>
-                            <td>@stk.Voting</td>
-                            <td>
-                                <a href="" @onclick="@((e) => AddStkAsync(e, stk.AccountID))" @onclick:preventDefault><u>Add Staking</u></a>
-                                &nbsp;
-                                <MudButton Variant="Variant.Filled" OnClick="@(async () => {await UnstakingConfirm(stk.AccountID);})">Unstaking</MudButton>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </MudTabPanel>
-        <MudTabPanel Text="Profiting Accounts">
-            <table class="table">
-                <thead>
+                }
+            </tbody>
+        </table>
+    </MudTabPanel>
+    <MudTabPanel Text="Profiting Accounts">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Share Ratio</th>
+                    <th>Seats</th>
+                    <th>Profiting Account ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pft in walletState.Value.pftAccounts)
+                {
                     <tr>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Share Ratio</th>
-                        <th>Seats</th>
-                        <th>Profiting Account ID</th>
+                        <td>@pft.Name</td>
+                        <td>@pft.PType</td>
+                        <td>@pft.ShareRito</td>
+                        <td>@pft.Seats</td>
+                        <td>
+                            @pft.AccountID
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var pft in walletState.Value.brokerAccounts.Where(a => a is ProfitingGenesis)
-                    .Cast<ProfitingGenesis>())
-                    {
-                        <tr>
-                            <td>@pft.Name</td>
-                            <td>@pft.PType</td>
-                            <td>@pft.ShareRito</td>
-                            <td>@pft.Seats</td>
-                            <td>
-                                @pft.AccountID
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </MudTabPanel>
+                }
+            </tbody>
+        </table>
+    </MudTabPanel>
 </MudTabs>
 
 <div style="height:60px;" />
 
 <MudTabs SelectedTab="@selectedTab2">
-        <MudTabPanel Text="Create Staking Account">
-            <p>
-                Name:
-                <MudTextField Label="Name" @bind-Value="@stkName" />
-            </p>
-            <p>
-                Staking For Address:
-                <MudTextField Label="Address" @bind-Value="@stkVoting" />
-            </p>
-            <p>
-                Days of staking:
-                <MudTextField Label="Days" @bind-Value="@stkDays" />
-            </p>
-            <p>
-                Compound staking mode:
-                <input size="10" type="checkbox" @bind="@stkCompound" />
-            </p>
-            <div>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="StakingCreate">Create Staking</MudButton>
-            </div>
-        </MudTabPanel>
-        <MudTabPanel Text="Create Profiting Account">
-            <p>
-                Name:
-                <MudTextField Label="Name" @bind-Value="@pftName" />
-            </p>
-            <p>
-                Type:
-                <select style="height: 40px; width: 380px" @bind="@pftType">
-                    <option value="Node">Node</option>
-                    <option disabled value="Oracle">Oracle</option>
-                    <option disabled value="Merchant">Merchant</option>
-                    <option value="Yield">Yield</option>
-                </select>
-            </p>
-            <p>
-                Ratio to share to staking (0% - 100%):
-                <MudTextField Label="Ratio" @bind-Value="@pftShare" />
-            </p>
-            <p>
-                Number of staking (0 - 100):
-                <MudTextField Label="Max number" @bind-Value="@pftSeats" />
-            </p>
-            <div>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="ProfitingCreate">Create Profiting Account</MudButton>
-            </div>
-        </MudTabPanel>
+    <MudTabPanel Text="Create Staking Account">
+        <p>
+            Name:
+            <MudTextField Label="Name" @bind-Value="@stkName" />
+        </p>
+        <p>
+            Staking For Address:
+            <MudTextField Label="Address" @bind-Value="@stkVoting" />
+        </p>
+        <p>
+            Days of staking:
+            <MudTextField Label="Days, >= 3" @bind-Value="@stkDays" />
+        </p>
+        <p>
+            Compound staking mode:
+            <input size="10" type="checkbox" @bind="@stkCompound" />
+        </p>
+        <div>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@adding"
+                       OnClick="@(async () => await StakingCreate())">
+                @if (adding)
+                {
+                    <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Processing</MudText>
+                }
+                else
+                {
+                    <MudText>Create Staking</MudText>
+                }
+            </MudButton>
+        </div>
+    </MudTabPanel>
+    <MudTabPanel Text="Create Profiting Account">
+        <p>
+            Name:
+            <MudTextField Label="Name" @bind-Value="@pftName" />
+        </p>
+        <p>
+            Type:
+            <select style="height: 40px; width: 380px" @bind="@pftType">
+                <option value="Node">Node</option>
+                <option disabled value="Oracle">Oracle</option>
+                <option disabled value="Merchant">Merchant</option>
+                <option value="Yield">Yield</option>
+            </select>
+        </p>
+        <p>
+            Ratio to share to staking (0% - 100%):
+            <MudTextField Label="Ratio" @bind-Value="@pftShare" />
+        </p>
+        <p>
+            Number of staking (0 - 100):
+            <MudTextField Label="Max number" @bind-Value="@pftSeats" />
+        </p>
+        <div>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@adding"
+                       OnClick="@(async () => await ProfitingCreate())">
+                @if (adding)
+                {
+                    <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Processing</MudText>
+                }
+                else
+                {
+                    <MudText>Create Profiting Account</MudText>
+                }
+            </MudButton>
+        </div>
+    </MudTabPanel>
 </MudTabs>
 
 @code {
@@ -147,8 +170,9 @@
     [Inject] ISnackbar Snackbar { get; set; }
 
     string selectedTab1 = "staking";
+    bool adding;
 
-    private Task OnSelectedTabChanged1( string name )
+    private Task OnSelectedTabChanged1(string name)
     {
         selectedTab1 = name;
         return Task.CompletedTask;
@@ -156,7 +180,7 @@
 
     string selectedTab2 = "crstk";
 
-    private Task OnSelectedTabChanged2( string name )
+    private Task OnSelectedTabChanged2(string name)
     {
         selectedTab2 = name;
         return Task.CompletedTask;
@@ -185,28 +209,47 @@
             var amt = await GetAmountInput();
             if (amt > 0)
             {
+                Snackbar.Add("Add staking...");
                 Dispatcher.Dispatch(new WebWalletAddStakingAction
                     {
                         wallet = walletState.Value.wallet,
                         stkid = stkid,
                         amount = amt
                     });
+
+                await Task.Delay(3000);
+                Snackbar.Add("Success. Refreshing...", Severity.Success);
+                await RefreshStakingAsync(walletState.Value.wallet);
             }
         }
         catch (Exception ex)
         {
-            Dispatcher.Dispatch(new WalletErrorResultAction { error = ex.Message });
+            Snackbar.Add($"Error: {ex}", Severity.Error);
         }
     }
 
-    async Task UnstakingConfirm(string actid)
+    async Task UnstakingConfirm(string actid, DateTime dtStart, int days)
     {
-        bool? result = await DialogService.ShowMessageBox(
-            "Warning", 
-            "Unstaking within the promised staking period will pay 0.8% panalise fee. Are you sure you want to confirm?", 
-            yesText:"Confirm!", cancelText:"Cancel");
+        bool expired = dtStart.AddDays(days) < DateTime.UtcNow;
 
-        if (result.Value)
+        bool? result;
+        if (expired)
+        {
+            result = await DialogService.ShowMessageBox(
+            "Notice",
+                "Staking has expired. It's now safe to unstake.",
+                yesText: "Confirm!", cancelText: "Cancel");
+        }
+        else
+        {
+            var timeleft = $"Staking will expire in {(dtStart.AddDays(days) - DateTime.UtcNow).TotalHours:N2} Hours.";
+            result = await DialogService.ShowMessageBox(
+            "Warning",
+                timeleft + "\nUnstaking within the promised staking period will pay 0.8% panalise fee. Are you sure you want to confirm?",
+                yesText: "Confirm!", cancelText: "Cancel");
+        }
+
+        if (result != null && result.Value)
         {
             RmStk(actid);
         }
@@ -216,19 +259,23 @@
         }
     }
 
-    private void RmStk(string stkid)
+    private async Task RmStk(string stkid)
     {
         try
         {
+            Snackbar.Add("Remove staking...");
             Dispatcher.Dispatch(new WebWalletRemoveStakingAction
                 {
                     wallet = walletState.Value.wallet,
                     stkid = stkid
                 });
+                await Task.Delay(3000);
+                Snackbar.Add("Success. Refreshing...", Severity.Success);
+                await RefreshStakingAsync(walletState.Value.wallet);
         }
         catch (Exception ex)
         {
-            Dispatcher.Dispatch(new WalletErrorResultAction { error = ex.Message });
+            Snackbar.Add($"Error: {ex}", Severity.Error);
         }
     }
 
@@ -240,46 +287,141 @@
         return decimal.Parse(prompted);
     }
 
-    private void StakingCreate(MouseEventArgs e)
+    private async Task StakingCreate()
     {
+        adding = true;
         try
         {
-            Dispatcher.Dispatch(new WebWalletCreateStakingAction
+            Snackbar.Add("Adding staking account...");
+            var action = new WebWalletCreateStakingAction
                 {
                     wallet = walletState.Value.wallet,
                     name = stkName,
                     voting = stkVoting,
                     days = int.Parse(stkDays),
                     compound = stkCompound
-                });
+                };
+
+            var crstkret = await action.wallet.CreateStakingAccountAsync(
+                action.name, action.voting, action.days, action.compound
+                );
+
+            if (crstkret.Successful())
+            {
+                // wait for a while
+                await Task.Delay(2000);
+                Snackbar.Add("Success. Refreshing...", Severity.Success);
+                await RefreshStakingAsync(walletState.Value.wallet);
+            }
+            else
+            {
+                Snackbar.Add($"Error: {crstkret.ResultCode}", Severity.Error);
+            }
         }
         catch (Exception ex)
         {
-            Dispatcher.Dispatch(new WalletErrorResultAction { error = ex.Message });
+            Snackbar.Add($"Error: {ex}", Severity.Error);
         }
+        adding = false;
     }
 
-    private void ProfitingCreate(MouseEventArgs e)
+    private async Task ProfitingCreate()
     {
+        adding = true;
         try
         {
             if (pftType != "Node" && pftType != "Yield")
+            {
                 return;
+            }
+
+            Snackbar.Add("Adding profiting account...");
 
             var type = (ProfitingType)Enum.Parse(typeof(ProfitingType), pftType);
 
-            Dispatcher.Dispatch(new WebWalletCreateProfitingAction
+            var action = new WebWalletCreateProfitingAction
                 {
                     wallet = walletState.Value.wallet,
                     name = pftName,
                     type = type,
                     share = decimal.Parse(pftShare) / 100m,
                     seats = int.Parse(pftSeats)
-                });
+                };
+
+            var crpftret = await action.wallet.CreateProfitingAccountAsync(
+                action.name, action.type, action.share, action.seats
+                );
+
+            if (crpftret.Successful())
+            {
+                // wait for a while
+                await Task.Delay(2000);
+                Snackbar.Add("Success. Refreshing...", Severity.Success);
+                await RefreshStakingAsync(walletState.Value.wallet);
+            }
+            else
+            {
+                Snackbar.Add($"Error: {crpftret.ResultCode}", Severity.Error);
+            }
         }
         catch (Exception ex)
         {
-            Dispatcher.Dispatch(new WalletErrorResultAction { error = ex.Message });
+            Snackbar.Add($"Error: {ex}", Severity.Error);
+        }
+        adding = false;
+    }
+
+    private async Task RefreshStakingAsync(Wallet wallet)
+    {
+        var lcx = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
+
+        var result = await lcx.GetAllBrokerAccountsForOwnerAsync(wallet.AccountId);
+        if (result.ResultCode == APIResultCodes.Success)
+        {
+            var blks = result.GetBlocks();
+
+            var allStks = blks.Where(a => a is StakingGenesis)
+                  .Cast<StakingGenesis>();
+
+            var dict = new Dictionary<string, decimal>();
+            var rwds = new Dictionary<string, decimal>();
+            DateTime dtstart = DateTime.MinValue;
+
+            var list = new List<Block>();
+            foreach (var stk in allStks)
+            {
+                dtstart = stk.Start;
+                var ret = await lcx.GetLastBlockAsync(stk.AccountID);
+                if (ret.Successful())
+                {
+                    var stkblk = ret.GetBlock() as TransactionBlock;
+                    list.Add(stkblk);
+                    dtstart = (stkblk as IStaking).Start;
+                    decimal amt = 0;
+                    if (stkblk.Balances.ContainsKey(LyraGlobal.OFFICIALTICKERCODE))
+                        amt = stkblk.Balances[LyraGlobal.OFFICIALTICKERCODE].ToBalanceDecimal();
+                    dict.Add(stk.AccountID, amt);
+                }
+                else
+                {
+                    list.Add(stk);
+                }
+
+                var stats = await lcx.GetBenefitStatsAsync(stk.Voting, stk.AccountID, DateTime.MinValue, DateTime.MaxValue);
+                rwds.Add(stk.AccountID, stats.Total);
+            }
+
+            walletState.Value.pftAccounts = blks.Where(a => a is ProfitingGenesis)
+              .Cast<ProfitingGenesis>().ToList();
+            walletState.Value.stkAccounts = list;
+            walletState.Value.stkBalances = dict;
+            walletState.Value.stkRewards = rwds;
+
+            StateHasChanged();
+        }
+        else
+        {
+            Snackbar.Add($"Error: {result.ResultCode}", Severity.Error);
         }
     }
 }

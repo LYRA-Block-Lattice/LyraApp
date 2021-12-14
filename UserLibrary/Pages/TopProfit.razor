@@ -44,10 +44,10 @@
                         <td>@pft.gens.Seats</td>
                         <td>@pft.totalprofit</td>
                         <td>
-                            <a href="/showblock/@pft.gens.AccountID">@pft.gens.AccountID</a>
+                            <a target="_blank" href="@bexpurl/showblock/@pft.gens.AccountID">@pft.gens.AccountID</a>
                         </td>
                         <td>
-                            <a href="/showblock/@pft.gens.OwnerAccountId">@pft.gens.OwnerAccountId.Substring(0, 10)...</a>
+                            <a target="_blank" href="@bexpurl/showblock/@pft.gens.OwnerAccountId">@pft.gens.OwnerAccountId.Substring(0, 10)...</a>
 
                         </td>
                     </tr>
@@ -74,11 +74,11 @@
         <p>Name: <b>@pft.Name</b></p>
         <p>Type: <b>@pft.PType</b></p>
         <p>
-            Node Owner Account ID: <a href="/showblock/@pft?.OwnerAccountId">@pft?.OwnerAccountId.Substring(0, 10)...</a>
+            Node Owner Account ID: <a target="_blank" href="@bexpurl/showblock/@pft?.OwnerAccountId">@pft?.OwnerAccountId.Substring(0, 10)...</a>
         </p>
         <p>
             Profiting Account ID:
-            <a href="/showblock/@GetPftID()">@GetPftID()</a>
+            <a target="_blank" href="@bexpurl/showblock/@GetPftID()">@GetPftID()</a>
         </p>
         <p>Total Earn: @pftStats.Total LYR</p>
         <p>Profit sharing ratio: @FormatShare() </p>
@@ -122,10 +122,10 @@
                                 <td>@stk.Days</td>                                
                                 <td>@stkRewards[stk.StkAccount] LYR</td>                                
                                 <td>
-                                    <a href="/showblock/@stk.StkAccount">@stk.StkAccount.Shorten()</a>
+                                    <a target="_blank" href="@bexpurl/showblock/@stk.StkAccount">@stk.StkAccount.Shorten()</a>
                                 </td>
                                 <td>
-                                    <a href="/showblock/@stk.OwnerAccount">@stk.OwnerAccount.Shorten()</a>
+                                    <a target="_blank" href="@bexpurl/showblock/@stk.OwnerAccount">@stk.OwnerAccount.Shorten()</a>
                                 </td>
                             </tr>
                         }
@@ -171,9 +171,12 @@
     public List<Staker> stks { get; set; }
     public ProfitingStats pftStats { get; set; }
     public Dictionary<string, decimal> stkRewards { get; set; }
+    string bexpurl;
 
     protected override async Task OnInitializedAsync()
     {
+        bexpurl = Configuration["network"] == "mainnet" ? "https://nebula.lyra.live" : "https://nebulatestnet.lyra.live";
+       
         Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Revenue Center" });
 
         try

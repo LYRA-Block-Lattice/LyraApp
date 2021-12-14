@@ -31,9 +31,10 @@ namespace Nebula.Store.WebWalletUseCase
 			{
 				IsLoading = false,
 				stage = UIStage.Staking,
-				brokerAccounts = action.brokers,
+				stkAccounts = action.brokers,
+				pftAccounts = action.pfts,
 				stkBalances = action.balances,
-				stkRewards = action.rewards
+				stkRewards = action.rewards,
 			});
 		}
 

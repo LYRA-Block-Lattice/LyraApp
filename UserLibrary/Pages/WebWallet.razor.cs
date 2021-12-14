@@ -85,7 +85,7 @@ namespace UserLibrary.Pages
 
             if (!string.IsNullOrWhiteSpace(walletState.Value.error))
             {
-                Snackbar.Add(walletState.Value.error, Severity.Error);
+                //Snackbar.Add(walletState.Value.error, Severity.Error);
                 return;
             }            
         }

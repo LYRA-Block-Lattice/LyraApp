@@ -1,9 +1,11 @@
 ﻿@page "/settings"
 @using Fluxor
+@using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
 @using BlazorZXingJs
 @using System.Reflection
 @inject NavigationManager Navigation
+@inject IConfiguration Configuration
 
 <div class="mag">
 @if(walletState.Value.wallet == null)
@@ -22,7 +24,7 @@ else
     <p><QRCodeWriter Text="@walletState.Value.wallet.AccountId" Width="300" Heigth="300"></QRCodeWriter></p>
     <MudDivider />
     <p><span title="Click to toggle to display" @onclick="ToggleKey">Your wallet's private key is (click to unhide/hide): </span><span>@altDisplay</span></p>
-    <p>Your wallet's address is: <a href="/showblock/@walletState.Value.wallet.AccountId">@walletState.Value.wallet.AccountId</a></p>
+    <p>Your wallet's address is: <a target="_blank" href="@bexpurl/showblock/@walletState.Value.wallet.AccountId">@walletState.Value.wallet.AccountId</a></p>
     <p>Your wallet's balance is: @walletState.Value.balanceString</p>
     <p>Your are now voting for: @walletState.Value.wallet.VoteFor</p>
 
@@ -71,11 +73,12 @@ else
     [Inject] ISnackbar Snackbar { get; set; }
 
     string voteAddr, altDisplay;
+    string bexpurl;
 
     protected override void OnInitialized()
     {
         Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "App Settings" });
-
+        bexpurl = Configuration["network"] == "mainnet" ? "https://nebula.lyra.live" : "https://nebulatestnet.lyra.live";
         base.OnInitialized();
     }
 

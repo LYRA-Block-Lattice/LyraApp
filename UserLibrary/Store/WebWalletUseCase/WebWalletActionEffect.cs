@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using Blazored.LocalStorage;
+using Lyra.Data.Blocks;
 
 namespace Nebula.Store.WebWalletUseCase
 {
@@ -48,6 +49,7 @@ namespace Nebula.Store.WebWalletUseCase
 
 			if(crpftret.Successful())
             {
+				await Task.Delay(2000);
 				await RefreshStakingAsync(action.wallet, dispatcher);
 			}
 			else
@@ -68,6 +70,7 @@ namespace Nebula.Store.WebWalletUseCase
 
 			if (crpftret.Successful())
 			{
+				await Task.Delay(2000);
 				await RefreshStakingAsync(action.wallet, dispatcher);
 			}
 			else
@@ -135,16 +138,26 @@ namespace Nebula.Store.WebWalletUseCase
 
 				var dict = new Dictionary<string, decimal>();
 				var rwds = new Dictionary<string, decimal>();
+				DateTime dtstart = DateTime.MinValue;
+
+				var list = new List<Block>();
 				foreach (var stk in allStks)
                 {
+					dtstart = stk.Start;
 					var ret = await lcx.GetLastBlockAsync(stk.AccountID);
 					if(ret.Successful())
                     {
 						var stkblk = ret.GetBlock() as TransactionBlock;
+						list.Add(stkblk);
+						dtstart = (stkblk as IStaking).Start;
 						decimal amt = 0;
 						if (stkblk.Balances.ContainsKey(LyraGlobal.OFFICIALTICKERCODE))
 							amt = stkblk.Balances[LyraGlobal.OFFICIALTICKERCODE].ToBalanceDecimal();
 						dict.Add(stk.AccountID, amt);
+                    }
+                    else
+                    {
+						list.Add(stk);
                     }
 
 					var stats = await lcx.GetBenefitStatsAsync(stk.Voting, stk.AccountID, DateTime.MinValue, DateTime.MaxValue);
@@ -153,7 +166,9 @@ namespace Nebula.Store.WebWalletUseCase
 
 				dispatcher.Dispatch(new StakingResultAction
 				{
-					brokers = blks.ToList(),
+					pfts = blks.Where(a => a is ProfitingGenesis)
+					  .Cast<ProfitingGenesis>().ToList(),
+					brokers = list,
 					balances = dict,
 					rewards = rwds
 				});
