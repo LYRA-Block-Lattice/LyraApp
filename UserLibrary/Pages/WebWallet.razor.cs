@@ -49,20 +49,28 @@ namespace UserLibrary.Pages
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            if (walletState.Value.wallet == null)
-            {
-                Navigation.NavigateTo("login");
-            }
-
-            if (action == "send" && target != null)
-            {
-                dstAddr = target;
-                tabs.ActivatePanel(1);
-            }
-
             walletState.StateChanged += this.WalletChanged;
+        }
 
-            Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Wallet" });
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if(firstRender)
+            {
+                if (walletState.Value.wallet == null)
+                {
+                    Navigation.NavigateTo("login");
+                }
+
+                if (action == "send" && target != null)
+                {
+                    dstAddr = target;
+                    tabs.ActivatePanel(1);
+                }
+
+                Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Wallet" });
+            }
+
+            base.OnAfterRender(firstRender);
         }
 
         public void Dispose()

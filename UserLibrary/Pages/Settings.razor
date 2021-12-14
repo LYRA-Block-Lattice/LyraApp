@@ -8,10 +8,12 @@
 <div class="mag">
 @if(walletState.Value.wallet == null)
 {
-<MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
-    <MudIcon Name="IconName.Unlock" />
-    Open Wallet
-</MudButton>
+    <a href="/wallet">
+        <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
+            <MudIcon Icon="@Icons.Filled.LockOpen" />
+            Open Wallet
+        </MudButton>
+    </a>
 }
 else
 {
