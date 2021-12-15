@@ -19,90 +19,52 @@
 }
 
 <div class="swc">
-
-    <table cellspacing="0" cellpadding="0" class="swt">
-
-
-        <tr>
-            <td>From</td>
-            <td>Balance: @($"{balance1:N8}")</td>
-        </tr>
-        <tr>
-            <td>
+        <div class="ipt">
+            <div>
                 <div class="round">
-                    <MudNumericField T="decimal" Style="font-size: 24px;" 
+                    <MudNumericField T="decimal" Label="From" HideSpinButtons="true"                     
+                    Style="font-size: 24px; " 
                                  @bind-Value="@amount1" />
                 </div>
-            </td>
-            <td>
+            </div>
+            <div class="algb">
                 <div class="round">
                     <TokenSelect Tokens="@tickers" @ref="@sel1" ValueChanged="@(a => Ticker1 = a)" />
+                        
                 </div>
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <MudIconButton Icon="@Icons.Filled.SwapVert" Color="Color.Secondary" 
+            </div>
+        </div>
+        <div class="ipt">
+            <div>~$ 0.03332</div>
+            <div>Balance: @($"{balance1:N8}")</div>
+        </div>
+        <div>
+            <div align="center">
+                <MudIconButton Icon="@Icons.Filled.ArrowDownward" Color="Color.Secondary" 
                     OnClick="@DoSwapTicker"
                     aria-label="add to favorite"></MudIconButton>
-            </td>
-            <td align="right"></td>
-        </tr>
-        <tr>
-            <td>To</td>
-            <td>Balance: @($"{balance2:N8}")</td>
-        </tr>
-        <tr>
-            <td>
+            </div>
+        </div>
+
+        <div class="ipt">
+            <div>
                 <div class="round">
-                    <MudNumericField T="decimal" Style="font-size: 24px;"
+                    <MudNumericField T="decimal" Label="To" HideSpinButtons="true" Style="font-size: 24px;"
                                  @bind-Value="@amount2" />
                 </div>
-            </td>
-            <td>
+            </div>
+            <div>
                 <div class="round">
                     <TokenSelect Tokens="@tickers" @ref="@sel2" ValueChanged="@(a => Ticker2 = a)" />
                 </div>
-            </td>
-        </tr>
+            </div>
+        </div>
+        <div class="ipt">
+            <div>~$ 0.03332</div>
+            <div>Balance: @($"{balance2:N8}")</div>
+        </div>
 
-        @if (haspoolinfo && dispswap)
-        {
-            <tr style="height: 10px">
-                <td colspan="2"></td>
-            </tr>
-            <tr>
-                <td>Estimated Price</td>
-                <td>@calprice</td>
-            </tr>
-            <tr>
-                <td>You will sell</td>
-                <td>@calsell</td>
-            </tr>
-            <tr>
-                <td>You will get</td>
-                <td>@calget</td>
-            </tr>
-            <tr>
-                <td>Price Impact</td>
-                <td>@calimpact</td>
-            </tr>
-            <tr>
-                <td>Pool Fee</td>
-                <td>@calprofee</td>
-            </tr>
-            <tr>
-                <td>Network Fee</td>
-                <td>@calnodfee</td>
-            </tr>
-        }
-
-        <tr style="height: 10px">
-            <td colspan="2"></td>
-        </tr>
-        <tr>
-
-            <td colspan="2">
+            <div style="padding: 30px">
                 @if (walletState.Value.wallet == null)
                 {
                     <a href="/wallet">
@@ -115,7 +77,7 @@
                 else
                 {
                     <MudButton Variant="Variant.Filled" FullWidth="true" Disabled="@(!canswap || swapping)" Color="Color.Primary" OnClick="@DoSwap" class="rounded-pill">
-                        <MudIcon Icon="@Icons.Filled.SwapCalls" Title="Swap" />                      
+                 
                         @if (swapping)
                         {
                             <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
@@ -123,44 +85,67 @@
                         }
                         else
                         {
+                            <MudIcon Icon="@Icons.Filled.SwapCalls" Title="Swap" /> 
                             <MudText>Swap</MudText>
                         }
                     </MudButton>
                 }
+            </div>
 
-
-            </td>
-        </tr>
+        @if (haspoolinfo && canswap)
+        {
+            
+        <div style="font-size: smaller;">
+            <div class="ipt">
+                <div>Estimated Price</div>
+                <div>@calprice</div>
+            </div>
+            <div class="ipt">
+                <div>You will sell</div>
+                <div>@calsell</div>
+            </div>
+            <div class="ipt">
+                <div>You will get</div>
+                <div>@calget</div>
+            </div>
+            <div class="ipt">
+                <div>Price Impact</div>
+                <div>@calimpact</div>
+            </div>
+            <div class="ipt">
+                <div>Pool Fee</div>
+                <div>@calprofee</div>
+            </div>
+            <div class="ipt">
+                <div>Network Fee</div>
+                <div>@calnodfee</div>
+            </div>
+        </div>
+        }
 
         @if (haspoolinfo)
         {
-            <tr style="height: 10px">
-                <td colspan="2"></td>
-            </tr>
-            <tr>
-                <td>Token Pair</td>
-                <td>@pairinfo</td>
-            </tr>
-            <tr>
-                <td>Total Liquidate</td>
-                <td>@pairliquid</td>
-            </tr>
+            <div class="ipt">
+                <div>Token Pair</div>
+                <div>@pairinfo</div>
+            </div>
+            <div class="iptct">
+                <div>Total Liquidate</div>
+                <div>@pairliquid</div>
+            </div>
 
-            <tr>
-                <td>Your Share</td>
-                <td>@pairshare</td>
-            </tr>
+            <div class="ipt">
+                <div>Your Share</div>
+                <div>@pairshare</div>
+            </div>
         }
         else
         {
-            <tr>
-                <td colspan="2" style="align-content:center;">Please select a token pair.</td>
-            </tr>
+            <div>
+                <div style="align-content:center;">Please select a token pair.</div>
+            </div>
 
         }
-
-
-    </table>
 
 </div>
 
@@ -244,7 +229,7 @@
 
     RenderFragment pairinfo, pairliquid, pairshare;
     bool haspoolinfo = false;
-    bool dispswap, canswap;
+    bool canswap;
     bool swapping;
 
     RenderFragment calprice, calsell, calget, calimpact, calprofee, calnodfee;
@@ -328,7 +313,6 @@
             _amount2 = swapcal.MinimumReceived;
             amount2 = swapcal.MinimumReceived;
 
-            dispswap = amount1 > 0;
             canswap = amount1 > 0 && amount1 <= balance1
             && selectedTicker1 != null && selectedTicker2 != null
                 && selectedTicker1 != selectedTicker2;
@@ -351,7 +335,6 @@
             _amount1 = swapcal.MinimumReceived;
             amount1 = swapcal.MinimumReceived;
 
-            dispswap = amount2 > 0;
             canswap = amount2 > 0 && amount2 < balance2
                 && selectedTicker1 != null && selectedTicker2 != null
                 && selectedTicker1 != selectedTicker2;
@@ -365,7 +348,7 @@
     }
     private void updateBtn(decimal a)
     {
-        if (selectedTicker1 != null && dispswap && amount1 > 0 && token0 != null)
+        if (selectedTicker1 != null && canswap && amount1 > 0 && token0 != null)
         {
             var fromticker = selectedTicker1;
             var swapcal = new SwapCalculator(token0, token1, poollatest,
@@ -559,7 +542,7 @@
                 var line1 = $"{platest.Balances[token0].ToBalanceDecimal()} {GN(token0)}";
                 var line2 = $"{platest.Balances[token1].ToBalanceDecimal()} {GN(token1)}";
                 pairliquid =
-    @<div>
+    @<div style="text-align:end">
         <div>@line1</div>
         <div>@line2</div>
     </div>
