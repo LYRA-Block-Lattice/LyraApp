@@ -37,7 +37,7 @@
         </div>
     </div>
     <div class="ipt">
-        <div>@value1</div>
+        <div title="Estimated total value. Only for reference.">@value1</div>
         <div>Balance: @($"{balance1:N8}")</div>
     </div>
     <div>
@@ -62,7 +62,7 @@
         </div>
     </div>
     <div class="ipt">
-        <div>@value2</div>
+        <div title="Estimated total value. Only for reference.">@value2</div>
         <div>Balance: @($"{balance2:N8}")</div>
     </div>
 
@@ -94,12 +94,20 @@
         }
     </div>
 
+    <div style="font-size: smaller;">
+            <div class="ipt" title="Price queried from CoinGecko. Only for reference.">
+                <div>LYR external price</div>
+                <div>$ @lyrprice</div>
+            </div>
+            <div class="ipt" title="Price calculated from liquidate pool. Only for reference.">
+                <div>LYR internal price</div>
+                <div>$ @lyrintprice</div>
+            </div>
     @if (haspoolinfo && canswap)
     {
 
-        <div style="font-size: smaller;">
             <div class="ipt">
-                <div>Estimated Price</div>
+                <div>Estimated ratio</div>
                 <div>@calprice</div>
             </div>
             <div class="ipt">
@@ -122,7 +130,7 @@
                 <div>Network Fee</div>
                 <div>@calnodfee</div>
             </div>
-        </div>
+        
     }
 
     @if (haspoolinfo)
@@ -148,6 +156,8 @@
         </div>
 
     }
+
+    </div>
 
 </div>
 
@@ -203,7 +213,7 @@
         }
     }
 
-    decimal lyrprice, trxprice;
+    decimal lyrprice, trxprice, lyrintprice;   // int price: internal price calculated by pool
     decimal balance1, balance2;
     TokenSelect sel1, sel2;
     List<Ticker> tickers;
@@ -247,6 +257,7 @@
 
     protected override void OnInitialized()
     {
+        PeriodicExecutor.StartExecuting();
         Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Swap" });
         PeriodicExecutor.JobExecuted += HandleJobExecuted;
         base.OnInitialized();
@@ -260,13 +271,22 @@
     void HandleJobExecuted(object sender, JobExecutedEventArgs e)
     {
         // price updated
-        trxprice = GetPrice("tether/TRX", e.prices);
-        lyrprice = GetPrice("LYR", e.prices);
+        trxprice = e.prices["tron"];
+        lyrprice = e.prices["lyra"];
+        lyrintprice = e.prices["LYR"];
 
         // update pool
         var t = Task.Run(async () =>
         {
-            await UpdatePool();
+            await InvokeAsync(() => StateHasChanged());
+            try
+            {
+                await UpdatePool();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"In HandleTimer: {ex}");
+            }            
         });
         Task.WaitAll(t);
     }
@@ -340,19 +360,6 @@
     @<div>~$ @val2str</div>
     ;
             }
-        }
-    }
-
-    private decimal GetPrice(string tickerDbname, Dictionary<string, decimal> prices)
-    {
-        switch (tickerDbname)
-        {
-            case LyraGlobal.OFFICIALTICKERCODE:
-                return prices[LyraGlobal.OFFICIALTICKERCODE];
-            case "tether/TRX":
-                return prices["tron"];
-            default:
-                return 0;
         }
     }
 
@@ -515,6 +522,8 @@
 
     private async Task UpdatePool()
     {
+        InvokeAsync(() => StateHasChanged());
+
         if (!busy && selectedTicker1 != null && selectedTicker2 != null && selectedTicker1 != selectedTicker2)
         {
             busy = true;
@@ -545,16 +554,14 @@
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine($"In UpdatePool: {ex}");
             }
             finally
             {
                 busy = false;
                 await InvokeAsync(() => StateHasChanged());
             }
-        }
-        else
-            haspoolinfo = false;
+        }    
     }
 
     private void UpdateBalance()

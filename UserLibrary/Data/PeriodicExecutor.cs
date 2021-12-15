@@ -71,7 +71,7 @@ namespace UserLibrary.Data
                     var poollatest = existspool.GetBlock() as TransactionBlock;
                     var swapcal = new SwapCalculator(existspool.Token0, existspool.Token1, poollatest,
                             LyraGlobal.OFFICIALTICKERCODE, 1, 0);
-                    myprice.Add(LyraGlobal.OFFICIALTICKERCODE, swapcal.MinimumReceived * myprice["tron"]);
+                    myprice.Add(LyraGlobal.OFFICIALTICKERCODE, Math.Round(swapcal.MinimumReceived * myprice["tron"], 8));
                 }
 
                 // Notify any subscribers to the event
@@ -79,7 +79,7 @@ namespace UserLibrary.Data
             }
             catch(Exception ex)
             {
-
+                Console.WriteLine($"In HandleTimer: {ex}");
             }
             finally
             {
