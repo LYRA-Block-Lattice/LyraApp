@@ -74,8 +74,26 @@
                             </MudCardContent>
                         </MudCard>
                     }
-
+                }
+                else
+                {
                     <MudCard Style="width: 200px;" Elevation="8">
+                            <MudCardHeader>
+                                <CardHeaderContent>
+                                    <h4>LYR</h4>
+                                </CardHeaderContent>
+                                <CardHeaderActions>
+                                    <MudButton Variant="Variant.Filled" Disabled="@(true)" Color="Color.Primary"
+                                   OnClick="@(async ()=>{ await SendX("LYR"); })">Send</MudButton>
+                                </CardHeaderActions>
+                            </MudCardHeader>
+                            <MudCardContent>
+                                <div>0.00</div>
+                            </MudCardContent>
+                        </MudCard>
+                }
+
+                <MudCard Style="width: 200px;" Elevation="8">
                         <MudCardHeader>
                             <CardHeaderContent>
                                 <h4>Your New Token</h4>
@@ -92,8 +110,6 @@
                             </div>
                         </MudCardContent>
                     </MudCard>
-                }
-
             </div>
 
         </MudTabPanel>
