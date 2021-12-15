@@ -1,7 +1,8 @@
 ﻿@namespace UserLibrary.Components
 @using UserLibrary.Data
 
-<MudSelect T="string" Placeholder="Choose Token" @ref="@sel" Style="margin: 0px; font-size: 24px;"
+<MudSelect T="string" Placeholder="Choose Token" @ref="@sel" DisableUnderLine
+    Style="margin: 0px; font-size: 24px; min-width: 140px;"
     ValueChanged="@(async (a) => await SetValue(a))">
        
 @if(Tokens != null)

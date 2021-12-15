@@ -12,6 +12,8 @@
 @using UserLibrary.Data
 @inject IConfiguration _config
 @inject ILyraAPI lyraClient
+@inject PeriodicExecutor PeriodicExecutor
+@implements IDisposable
 
 @if (busy)
 {
@@ -19,82 +21,82 @@
 }
 
 <div class="swc">
-        <div class="ipt">
-            <div>
-                <div class="round">
-                    <MudNumericField T="decimal" Label="From" HideSpinButtons="true"                     
-                    Style="font-size: 24px; " 
+    <div class="ipt">
+        <div>
+            <div class="round">
+                <MudNumericField T="decimal" Label="From" HideSpinButtons="true"
+                                 Style="font-size: 24px; " DisableUnderLine
                                  @bind-Value="@amount1" />
-                </div>
-            </div>
-            <div class="algb">
-                <div class="round">
-                    <TokenSelect Tokens="@tickers" @ref="@sel1" ValueChanged="@(a => Ticker1 = a)" />
-                        
-                </div>
             </div>
         </div>
-        <div class="ipt">
-            <div>~$ 0.03332</div>
-            <div>Balance: @($"{balance1:N8}")</div>
+        <div class="algb">
+            <div class="round">
+                <TokenSelect Tokens="@tickers" @ref="@sel1" ValueChanged="@(a => Ticker1 = a)" />
+
+            </div>
+        </div>
+    </div>
+    <div class="ipt">
+        <div>@value1</div>
+        <div>Balance: @($"{balance1:N8}")</div>
+    </div>
+    <div>
+        <div align="center">
+            <MudIconButton Icon="@Icons.Filled.ArrowDownward" Color="Color.Secondary"
+                           OnClick="@DoSwapTicker"
+                           aria-label="add to favorite"></MudIconButton>
+        </div>
+    </div>
+
+    <div class="ipt">
+        <div>
+            <div class="round">
+                <MudNumericField T="decimal" Label="To" HideSpinButtons="true" Style="font-size: 24px;"
+                      DisableUnderLine           @bind-Value="@amount2" />
+            </div>
         </div>
         <div>
-            <div align="center">
-                <MudIconButton Icon="@Icons.Filled.ArrowDownward" Color="Color.Secondary" 
-                    OnClick="@DoSwapTicker"
-                    aria-label="add to favorite"></MudIconButton>
+            <div class="round">
+                <TokenSelect Tokens="@tickers" @ref="@sel2" ValueChanged="@(a => Ticker2 = a)" />
             </div>
         </div>
+    </div>
+    <div class="ipt">
+        <div>@value2</div>
+        <div>Balance: @($"{balance2:N8}")</div>
+    </div>
 
-        <div class="ipt">
-            <div>
-                <div class="round">
-                    <MudNumericField T="decimal" Label="To" HideSpinButtons="true" Style="font-size: 24px;"
-                                 @bind-Value="@amount2" />
-                </div>
-            </div>
-            <div>
-                <div class="round">
-                    <TokenSelect Tokens="@tickers" @ref="@sel2" ValueChanged="@(a => Ticker2 = a)" />
-                </div>
-            </div>
-        </div>
-        <div class="ipt">
-            <div>~$ 0.03332</div>
-            <div>Balance: @($"{balance2:N8}")</div>
-        </div>
+    <div style="padding: 30px">
+        @if (walletState.Value.wallet == null)
+        {
+            <a href="/wallet">
+                <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
+                    <MudIcon Icon="@Icons.Filled.LockOpen" Title="Unlock" />
+                    Open Wallet
+                </MudButton>
+            </a>
+        }
+        else
+        {
+            <MudButton Variant="Variant.Filled" FullWidth="true" Disabled="@(!canswap || swapping)" Color="Color.Primary" OnClick="@DoSwap" class="rounded-pill">
 
-            <div style="padding: 30px">
-                @if (walletState.Value.wallet == null)
+                @if (swapping)
                 {
-                    <a href="/wallet">
-                    <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
-                        <MudIcon Icon="@Icons.Filled.LockOpen" Title="Unlock" />
-                        Open Wallet
-                    </MudButton>
-                    </a>
+                    <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Processing</MudText>
                 }
                 else
                 {
-                    <MudButton Variant="Variant.Filled" FullWidth="true" Disabled="@(!canswap || swapping)" Color="Color.Primary" OnClick="@DoSwap" class="rounded-pill">
-                 
-                        @if (swapping)
-                        {
-                            <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                            <MudText Class="ms-2">Processing</MudText>
-                        }
-                        else
-                        {
-                            <MudIcon Icon="@Icons.Filled.SwapCalls" Title="Swap" /> 
-                            <MudText>Swap</MudText>
-                        }
-                    </MudButton>
+                    <MudIcon Icon="@Icons.Filled.SwapCalls" Title="Swap" />
+                    <MudText>Swap</MudText>
                 }
-            </div>
+            </MudButton>
+        }
+    </div>
 
-        @if (haspoolinfo && canswap)
-        {
-            
+    @if (haspoolinfo && canswap)
+    {
+
         <div style="font-size: smaller;">
             <div class="ipt">
                 <div>Estimated Price</div>
@@ -121,31 +123,31 @@
                 <div>@calnodfee</div>
             </div>
         </div>
-        }
+    }
 
-        @if (haspoolinfo)
-        {
-            <div class="ipt">
-                <div>Token Pair</div>
-                <div>@pairinfo</div>
-            </div>
-            <div class="iptct">
-                <div>Total Liquidate</div>
-                <div>@pairliquid</div>
-            </div>
+    @if (haspoolinfo)
+    {
+        <div class="ipt">
+            <div>Token Pair</div>
+            <div>@pairinfo</div>
+        </div>
+        <div class="iptct">
+            <div>Total Liquidate</div>
+            <div>@pairliquid</div>
+        </div>
 
-            <div class="ipt">
-                <div>Your Share</div>
-                <div>@pairshare</div>
-            </div>
-        }
-        else
-        {
-            <div>
-                <div style="align-content:center;">Please select a token pair.</div>
-            </div>
+        <div class="ipt">
+            <div>Your Share</div>
+            <div>@pairshare</div>
+        </div>
+    }
+    else
+    {
+        <div>
+            <div style="align-content:center;">Please select a token pair.</div>
+        </div>
 
-        }
+    }
 
 </div>
 
@@ -160,6 +162,8 @@
     double intervalBeforeMsgClose = 2000;
 
     bool busy;
+
+    RenderFragment value1, value2;
 
     private decimal _amount1;
     public decimal amount1
@@ -199,6 +203,7 @@
         }
     }
 
+    decimal lyrprice, trxprice;
     decimal balance1, balance2;
     TokenSelect sel1, sel2;
     List<Ticker> tickers;
@@ -243,8 +248,112 @@
     protected override void OnInitialized()
     {
         Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Swap" });
-
+        PeriodicExecutor.JobExecuted += HandleJobExecuted;
         base.OnInitialized();
+    }
+
+    public void Dispose()
+    {
+        PeriodicExecutor.JobExecuted -= HandleJobExecuted;
+    }
+
+    void HandleJobExecuted(object sender, JobExecutedEventArgs e)
+    {
+        // price updated
+        trxprice = GetPrice("tether/TRX", e.prices);
+        lyrprice = GetPrice("LYR", e.prices);
+
+        // update pool
+        var t = Task.Run(async () =>
+        {
+            await UpdatePool();
+        });
+        Task.WaitAll(t);
+    }
+
+    private void UpdateValue()
+    {
+        if (Ticker1 == null)
+        {
+            value1 =
+    @<div></div>
+    ;
+        }
+        else
+        {
+            decimal val1 = 0;
+            if (Ticker1.dbname == "LYR")
+                val1 = lyrprice;
+            else if (Ticker1.dbname == "tether/TRX")
+                val1 = trxprice;
+            else if (price > 0)
+            {
+                // then ticker2 is LYR. price is x tik1 to 1 tik2
+                val1 = lyrprice / price;
+            }
+
+            if (val1 == 0)
+            {
+                value1 =
+    @<div></div>
+    ;
+            }
+            else
+            {
+                var val1str = $"{Math.Round(val1 * amount1, 2)}";
+                value1 =
+    @<div>~$ @val1str</div>
+    ;
+            }
+
+        }
+
+        if (Ticker2 == null)
+        {
+            value2 =
+    @<div></div>
+    ;
+        }
+        else
+        {
+            decimal val2 = 0;
+            if (Ticker2.dbname == "LYR")
+                val2 = lyrprice;
+            else if (Ticker2.dbname == "tether/TRX")
+                val2 = trxprice;
+            else if (price > 0)
+            {
+                // then ticker1 is LYR. price is x tik1 to 1 tik2
+                val2 = lyrprice * price;
+            }
+
+            if (val2 == 0)
+            {
+                value2 =
+    @<div></div>
+    ;
+            }
+            else
+            {
+                var val2str = $"{Math.Round(val2 * amount2, 2)}";
+                value2 =
+    @<div>~$ @val2str</div>
+    ;
+            }
+        }
+    }
+
+    private decimal GetPrice(string tickerDbname, Dictionary<string, decimal> prices)
+    {
+        switch (tickerDbname)
+        {
+            case LyraGlobal.OFFICIALTICKERCODE:
+                return prices[LyraGlobal.OFFICIALTICKERCODE];
+            case "tether/TRX":
+                return prices["tron"];
+            default:
+                return 0;
+        }
     }
 
     private void DoSwapTicker()
@@ -281,7 +390,7 @@
             if (existspool.Successful())
             {
                 Snackbar.Add("Updated.", Severity.Success);
-            
+
                 poollatest = existspool.GetBlock() as TransactionBlock;
                 token0 = existspool.Token0;
                 token1 = existspool.Token1;
@@ -384,6 +493,8 @@
     @<div>@feep</div>
     ;
         }
+
+        ChangePool();
     }
 
     private void OnSelectedItemChangedHandler1()
@@ -399,51 +510,51 @@
 
     private void ChangePool()
     {
-        if (selectedTicker1 != null && selectedTicker2 != null && selectedTicker1 != selectedTicker2)
+        _ = Task.Run(async () => { await UpdatePool(); });
+    }
+
+    private async Task UpdatePool()
+    {
+        if (!busy && selectedTicker1 != null && selectedTicker2 != null && selectedTicker1 != selectedTicker2)
         {
             busy = true;
-            _ = Task.Run(async () =>
+
+            var lc = LyraRestClient.Create(_config["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
+
+            try
             {
-                var lc = LyraRestClient.Create(_config["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
-
-                try
+                var existspool = await lc.GetPoolAsync(selectedTicker1.dbname, selectedTicker2.dbname);
+                if (existspool.Successful())
                 {
-                    var existspool = await lc.GetPoolAsync(selectedTicker1.dbname, selectedTicker2.dbname);
-                    if (existspool.Successful())
-                    {
-                        poollatest = existspool.GetBlock() as TransactionBlock;
-                        token0 = existspool.Token0;
-                        token1 = existspool.Token1;
-                    }
-                    else
-                    {
-                        poollatest = null;
-                        token0 = null;
-                        token1 = null;
-                    }
-
-                    CreatePoolInfo(poollatest);
-
-                    updateBtn1(amount1);
-                    UpdateBalance();
-
+                    poollatest = existspool.GetBlock() as TransactionBlock;
+                    token0 = existspool.Token0;
+                    token1 = existspool.Token1;
                 }
-                catch (Exception ex)
+                else
                 {
-
-                }
-                finally
-                {
-                    busy = false;
-                    await InvokeAsync(() => StateHasChanged());
-
+                    poollatest = null;
+                    token0 = null;
+                    token1 = null;
                 }
 
-            });
+                CreatePoolInfo(poollatest);
+
+                updateBtn1(amount1);
+                UpdateBalance();
+                UpdateValue();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                busy = false;
+                await InvokeAsync(() => StateHasChanged());
+            }
         }
         else
             haspoolinfo = false;
-
     }
 
     private void UpdateBalance()
@@ -497,10 +608,7 @@
             .ToList();
         tickers.Insert(0, new Ticker { dbname = "LYR", Name = "LYR" });
 
-        ICoinGeckoClient _client = CoinGeckoClient.Instance;
-        const string vsCurrencies = "usd";
-        var prices = await _client.SimpleClient.GetSimplePrice(new[] { "lyra" }, new[] { vsCurrencies });
-        lyraprice = (decimal)prices["lyra"]["usd"];
+
         busy = false;
     }
 
@@ -516,9 +624,9 @@
                     await walletState.Value.wallet.SyncAsync(null);
                 await OpenSwapUI();
 
-                Snackbar.Add($"Swap App is ready. ", Severity.Success);                
+                Snackbar.Add($"Swap App is ready. ", Severity.Success);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Snackbar.Add($"Init refresh failed: {ex.Message}", Severity.Error);
             }

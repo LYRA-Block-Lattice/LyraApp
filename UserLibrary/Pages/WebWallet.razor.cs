@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace UserLibrary.Pages
 {
-    public partial class WebWallet
+    public partial class WebWallet : IDisposable
     {
         [Inject]
         private IState<WebWalletState> walletState { get; set; }
