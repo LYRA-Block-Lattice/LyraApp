@@ -618,10 +618,12 @@
         busy = false;
     }
 
+    bool init;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (firstRender && !init)
         {
+            init = true;
             Snackbar.Add($"Initialize Swap App... ", Severity.Info);
 
             try
@@ -638,6 +640,7 @@
             }
 
             StateHasChanged();
+            init = false;
         }
     }
 
