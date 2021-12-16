@@ -35,9 +35,21 @@
                 <p style="color: red">Please save private key properly if you want to open this wallet again.</p>
             </div>
             <MudDivider />
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async() => await Transactions())">
-                Transactions
+
+            <MudButton Variant="Variant.Filled" Disabled="@(fetching)" Color="Color.Primary" 
+                OnClick="@(async() => await Transactions())" class="rounded-pill">
+
+                @if (fetching)
+                {
+                    <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Processing</MudText>
+                }
+                else
+                {
+                    <MudText>Show Last 10 Transactions</MudText>
+                }
             </MudButton>
+
             @if (txs != null)
             {
                 <pre>
@@ -74,6 +86,7 @@
 
     string voteAddr, altDisplay;
     string bexpurl;
+    bool fetching;
     List<string> txs;
 
     protected override void OnInitialized()
@@ -104,6 +117,8 @@
 
     private async Task Transactions()
     {
+        fetching = true;
+        StateHasChanged();
         try
         {
             var client = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
@@ -150,13 +165,14 @@
                     }
                 }
             }
-            txs.Reverse();
-            StateHasChanged();
+            txs.Reverse();            
         }
         catch (Exception ex)
         {
             Console.WriteLine($"In Transactions: {ex}");
         }
+        fetching = false;
+        StateHasChanged();
     }
 
     private string BalanceDifference(Dictionary<string, long> oldBalance, Dictionary<string, long> newBalance)
