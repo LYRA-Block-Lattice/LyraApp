@@ -276,7 +276,7 @@
         lyrintprice = e.prices["LYR"];
 
         // update pool
-        var t = Task.Run(async () =>
+        _ = Task.Run(async () =>
         {
             await InvokeAsync(() => StateHasChanged());
             try
@@ -288,7 +288,6 @@
                 Console.WriteLine($"In HandleTimer: {ex}");
             }            
         });
-        Task.WaitAll(t);
     }
 
     private void UpdateValue()

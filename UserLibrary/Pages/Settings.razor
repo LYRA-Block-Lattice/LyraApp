@@ -8,56 +8,56 @@
 @inject IConfiguration Configuration
 
 <div class="mag">
-@if(walletState.Value.wallet == null)
-{
-    <a href="/wallet">
-        <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
-            <MudIcon Icon="@Icons.Filled.LockOpen" />
-            Open Wallet
-        </MudButton>
-    </a>
-}
-else
-{
-    <div>
-    <h3>Scan to Pay Me</h3>
-    <p><QRCodeWriter Text="@walletState.Value.wallet.AccountId" Width="300" Heigth="300"></QRCodeWriter></p>
-    <MudDivider />
-    <p><span title="Click to toggle to display" @onclick="ToggleKey">Your wallet's private key is (click to unhide/hide): </span><span>@altDisplay</span></p>
-    <p>Your wallet's address is: <a target="_blank" href="@bexpurl/showblock/@walletState.Value.wallet.AccountId">@walletState.Value.wallet.AccountId</a></p>
-    <p>Your wallet's balance is: @walletState.Value.balanceString</p>
-    <p>Your are now voting for: @walletState.Value.wallet.VoteFor</p>
-
-    <p>
-        <MudTextField T="string" Label="Vote For Address" @bind-Value="@voteAddr" />
-    </p>
-    <div>
-        <p style="color: red">Please save private key properly if you want to open this wallet again.</p>
-    </div>
-    <MudDivider />
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="Transactions">
-        Transactions
-    </MudButton>
-    @if (walletState.Value.txs != null)
+    @if (walletState.Value.wallet == null)
     {
-        <pre>
-            @foreach (var tx in walletState.Value.txs)
-            {
-                @tx <br />
-
-            }
-                                    </pre>
+        <a href="/wallet">
+            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
+                <MudIcon Icon="@Icons.Filled.LockOpen" />
+                Open Wallet
+            </MudButton>
+        </a>
     }
-    &nbsp;<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SaveSettings">Save</MudButton>
-    &nbsp;<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="CloseWallet">Close Wallet</MudButton>
-</div>
-}
+    else
+    {
+        <div>
+            <h3>Scan to Pay Me</h3>
+            <p><QRCodeWriter Text="@walletState.Value.wallet.AccountId" Width="300" Heigth="300"></QRCodeWriter></p>
+            <MudDivider />
+            <p><span title="Click to toggle to display" @onclick="ToggleKey">Your wallet's private key is (click to unhide/hide): </span><span>@altDisplay</span></p>
+            <p>Your wallet's address is: <a target="_blank" href="@bexpurl/showblock/@walletState.Value.wallet.AccountId">@walletState.Value.wallet.AccountId</a></p>
+            <p>Your wallet's balance is: @walletState.Value.balanceString</p>
+            <p>Your are now voting for: @walletState.Value.wallet.VoteFor</p>
 
-<MudDivider Style="margin: 30px" />
-<div style="font-size: xx-small">
-    Main Program Version: @(Assembly.GetEntryAssembly().GetName().Version)<br />
-    User Library Version: @(typeof(UserLibrary.Data.WalletView).Assembly.GetName().Version)
-</div>
+            <p>
+                <MudTextField T="string" Label="Vote For Address" @bind-Value="@voteAddr" />
+            </p>
+            <div>
+                <p style="color: red">Please save private key properly if you want to open this wallet again.</p>
+            </div>
+            <MudDivider />
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async() => await Transactions())">
+                Transactions
+            </MudButton>
+            @if (txs != null)
+            {
+                <pre>
+                    @foreach (var tx in txs)
+                    {
+                        @tx <br />
+
+                    }
+                        </pre>
+            }
+            &nbsp;<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SaveSettings">Save</MudButton>
+            &nbsp;<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="CloseWallet">Close Wallet</MudButton>
+        </div>
+    }
+
+    <MudDivider Style="margin: 30px" />
+    <div style="font-size: xx-small">
+        Main Program Version: @(Assembly.GetEntryAssembly().GetName().Version)<br />
+        User Library Version: @(typeof(UserLibrary.Data.WalletView).Assembly.GetName().Version)
+    </div>
 </div>
 @code {
     [Inject]
@@ -74,6 +74,7 @@ else
 
     string voteAddr, altDisplay;
     string bexpurl;
+    List<string> txs;
 
     protected override void OnInitialized()
     {
@@ -89,10 +90,7 @@ else
         else
             altDisplay = "************";
     }
-    private void Transactions(MouseEventArgs e)
-    {
-        Dispatcher.Dispatch(new WebWalletTransactionsAction { wallet = walletState.Value.wallet });
-    }
+
     private void CloseWallet(MouseEventArgs e)
     {
         Dispatcher.Dispatch(new WebWalletCloseAction());
@@ -102,5 +100,74 @@ else
     private void SaveSettings(MouseEventArgs e)
     {
         Dispatcher.Dispatch(new WebWalletSaveSettingsAction { VoteFor = voteAddr });
+    }
+
+    private async Task Transactions()
+    {
+        try
+        {
+            var client = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
+
+            var result = await walletState.Value.wallet.SyncAsync(client);
+            txs = new List<string>();
+            if (result == Lyra.Core.Blocks.APIResultCodes.Success)
+            {
+                var accHeight = await client.GetAccountHeightAsync(walletState.Value.wallet.AccountId);
+                Dictionary<string, long> oldBalance = null;
+                var start = accHeight.Height - 10;
+                if (start < 1)
+                    start = 1;          // only show the last 100 tx
+                for (long i = start; i <= accHeight.Height; i++)
+                {
+                    var blockResult = await client.GetBlockByIndexAsync(walletState.Value.wallet.AccountId, i);
+                    var block = blockResult.GetBlock() as TransactionBlock;
+                    if (block == null)
+                        txs.Add("Null");
+                    else
+                    {
+                        var str = $"No. {block.Height} {block.TimeStamp}, ";
+                        if (block is SendTransferBlock sb)
+                            str += $"Send to {sb.DestinationAccountId}";
+                        else if (block is ReceiveTransferBlock rb)
+                        {
+                            if (rb.SourceHash == null)
+                            {
+                                str += $"Genesis";
+                            }
+                            else
+                            {
+                                var srcBlockResult = await client.GetBlockAsync(rb.SourceHash);
+                                var srcBlock = srcBlockResult.GetBlock() as TransactionBlock;
+                                str += $"Receive from {srcBlock.AccountID}";
+                            }
+                        }
+                        str += BalanceDifference(oldBalance, block.Balances);
+                        str += $" Balance: {string.Join(", ", block.Balances.Select(m => $"{m.Key}: {m.Value.ToBalanceDecimal()}"))}";
+
+                        txs.Add(str);
+
+                        oldBalance = block.Balances;
+                    }
+                }
+            }
+            txs.Reverse();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"In Transactions: {ex}");
+        }
+    }
+
+    private string BalanceDifference(Dictionary<string, long> oldBalance, Dictionary<string, long> newBalance)
+    {
+        if (oldBalance == null)
+        {
+            return " Amount: " + string.Join(", ", newBalance.Select(m => $"{m.Key} {m.Value.ToBalanceDecimal()}"));
+        }
+        else
+        {
+            return " Amount: " + string.Join(", ", newBalance.Select(m => $"{m.Key} {(decimal)(m.Value - (oldBalance.ContainsKey(m.Key) ? oldBalance[m.Key] : 0)) / LyraGlobal.TOKENSTORAGERITO}"));
+        }
     }
 }
