@@ -1,6 +1,6 @@
 ﻿.rndcc {
 	border-radius: 16px;
-	background: #f7f7f7;
+	background: #ffffff;
 	padding: 12px;
 }
 
@@ -26,13 +26,17 @@
 	display: flex;
 	flex-flow: row nowrap;
 	-webkit-box-align: center;
-	align-items: flex-end;
+	align-items:center;
 	-webkit-box-pack: justify;
 	justify-content: space-between;
 }
 
 .algb {
+	border-radius: 12px;
+	padding-left: 12px;
 	vertical-align: bottom;
+	margin-left: 12px;
+	background: #F0F0F0;
 }
 
 .iptct {
@@ -46,12 +50,11 @@
 
 .swc {
 	display: flex;
-	padding: 3px;
-	background: #FFFFFF;
+	padding: 8px;
+	background: #f7f7f7;
 	display: inline-block;
 	margin: 0 auto;
 	border-radius: 15px;
-	padding: 5px;
 	font-size: 14px;
 	max-width: 480px;
 }
@@ -61,6 +64,10 @@
 	border-collapse: separate;
 	background: #FFFFFF;
 	border: 0px;
+}
+
+.infop {
+	padding: 20px;
 }
 
 .round {

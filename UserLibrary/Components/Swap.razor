@@ -20,22 +20,27 @@
     <div style="z-index: 5;" class="spinner"></div>
 }
 
-<div class="swc">
+<div class="swc mud-elevation-2">
     <div class="rndcc mud-elevation-2">
         <div class="ipt">
             <div>
-                <MudNumericField T="decimal" Label="From" HideSpinButtons="true"
-                                 Style="font-size: 24px; " DisableUnderLine
+                <MudNumericField T="decimal" HideSpinButtons="true"
+                                 Style="font-size: 28px; margin-top: 0px; font-weight: 500;" DisableUnderLine
                                  @bind-Value="@amount1" />
             </div>
             <div class="algb">
-                <TokenSelect Tokens="@tickers" @ref="@sel1" ValueChanged="@(a => Ticker1 = a)" />
+                <TokenSelect Tokens="@tickers" @ref="@sel1" ValueChanged="@(async(a) => await UpdateTicker1(a))" />
 
             </div>
         </div>
         <div class="ipt">
             <div title="Estimated total value. Only for reference.">@value1</div>
-            <div>Balance: @($"{balance1:N8}")</div>
+                @if(balance1 > 0)
+                {
+                    <div>
+                    Balance: @($"{balance1:N4}")
+                    </div>
+                }    
         </div>
     </div>
     <div>
@@ -49,16 +54,22 @@
     <div class="rndcc mud-elevation-2">
         <div class="ipt">
             <div>
-                <MudNumericField T="decimal" Label="To" HideSpinButtons="true" Style="font-size: 24px;"
+                <MudNumericField T="decimal" HideSpinButtons="true" 
+                    Style="font-size: 28px; margin-top: 0px; font-weight: 500;"
                                  DisableUnderLine @bind-Value="@amount2" />
             </div>
-            <div>
-                <TokenSelect Tokens="@tickers" @ref="@sel2" ValueChanged="@(a => Ticker2 = a)" />
+            <div class="algb">
+                <TokenSelect Tokens="@tickers" @ref="@sel2" ValueChanged="@(async(a) => await UpdateTicker2(a))" />
             </div>
         </div>
         <div class="ipt">
             <div title="Estimated total value. Only for reference.">@value2</div>
-            <div>Balance: @($"{balance2:N8}")</div>
+                @if(balance2 > 0)
+                {
+                    <div>
+                    Balance: @($"{balance2:N4}")
+                    </div>
+                }                
         </div>
     </div>
     <div style="padding: 30px">
@@ -89,7 +100,7 @@
         }
     </div>
 
-    <div style="font-size: smaller;">
+    <div style="font-size: smaller; padding: 15px;">
             <div class="ipt" title="Price queried from CoinGecko. Only for reference.">
                 <div>LYR external price</div>
                 <div>$ @lyrprice</div>
@@ -98,42 +109,51 @@
                 <div>LYR internal price</div>
                 <div>$ @lyrintprice</div>
             </div>
-    @if (haspoolinfo && canswap)
-    {
-
-            <div class="ipt">
-                <div>Estimated ratio</div>
-                <div>@calprice</div>
-            </div>
-            <div class="ipt">
-                <div>You will sell</div>
-                <div>@calsell</div>
-            </div>
-            <div class="ipt">
-                <div>You will get</div>
-                <div>@calget</div>
-            </div>
-            <div class="ipt">
-                <div>Price Impact</div>
-                <div>@calimpact</div>
-            </div>
-            <div class="ipt">
-                <div>Pool Fee</div>
-                <div>@calprofee</div>
-            </div>
-            <div class="ipt">
-                <div>Network Fee</div>
-                <div>@calnodfee</div>
-            </div>
-        
-    }
-
+        <MudDivider Class="ma-2" />
     @if (haspoolinfo)
-    {
+    {        
         <div class="ipt">
             <div>Token Pair</div>
             <div>@pairinfo</div>
         </div>
+            @if (poollatest != null && amount1 != 0)
+            {
+                <div class="ipt">
+                    <div>Estimated ratio</div>
+                    <div>@calprice</div>
+                </div>
+                <div class="ipt">
+                    <div>You will sell</div>
+                    <div>@calsell</div>
+                </div>
+                <div class="ipt">
+                    <div>You will get</div>
+                    <div>@calget</div>
+                </div>
+                <div class="ipt">
+                    <div>Price Impact</div>
+                    <div>@calimpact</div>
+                </div>
+                <div class="ipt">
+                    <div>Pool Fee</div>
+                    <div>@calprofee</div>
+                </div>
+                <div class="ipt">
+                    <div>Network Fee</div>
+                    <div>@calnodfee</div>
+                </div>
+            }
+            else
+            {
+                <div class="d-flex justify-center">
+                    <div>Please change swap amount</div>
+                </div>
+            }
+        }
+
+    @if (haspoolinfo)
+    {
+        <MudDivider Class="ma-2" />
         <div class="iptct">
             <div>Total Liquidate</div>
             <div>@pairliquid</div>
@@ -149,7 +169,6 @@
         <div>
             <div style="align-content:center;">Please select a token pair.</div>
         </div>
-
     }
 
     </div>
@@ -215,28 +234,6 @@
     Ticker selectedTicker1;
     Ticker selectedTicker2;
 
-    private Ticker Ticker1
-    {
-        get { return selectedTicker1; }
-        set
-        {
-            selectedTicker1 = value;
-            UpdateBalance();
-            ChangePool();
-        }
-    }
-
-    private Ticker Ticker2
-    {
-        get { return selectedTicker2; }
-        set
-        {
-            selectedTicker2 = value;
-            UpdateBalance();
-            ChangePool();
-        }
-    }
-
     RenderFragment pairinfo, pairliquid, pairshare;
     bool haspoolinfo = false;
     bool canswap;
@@ -263,7 +260,7 @@
         PeriodicExecutor.JobExecuted -= HandleJobExecuted;
     }
 
-    void HandleJobExecuted(object sender, JobExecutedEventArgs e)
+    async void HandleJobExecuted(object sender, JobExecutedEventArgs e)
     {
         // price updated
         trxprice = e.prices["tron"];
@@ -271,23 +268,25 @@
         lyrintprice = e.prices["LYR"];
 
         // update pool
-        _ = Task.Run(async () =>
-        {
-            await InvokeAsync(() => StateHasChanged());
-            try
-            {
-                await UpdatePool();
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine($"In HandleTimer: {ex}");
-            }            
-        });
+        //_ = Task.Run(async () =>
+        await UpdatePool();
+    }
+
+    private async Task UpdateTicker1(Ticker tk1)
+    {
+        selectedTicker1 = tk1;
+        await UpdatePool();
+    }
+
+    private async Task UpdateTicker2(Ticker tk2)
+    {
+        selectedTicker2 = tk2;
+        await UpdatePool();
     }
 
     private void UpdateValue()
     {
-        if (Ticker1 == null)
+        if (selectedTicker1 == null)
         {
             value1 =
     @<div></div>
@@ -296,11 +295,11 @@
         else
         {
             decimal val1 = 0;
-            if (Ticker1.dbname == "LYR")
+            if (selectedTicker1.dbname == "LYR")
                 val1 = lyrprice;
-            else if (Ticker1.dbname == "tether/TRX")
+            else if (selectedTicker1.dbname == "tether/TRX")
                 val1 = trxprice;
-            else if (Ticker1.dbname == "tether/USDT")
+            else if (selectedTicker1.dbname == "tether/USDT")
                 val1 = 1m;
             else if (price > 0)
             {
@@ -324,7 +323,7 @@
 
         }
 
-        if (Ticker2 == null)
+        if (selectedTicker2 == null)
         {
             value2 =
     @<div></div>
@@ -333,11 +332,11 @@
         else
         {
             decimal val2 = 0;
-            if (Ticker2.dbname == "LYR")
+            if (selectedTicker2.dbname == "LYR")
                 val2 = lyrprice;
-            else if (Ticker2.dbname == "tether/TRX")
+            else if (selectedTicker2.dbname == "tether/TRX")
                 val2 = trxprice;
-            else if (Ticker2.dbname == "tether/USDT")
+            else if (selectedTicker2.dbname == "tether/USDT")
                 val2 = 1m;
             else if (price > 0)
             {
@@ -418,7 +417,7 @@
         busy = false;
     }
 
-    private void updateBtn1(decimal? a)
+    private async Task updateBtn1(decimal? a)
     {
         if (selectedTicker1 != null && poollatest != null && amount1 > 0 && token0 != null)
         {
@@ -431,7 +430,7 @@
             && selectedTicker1 != null && selectedTicker2 != null
                 && selectedTicker1 != selectedTicker2;
 
-            updateBtn(amount1);
+            await UpdatePool();
         }
         else
         {
@@ -439,7 +438,7 @@
         }
     }
 
-    private void updateBtn2(decimal? a)
+    private async Task updateBtn2(decimal? a)
     {
         if (selectedTicker2 != null && poollatest != null && amount2 > 0 && token0 != null)
         {
@@ -453,16 +452,16 @@
                 && selectedTicker1 != null && selectedTicker2 != null
                 && selectedTicker1 != selectedTicker2;
 
-            updateBtn(amount2);
+            await UpdatePool();
         }
         else
         {
             canswap = false;
         }
     }
-    private void updateBtn(decimal a)
+    private void updateTradeInfo()
     {
-        if (selectedTicker1 != null && canswap && amount1 > 0 && token0 != null)
+        if (selectedTicker1 != null && amount1 > 0 && token0 != null)
         {
             var fromticker = selectedTicker1;
             var swapcal = new SwapCalculator(token0, token1, poollatest,
@@ -499,36 +498,21 @@
     ;
         }
 
-        ChangePool();
+
     }
 
-    private void OnSelectedItemChangedHandler1()
+    private async Task OnSelectedItemChangedHandler1()
     {
-        UpdateBalance();
-        ChangePool();
+        await UpdatePool();
     }
-    private void OnSelectedItemChangedHandler2()
+    private async Task OnSelectedItemChangedHandler2()
     {
-        UpdateBalance();
-        ChangePool();
-    }
-
-    private void ChangePool()
-    {
-        _ = Task.Run(async () => { 
-            try
-            {
-                await UpdatePool(); 
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine("In UpdatePool: " + ex.Message);
-            }
-        });
+        await UpdatePool();
     }
 
     private async Task UpdatePool()
     {
+        Console.WriteLine("Begin Update Pool");
         await InvokeAsync(() => StateHasChanged());
 
         if (!busy && selectedTicker1 != null && selectedTicker2 != null && selectedTicker1 != selectedTicker2)
@@ -540,7 +524,7 @@
             try
             {
                 var existspool = await lc.GetPoolAsync(selectedTicker1.dbname, selectedTicker2.dbname);
-                if (existspool.Successful())
+                if (existspool.Successful() && existspool.BlockData != null)
                 {
                     poollatest = existspool.GetBlock() as TransactionBlock;
                     token0 = existspool.Token0;
@@ -548,6 +532,7 @@
                 }
                 else
                 {
+                    haspoolinfo = false;
                     poollatest = null;
                     token0 = null;
                     token1 = null;
@@ -555,9 +540,9 @@
 
                 CreatePoolInfo(poollatest);
 
-                updateBtn1(amount1);
                 UpdateBalance();
                 UpdateValue();
+                updateTradeInfo();
             }
             catch (Exception ex)
             {
@@ -569,6 +554,13 @@
                 await InvokeAsync(() => StateHasChanged());
             }
         }    
+        else
+        {
+            haspoolinfo = false;
+            poollatest = null;
+            token0 = null;
+            token1 = null;
+        }
     }
 
     private void UpdateBalance()
@@ -589,7 +581,7 @@
                 else
                     balance2 = 0;
 
-            Dispatcher.Dispatch(new WebWalletRefreshBalanceAction { wallet = walletState.Value.wallet });
+            //Dispatcher.Dispatch(new WebWalletRefreshBalanceAction { wallet = walletState.Value.wallet });
         }
 
         //InvokeAsync(() => StateHasChanged());
