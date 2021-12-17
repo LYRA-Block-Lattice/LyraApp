@@ -21,51 +21,46 @@
 }
 
 <div class="swc">
-    <div class="ipt">
-        <div>
-            <div class="round">
+    <div class="rndcc mud-elevation-2">
+        <div class="ipt">
+            <div>
                 <MudNumericField T="decimal" Label="From" HideSpinButtons="true"
                                  Style="font-size: 24px; " DisableUnderLine
                                  @bind-Value="@amount1" />
             </div>
-        </div>
-        <div class="algb">
-            <div class="round">
+            <div class="algb">
                 <TokenSelect Tokens="@tickers" @ref="@sel1" ValueChanged="@(a => Ticker1 = a)" />
 
             </div>
         </div>
-    </div>
-    <div class="ipt">
-        <div title="Estimated total value. Only for reference.">@value1</div>
-        <div>Balance: @($"{balance1:N8}")</div>
+        <div class="ipt">
+            <div title="Estimated total value. Only for reference.">@value1</div>
+            <div>Balance: @($"{balance1:N8}")</div>
+        </div>
     </div>
     <div>
-        <div align="center">
-            <MudIconButton Icon="@Icons.Filled.ArrowDownward" Color="Color.Secondary"
-                           OnClick="@DoSwapTicker"
-                           aria-label="add to favorite"></MudIconButton>
+        <div class="arrdir">
+            <MudIcon Icon="@Icons.Filled.ArrowDownward" Color="Color.Secondary"
+                Size="Size.Medium"
+                           @onclick="@DoSwapTicker"></MudIcon>
         </div>
     </div>
 
-    <div class="ipt">
-        <div>
-            <div class="round">
+    <div class="rndcc mud-elevation-2">
+        <div class="ipt">
+            <div>
                 <MudNumericField T="decimal" Label="To" HideSpinButtons="true" Style="font-size: 24px;"
-                      DisableUnderLine           @bind-Value="@amount2" />
+                                 DisableUnderLine @bind-Value="@amount2" />
             </div>
-        </div>
-        <div>
-            <div class="round">
+            <div>
                 <TokenSelect Tokens="@tickers" @ref="@sel2" ValueChanged="@(a => Ticker2 = a)" />
             </div>
         </div>
+        <div class="ipt">
+            <div title="Estimated total value. Only for reference.">@value2</div>
+            <div>Balance: @($"{balance2:N8}")</div>
+        </div>
     </div>
-    <div class="ipt">
-        <div title="Estimated total value. Only for reference.">@value2</div>
-        <div>Balance: @($"{balance2:N8}")</div>
-    </div>
-
     <div style="padding: 30px">
         @if (walletState.Value.wallet == null)
         {
@@ -305,6 +300,8 @@
                 val1 = lyrprice;
             else if (Ticker1.dbname == "tether/TRX")
                 val1 = trxprice;
+            else if (Ticker1.dbname == "tether/USDT")
+                val1 = 1m;
             else if (price > 0)
             {
                 // then ticker2 is LYR. price is x tik1 to 1 tik2
@@ -340,6 +337,8 @@
                 val2 = lyrprice;
             else if (Ticker2.dbname == "tether/TRX")
                 val2 = trxprice;
+            else if (Ticker2.dbname == "tether/USDT")
+                val2 = 1m;
             else if (price > 0)
             {
                 // then ticker1 is LYR. price is x tik1 to 1 tik2
@@ -516,12 +515,21 @@
 
     private void ChangePool()
     {
-        _ = Task.Run(async () => { await UpdatePool(); });
+        _ = Task.Run(async () => { 
+            try
+            {
+                await UpdatePool(); 
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("In UpdatePool: " + ex.Message);
+            }
+        });
     }
 
     private async Task UpdatePool()
     {
-        InvokeAsync(() => StateHasChanged());
+        await InvokeAsync(() => StateHasChanged());
 
         if (!busy && selectedTicker1 != null && selectedTicker2 != null && selectedTicker1 != selectedTicker2)
         {
