@@ -26,9 +26,9 @@
             <div>
                 <MudNumericField T="decimal" HideSpinButtons="true"
                                  Style="font-size: 28px; margin-top: 0px; font-weight: 500;" DisableUnderLine
-                                 @bind-Value="@amount1" />
+                                 Value="@amount1" ValueChanged="@(async (a) => await updateDig1(a))" />
             </div>
-            <div class="algb">
+            <div class="algb algb2">
                 <TokenSelect Tokens="@tickers" @ref="@sel1" ValueChanged="@(async(a) => await UpdateTicker1(a))" />
 
             </div>
@@ -56,9 +56,9 @@
             <div>
                 <MudNumericField T="decimal" HideSpinButtons="true" 
                     Style="font-size: 28px; margin-top: 0px; font-weight: 500;"
-                                 DisableUnderLine @bind-Value="@amount2" />
+                                 DisableUnderLine Value="@amount2" ValueChanged="@(async (a) => await updateDig2(a))" />
             </div>
-            <div class="algb">
+            <div class="algb algb2">
                 <TokenSelect Tokens="@tickers" @ref="@sel2" ValueChanged="@(async(a) => await UpdateTicker2(a))" />
             </div>
         </div>
@@ -189,44 +189,6 @@
 
     RenderFragment value1, value2;
 
-    private decimal _amount1;
-    public decimal amount1
-    {
-        get
-        {
-            return _amount1;
-        }
-        set
-        {
-            if (_amount1 != value)
-            {
-                _amount1 = value;
-                updateBtn1(_amount1);
-            }
-            else
-                _amount1 = value;
-        }
-    }
-
-    private decimal _amount2;
-    public decimal amount2
-    {
-        get
-        {
-            return _amount2;
-        }
-        set
-        {
-            if (_amount2 != value)
-            {
-                _amount2 = value;
-                updateBtn2(_amount2);
-            }
-            else
-                _amount2 = value;
-        }
-    }
-
     decimal lyrprice, trxprice, lyrintprice;   // int price: internal price calculated by pool
     decimal balance1, balance2;
     TokenSelect sel1, sel2;
@@ -246,6 +208,19 @@
     decimal price;
     decimal minrecv;
     decimal lyraprice;
+
+    private decimal amount1, amount2;
+
+    async Task updateDig1(decimal digi1)
+    {
+        amount1 = digi1;
+        await UpdatePool(true);
+    }
+    async Task updateDig2(decimal digi2)
+    {
+        amount2 = digi2;
+        await UpdatePool(false);
+    }
 
     protected override void OnInitialized()
     {
@@ -269,19 +244,63 @@
 
         // update pool
         //_ = Task.Run(async () =>
-        await UpdatePool();
+        await UpdatePool(true);
+    }
+
+    private void updateBtn1()
+    {
+        if (selectedTicker1 != null && poollatest != null && amount1 > 0 && token0 != null)
+        {
+            var swapcal = new SwapCalculator(token0, token1, poollatest,
+                selectedTicker1.dbname, amount1, 0);
+            amount2 = swapcal.MinimumReceived;
+
+            canswap = amount1 > 0 && amount1 <= balance1
+            && selectedTicker1 != null && selectedTicker2 != null
+                && selectedTicker1 != selectedTicker2;
+        }
+        else if(selectedTicker1 == selectedTicker2)
+        {
+            amount2 = amount1;
+            canswap = false;
+        }
+        else
+        {
+            amount2 = 0;
+            canswap = false;
+        }
+    }
+
+    private void updateBtn2()
+    {
+        if (selectedTicker2 != null && poollatest != null && amount2 >= 0 && token0 != null)
+        {
+            var swapcal = new SwapCalculator(token0, token1, poollatest,
+                selectedTicker2.dbname, amount2, 0);
+
+            amount1 = swapcal.MinimumReceived;
+
+            canswap = amount2 > 0 && amount2 < balance2
+                && selectedTicker1 != null && selectedTicker2 != null
+                && selectedTicker1 != selectedTicker2;
+        }
+        else
+        {
+            amount1 = 0;
+            canswap = false;
+        }
     }
 
     private async Task UpdateTicker1(Ticker tk1)
     {
         selectedTicker1 = tk1;
-        await UpdatePool();
+        await UpdatePool(true);
     }
 
     private async Task UpdateTicker2(Ticker tk2)
     {
         selectedTicker2 = tk2;
-        await UpdatePool();
+        await UpdatePool(true);
     }
 
     private void UpdateValue()
@@ -307,7 +326,7 @@
                 val1 = lyrprice / price;
             }
 
-            if (val1 == 0)
+            if (amount1 == 0)
             {
                 value1 =
     @<div></div>
@@ -344,7 +363,7 @@
                 val2 = lyrprice * price;
             }
 
-            if (val2 == 0)
+            if (amount2 == 0)
             {
                 value2 =
     @<div></div>
@@ -366,7 +385,8 @@
         (sel1.Value, sel2.Value) = (sel2.Value, sel1.Value);
         (amount1, amount2) = (amount2, amount1);
         UpdateBalance();
-        updateBtn1(amount1);
+        updateBtn1();
+        UpdateValue();
     }
 
     private string GN(string dbname)
@@ -405,7 +425,7 @@
                 Snackbar.Add($" Pool refresh failed: {existspool.ResultCode}", Severity.Error);
             }
 
-            updateBtn1(amount1);
+            updateBtn1();
             UpdateBalance();
 
             swapping = false;
@@ -417,48 +437,6 @@
         busy = false;
     }
 
-    private async Task updateBtn1(decimal? a)
-    {
-        if (selectedTicker1 != null && poollatest != null && amount1 > 0 && token0 != null)
-        {
-            var swapcal = new SwapCalculator(token0, token1, poollatest,
-                selectedTicker1.dbname, amount1, 0);
-            _amount2 = swapcal.MinimumReceived;
-            amount2 = swapcal.MinimumReceived;
-
-            canswap = amount1 > 0 && amount1 <= balance1
-            && selectedTicker1 != null && selectedTicker2 != null
-                && selectedTicker1 != selectedTicker2;
-
-            await UpdatePool();
-        }
-        else
-        {
-            canswap = false;
-        }
-    }
-
-    private async Task updateBtn2(decimal? a)
-    {
-        if (selectedTicker2 != null && poollatest != null && amount2 > 0 && token0 != null)
-        {
-            var swapcal = new SwapCalculator(token0, token1, poollatest,
-                selectedTicker2.dbname, amount2, 0);
-
-            _amount1 = swapcal.MinimumReceived;
-            amount1 = swapcal.MinimumReceived;
-
-            canswap = amount2 > 0 && amount2 < balance2
-                && selectedTicker1 != null && selectedTicker2 != null
-                && selectedTicker1 != selectedTicker2;
-
-            await UpdatePool();
-        }
-        else
-        {
-            canswap = false;
-        }
-    }
     private void updateTradeInfo()
     {
         if (selectedTicker1 != null && amount1 > 0 && token0 != null)
@@ -501,16 +479,7 @@
 
     }
 
-    private async Task OnSelectedItemChangedHandler1()
-    {
-        await UpdatePool();
-    }
-    private async Task OnSelectedItemChangedHandler2()
-    {
-        await UpdatePool();
-    }
-
-    private async Task UpdatePool()
+    private async Task UpdatePool(bool Is1)
     {
         Console.WriteLine("Begin Update Pool");
         await InvokeAsync(() => StateHasChanged());
@@ -540,8 +509,7 @@
 
                 CreatePoolInfo(poollatest);
 
-                UpdateBalance();
-                UpdateValue();
+                UpdateBalance();                
                 updateTradeInfo();
             }
             catch (Exception ex)
@@ -561,6 +529,13 @@
             token0 = null;
             token1 = null;
         }
+
+        if (Is1)
+            updateBtn1();
+        else
+            updateBtn2();
+
+        UpdateValue();
     }
 
     private void UpdateBalance()

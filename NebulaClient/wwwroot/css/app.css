@@ -102,3 +102,7 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.algb2 .mud-input-text {
+    margin-top: 0 !important;
+}
