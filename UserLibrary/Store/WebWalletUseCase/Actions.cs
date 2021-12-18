@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace Nebula.Store.WebWalletUseCase
 {
+    public class WebWalletBackupAction
+    {
+        public bool IsBackuped { get; set; }
+    }
     public class WebWalletCreateAction {
         public string store { get; set; }
         public string name { get; set; }   

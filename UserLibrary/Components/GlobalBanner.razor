@@ -1,0 +1,52 @@
+﻿@namespace UserLibrary.Components
+
+@using Blazored.LocalStorage
+@using Fluxor
+@using Lyra.Core.API
+@using Nebula.Store.WebWalletUseCase
+@using UserLibrary.Data
+@implements IDisposable
+
+@if (!walletState.Value.IsBackuped)
+{
+    <div style="width:100%;">
+        <MudLink Href="/backup" Underline="Underline.None">
+            <MudAlert Severity="Severity.Warning" Variant="Variant.Filled">Wallet not backup. Tap here to backup your wallet.</MudAlert>
+        </MudLink>
+    </div>
+}
+
+@code
+{
+    [Inject]
+    private IState<WebWalletState>? walletState { get; set; }
+    [Inject]
+    private IDispatcher Dispatcher { get; set; }
+    [Inject] 
+    private ILocalStorageService localStorage { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            walletState.StateChanged += this.WalletChanged;
+
+            var s = await localStorage.GetItemAsync<string>(NebulaConsts.NebulaBackupName);
+            Dispatcher.Dispatch(new WebWalletBackupAction
+                {
+                    IsBackuped = s == "Yes"
+                });            
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private void WalletChanged(object sender, WebWalletState wallet)
+    {
+        InvokeAsync(() => StateHasChanged());
+    }
+
+    public void Dispose()
+    {
+        walletState.StateChanged -= this.WalletChanged;
+    }    
+}

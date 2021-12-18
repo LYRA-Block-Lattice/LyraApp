@@ -7,14 +7,14 @@
 @inject IConfiguration Configuration
 @implements IDisposable
 
-<div class="top-row px-4">
-    <div class="tg">
-        @title
+    <div class="top-row px-4">
+        <div class="tg">
+            @title
+        </div>
+        <div>
+            @Configuration["network"].ToUpper()
+        </div>
     </div>
-    <div>
-        @Configuration["network"].ToUpper()
-    </div>
-</div>
 
 @code
 {

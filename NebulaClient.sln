@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NebulaClient", "NebulaClien
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserLibrary", "UserLibrary\UserLibrary.csproj", "{451AFFCA-515A-4760-BE9C-0695CDAE52D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotTest", "HotTest\HotTest.csproj", "{0F2C1095-0496-4C73-8A62-F4E9F607329F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotTest", "HotTest\HotTest.csproj", "{0F2C1095-0496-4C73-8A62-F4E9F607329F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

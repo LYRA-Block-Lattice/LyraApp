@@ -35,27 +35,27 @@
         </div>
         <div class="ipt">
             <div title="Estimated total value. Only for reference.">@value1</div>
-                @if(balance1 > 0)
-                {
-                    <div>
+            @if (walletState.Value.wallet != null)
+            {
+                <div>
                     Balance: @($"{balance1:N4}")
-                    </div>
-                }    
+                </div>
+            }
         </div>
     </div>
     <div>
         <div class="arrdir">
             <MudIcon Icon="@Icons.Filled.ArrowDownward" Color="Color.Secondary"
-                Size="Size.Medium"
-                           @onclick="@DoSwapTicker"></MudIcon>
+                     Size="Size.Medium"
+                     @onclick="@DoSwapTicker"></MudIcon>
         </div>
     </div>
 
     <div class="rndcc mud-elevation-2">
         <div class="ipt">
             <div>
-                <MudNumericField T="decimal" HideSpinButtons="true" 
-                    Style="font-size: 28px; margin-top: 0px; font-weight: 500;"
+                <MudNumericField T="decimal" HideSpinButtons="true"
+                                 Style="font-size: 28px; margin-top: 0px; font-weight: 500;"
                                  DisableUnderLine Value="@amount2" ValueChanged="@(async (a) => await updateDig2(a))" />
             </div>
             <div class="algb algb2">
@@ -64,19 +64,20 @@
         </div>
         <div class="ipt">
             <div title="Estimated total value. Only for reference.">@value2</div>
-                @if(balance2 > 0)
-                {
-                    <div>
+            @if (walletState.Value.wallet != null)
+            {
+                <div>
                     Balance: @($"{balance2:N4}")
-                    </div>
-                }                
+                </div>
+            }
         </div>
     </div>
     <div style="padding: 30px">
         @if (walletState.Value.wallet == null)
         {
             <a href="/wallet">
-                <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
+                <MudButton Variant="Variant.Filled" FullWidth="true" 
+                    Color="Color.Primary" Size="Size.Large" class="rounded-pill">
                     <MudIcon Icon="@Icons.Filled.LockOpen" Title="Unlock" />
                     Open Wallet
                 </MudButton>
@@ -84,7 +85,8 @@
         }
         else
         {
-            <MudButton Variant="Variant.Filled" FullWidth="true" Disabled="@(!canswap || swapping)" Color="Color.Primary" OnClick="@DoSwap" class="rounded-pill">
+            <MudButton Variant="Variant.Filled" FullWidth="true" Disabled="@(!canswap || swapping)" 
+                Color="Color.Primary" Size="Size.Large" OnClick="@DoSwap" class="rounded-pill">
 
                 @if (swapping)
                 {
@@ -100,79 +102,97 @@
         }
     </div>
 
-    <div style="font-size: smaller; padding: 15px;">
-            <div class="ipt" title="Price queried from CoinGecko. Only for reference.">
-                <div>LYR external price</div>
-                <div>$ @lyrprice</div>
-            </div>
-            <div class="ipt" title="Price calculated from liquidate pool. Only for reference.">
-                <div>LYR internal price</div>
-                <div>$ @lyrintprice</div>
-            </div>
-        <MudDivider Class="ma-2" />
-    @if (haspoolinfo)
-    {        
-        <div class="ipt">
-            <div>Token Pair</div>
-            <div>@pairinfo</div>
-        </div>
-            @if (poollatest != null && amount1 != 0)
-            {
-                <div class="ipt">
-                    <div>Estimated ratio</div>
-                    <div>@calprice</div>
-                </div>
-                <div class="ipt">
-                    <div>You will sell</div>
-                    <div>@calsell</div>
-                </div>
-                <div class="ipt">
-                    <div>You will get</div>
-                    <div>@calget</div>
-                </div>
-                <div class="ipt">
-                    <div>Price Impact</div>
-                    <div>@calimpact</div>
-                </div>
-                <div class="ipt">
-                    <div>Pool Fee</div>
-                    <div>@calprofee</div>
-                </div>
-                <div class="ipt">
-                    <div>Network Fee</div>
-                    <div>@calnodfee</div>
-                </div>
-            }
-            else
-            {
-                <div class="d-flex justify-center">
-                    <div>Please change swap amount</div>
-                </div>
-            }
-        }
+        <MudExpansionPanel>
+            <TitleContent>
+                <div>
+                    <div class="d-flex">
+                        <MudIcon Icon="@Icons.Material.Filled.Info" class="mr-3"></MudIcon>
+                        <MudText><strong>@expandTitle</strong></MudText>
+                    </div>
+@if(updating)
+                    {
+                    <div style="position:absolute;left:0;top:-28px;z-index:20;width:100%;">
+                        <MudProgressLinear Color="Color.Info" Indeterminate="true" Class="my-7" />
+                    </div>
+                    }
 
-    @if (haspoolinfo)
-    {
-        <MudDivider Class="ma-2" />
-        <div class="iptct">
-            <div>Total Liquidate</div>
-            <div>@pairliquid</div>
-        </div>
+                </div>
+            </TitleContent>
+            <ChildContent>
+                <div style="font-size: smaller; padding: 15px;">
+                    <div class="ipt" title="Price queried from CoinGecko. Only for reference.">
+                        <div>LYR external price</div>
+                        <div>$ @lyrprice</div>
+                    </div>
+                    <div class="ipt" title="Price calculated from liquidate pool. Only for reference.">
+                        <div>LYR internal price</div>
+                        <div>$ @lyrintprice</div>
+                    </div>
+                    <MudDivider Class="ma-2" />
+                    @if (haspoolinfo)
+                    {
+                        <div class="ipt">
+                            <div>Token Pair</div>
+                            <div>@pairinfo</div>
+                        </div>
+                        @if (poollatest != null && amount1 != 0)
+                        {
+                            <div class="ipt">
+                                <div>Estimated ratio</div>
+                                <div>@calprice</div>
+                            </div>
+                            <div class="ipt">
+                                <div>You will sell</div>
+                                <div>@calsell</div>
+                            </div>
+                            <div class="ipt">
+                                <div>You will get</div>
+                                <div>@calget</div>
+                            </div>
+                            <div class="ipt">
+                                <div>Price Impact</div>
+                                <div>@calimpact</div>
+                            </div>
+                            <div class="ipt">
+                                <div>Pool Fee</div>
+                                <div>@calprofee</div>
+                            </div>
+                            <div class="ipt">
+                                <div>Network Fee</div>
+                                <div>@calnodfee</div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="d-flex justify-center">
+                                <div>Please change swap amount</div>
+                            </div>
+                        }
+                    }
 
-        <div class="ipt">
-            <div>Your Share</div>
-            <div>@pairshare</div>
-        </div>
-    }
-    else
-    {
-        <div>
-            <div style="align-content:center;">Please select a token pair.</div>
-        </div>
-    }
+                    @if (haspoolinfo)
+                    {
+                        <MudDivider Class="ma-2" />
+                        <div class="iptct">
+                            <div>Total Liquidate</div>
+                            <div>@pairliquid</div>
+                        </div>
 
-    </div>
+                        <div class="ipt">
+                            <div>Your Share</div>
+                            <div>@pairshare</div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div>
+                            <div style="align-content:center;">Please select a token pair.</div>
+                        </div>
+                    }
 
+                </div>
+            </ChildContent>
+        </MudExpansionPanel>
 </div>
 
 @code {
@@ -185,8 +205,11 @@
     [Inject] ISnackbar Snackbar { get; set; }
     double intervalBeforeMsgClose = 2000;
 
-    bool busy;
+    bool busy, updating;
 
+    RenderFragment expandTitle =
+    @<div>Please chose what to swap.</div>
+    ;
     RenderFragment value1, value2;
 
     decimal lyrprice, trxprice, lyrintprice;   // int price: internal price calculated by pool
@@ -259,7 +282,7 @@
             && selectedTicker1 != null && selectedTicker2 != null
                 && selectedTicker1 != selectedTicker2;
         }
-        else if(selectedTicker1 == selectedTicker2)
+        else if (selectedTicker1 == selectedTicker2)
         {
             amount2 = amount1;
             canswap = false;
@@ -481,6 +504,11 @@
 
     private async Task UpdatePool(bool Is1)
     {
+        while(updating)
+        {
+            await Task.Delay(100);
+        }
+        updating = true;
         Console.WriteLine("Begin Update Pool");
         await InvokeAsync(() => StateHasChanged());
 
@@ -509,7 +537,7 @@
 
                 CreatePoolInfo(poollatest);
 
-                UpdateBalance();                
+                UpdateBalance();
                 updateTradeInfo();
             }
             catch (Exception ex)
@@ -521,7 +549,7 @@
                 busy = false;
                 await InvokeAsync(() => StateHasChanged());
             }
-        }    
+        }
         else
         {
             haspoolinfo = false;
@@ -530,12 +558,29 @@
             token1 = null;
         }
 
-        if (Is1)
-            updateBtn1();
-        else
-            updateBtn2();
+        try
+        {
+            if (Is1)
+                updateBtn1();
+            else
+                updateBtn2();
 
-        UpdateValue();
+            UpdateValue();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"In UpdatePool 2: {ex}");
+        }
+        
+        if (!haspoolinfo || amount1 == 0)
+            expandTitle =
+    @<div>Please chose what to swap.</div>
+    ;
+        else
+            expandTitle = calprice;
+
+        updating = false;
+        await InvokeAsync(() => StateHasChanged());
     }
 
     private void UpdateBalance()

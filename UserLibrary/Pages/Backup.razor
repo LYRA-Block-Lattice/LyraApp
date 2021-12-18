@@ -1,0 +1,154 @@
+﻿@page "/backup"
+@using Blazored.LocalStorage
+@using Fluxor
+@using Lyra.Core.Accounts
+@using Nebula.Store.WebWalletUseCase
+@using UserLibrary.Data
+
+@if (authed)
+{
+    <div class="mag flex-container">
+    @if(backuped)
+        {
+            <a href="/">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary">
+                    Home
+                </MudButton>     
+            </a>
+        }
+        else
+        {
+            <MudText>
+                Your key is
+            </MudText>
+            <MudText>
+                @pvtkey
+            </MudText>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" 
+                @onclick="@(async() => await Finish())">
+                I have memorized the private key
+            </MudButton>
+        }
+
+   </div>
+}
+else
+{
+    <div class="mag flex-container">
+        <div>
+            Input your password to backup.
+        </div>
+        <div class="mid">
+            <MudTextField InputType="InputType.Password" Label="Password" Size="Size.Large" @bind-Value="@txtValue1" />
+        </div>
+        <div class="mid">
+            <MudButton Variant="Variant.Filled" Disabled="@busy" Color="Color.Primary" OnClick="@(async() => await OpenWallet())">
+                @if (busy)
+                {
+                    <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Processing</MudText>
+                }
+                else
+                {
+                    <MudText>Verify password and backup</MudText>
+                }
+            </MudButton>
+        </div>
+    </div>
+}
+
+<MudDialog @bind-IsVisible="visible" Options="dialogOptions">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3"/> Confirm the private key has been memorized
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <p>What is the last 6 charactors of the private key?</p>
+        <MudTextField @bind-Value="last6" Label="Memorized" Variant="Variant.Text"></MudTextField>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async() => await Submit())" Class="px-10">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    // first need user password to run backup.
+    //
+    [Inject]
+    private IState<WebWalletState> walletState { get; set; }
+
+    [Inject]
+    private IDispatcher Dispatcher { get; set; }
+
+    [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] ILocalStorageService localStorage { get; set; }
+
+    bool authed, busy, backuped;
+    string txtValue1;
+    string pvtkey, pvtkey2;
+
+    private bool visible;
+    private int rating;
+    private void OpenDialog() => visible = true;
+    private string last6 { get; set; }
+
+    private DialogOptions dialogOptions = new() { FullWidth = true };
+
+    async Task Submit()
+    {        
+        if(last6 != null && last6.Length == 6 && pvtkey2.EndsWith(last6))
+        {
+            visible = false;
+            backuped = true;
+            StateHasChanged();
+            Snackbar.Add("Congratulations! You have backup your private key properly.", Severity.Success);
+        }
+        else
+        {
+            backuped = false;
+            Snackbar.Add("Unfortunately you dont backup your private key properly.", Severity.Warning);
+        }
+
+        await localStorage.SetItemAsync(NebulaConsts.NebulaBackupName, "Yes");
+
+        Dispatcher.Dispatch(new WebWalletBackupAction
+            {
+                IsBackuped = backuped
+            });
+    }
+
+    private async Task Finish()
+    {
+        pvtkey2 = pvtkey;
+        pvtkey = "************";
+        StateHasChanged();
+
+        OpenDialog();
+    }
+
+    private async Task OpenWallet()
+    {
+        busy = true;
+        var storeName = NebulaConsts.NebulaStorName;
+
+        try
+        {
+            var buff = await localStorage.GetItemAsync<byte[]>(storeName);
+            var aib = new AccountInBuffer(buff, txtValue1);
+            var wallet = Wallet.Open(aib, "default", txtValue1);
+
+            if (walletState.Value.wallet != null && wallet.AccountId != walletState.Value.wallet.AccountId)
+                throw new Exception("Wrong Wallet");
+
+            pvtkey = wallet.PrivateKey;
+            authed = true;    
+        }
+        catch(Exception ex)
+        {
+            authed = false;
+            Snackbar.Add($"Failed to authorize. {ex.Message}. Unable to backup.", Severity.Error);
+        }
+        busy = false;
+    }
+}

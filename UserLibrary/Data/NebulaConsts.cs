@@ -9,5 +9,6 @@ namespace UserLibrary.Data
     internal class NebulaConsts
     {
         public const string NebulaStorName = "nebdat";
+        public const string NebulaBackupName = "nebbkp";
     }
 }
