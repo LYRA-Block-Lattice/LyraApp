@@ -18,16 +18,24 @@
         }
         else
         {
-            <MudText>
-                Your key is
-            </MudText>
-            <MudText>
-                @pvtkey
-            </MudText>
+            <div class="flex-container">
+            <h3>
+                Your private key is
+            </h3>
+            <MudPaper Elevation="4" Style="margin: 20px;">
+                <span style="margin:20%; width:100px; word-wrap:break-word; display:inline-block;">
+                    @pvtkey
+                </span>
+            </MudPaper>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" 
                 @onclick="@(async() => await Finish())">
                 I have memorized the private key
             </MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                @onclick="@(async() => await Restart())">
+                Start Over Again     
+            </MudButton>
+            </div>
         }
 
    </div>
@@ -68,7 +76,7 @@ else
         <MudTextField @bind-Value="last6" Label="Memorized" Variant="Variant.Text"></MudTextField>
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async() => await Submit())" Class="px-10">Close</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async() => await Submit())" Class="px-10">Test Me!</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -89,12 +97,23 @@ else
     string pvtkey, pvtkey2;
 
     private bool visible;
-    private int rating;
     private void OpenDialog() => visible = true;
     private string last6 { get; set; }
 
     private DialogOptions dialogOptions = new() { FullWidth = true };
 
+    async Task Restart()
+    {
+        backuped = false;
+        authed = false;
+        busy = false;
+        visible = false;
+        txtValue1 = "";
+        pvtkey = "";
+        pvtkey2 = "";
+        last6 = "";
+        StateHasChanged();
+    }
     async Task Submit()
     {        
         if(last6 != null && last6.Length == 6 && pvtkey2.EndsWith(last6))

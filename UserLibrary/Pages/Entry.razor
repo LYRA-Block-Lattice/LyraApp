@@ -8,7 +8,7 @@
     <MudGrid>
         @foreach (var kvp in Apps)
         {
-            <MudItem xs="3">
+            <MudItem xs="4">
                 <MudPaper Class="d-flex align-center justify-center mud-width-full py-8">
                     <MudLink Href="@kvp.link" Underline="Underline.None">
                         <div class="progicon">
@@ -38,11 +38,11 @@
                 ("DEX", "/dex", Icons.Filled.Money),
                 ("Staking", "/staking", Icons.Filled.WhereToVote),
                 ("Mint", "/mint", Icons.Filled.GeneratingTokens),
-                ("Revenue Center", "/profit", Icons.Filled.CalendarViewMonth),
+                ("Revenue", "/profit", Icons.Filled.CalendarViewMonth),
                 ("Settings", "/settings", Icons.Filled.Settings),
             };
 
-        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Business" });
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Decentralized Business" });
 
         base.OnInitialized();
     }
