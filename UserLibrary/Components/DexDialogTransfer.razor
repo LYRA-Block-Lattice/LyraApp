@@ -11,9 +11,13 @@
     </TitleContent>
     <DialogContent>
         <MudText>Amount you want to transfer:</MudText>
-               <MudNumericField T="decimal?" Style="background: white; font-size:large;" 
-                    Min="@Args.min" Max="@Args.max"
-                    ValueChanged="@((e) => {Args.val = e.Value;})" />
+<div style="width: 100%; display:flex;">
+    <MudNumericField T="decimal?" @ref="@dat" Style="background: white; font-size:large;" 
+                        Min="@Args.min" Max="@Args.max" Value="@Args.val"
+                        ValueChanged="@((e) => {Args.val = e != null ? e.Value : 0; })" />
+</div>
+
+               
                &nbsp;@Args.symbol
     </DialogContent>
     <DialogActions>
@@ -26,6 +30,7 @@
 
     [Parameter] public DexTransferArgs Args { get; set; }
 
+    MudNumericField<decimal?> dat { get; set; }
     private void Cancel()
     {
         MudDialog.Cancel();

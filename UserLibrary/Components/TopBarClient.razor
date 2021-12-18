@@ -5,11 +5,12 @@
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
 @inject IConfiguration Configuration
+@inject NavigationManager Navigation
 @implements IDisposable
 
-    <div class="top-row px-4">
+    <div class="top-row px-4" onclick="@gohome">
         <div class="tg">
-            @title
+                @title
         </div>
         <div>
             @Configuration["network"].ToUpper()
@@ -68,5 +69,10 @@
     public void Dispose()
     {
         walletState.StateChanged -= this.WalletChanged;
+    }
+
+    private void gohome()
+    {
+        Navigation.NavigateTo("/");
     }
 }
