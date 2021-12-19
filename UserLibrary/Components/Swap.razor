@@ -232,7 +232,7 @@
     decimal minrecv;
     decimal lyraprice;
 
-    private decimal amount1, amount2;
+    private decimal amount1 = 0.0m, amount2 = 0.0m;
 
     async Task updateDig1(decimal digi1)
     {
@@ -289,7 +289,7 @@
         }
         else
         {
-            amount2 = 0;
+            amount2 = 0.0m;
             canswap = false;
         }
     }
@@ -309,7 +309,7 @@
         }
         else
         {
-            amount1 = 0;
+            amount1 = 0.0m;
             canswap = false;
         }
     }

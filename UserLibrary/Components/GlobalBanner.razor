@@ -7,7 +7,7 @@
 @using UserLibrary.Data
 @implements IDisposable
 
-@if (!walletState.Value.IsBackuped)
+@if (hasStore && !walletState.Value.IsBackuped)
 {
     <div style="width:100%;">
         <MudLink Href="/backup" Underline="Underline.None">
@@ -25,17 +25,27 @@
     [Inject] 
     private ILocalStorageService localStorage { get; set; }
 
+    bool hasStore;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if(firstRender)
         {
             walletState.StateChanged += this.WalletChanged;
 
-            var s = await localStorage.GetItemAsync<string>(NebulaConsts.NebulaBackupName);
-            Dispatcher.Dispatch(new WebWalletBackupAction
-                {
-                    IsBackuped = s == "Yes"
-                });            
+            if (await localStorage.ContainKeyAsync(NebulaConsts.NebulaStorName))
+                hasStore = true;
+            else
+                hasStore = false;
+
+            if(hasStore)
+            {
+                var s = await localStorage.GetItemAsync<string>(NebulaConsts.NebulaBackupName);
+                Dispatcher.Dispatch(new WebWalletBackupAction
+                    {
+                        IsBackuped = s == "Yes"
+                    });       
+            }     
         }
         await base.OnAfterRenderAsync(firstRender);
     }
