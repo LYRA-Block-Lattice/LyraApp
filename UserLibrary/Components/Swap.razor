@@ -44,9 +44,9 @@
         </div>
     </div>
     <div>
-        <div class="arrdir">
+        <div class="arrdir1">
             <MudIcon Icon="@Icons.Filled.ArrowDownward" Color="Color.Secondary"
-                     Size="Size.Medium"
+                     Size="Size.Medium" Style="mud-elevation-2"
                      @onclick="@DoSwapTicker"></MudIcon>
         </div>
     </div>
@@ -112,7 +112,7 @@
 @if(updating)
                     {
                     <div style="position:absolute;left:0;top:-28px;z-index:20;width:100%;">
-                        <MudProgressLinear Color="Color.Info" Indeterminate="true" Class="my-7" />
+                        <MudProgressLinear Color="Color.Info" Style="height: 2px;" Indeterminate="true" Class="my-7" />
                     </div>
                     }
 

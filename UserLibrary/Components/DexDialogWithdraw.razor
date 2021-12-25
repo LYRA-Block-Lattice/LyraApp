@@ -19,7 +19,7 @@
                <MudTextField Label="Withdraw to address" @bind-Value="@Args.address" />
                <h3>Amount:</h3>
                       <MudNumericField T="decimal?" Style="background: white; font-size:large;" 
-                    Min="@Args.min" Max="@Args.max"
+                    Min="@Args.min" Max="@Args.max" Value="@Args.amount"
                     ValueChanged="@((e) => {Args.amount = e.Value;})" />
 
                &nbsp;@Args.view.Symbol

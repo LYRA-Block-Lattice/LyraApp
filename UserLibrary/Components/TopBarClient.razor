@@ -13,7 +13,7 @@
                 @title
         </div>
         <div>
-            &nbsp;
+            @net
         </div>
     </div>
 
@@ -24,9 +24,14 @@
 
     RenderFragment? banner;
     string title = "Lyra";
+    string net;
 
     protected override void OnInitialized()
     {
+        net = Configuration["network"];
+        if (net == "mainnet")
+            net = "&nbsp;";
+
         WalletChanged(this, walletState.Value);
 
         walletState.StateChanged += this.WalletChanged;
