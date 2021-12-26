@@ -91,6 +91,7 @@ else
 
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] ILocalStorageService localStorage { get; set; }
+    [Inject] NebulaConsts _consts { get; set; }
 
     bool authed, busy, backuped;
     string txtValue1;
@@ -129,7 +130,7 @@ else
             Snackbar.Add("Unfortunately you dont backup your private key properly.", Severity.Warning);
         }
 
-        await localStorage.SetItemAsync(NebulaConsts.NebulaBackupName, "Yes");
+        await localStorage.SetItemAsync(_consts.NebulaBackupName, "Yes");
 
         Dispatcher.Dispatch(new WebWalletBackupAction
             {
@@ -149,7 +150,7 @@ else
     private async Task OpenWallet()
     {
         busy = true;
-        var storeName = NebulaConsts.NebulaStorName;
+        var storeName = _consts.NebulaStorName;
 
         try
         {

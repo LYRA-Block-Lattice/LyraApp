@@ -25,6 +25,9 @@
     @if (ui == UI.entry)
     {
         <div class="mid">
+            <MudTextField InputType="InputType.Text" Label="Name of wallet" Size="Size.Large" @bind-Value="@walletName" />
+        </div>
+        <div class="mid">
             <MudTextField InputType="InputType.Password" Label="Password" Size="Size.Large" @bind-Value="@txtValue1" />
         </div>
         <div class="mid">
@@ -64,10 +67,8 @@
     @if (ui == UI.success)
     {
         <div class="mid">
-            <Result Icon="smile-outline"
-                Status="success"
-                Title="Your wallet has been created"
-                Extra=@extraok />
+            <p>Your wallet has been created</p>
+            @extraok
         </div>
     }
 
@@ -87,11 +88,14 @@
     public EventCallback OnFinished { get; set; }
 
     [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] NebulaConsts _consts { get; set; }
 
     bool busy;
 
     enum UI { entry, success, failed }
     UI ui = UI.entry;
+
+    string walletName;
 
     string act = "Create new";
     string prvKey;
@@ -129,7 +133,7 @@
 
     protected async override Task OnInitializedAsync()
     {
-        var storeName = NebulaConsts.NebulaStorName;
+        var storeName = _consts.NebulaStorName;
 
         if (await _localStorage.ContainKeyAsync(storeName))
         {
@@ -148,6 +152,12 @@
 
     private async Task RestoreWallet()
     {
+        if(string.IsNullOrWhiteSpace(walletName))
+        {
+            Snackbar.Add("Please specify the name of wallet.");
+            return;
+        }
+
         if (txtValue1 == txtValue2)
         {
             if(!Signatures.ValidatePrivateKey(prvKey))
@@ -163,11 +173,11 @@
             else
             {
                 busy = true;
-                var storeName = NebulaConsts.NebulaStorName;
+                var storeName = _consts.NebulaStorName;
                 Dispatcher.Dispatch(new WebWalletRestoreAction
                     {
                         store = storeName,
-                        name = "default",
+                        name = walletName,
                         password = txtValue1,
                         privateKey = prvKey
                     });

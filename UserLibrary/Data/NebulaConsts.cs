@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +7,14 @@ using System.Threading.Tasks;
 
 namespace UserLibrary.Data
 {
-    internal class NebulaConsts
+    public class NebulaConsts
     {
-        public const string NebulaStorName = "nebdat";
-        public const string NebulaBackupName = "nebbkp";
+        IConfiguration _config { get; init; }
+        public NebulaConsts(IConfiguration configuration)
+        {
+            _config = configuration;
+        }
+        public string NebulaStorName => $"nebdat_{_config["network"]}";
+        public string NebulaBackupName => $"nebbkp_{_config["network"]}";
     }
 }

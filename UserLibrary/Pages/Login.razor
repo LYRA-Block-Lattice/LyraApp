@@ -34,7 +34,8 @@ else
     private IDispatcher Dispatcher { get; set; }
 
     [Inject]
-    public ILocalStorageService _localStorage { get; set; }
+    public ILocalStorageService localStorage { get; set; }
+    [Inject] NebulaConsts _consts { get; set; }
 
     bool hasStore = false;
     bool busy = true;
@@ -53,11 +54,23 @@ else
     {
         if (firstRender)
         {
-            var storeName = NebulaConsts.NebulaStorName;
             busy = true;
             StateHasChanged();
 
-            if (await _localStorage.ContainKeyAsync(storeName))
+            // convert old store
+            var oldDataExists = await localStorage.ContainKeyAsync("nebdat");
+            if(oldDataExists)
+            {
+                var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+                var wc = new WalletContainer(wcjson);
+
+                wc.AddOrUpdate("Default", await localStorage.GetItemAsync<byte[]>("nebdat"));
+                await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());
+                await localStorage.RemoveItemAsync("nebdat");
+            }
+            // end
+
+            if (await localStorage.ContainKeyAsync(_consts.NebulaStorName))
                 hasStore = true;
             else
                 hasStore = false;

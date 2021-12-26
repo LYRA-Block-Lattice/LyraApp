@@ -80,6 +80,7 @@ namespace Nebula.Store.WebWalletUseCase
 
 			return state.With(new
 			{
+				PendingRecv = action.PendingRecv,
 				IsLoading = false,
 				stage = action.stage,
 				IsOpening = action.IsOpening,

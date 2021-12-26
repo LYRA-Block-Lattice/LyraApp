@@ -24,6 +24,7 @@
     private IDispatcher Dispatcher { get; set; }
     [Inject] 
     private ILocalStorageService localStorage { get; set; }
+    [Inject] NebulaConsts _consts { get; set; }
 
     bool hasStore;
 
@@ -33,14 +34,14 @@
         {
             walletState.StateChanged += this.WalletChanged;
 
-            if (await localStorage.ContainKeyAsync(NebulaConsts.NebulaStorName))
+            if (await localStorage.ContainKeyAsync(_consts.NebulaStorName))
                 hasStore = true;
             else
                 hasStore = false;
 
             if(hasStore)
             {
-                var s = await localStorage.GetItemAsync<string>(NebulaConsts.NebulaBackupName);
+                var s = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
                 Dispatcher.Dispatch(new WebWalletBackupAction
                     {
                         IsBackuped = s == "Yes"

@@ -213,38 +213,34 @@ namespace Nebula.Store.WebWalletUseCase
         [EffectMethod]
 		public async Task HandleCreation(WebWalletCreateAction action, IDispatcher dispatcher)
 		{
-			Wallet wallet;
-			if(config["localstore"] == "yes")
-            {
-				// maui app. save data encrypted
+            var aib = new AccountInBuffer();
+            Wallet.Create(aib, action.name, action.password, config["network"]);
+            var data = aib.GetBuffer(action.password);
 
-				var aib = new AccountInBuffer();
-				Wallet.Create(aib, action.name, action.password, config["network"]);
-				var data = aib.GetBuffer(action.password);
-				await _localStorage.SetItemAsync(action.store, data);
-            }
-			else
-            {
-				//var store = new AccountInMemoryStorage();
-				//Wallet.Create(store, action.name, action.password, config["network"]);
-				//wallet = Wallet.Open(store, action.name, action.password);
-			}
+			var wcjson = await _localStorage.GetItemAsync<string>(action.store);
+			var wc = new WalletContainer(wcjson);
+			wc.AddOrUpdate(action.name, data);
 
-			//await wallet.SyncAsync(client);
-			//dispatcher.Dispatch(new WebWalletResultAction(wallet, true, UIStage.Main));
-		}
+            await _localStorage.SetItemAsync(action.store, wc.ToString());
+        }
 
 		[EffectMethod]
 		public async Task HandleOpen(WebWalletOpenAction action, IDispatcher dispatcher)
 		{
 			try
             {
-				var buff = await _localStorage.GetItemAsync<byte[]>(action.store);
+				var wcjson = await _localStorage.GetItemAsync<string>(action.store);
+				var wc = new WalletContainer(wcjson);
+
+				var buff = wc.Get(action.name);
 				var aib = new AccountInBuffer(buff, action.password);
 				var wallet = Wallet.Open(aib, action.name, action.password);
 
-				await wallet.SyncAsync(client);
-				dispatcher.Dispatch(new WebWalletResultAction(wallet, true, UIStage.Main));
+				//await wallet.SyncAsync(client);
+				var lcx = LyraRestClient.Create(config["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
+				wallet.SetClient(lcx);
+				var pending = await wallet.GetPendingRecvAsync();
+				dispatcher.Dispatch(new WebWalletResultAction(wallet, true, UIStage.Main, pending));
 			}
 			catch(Exception ex)
             {
@@ -262,13 +258,15 @@ namespace Nebula.Store.WebWalletUseCase
 		{
 			try
             {
-				if (await _localStorage.ContainKeyAsync(action.store))
-					await _localStorage.RemoveItemAsync(action.store);
+				var wcjson = await _localStorage.GetItemAsync<string>(action.store);
+				var wc = new WalletContainer(wcjson);
 
 				var aib = new AccountInBuffer();
 				Wallet.Create(aib, action.name, action.password, config["network"], action.privateKey);
 				var data = aib.GetBuffer(action.password);
-				await _localStorage.SetItemAsync(action.store, data);
+
+				wc.AddOrUpdate(action.name, data);
+				await _localStorage.SetItemAsync(action.store, wc.ToString());
 			}
 			catch(Exception ex)
             {

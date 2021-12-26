@@ -14,12 +14,14 @@ namespace Nebula.Store.WebWalletUseCase
 		public bool IsOpening { get; }
 		public Wallet wallet { get; }
 		public UIStage stage { get; }
+		public bool PendingRecv { get; }
 
-		public WebWalletResultAction(Wallet wallet, bool isOpening, UIStage Stage)
+		public WebWalletResultAction(Wallet wallet, bool isOpening, UIStage Stage, bool pending = false)
 		{
 			this.IsOpening = isOpening;
 			this.wallet = wallet;
 			this.stage = Stage;
+			this.PendingRecv = pending;
 		}
 	}
 

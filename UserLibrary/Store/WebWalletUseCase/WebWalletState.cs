@@ -9,6 +9,7 @@ namespace Nebula.Store.WebWalletUseCase
 
 	public class WebWalletState
 	{
+		public bool PendingRecv { get; set; } = false;
 		public bool IsBackuped { get; set; } = true;
 		public string Title { get; set; }
 		private const string faucetKey = "freeLyraToken";

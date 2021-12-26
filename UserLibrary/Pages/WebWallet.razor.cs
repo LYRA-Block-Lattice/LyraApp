@@ -66,8 +66,8 @@ namespace UserLibrary.Pages
                     dstAddr = target;
                     tabs.ActivatePanel(1);
                 }
-
                 Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Wallet" });
+                Refresh();
             }
 
             base.OnAfterRender(firstRender);

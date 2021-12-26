@@ -39,6 +39,7 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
 
+builder.Services.AddTransient<NebulaConsts>();
 builder.Services.AddSingleton<PeriodicExecutor>(x =>
     new PeriodicExecutor(networkid)
 );
