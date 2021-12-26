@@ -7,7 +7,7 @@
 <div style="padding:15px;">
     <h3>Multiple wallet manager</h3>
 
-            <MudSelect T="string" Label="Wallet Name" @ref="@sel" 
+            <MudSelect T="string" Label="Select the wallet you want to manage" @ref="@sel" 
                 SelectedValuesChanged="@Selected"
                 AnchorOrigin="Origin.BottomCenter">
     @foreach(var name in walletNames)
@@ -23,7 +23,7 @@
         <MudTextField T="string" Label="Wallet Name" Variant="Variant.Text" @bind-Value="@selName" />
     </MudItem>
     <MudItem xs="12" sm="12" md="12">
-        <MudTextField T="string" Label="Multiline" Variant="Variant.Text" @bind-Value="@selNote" Lines="5" />
+        <MudTextField T="string" Label="Note" Variant="Variant.Text" @bind-Value="@selNote" Lines="5" />
     </MudItem>
     <MudItem xs="12" sm="12" md="12">
         <MudButton Variant="Variant.Filled" Color="Color.Primary"
@@ -135,7 +135,7 @@
             var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
             var wc = new WalletContainer(wcjson);
 
-            Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Open Wallet" });
+            Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Wallet Manager" });
 
             walletNames = wc.Names;
             StateHasChanged();
