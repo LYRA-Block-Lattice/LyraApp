@@ -59,14 +59,15 @@ else
 
             // convert old store
             var oldDataExists = await localStorage.ContainKeyAsync("nebdat");
-            if(oldDataExists)
+            var newDataExists = await localStorage.ContainKeyAsync(_consts.NebulaStorName);
+            if(oldDataExists && !newDataExists)
             {
                 var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
                 var wc = new WalletContainer(wcjson);
 
                 wc.AddOrUpdate("Default", await localStorage.GetItemAsync<byte[]>("nebdat"), $"Migrated: {DateTime.Now}", false);
                 await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());
-                await localStorage.RemoveItemAsync("nebdat");
+                //await localStorage.RemoveItemAsync("nebdat");
             }
             // end
 
