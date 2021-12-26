@@ -36,7 +36,7 @@
         <div class="mid">
             <MudTextField Size="Size.Large" Label="Private Key" @bind-Value="@prvKey" />
         </div>
-        @if(hasStore)
+        @if(false)//hasStore)
         {
             <div class="mid">
                 <MudSwitch T="bool" @bind-Checked="@confirmdelete" Color="Color.Primary">Confirm delete existing wallet</MudSwitch>
@@ -82,7 +82,7 @@
     private IDispatcher Dispatcher { get; set; }
 
     [Inject]
-    public ILocalStorageService _localStorage { get; set; }
+    public ILocalStorageService localStorage { get; set; }
 
     [Parameter]
     public EventCallback OnFinished { get; set; }
@@ -135,7 +135,7 @@
     {
         var storeName = _consts.NebulaStorName;
 
-        if (await _localStorage.ContainKeyAsync(storeName))
+        if (await localStorage.ContainKeyAsync(storeName))
         {
             hasStore = true;
             act = "Open existing wallet";
@@ -158,6 +158,14 @@
             return;
         }
 
+        var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+        var wc = new WalletContainer(wcjson);
+        if(wc.Names.Contains(walletName))
+        {
+            Snackbar.Add($"Wallet name exists. Please pick another one.", Severity.Warning);
+            return;
+        }
+
         if (txtValue1 == txtValue2)
         {
             if(!Signatures.ValidatePrivateKey(prvKey))
@@ -165,25 +173,17 @@
                 Snackbar.Add("Invalid private key.", Severity.Warning);
                 return;
             }
-            // warn if wallet exists
-            if (hasStore && !confirmdelete)
-            {
-                return;
-            }
-            else
-            {
-                busy = true;
-                var storeName = _consts.NebulaStorName;
-                Dispatcher.Dispatch(new WebWalletRestoreAction
-                    {
-                        store = storeName,
-                        name = walletName,
-                        password = txtValue1,
-                        privateKey = prvKey
-                    });
-                await Task.Delay(2000);
-                OnFinished.InvokeAsync();
-            }
+
+            busy = true;
+            var aib = new AccountInBuffer();
+            Wallet.Create(aib, walletName, txtValue1, Configuration["network"], prvKey);
+            var data = aib.GetBuffer(txtValue1);
+
+            wc.AddOrUpdate(walletName, data, $"Restored: {DateTime.Now}");
+
+            await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());
+
+            OnFinished.InvokeAsync();
         }
 
         else

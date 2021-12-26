@@ -10,17 +10,17 @@
 {
     <div style="z-index: 5;" class="spinner"></div>
 }
-else if(src == "key")
+else if(src == "key" || src == "newkey")
 {
     <UserLibrary.Components.CreateWithPrivateKey OnFinished="@(() => {hasStore = true; Navigation.NavigateTo("/login");})" />
 }
-else if(hasStore)
+else if(hasStore && src != "new")
 {
     <UserLibrary.Components.OpenWithPassword />
 }
 else
 {
-    <UserLibrary.Components.CreateWithPassword OnFinished="@(() => {hasStore = true;})" />
+    <UserLibrary.Components.CreateWithPassword OnFinished="@(() => {hasStore = true; Navigation.NavigateTo("/login");})" />
 }
 
 @code{
@@ -71,7 +71,14 @@ else
             // end
 
             if (await localStorage.ContainKeyAsync(_consts.NebulaStorName))
-                hasStore = true;
+            {
+                var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+                var wc = new WalletContainer(wcjson);
+                if (wc.Names.Length > 0)
+                    hasStore = true;
+                else
+                    hasStore = false;
+            }            
             else
                 hasStore = false;
 

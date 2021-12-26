@@ -59,7 +59,7 @@
                 {
                     @foreach (var kvp in walletState.Value.wallet.GetLatestBlock().Balances)
                     {
-                        <MudCard Style="width: 200px;" Elevation="8">
+                        <MudCard Style="min-width: 200px;" Elevation="8">
                             <MudCardHeader>
                                 <CardHeaderContent>
                                     <h4>@kvp.Key.Replace("tether/", "$")</h4>

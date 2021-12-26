@@ -31,7 +31,9 @@
             <h3>Scan to Pay Me</h3>
             <p><QRCodeWriter Text="@walletState.Value.wallet.AccountId" Width="300" Heigth="300"></QRCodeWriter></p>
             <MudDivider />
-            
+            <p>Your wallet's address is: <a target="_blank" href="@bexpurl/showblock/@walletState.Value.wallet.AccountId">@walletState.Value.wallet.AccountId</a></p>
+            <p>Your wallet's balance is: @walletState.Value.balanceString</p>
+ 
             <p>Your are now voting for: @walletState.Value.wallet.VoteFor</p>
 
             <p>

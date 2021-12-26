@@ -4,7 +4,8 @@
 @using Nebula.Store.WebWalletUseCase
 @using UserLibrary.Data
 
-<h3>Multiple wallet manager</h3>
+<div style="padding:15px;">
+    <h3>Multiple wallet manager</h3>
 
             <MudSelect T="string" Label="Wallet Name" @ref="@sel" 
                 SelectedValuesChanged="@Selected"
@@ -15,21 +16,25 @@
             }
             </MudSelect>
 
-@if(meta != null)
+@if(selName != null)
 {
 <MudGrid>
     <MudItem xs="12" sm="12" md="12">
-        <MudTextField T="string" Label="Wallet Name" Variant="Variant.Text" @bind-Value="@meta.Name" />
+        <MudTextField T="string" Label="Wallet Name" Variant="Variant.Text" @bind-Value="@selName" />
     </MudItem>
     <MudItem xs="12" sm="12" md="12">
-        <MudTextField T="string" Label="Multiline" Variant="Variant.Text" @bind-Value="@meta.Note" Lines="5" />
+        <MudTextField T="string" Label="Multiline" Variant="Variant.Text" @bind-Value="@selNote" Lines="5" />
     </MudItem>
     <MudItem xs="12" sm="12" md="12">
-        <MudButton Variant="Variant.Filled" OnClick="Update">Update</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+            Disabled="@(!canupdate)"
+            OnClick="Update">Update</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Delete">Delete</MudButton>
     </MudItem>
 </MudGrid>
 }
+</div>
+
 
 
 @code {
@@ -39,45 +44,76 @@
     private ILocalStorageService localStorage { get; set; }
     [Inject] NebulaConsts _consts { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] private IDialogService DialogService { get; set; }
 
     MudSelect<string> sel;
-    bool busy;
+    bool busy, canupdate;
     string[] walletNames = new string[]{};
-    WalletContainer.MetaData meta;
+    string selName, selNote;
+    byte[] selData;
 
     private async Task Update()
     {
         var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
         var wc = new WalletContainer(wcjson);
-        wc.AddOrUpdate(meta.Name, meta.Data, meta.Note);
+        wc.AddOrUpdate(selName, selData, selName);
         await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());
+
+        walletNames = wc.Names;
+        sel.Value = selName;
+        StateHasChanged();
+
         Snackbar.Add("Wallet updated!", Severity.Success);
     }
 
     private async Task Delete()
     {
-        var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
-        var wc = new WalletContainer(wcjson);
-        wc.Remove(meta.Name);
-        await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());
+        var result = await DialogService.ShowMessageBox(
+            "Warning",
+                $"\nOnce you have deleted the wallet, you will never get it back. Make sure you have backup the private key. Are you sure you want to delete the wallet named \"{selName}\"?",
+                yesText: "Confirm!", cancelText: "Cancel");
+        
+        if (result != null && result.Value)
+        {
+            var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+            var wc = new WalletContainer(wcjson);
+            wc.Remove(selName);
+            await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());
 
-        walletNames = wc.Names;
-        StateHasChanged();
+            canupdate = false;
+            selName = null;
+            selData = null;
+            selNote = null;
+            walletNames = wc.Names;
+            sel.Reset();
+            StateHasChanged();
 
-        Snackbar.Add("Wallet deleted!", Severity.Success);
+            Snackbar.Add("Wallet deleted!", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add("Nothing changed.", Severity.Normal);
+        }
     }
 
     async Task Selected()
     {        
         if(string.IsNullOrWhiteSpace(sel.Value))
         {
-            meta = null;
+            canupdate = false;
+            selName = null;
+            selData = null;
+            selNote = null;
         }
         else
         {
             var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
             var wc = new WalletContainer(wcjson);
-            meta = wc.Get(sel.Value);
+            var meta = wc.Get(sel.Value);
+            canupdate = true;
+            selName = meta.Name;
+            selData = meta.Data;
+            selNote = meta.Note;
         }
     }
 
