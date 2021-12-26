@@ -1,0 +1,98 @@
+﻿@namespace UserLibrary.Components
+@using Blazored.LocalStorage
+@using Fluxor
+@using Nebula.Store.WebWalletUseCase
+@using UserLibrary.Data
+
+<h3>Multiple wallet manager</h3>
+
+            <MudSelect T="string" Label="Wallet Name" @ref="@sel" 
+                SelectedValuesChanged="@Selected"
+                AnchorOrigin="Origin.BottomCenter">
+    @foreach(var name in walletNames)
+            {
+                <MudSelectItem Value="@name" />
+            }
+            </MudSelect>
+
+@if(meta != null)
+{
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <MudTextField T="string" Label="Wallet Name" Variant="Variant.Text" @bind-Value="@meta.Name" />
+    </MudItem>
+    <MudItem xs="12" sm="12" md="12">
+        <MudTextField T="string" Label="Multiline" Variant="Variant.Text" @bind-Value="@meta.Note" Lines="5" />
+    </MudItem>
+    <MudItem xs="12" sm="12" md="12">
+        <MudButton Variant="Variant.Filled" OnClick="Update">Update</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Delete">Delete</MudButton>
+    </MudItem>
+</MudGrid>
+}
+
+
+@code {
+    [Inject]
+    private IDispatcher Dispatcher { get; set; }
+    [Inject] 
+    private ILocalStorageService localStorage { get; set; }
+    [Inject] NebulaConsts _consts { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
+
+    MudSelect<string> sel;
+    bool busy;
+    string[] walletNames = new string[]{};
+    WalletContainer.MetaData meta;
+
+    private async Task Update()
+    {
+        var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+        var wc = new WalletContainer(wcjson);
+        wc.AddOrUpdate(meta.Name, meta.Data, meta.Note);
+        await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());
+        Snackbar.Add("Wallet updated!", Severity.Success);
+    }
+
+    private async Task Delete()
+    {
+        var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+        var wc = new WalletContainer(wcjson);
+        wc.Remove(meta.Name);
+        await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());
+
+        walletNames = wc.Names;
+        StateHasChanged();
+
+        Snackbar.Add("Wallet deleted!", Severity.Success);
+    }
+
+    async Task Selected()
+    {        
+        if(string.IsNullOrWhiteSpace(sel.Value))
+        {
+            meta = null;
+        }
+        else
+        {
+            var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+            var wc = new WalletContainer(wcjson);
+            meta = wc.Get(sel.Value);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+            var wc = new WalletContainer(wcjson);
+
+            Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Open Wallet" });
+
+            walletNames = wc.Names;
+            StateHasChanged();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}

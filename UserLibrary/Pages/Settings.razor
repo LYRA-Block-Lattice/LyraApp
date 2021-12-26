@@ -10,12 +10,20 @@
 <div class="mag">
     @if (walletState.Value.wallet == null)
     {
+        <div>
         <a href="/wallet">
             <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
                 <MudIcon Icon="@Icons.Filled.LockOpen" />
                 Open Wallet
             </MudButton>
         </a>
+        </div>
+
+            <div>
+
+                <WalletsManager />
+
+            </div>
     }
     else
     {
@@ -24,8 +32,6 @@
             <p><QRCodeWriter Text="@walletState.Value.wallet.AccountId" Width="300" Heigth="300"></QRCodeWriter></p>
             <MudDivider />
             
-            <p>Your wallet's address is: <a target="_blank" href="@bexpurl/showblock/@walletState.Value.wallet.AccountId">@walletState.Value.wallet.AccountId</a></p>
-            <p>Your wallet's balance is: @walletState.Value.balanceString</p>
             <p>Your are now voting for: @walletState.Value.wallet.VoteFor</p>
 
             <p>

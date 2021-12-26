@@ -219,7 +219,7 @@ namespace Nebula.Store.WebWalletUseCase
 
 			var wcjson = await _localStorage.GetItemAsync<string>(action.store);
 			var wc = new WalletContainer(wcjson);
-			wc.AddOrUpdate(action.name, data);
+			wc.AddOrUpdate(action.name, data, $"Created: {DateTime.Now}");
 
             await _localStorage.SetItemAsync(action.store, wc.ToString());
         }
@@ -232,7 +232,7 @@ namespace Nebula.Store.WebWalletUseCase
 				var wcjson = await _localStorage.GetItemAsync<string>(action.store);
 				var wc = new WalletContainer(wcjson);
 
-				var buff = wc.Get(action.name);
+				var buff = wc.Get(action.name).Data;
 				var aib = new AccountInBuffer(buff, action.password);
 				var wallet = Wallet.Open(aib, action.name, action.password);
 
@@ -265,7 +265,7 @@ namespace Nebula.Store.WebWalletUseCase
 				Wallet.Create(aib, action.name, action.password, config["network"], action.privateKey);
 				var data = aib.GetBuffer(action.password);
 
-				wc.AddOrUpdate(action.name, data);
+				wc.AddOrUpdate(action.name, data, $"Restored: {DateTime.Now}");
 				await _localStorage.SetItemAsync(action.store, wc.ToString());
 			}
 			catch(Exception ex)
