@@ -130,7 +130,14 @@ else
             Snackbar.Add("Unfortunately you dont backup your private key properly.", Severity.Warning);
         }
 
-        await localStorage.SetItemAsync(_consts.NebulaBackupName, "Yes");
+        if(backuped)
+        {
+            var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+            var wc = new WalletContainer(wcjson);
+            var meta = wc.Get(walletState.Value.wallet.AccountName);
+            wc.AddOrUpdate(meta.Name, meta.Data, meta.Note, true);
+            await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());
+        }
 
         Dispatcher.Dispatch(new WebWalletBackupAction
             {
@@ -150,13 +157,14 @@ else
     private async Task OpenWallet()
     {
         busy = true;
-        var storeName = _consts.NebulaStorName;
-
         try
         {
-            var buff = await localStorage.GetItemAsync<byte[]>(storeName);
-            var aib = new AccountInBuffer(buff, txtValue1);
-            var wallet = Wallet.Open(aib, "default", txtValue1);
+            var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+            var wc = new WalletContainer(wcjson);
+            var meta = wc.Get(walletState.Value.wallet.AccountName);
+
+            var aib = new AccountInBuffer(meta.Data, txtValue1);
+            var wallet = Wallet.Open(aib, walletState.Value.wallet.AccountName, txtValue1);
 
             if (walletState.Value.wallet != null && wallet.AccountId != walletState.Value.wallet.AccountId)
                 throw new Exception("Wrong Wallet");

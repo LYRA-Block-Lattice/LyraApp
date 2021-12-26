@@ -7,7 +7,7 @@
 @using UserLibrary.Data
 @implements IDisposable
 
-@if (hasStore && !walletState.Value.IsBackuped)
+@if (showbackup)
 {
     <div style="width:100%;">
         <MudLink Href="/backup" Underline="Underline.None">
@@ -26,7 +26,7 @@
     private ILocalStorageService localStorage { get; set; }
     [Inject] NebulaConsts _consts { get; set; }
 
-    bool hasStore;
+    bool showbackup;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -34,17 +34,15 @@
         {
             walletState.StateChanged += this.WalletChanged;
 
-            if (await localStorage.ContainKeyAsync(_consts.NebulaStorName))
-                hasStore = true;
-            else
-                hasStore = false;
-
-            if(hasStore)
+            if(walletState.Value.wallet != null)
             {
-                var s = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+                var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+                var wc = new WalletContainer(wcjson);
+                var meta = wc.Get(walletState.Value.wallet.AccountName);
+
                 Dispatcher.Dispatch(new WebWalletBackupAction
                     {
-                        IsBackuped = s == "Yes"
+                        IsBackuped = meta.Backup
                     });       
             }     
         }
@@ -53,7 +51,17 @@
 
     private void WalletChanged(object sender, WebWalletState wallet)
     {
-        InvokeAsync(() => StateHasChanged());
+        InvokeAsync(async () =>
+        {
+            if (wallet.wallet != null)
+            {
+                var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+                var wc = new WalletContainer(wcjson);
+                var meta = wc.Get(walletState.Value.wallet.AccountName);
+                showbackup = !meta.Backup;
+            }
+            StateHasChanged();
+        });
     }
 
     public void Dispose()

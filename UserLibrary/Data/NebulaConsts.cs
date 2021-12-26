@@ -15,6 +15,5 @@ namespace UserLibrary.Data
             _config = configuration;
         }
         public string NebulaStorName => $"nebdat_{_config["network"]}";
-        public string NebulaBackupName => $"nebbkp_{_config["network"]}";
     }
 }

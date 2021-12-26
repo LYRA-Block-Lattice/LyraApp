@@ -51,12 +51,20 @@
     string[] walletNames = new string[]{};
     string selName, selNote;
     byte[] selData;
+    bool selBackup;
 
     private async Task Update()
     {
         var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
         var wc = new WalletContainer(wcjson);
-        wc.AddOrUpdate(selName, selData, selName);
+
+        if(wc.Names.Contains(selName))
+        {
+            Snackbar.Add("Wallet name exists!", Severity.Warning);
+            return;
+        }
+
+        wc.AddOrUpdate(selName, selData, selName, false);
         await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());
 
         walletNames = wc.Names;
@@ -72,7 +80,7 @@
             "Warning",
                 $"\nOnce you have deleted the wallet, you will never get it back. Make sure you have backup the private key. Are you sure you want to delete the wallet named \"{selName}\"?",
                 yesText: "Confirm!", cancelText: "Cancel");
-        
+
         if (result != null && result.Value)
         {
             var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
@@ -84,6 +92,7 @@
             selName = null;
             selData = null;
             selNote = null;
+            selBackup = false;
             walletNames = wc.Names;
             sel.Reset();
             StateHasChanged();
@@ -104,6 +113,7 @@
             selName = null;
             selData = null;
             selNote = null;
+            selBackup = false;
         }
         else
         {
@@ -114,6 +124,7 @@
             selName = meta.Name;
             selData = meta.Data;
             selNote = meta.Note;
+            selBackup = meta.Backup;
         }
     }
 
