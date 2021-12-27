@@ -39,7 +39,7 @@ else
     protected override void OnInitialized()
     {
         walletState.StateChanged += this.WalletChanged;
-
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Staking" });
         base.OnInitialized();
     }
 
