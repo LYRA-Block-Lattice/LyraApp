@@ -70,12 +70,14 @@
     {
         if (firstRender)
         {
-            Dispatcher.Dispatch(new WebWalletChangeTitleAction
-                {
-                    title = "Lyra DAO Central",
-                    menunew = action != "new"
-                });
+
         }
+
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction
+            {
+                title = "Lyra DAO Central",
+                menunew = action != "new"
+            });
 
         base.OnAfterRender(firstRender);
     }
