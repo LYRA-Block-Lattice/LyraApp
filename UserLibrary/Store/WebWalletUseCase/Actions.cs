@@ -202,5 +202,6 @@ namespace Nebula.Store.WebWalletUseCase
     public class WebWalletChangeTitleAction
     { 
         public string title { get; set; }
+        public bool menunew { get; set; }
     }
 }

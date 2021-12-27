@@ -8,23 +8,55 @@
 @inject NavigationManager Navigation
 @implements IDisposable
 
-    <div class="top-row px-4" onclick="@gohome">
-        <div class="tg">
-                @title
-        </div>
+<div class="top-row">
+    <div class="tg">
+        @title
+    </div>
+    <div class="tg">
+        <div>@net &nbsp;</div>
         <div>
-            @net
+            <MudMenu AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopRight">
+                <ActivatorContent>
+                    <div class="icon">
+                        <svg t="1640578476860" class="icon" viewBox="0 0 1024 1024" preserveAspectRatio="xMaxYMax meet" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2994" width="24" height="24"><path d="M480 64A416.64 416.64 0 0 0 64 480 416.64 416.64 0 0 0 480 896 416.64 416.64 0 0 0 896 480 416.64 416.64 0 0 0 480 64z m0 64C674.752 128 832 285.248 832 480S674.752 832 480 832A351.552 351.552 0 0 1 128 480C128 285.248 285.248 128 480 128zM448 256v192H256v64h192v192h64V512h192V448H512V256z" fill="#ffffff" p-id="2995"></path></svg>
+                    </div>
+                </ActivatorContent>
+
+                <ChildContent>
+                    <MudMenuItem>
+                        <a href="/scan">
+                        <div class="tg">
+                            <div>
+                            <svg t="1640580184239" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3899" width="32" height="32"><path d="M128 669.866667v154.133333a72 72 0 0 0 67.776 71.893333l4.224 0.106667H354.133333c4.693333 0 8.533333 3.84 8.533334 8.533333v46.933334a8.533333 8.533333 0 0 1-8.533334 8.533333H205.482667A141.482667 141.482667 0 0 1 64 818.517333V669.866667c0-4.693333 3.84-8.533333 8.533333-8.533334h46.933334c4.693333 0 8.533333 3.84 8.533333 8.533334z m832 0v148.650666A141.482667 141.482667 0 0 1 818.517333 960H669.866667a8.533333 8.533333 0 0 1-8.533334-8.533333v-46.933334c0-4.693333 3.84-8.533333 8.533334-8.533333h154.133333a72 72 0 0 0 71.893333-67.776l0.106667-4.224V669.866667c0-4.693333 3.84-8.533333 8.533333-8.533334h46.933334c4.693333 0 8.533333 3.84 8.533333 8.533334z m0-170.666667v46.933333a8.533333 8.533333 0 0 1-8.533333 8.533334H72.533333a8.533333 8.533333 0 0 1-8.533333-8.533334v-46.933333c0-4.693333 3.84-8.533333 8.533333-8.533333h878.933334c4.693333 0 8.533333 3.84 8.533333 8.533333z m-597.333333-426.666667v46.933334a8.533333 8.533333 0 0 1-8.533334 8.533333H200a72 72 0 0 0-71.893333 67.776L128 200V354.133333a8.533333 8.533333 0 0 1-8.533333 8.533334H72.533333a8.533333 8.533333 0 0 1-8.533333-8.533334V205.482667A141.482667 141.482667 0 0 1 205.482667 64H354.133333c4.693333 0 8.533333 3.84 8.533334 8.533333zM818.517333 64A141.482667 141.482667 0 0 1 960 205.482667V354.133333a8.533333 8.533333 0 0 1-8.533333 8.533334h-46.933334a8.533333 8.533333 0 0 1-8.533333-8.533334V200a72 72 0 0 0-67.776-71.893333L824 128H669.866667a8.533333 8.533333 0 0 1-8.533334-8.533333V72.533333c0-4.693333 3.84-8.533333 8.533334-8.533333h148.650666z" fill="#333333" p-id="3900"></path></svg>
+                            </div>
+                            <div>
+                                Scan
+                            </div>
+                        </div>
+                        </a>
+                        </MudMenuItem>
+@if(shownew)
+                    {
+                        <MudDivider />
+                     <MudMenuItem OnClick="@gonew">New</MudMenuItem>   
+                    }                    
+                </ChildContent>
+            </MudMenu>
         </div>
     </div>
+</div>
 
 @code
 {
     [Inject]
     private IState<WebWalletState>? walletState { get; set; }
 
+    MudMenu mnu;
+
     RenderFragment? banner;
     string title = "Lyra";
     string net;
+    bool shownew;
 
     protected override void OnInitialized()
     {
@@ -39,32 +71,33 @@
         base.OnInitialized();
     }
 
-    private void WalletChanged(object sender, WebWalletState wallet)
+    private void WalletChanged(object sender, WebWalletState walletState)
     {
-        title = wallet.Title;
+        title = walletState.Title;
+        shownew = walletState.MenuNew;
 
         decimal balance1 = 0;
-        if (wallet.wallet != null)
+        if (walletState.wallet != null)
         {
-            var blk = wallet.wallet.GetLatestBlock();
-            if(blk!= null)
+            var blk = walletState.wallet.GetLatestBlock();
+            if (blk != null)
             {
                 if (blk.Balances.ContainsKey("LYR"))
                     balance1 = blk.Balances["LYR"].ToBalanceDecimal();
 
-            var bs = $"{balance1:N2}";
-            banner = 
+                var bs = $"{balance1:N2}";
+                banner =
     @<div>Balance: <b>@bs</b> LYR</div>
-        ;
+    ;
             }
             else
             {
-                banner = 
+                banner =
     @<div>Wallet is empty.</div>;
             }
         }
         else
-            banner = 
+            banner =
     @<div>Wallet is not opened.</div>
     ;
 
@@ -76,8 +109,8 @@
         walletState.StateChanged -= this.WalletChanged;
     }
 
-    private void gohome()
+    private void gonew()
     {
-        Navigation.NavigateTo("/");
+        Navigation.NavigateTo(Navigation.Uri + "/new");
     }
 }

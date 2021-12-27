@@ -1,9 +1,19 @@
 ﻿@page "/dao"
+@page "/dao/{action}"
+
 @using Fluxor
 @using Nebula.Store.WebWalletUseCase
 
 <div class="mag cet">
     <MudGrid>
+@if(action == "new")
+        {
+        <MudItem xs="12">
+            <h1>Create DAO</h1>
+            </MudItem>
+        }
+        else
+        {
         <MudItem xs="12">
             <MudTextField @bind-Value="@keywords" Label="Search DAO" Variant="Variant.Text"></MudTextField>
         </MudItem>
@@ -39,6 +49,8 @@
                 </MudExpansionPanel>
             </MudExpansionPanels>
         </MudItem>
+        }
+
 
     </MudGrid>
 
@@ -46,6 +58,9 @@
 
 
 @code {
+    [Parameter]
+    public string action {  get;  set; } 
+
     [Inject]
     private IDispatcher Dispatcher { get; set; }
 
@@ -55,7 +70,11 @@
     {
         if (firstRender)
         {
-            Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra DAO Central" });
+            Dispatcher.Dispatch(new WebWalletChangeTitleAction
+                {
+                    title = "Lyra DAO Central",
+                    menunew = action != "new"
+                });
         }
 
         base.OnAfterRender(firstRender);

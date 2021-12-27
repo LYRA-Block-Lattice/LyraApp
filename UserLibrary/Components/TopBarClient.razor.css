@@ -2,6 +2,7 @@
 	display: flex;
 	gap: 15px;
 	align-items: center;
+	vertical-align: middle;
 }
 
 .top-row {
@@ -9,6 +10,13 @@
 	display: flex;
 	align-items: center;
 	width: 100%;
+}
+
+.icon {
+	margin-top: 4px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 	.top-row ::deep a, .top-row .btn-link {
