@@ -1,4 +1,4 @@
-# LyraApp
+# Lyra App
 The main App for Lyra eco-system.
 
 # Mainnet
