@@ -203,17 +203,21 @@
             var amt = await GetAmountInput();
             if (amt > 0)
             {
-                Snackbar.Add("Add staking...");
-                Dispatcher.Dispatch(new WebWalletAddStakingAction
-                    {
-                        wallet = walletState.Value.wallet,
-                        stkid = stkid,
-                        amount = amt
-                    });
+                Snackbar.Add($"Add staking of {amt} LYR...");
+			    var crpftret = await walletState.Value.wallet.AddStakingAsync(
+				    stkid, amt
+				    );
 
-                await Task.Delay(3000);
-                Snackbar.Add("Success. Refreshing...", Severity.Success);
-                await RefreshStakingAsync(walletState.Value.wallet);
+			    if (crpftret.Successful())
+			    {
+				    await Task.Delay(3000);
+                    Snackbar.Add("Success. Refreshing...", Severity.Success);
+				    await RefreshStakingAsync(walletState.Value.wallet);
+			    }
+			    else
+			    {
+                    Snackbar.Add($"Failed adding staking. Error: {crpftret.ResultCode}", Severity.Error);
+			    }
             }
         }
         catch (Exception ex)
@@ -245,7 +249,7 @@
 
         if (result != null && result.Value)
         {
-            RmStk(actid);
+            await RmStk(actid);
         }
         else
         {
@@ -258,14 +262,17 @@
         try
         {
             Snackbar.Add("Remove staking...");
-            Dispatcher.Dispatch(new WebWalletRemoveStakingAction
-                {
-                    wallet = walletState.Value.wallet,
-                    stkid = stkid
-                });
+			var crpftret = await walletState.Value.wallet.UnStakingAsync(stkid);
+			if (crpftret.Successful())
+			{
                 await Task.Delay(3000);
                 Snackbar.Add("Success. Refreshing...", Severity.Success);
                 await RefreshStakingAsync(walletState.Value.wallet);
+			}
+			else
+			{
+                Snackbar.Add($"Failed to unstake. Error: {crpftret.ResultCode}", Severity.Error);
+			}
         }
         catch (Exception ex)
         {
