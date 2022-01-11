@@ -2,22 +2,106 @@
 @page "/dao/{action}"
 
 @using Fluxor
+@using Lyra.Data.Crypto
 @using Nebula.Store.WebWalletUseCase
+@using Microsoft.Extensions.Configuration
+@using Lyra.Data.API.WorkFlow
+@using UserLibrary.Data
 
 <div class="mag cet">
     <MudGrid>
 @if(action == "new")
         {
-        <MudItem xs="12">
-            <h1>Create DAO</h1>
+            <MudItem xs="12">
+                <h1>Create Orgnization</h1>
+            </MudItem>
+            <MudItem xs="12">
+                <RadzenTextBox @bind-Value=@name Placeholder="Name" Class="w-100" />
+            </MudItem>
+            <MudItem xs="12">
+                <RadzenTextArea @bind-Value=@desc Placeholder="Orgnization description..." Class="w-100" />
+            </MudItem>
+            <MudItem xs="12">
+                <RadzenButton IsBusy=@busy Click=@(args => OnClick("adddao")) Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
+            </MudItem>
+            <MudItem xs="12">
+                <RadzenButton Click=@(args => Back("")) Text="Back" ButtonStyle="ButtonStyle.Light" />
             </MudItem>
         }
         else
         {
+  @if(mydaos != null)
+            {
+        @if(!showco)
+                {
+                    <MudItem xs="12">
+                    <h1>My Orgnizations</h1>
+                    </MudItem>            
+                    @foreach(var dao in mydaos)
+                        {
+                            <MudItem xs="12">
+                            <h3>@dao.Name</h3>
+                            <div>@dao.Description</div>
+                            <RadzenButton Click=@(args => CreateOrder((dao as TransactionBlock).AccountID)) Text="Create Order" ButtonStyle="ButtonStyle.Primary" />
+                            </MudItem>
+                        }    
+                }
+            @if(showco)
+                {
+                    <MudItem xs="12">
+                        <RadzenSelectBar @bind-Value=@dir TValue="bool" >
+                            <Items>
+                                <RadzenSelectBarItem Text="Buy" Value="true" />
+                                <RadzenSelectBarItem Text="Sell" Value="false" />
+                            </Items>
+                        </RadzenSelectBar>
+                    </MudItem>   
+                     <MudItem xs="12">
+                        Orgnization
+                        <RadzenDropDown AllowClear="false" TValue="String" Class="w-100" 
+                            Data=@(mydaos.Select(a => (a as IBrokerAccount).Name))
+                            />
+                    </MudItem>  
+                    <MudItem xs="12">
+                        Token To Sell
+                        <RadzenDropDown AllowClear="false" TValue="Ticker" Class="w-100" 
+                            Data=@tickers
+                            />
+                    </MudItem>   
+                    <MudItem xs="12">
+                        Fiat currency
+                        <RadzenDropDown AllowClear="false" TValue="string" Class="w-100" 
+                            Data=@fiats
+                            />
+                    </MudItem>   
+                    <MudItem xs="12">
+                        Order Type
+                        <RadzenDropDown AllowClear="false" TValue="string" Class="w-100" 
+                            Data=@odrtyps
+                            />
+                    </MudItem>   
+                    <MudItem xs="12">
+                        Sell price
+                        <RadzenNumeric TValue="decimal" Class="w-100" />
+                    </MudItem>   
+                    <MudItem xs="12">
+                        Quantity
+                        <RadzenNumeric TValue="decimal" Class="w-100" />
+                    </MudItem>   
+                    <MudItem xs="12">
+                        Total: @total
+                    </MudItem>   
+                    <MudItem xs="12">
+                        <RadzenButton IsBusy=@busy Click=@(args => OnClick("adddao")) Text="Add New Order" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
+                    </MudItem>   
+
+                }
+            }
+
         <MudItem xs="12">
             <MudTextField @bind-Value="@keywords" Label="Search DAO" Variant="Variant.Text"></MudTextField>
         </MudItem>
-        <MudItem xs="12">
+            <MudItem xs="12">
             <MudExpansionPanels Class=".blue .darken-1 .shades-text .text-white">
                 <MudExpansionPanel Text="The Lyra Council" MaxHeight="1000">
                     <p>
@@ -62,23 +146,125 @@
     public string action {  get;  set; } 
 
     [Inject]
+    private IState<WebWalletState> walletState { get; set; }
+
+    [Inject]
     private IDispatcher Dispatcher { get; set; }
+
+    [Inject]
+    IConfiguration Configuration { get; set; }
+
+    [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] NavigationManager Navigation { get; set; }
 
     string keywords;
 
-    protected override void OnAfterRender(bool firstRender)
+    string name, desc;
+    bool busy;
+
+    List<IDao> mydaos;
+    bool showco,dir;
+    string total;
+    List<Ticker> tickers;
+    List<string> fiats = new List<string>
+    {
+        "USD", "EUR", "JPY", "CNY", "CHF"
+    };
+    List<string> odrtyps = new List<string>
+    {
+        "Fixed price", "Floating price"
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-
+            await GetMyDaos();
+            await OpenSwapUI();
+            StateHasChanged();
         }
 
-        Dispatcher.Dispatch(new WebWalletChangeTitleAction
-            {
-                title = "Lyra DAO Central",
-                menunew = action != "new"
-            });
+        if (walletState.Value.wallet != null)
+        {
+            Dispatcher.Dispatch(new WebWalletChangeTitleAction
+                {
+                    title = "Lyra DAO Central",
+                    menunew = action != "new"
+                });
+        }
 
-        base.OnAfterRender(firstRender);
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    void CreateOrder(string name)
+    {
+        showco = !showco;
+    }
+
+    async Task GetMyDaos()
+    {
+        if (walletState.Value.wallet == null)
+            return;
+        var brkblksret = await walletState.Value.wallet.RPC.GetAllBrokerAccountsForOwnerAsync(walletState.Value.wallet.AccountId);
+        mydaos = brkblksret.GetBlocks().Where(a => a is DaoGenesisBlock).Cast<IDao>().ToList();
+    }
+
+    async Task OnClick(string buttonName)
+    {
+        busy = true;
+
+        Snackbar.Add("Creating orgnization...", Severity.Info);
+
+        try
+        {
+            var lc = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
+            var dcret = await walletState.Value.wallet.CreateDAOAsync(name, desc);
+            if(dcret.Successful())
+            {
+                Snackbar.Add($"Orgnization {name} created successfully.", Severity.Success);
+                await GetMyDaos();
+            }
+            else
+            {
+                Snackbar.Add($"Failed to create orgnization: {dcret.ResultCode}", Severity.Error);
+            }
+        }
+        catch(Exception ex)
+        {
+            Snackbar.Add($"Failed to create orgnization: {ex.Message}", Severity.Error);
+        }
+
+        busy = false;
+
+    }
+
+    async Task Back(string buttonName)
+    {
+        Navigation.NavigateTo("/dao");
+    }
+
+    private async Task OpenSwapUI()
+    {
+        var lc = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
+
+        // for api sign only
+        var pk = "n4uh7o2kAerPZQSNBRirzA3pSUBEuEhs6r7oRwpV6Dgbs3FvY";
+        var pub = "LBRzScs8NwMcr7U8i9a8sSWETseWf3TLge4CVJy6as24hSB4hwtZ5jKTbHJdoVZBJiNC2LpjN9MQB719Py9YxXo2xpLxnS";
+
+        var lsbret = await lc.GetLastServiceBlockAsync();
+
+        var sign = Signatures.GetSignature(pk, (lsbret.GetBlock() as ServiceBlock).Hash, pub);
+        var tokens = await lc.GetTokenNamesAsync(pub, sign, "(null)");
+
+        tickers = tokens.Entities
+            .Where(a => !a.StartsWith("unittest/"))
+            .Select(a => new Ticker
+                {
+                    dbname = a,
+                    Name = a.Replace("tether/", "$")
+                })
+            .OrderBy(a => a.Name)
+            .ToList();
+        tickers.Insert(0, new Ticker { dbname = "LYR", Name = "LYR" });
     }
 }

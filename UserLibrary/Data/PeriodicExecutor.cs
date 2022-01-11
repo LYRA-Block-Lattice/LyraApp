@@ -66,7 +66,7 @@ namespace UserLibrary.Data
                 // calculate lyra price based on lyr/trx liquidate pool
                 var lc = LyraRestClient.Create(_network, Environment.OSVersion.ToString(), "Nebula", "1.4");
                 var existspool = await lc.GetPoolAsync(LyraGlobal.OFFICIALTICKERCODE, "tether/trx");
-                if (existspool.Successful())
+                if (existspool != null && existspool.Successful() && existspool.PoolAccountId != null)
                 {
                     var poollatest = existspool.GetBlock() as TransactionBlock;
                     var swapcal = new SwapCalculator(existspool.Token0, existspool.Token1, poollatest,
