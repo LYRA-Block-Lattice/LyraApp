@@ -10,7 +10,10 @@
 
 <div class="mag cet">
     <MudGrid>
-@if(action == "new")
+            <MudItem xs="12">
+                <MudTextField @bind-Value="@keywords" Label="Search DAO" Variant="Variant.Text"></MudTextField>
+            </MudItem>
+        @if (action == "new")
         {
             <MudItem xs="12">
                 <h1>Create Orgnization</h1>
@@ -30,109 +33,125 @@
         }
         else
         {
-  @if(mydaos != null)
+            @if (mydaos != null)
             {
-        @if(!showco)
+                @if (!showco)
                 {
                     <MudItem xs="12">
-                    <h1>My Orgnizations</h1>
-                    </MudItem>            
-                    @foreach(var dao in mydaos)
+                        <h1>My Orgnizations</h1>
+                    </MudItem>
+                    <MudExpansionPanels MultiExpansion="true" Class=".blue .darken-1 .shades-text .text-white">
+                        @foreach (var dao in mydaos)
                         {
-                            <MudItem xs="12">
-                            <h3>@dao.Name</h3>
-                            <div>@dao.Description</div>
-                            <RadzenButton Click=@(args => CreateOrder((dao as TransactionBlock).AccountID)) Text="Create Order" ButtonStyle="ButtonStyle.Primary" />
-                            </MudItem>
-                        }    
+                            <MudExpansionPanel Text="@dao.Name" MaxHeight="1000">
+                                <p>
+                                    @dao.Description
+                                </p>
+                                <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+                                <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton>
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary">Join</MudButton>
+                                <RadzenButton Click=@(args => ShowCreateOrderUI((dao as IBrokerAccount).Name)) Text="Create Order" ButtonStyle="ButtonStyle.Primary" />
+
+                            </MudExpansionPanel>
+                        }
+
+                    </MudExpansionPanels>
+
+
+
                 }
-            @if(showco)
+                @if (showco)
                 {
                     <MudItem xs="12">
-                        <RadzenSelectBar @bind-Value=@dir TValue="bool" >
+                        <RadzenSelectBar @bind-Value=@dir TValue="bool">
                             <Items>
                                 <RadzenSelectBarItem Text="Buy" Value="true" />
                                 <RadzenSelectBarItem Text="Sell" Value="false" />
                             </Items>
                         </RadzenSelectBar>
-                    </MudItem>   
-                     <MudItem xs="12">
-                        Orgnization
-                        <RadzenDropDown AllowClear="false" TValue="String" Class="w-100" 
-                            Data=@(mydaos.Select(a => (a as IBrokerAccount).Name))
-                            />
-                    </MudItem>  
+                    </MudItem>
                     <MudItem xs="12">
-                        Token To Sell
-                        <RadzenDropDown AllowClear="false" TValue="Ticker" Class="w-100" 
-                            Data=@tickers
-                            />
-                    </MudItem>   
+                        Orgnization<br />
+                        <RadzenDropDown AllowClear="false" TValue="String" Class="w-100"
+                            @bind-Value=@seldaoname
+                            Data=@(mydaos.Select(a => (a as IBrokerAccount).Name)) />
+                    </MudItem>
                     <MudItem xs="12">
-                        Fiat currency
-                        <RadzenDropDown AllowClear="false" TValue="string" Class="w-100" 
-                            Data=@fiats
-                            />
-                    </MudItem>   
+                        Token To Sell<br />
+                        <RadzenDropDown AllowClear="false" TValue="Ticker" Class="w-100"
+                            @bind-Value=@selcrypto
+                            Data=@tickers />
+                    </MudItem>
                     <MudItem xs="12">
-                        Order Type
-                        <RadzenDropDown AllowClear="false" TValue="string" Class="w-100" 
-                            Data=@odrtyps
-                            />
-                    </MudItem>   
+                        Fiat currency<br />
+                        <RadzenDropDown AllowClear="false" TValue="string" Class="w-100"
+                            @bind-Value=@selfiat
+                            Data=@fiats />
+                    </MudItem>
                     <MudItem xs="12">
-                        Sell price
-                        <RadzenNumeric TValue="decimal" Class="w-100" />
-                    </MudItem>   
+                        Order Type<br />
+                        <RadzenDropDown AllowClear="false" TValue="string" Class="w-100"
+                            @bind-Value=@selodrtyp
+                            Data=@odrtyps />
+                    </MudItem>
                     <MudItem xs="12">
-                        Quantity
-                        <RadzenNumeric TValue="decimal" Class="w-100" />
-                    </MudItem>   
+                        Sell price<br />
+                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@selprice Change=@(args => total=$"{selqty*selprice:N2}") />
+                    </MudItem>
+                    <MudItem xs="12">
+                        Quantity<br />
+                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@selqty Change=@(args => total=$"{selqty*selprice:N2}") />
+                    </MudItem>
+                    <MudItem xs="12">
+                        Collateral<br />
+                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@cltlyr />
+                    </MudItem>
                     <MudItem xs="12">
                         Total: @total
-                    </MudItem>   
+                    </MudItem>
                     <MudItem xs="12">
-                        <RadzenButton IsBusy=@busy Click=@(args => OnClick("adddao")) Text="Add New Order" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
-                    </MudItem>   
+                        <RadzenButton IsBusy=@busy Click=@(async args => await CreateOrder("adddao")) Text="Add New Order" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <RadzenButton Click=@(args => Back2("")) Text="Back" ButtonStyle="ButtonStyle.Light" />
+                    </MudItem>
 
                 }
             }
 
-        <MudItem xs="12">
-            <MudTextField @bind-Value="@keywords" Label="Search DAO" Variant="Variant.Text"></MudTextField>
-        </MudItem>
-            <MudItem xs="12">
-            <MudExpansionPanels Class=".blue .darken-1 .shades-text .text-white">
-                <MudExpansionPanel Text="The Lyra Council" MaxHeight="1000">
-                    <p>
-                        Formed by all (Total 19) Lyra node owners, The Lyra Council 
-                       is the final arbitration institution for almost all fairs of 
-                       the whole Lyra network. Decisions are made by voting of members.
-                    </p>
-                    <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" >Details</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" >Join</MudButton>
-                </MudExpansionPanel>
-                <MudExpansionPanel Text="OTC Exchange" MaxHeight="500">
-                    <p>
-                       Trade Token/Fiat without a broker.
-                    </p>
-                    <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" >Details</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" >Sell</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" >Buy</MudButton>
-                </MudExpansionPanel>
-                <MudExpansionPanel Text="Simple Buy & Sell" MaxHeight="1000">
-                    <p>
-                       A simple buy/sell business model.
-                    </p>
-                    <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" >Details</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" >Sell</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" >Buy</MudButton>
-                </MudExpansionPanel>
-            </MudExpansionPanels>
-        </MudItem>
+
+@*            <MudItem xs="12">
+                <MudExpansionPanels Class=".blue .darken-1 .shades-text .text-white">
+                    <MudExpansionPanel Text="The Lyra Council" MaxHeight="1000">
+                        <p>
+                            Formed by all (Total 19) Lyra node owners, The Lyra Council
+                            is the final arbitration institution for almost all fairs of
+                            the whole Lyra network. Decisions are made by voting of members.
+                        </p>
+                        <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary">Join</MudButton>
+                    </MudExpansionPanel>
+                    <MudExpansionPanel Text="OTC Exchange" MaxHeight="500">
+                        <p>
+                            Trade Token/Fiat without a broker.
+                        </p>
+                        <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary">Sell</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary">Buy</MudButton>
+                    </MudExpansionPanel>
+                    <MudExpansionPanel Text="Simple Buy & Sell" MaxHeight="1000">
+                        <p>
+                            A simple buy/sell business model.
+                        </p>
+                        <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary">Sell</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary">Buy</MudButton>
+                    </MudExpansionPanel>
+                </MudExpansionPanels>
+            </MudItem>*@
         }
 
 
@@ -143,7 +162,7 @@
 
 @code {
     [Parameter]
-    public string action {  get;  set; } 
+    public string action { get; set; }
 
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
@@ -163,7 +182,7 @@
     bool busy;
 
     List<IDao> mydaos;
-    bool showco,dir;
+    bool showco, dir;
     string total;
     List<Ticker> tickers;
     List<string> fiats = new List<string>
@@ -174,6 +193,10 @@
     {
         "Fixed price", "Floating price"
     };
+
+    Ticker selcrypto;
+    string seldaoname, selfiat, selodrtyp;
+    decimal selprice, selqty, cltlyr;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -196,9 +219,49 @@
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    void CreateOrder(string name)
+    void ShowCreateOrderUI(string name)
     {
         showco = !showco;
+        seldaoname = name;
+    }
+
+    async Task CreateOrder(string daoname)
+    {
+        busy = true;
+        Snackbar.Add("Creating Order...", Severity.Info);
+
+        try
+        {
+            var daoret3 = await walletState.Value.wallet.RPC.GetDaoByNameAsync(seldaoname);
+            var daot = daoret3.GetBlock() as TransactionBlock;
+
+            var order = new OTCCryptoOrder
+                {
+                    daoid = daot.AccountID,
+                    dir = TradeDirection.Sell,
+                    crypto = selcrypto.dbname,
+                    fiat = selfiat,
+                    priceType = PriceType.Fixed,
+                    price = selprice,
+                    amount = selqty,
+                    collateral = cltlyr,
+                };
+            var ret = await walletState.Value.wallet.CreateOTCOrderAsync(order);
+            if (ret.Successful())
+            {
+                Snackbar.Add("Order created.", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add($"Order failed to create: {ret.ResultCode}", Severity.Error);
+            }
+        }
+        catch (Exception e)
+        {
+            Snackbar.Add($"Order failed to create: {e}", Severity.Error);
+        }
+
+        busy = false;
     }
 
     async Task GetMyDaos()
@@ -219,7 +282,7 @@
         {
             var lc = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
             var dcret = await walletState.Value.wallet.CreateDAOAsync(name, desc);
-            if(dcret.Successful())
+            if (dcret.Successful())
             {
                 Snackbar.Add($"Orgnization {name} created successfully.", Severity.Success);
                 await GetMyDaos();
@@ -229,7 +292,7 @@
                 Snackbar.Add($"Failed to create orgnization: {dcret.ResultCode}", Severity.Error);
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Snackbar.Add($"Failed to create orgnization: {ex.Message}", Severity.Error);
         }
@@ -240,6 +303,12 @@
 
     async Task Back(string buttonName)
     {
+        Navigation.NavigateTo("/dao");
+    }
+
+    async Task Back2(string buttonName)
+    {
+        showco = !showco;
         Navigation.NavigateTo("/dao");
     }
 
