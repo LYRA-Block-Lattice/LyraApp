@@ -10,149 +10,197 @@
 @using Nebula.Store.WebWalletUseCase
 @inject IConfiguration Configuration
 
-<MudTabs SelectedTab="@selectedTab1">
-    <MudTabPanel Text="Staking Accounts">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Staking Amount</th>
-                    <th>Compound Mode</th>
-                    <th>Total Reward</th>
-                    <th>Start Time</th>
-                    <th>Staking Days</th>
-                    <th>Staking to Account</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var stk in walletState.Value.stkAccounts)
-                {
-                    <tr>
-                        <td>@((stk as IStaking).Name)</td>
-                        @if (walletState.Value.stkBalances != null)
+<MudTabs SelectedTab="@selectedTab1" Centered="true">
+    <MudTabPanel Text="Staking Accounts" >
+        <div class="flex-container">
+            <div class="node-list staking-list">
+                <table class="table">
+                    <tbody>
+                        @foreach (var stk in walletState.Value.stkAccounts)
                         {
-                            <td>@walletState.Value.stkBalances[(stk as TransactionBlock).AccountID]</td>
+                            <tr>
+                                <td>Name</td>
+                                <td>:</td>
+                                <td>@((stk as IStaking).Name)</td>
+                            </tr>
+                            <tr>
+                                <td>Staking Amount</td>
+                                <td>:</td>
+                                @if (walletState.Value.stkBalances != null)
+                                {
+                                    <td>@walletState.Value.stkBalances[(stk as TransactionBlock).AccountID]</td>
+                                }
+                                else
+                                {
+                                    <td>0</td>
+                                }
+                            </tr>
+                            <tr>
+                                <td>Compund Mode</td>
+                                <td>:</td>
+                                <td>@((stk as IStaking).CompoundMode)</td>
+                            </tr>
+                            <tr>
+                                <td>Total Reward</td>
+                                <td>:</td>
+                                <td>@walletState.Value.stkRewards[(stk as TransactionBlock).AccountID]</td>
+                            </tr>
+                            <tr>
+                                <td>Start Time</td>
+                                <td>:</td>
+                                <td>@((stk as IStaking).Start)</td>
+                            </tr>
+                            <tr>
+                                <td>Staking Days</td>
+                                <td>:</td>
+                                <td>@((stk as IStaking).Days)</td>
+                            </tr>
+                            <tr>
+                                <td>Staking to Account</td>
+                                <td>:</td>
+                                <td>
+                                    @((stk as IStaking).Voting.Substring(0, 10))...
+                                    <a target="_blank" href="https://nebula.lyra.live/showblock/@((stk as IStaking).Voting)"><MudIcon Icon="@Icons.Filled.CallMade" Size="Size.Small" /></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align: center;border-bottom:none;padding-top:30px;">
+                                    <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" OnClick="@(async (e) => await AddStkAsync(e, (stk as TransactionBlock).AccountID))">Add Staking</MudButton>
+                                    &nbsp;
+                                    <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" OnClick="@(async () => {await UnstakingConfirm((stk as TransactionBlock).AccountID, (stk as IStaking).Start, (stk as IStaking).Days);})">Unstaking</MudButton>
+                                </td>
+                            </tr>
                         }
-                        else
-                        {
-                            <td>0</td>
-                        }
-                        <td>@((stk as IStaking).CompoundMode)</td>
-                        <td>@walletState.Value.stkRewards[(stk as TransactionBlock).AccountID]</td>
-                        <td>@((stk as IStaking).Start)</td>
-                        <td>@((stk as IStaking).Days)</td>
-                        <td>@((stk as IStaking).Voting)</td>
-                        <td>
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async (e) => await AddStkAsync(e, (stk as TransactionBlock).AccountID))">Add Staking</MudButton>
-                            &nbsp;
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async () => {await UnstakingConfirm((stk as TransactionBlock).AccountID, (stk as IStaking).Start, (stk as IStaking).Days);})">Unstaking</MudButton>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </MudTabPanel>
     <MudTabPanel Text="Profiting Accounts">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Share Ratio</th>
-                    <th>Seats</th>
-                    <th>Profiting Account ID</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var pft in walletState.Value.pftAccounts)
-                {
-                    <tr>
-                        <td>@pft.Name</td>
-                        <td>@pft.PType</td>
-                        <td>@pft.ShareRito</td>
-                        <td>@pft.Seats</td>
-                        <td>
-                            @pft.AccountID
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <div class="flex-container">
+            <div class="node-list staking-list">
+                <table class="table">
+                    <tbody>
+                        
+                        @foreach (var pft in walletState.Value.pftAccounts)
+                        {
+                            <tr>
+                                <td>Name</td>
+                                <td>:</td>
+                                <td>@pft.Name</td>
+                            </tr>
+                            <tr>
+                                <td>Type</td>
+                                <td>:</td>
+                                <td>@pft.PType</td>
+                            </tr>
+                            <tr>
+                                <td>Share</td>
+                                <td>:</td>
+                                <td>@pft.ShareRito</td>
+                            </tr>
+                            <tr>
+                                <td>Seats</td>
+                                <td>:</td>
+                                <td>@pft.Seats</td>
+                            </tr>
+                            <tr>
+                                <td>Profiting Account ID</td>
+                                <td>:</td>
+                                <td>
+                                     <p style="width:100%;display:inline;">
+                                        <CopyToClipboard Text="@pft.AccountID" />
+                                    </p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </MudTabPanel>
 </MudTabs>
 
 <div style="height:60px;" />
 
-<MudTabs SelectedTab="@selectedTab2">
+<MudTabs SelectedTab="@selectedTab2" Centered="true">
     <MudTabPanel Text="Create Staking Account">
-        <p>
-            Name:
-            <MudTextField Label="Name" @bind-Value="@stkName" />
-        </p>
-        <p>
-            Staking For Address:
-            <MudTextField Label="Address" @bind-Value="@stkVoting" />
-        </p>
-        <p>
-            Days of staking:
-            <MudTextField Label="Days, >= 3" @bind-Value="@stkDays" />
-        </p>
-        <p>
-            Compound staking mode:
-            <input size="10" type="checkbox" @bind="@stkCompound" />
-        </p>
-        <div>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@adding"
-                       OnClick="@(async () => await StakingCreate())">
-                @if (adding)
-                {
-                    <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2">Processing</MudText>
-                }
-                else
-                {
-                    <MudText>Create Staking</MudText>
-                }
-            </MudButton>
+        <div class="flex-container">
+            <div class="node-list ProfStake-create">
+                <div class="card-staking">
+                    Name:
+                    <MudTextField Label="Name" @bind-Value="@stkName" />
+                </div>
+                <div class="card-staking">
+                    Staking For Address:
+                    <MudTextField Label="Address" @bind-Value="@stkVoting" />
+                </div>
+                <div class="card-staking">
+                    Days of staking:
+                    <MudTextField Label="Days, >= 3" @bind-Value="@stkDays" />
+                </div>
+                <div class="card-staking">
+                    Compound staking mode:
+                    <input size="10" type="checkbox" @bind="@stkCompound" />
+                </div>
+                <div>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@adding"
+                            OnClick="@(async () => await StakingCreate())">
+                        @if (adding)
+                        {
+                            <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Processing</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Create Staking</MudText>
+                        }
+                    </MudButton>
+                </div>
+            </div>
         </div>
     </MudTabPanel>
     <MudTabPanel Text="Create Profiting Account">
-        <p>
-            Name:
-            <MudTextField Label="Name" @bind-Value="@pftName" />
-        </p>
-        <p>
-            Type:
-            <select style="height: 40px; width: 380px" @bind="@pftType">
-                <option value="Node">Node</option>
-                <option disabled value="Oracle">Oracle</option>
-                <option disabled value="Merchant">Merchant</option>
-                <option value="Yield">Yield</option>
-            </select>
-        </p>
-        <p>
-            Ratio to share to staking (0% - 100%):
-            <MudTextField Label="Ratio" @bind-Value="@pftShare" />
-        </p>
-        <p>
-            Number of staking (0 - 100):
-            <MudTextField Label="Max number" @bind-Value="@pftSeats" />
-        </p>
-        <div>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@adding"
-                       OnClick="@(async () => await ProfitingCreate())">
-                @if (adding)
-                {
-                    <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2">Processing</MudText>
-                }
-                else
-                {
-                    <MudText>Create Profiting Account</MudText>
-                }
-            </MudButton>
+        <div class="flex-container">
+            <div class="node-list ProfStake-create">
+                <div class="card-staking">
+                    Name:
+                    <MudTextField Label="Name" @bind-Value="@pftName" />
+                </div>
+                <div class="card-staking">
+                    Type:
+                    <select style="height: 40px; width: 100%" @bind="@pftType">
+                        <option value="Node">Node</option>
+                        <option disabled value="Oracle">Oracle</option>
+                        <option disabled value="Merchant">Merchant</option>
+                        <option value="Yield">Yield</option>
+                    </select>
+                </div>
+                <div class="card-staking">
+                    Ratio to share to staking (0% - 100%):
+                    <MudTextField Label="Ratio" @bind-Value="@pftShare" />
+                </div>
+                <div class="card-staking">
+                    Number of staking (0 - 100):
+                    <MudTextField Label="Max number" @bind-Value="@pftSeats" />
+                </div>
+                <div style="display: flex;justify-content:center;">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@adding"
+                            OnClick="@(async () => await ProfitingCreate())">
+                        @if (adding)
+                        {
+                            <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Processing</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Create Profiting Account</MudText>
+                        }
+                    </MudButton>
+                </div>
+            </div>
         </div>
+        
     </MudTabPanel>
 </MudTabs>
 

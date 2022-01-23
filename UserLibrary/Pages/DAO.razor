@@ -10,45 +10,56 @@
         {
         <MudItem xs="12">
             <h1>Create DAO</h1>
-            </MudItem>
+        </MudItem>
         }
         else
         {
-        <MudItem xs="12">
-            <MudTextField @bind-Value="@keywords" Label="Search DAO" Variant="Variant.Text"></MudTextField>
-        </MudItem>
-        <MudItem xs="12">
-            <MudExpansionPanels Class=".blue .darken-1 .shades-text .text-white">
-                <MudExpansionPanel Text="The Lyra Council" MaxHeight="1000">
-                    <p>
-                        Formed by all (Total 19) Lyra node owners, The Lyra Council 
-                       is the final arbitration institution for almost all fairs of 
-                       the whole Lyra network. Decisions are made by voting of members.
-                    </p>
-                    <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" >Details</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" >Join</MudButton>
-                </MudExpansionPanel>
-                <MudExpansionPanel Text="OTC Exchange" MaxHeight="500">
-                    <p>
-                       Trade Token/Fiat without a broker.
-                    </p>
-                    <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" >Details</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" >Sell</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" >Buy</MudButton>
-                </MudExpansionPanel>
-                <MudExpansionPanel Text="Simple Buy & Sell" MaxHeight="1000">
-                    <p>
-                       A simple buy/sell business model.
-                    </p>
-                    <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" >Details</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" >Sell</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" >Buy</MudButton>
-                </MudExpansionPanel>
-            </MudExpansionPanels>
-        </MudItem>
+            <div class="flex-container">
+                <div class="node-list DAO-list">
+                    <MudItem xs="12">
+                        <MudTextField @bind-Value="@keywords" Label="Search DAO" Variant="Variant.Text"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudExpansionPanels Class=".blue .darken-1 .shades-text .text-white">
+                            <div class="card-DAO">
+                                <MudExpansionPanel Text="The Lyra Council" MaxHeight="1000">
+                                    <p> Formed by all (Total 19) Lyra node owners, The Lyra Council 
+                                    is the final arbitration institution for almost all fairs of 
+                                    the whole Lyra network. Decisions are made by voting of members.</p>
+                                    
+                                    <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+                                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" >Details</MudButton>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" >Join</MudButton>
+                                </MudExpansionPanel>
+                            </div>
+                            
+
+                            <div class="card-DAO">
+                                <MudExpansionPanel Text="OTC Exchange" MaxHeight="500">
+                                    <p>Trade Token/Fiat without a broker.</p>
+                                    <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+                                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" >Details</MudButton>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" >Sell</MudButton>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" >Buy</MudButton>
+                                </MudExpansionPanel>
+                            </div>
+                            
+
+                            <div class="card-DAO">
+                                <MudExpansionPanel Text="Simple Buy & Sell" MaxHeight="1000">
+                                    <p>A simple buy/sell business model.</p>
+                                    <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+                                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" >Details</MudButton>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" >Sell</MudButton>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" >Buy</MudButton>
+                                </MudExpansionPanel>
+                            </div>
+                            
+                        </MudExpansionPanels>
+                    </MudItem>
+                </div>
+            </div>
+        
         }
 
 

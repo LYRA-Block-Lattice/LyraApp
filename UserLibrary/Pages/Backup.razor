@@ -7,7 +7,7 @@
 
 @if (authed)
 {
-    <div class="mag flex-container">
+    <div class="flex-container">
     @if(backuped)
         {
             <a href="/">
@@ -18,49 +18,52 @@
         }
         else
         {
-            <div class="flex-container">
-            <h3>
-                Your private key is
-            </h3>
-            <MudPaper Elevation="4" Style="margin: 20px;">
-                <span style="margin:20%; width:100px; word-wrap:break-word; display:inline-block;">
+            <div class="node-list" style="width: 100%;">
+                <h3>
+                    Your private key is
+                </h3>
+                <div class="coin-card" style="margin-bottom: 20px;word-break: break-all;">
                     @pvtkey
-                </span>
-            </MudPaper>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" 
-                @onclick="@(async() => await Finish())">
-                I have memorized the private key
-            </MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                @onclick="@(async() => await Restart())">
-                Start Over Again     
-            </MudButton>
+                </div>
+                <p style="color: red;">*This private key is the key to your wallet and assets, so keep this private key well and away from the possibility of being stolen by others. </p> 
+                <p style="color: red;">Lost private key = lost assets</p>
+                <div style="text-align: center;margin-top:20px;">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(async() => await Finish())">
+                        I have memorized the private key
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(async() => await Restart())">
+                        Start Over Again     
+                    </MudButton>
+                </div>
             </div>
+           
         }
 
    </div>
 }
 else
 {
-    <div class="mag flex-container">
-        <div>
-            Input your password to backup.
-        </div>
-        <div class="mid">
-            <MudTextField InputType="InputType.Password" Label="Password" Size="Size.Large" @bind-Value="@txtValue1" />
-        </div>
-        <div class="mid">
-            <MudButton Variant="Variant.Filled" Disabled="@busy" Color="Color.Primary" OnClick="@(async() => await OpenWallet())">
-                @if (busy)
-                {
-                    <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2">Processing</MudText>
-                }
-                else
-                {
-                    <MudText>Verify password and backup</MudText>
-                }
-            </MudButton>
+    <div class="mag flex-container backup-flex">
+        <div class="node-list">
+            <div>
+                Input your password to backup.
+            </div>
+            <div class="mid">
+                <MudTextField InputType="InputType.Password" Label="Password" Size="Size.Large" @bind-Value="@txtValue1" />
+            </div>
+            <div class="mid" style="margin-top: 20px;text-align:center;">
+                <MudButton Variant="Variant.Filled" Disabled="@busy" Color="Color.Primary" OnClick="@(async() => await OpenWallet())">
+                    @if (busy)
+                    {
+                        <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                        <MudText Class="ms-2">Processing</MudText>
+                    }
+                    else
+                    {
+                        <MudText>Verify password and backup</MudText>
+                    }
+                </MudButton>
+            </div>
         </div>
     </div>
 }

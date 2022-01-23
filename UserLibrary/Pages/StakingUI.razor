@@ -23,7 +23,7 @@ else
     else
     {
         Dispatcher.Dispatch(new WebWalletStakingAction { wallet = walletState.Value.wallet });
-        <p>Refreshing...</p>
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
     }
 }
 

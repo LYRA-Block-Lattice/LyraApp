@@ -25,6 +25,7 @@ else
 
     @if (tokens == null)
     {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
         <p><em>Loading wallets... This may take a while.</em></p>
         <div class="spinner"></div>
     }
@@ -32,7 +33,41 @@ else
     {
         foreach (var token in tokens)
         {
-            <MudCard Style="width: 300px;" Elevation="8">
+            <div class="wrap-dex">
+                <div class="coin-card dex-card">
+                    <div class="dex-coin">
+                        <div class="logo-dex">@token.Name.Substring(0, 1)</div>
+                        <div class="dex-name"><h4>@token.Name</h4></div>
+                    </div>
+                    <div class="dex-balance">
+                        <div class="spot-dex">
+                            <span>Spot:</span>
+                            <span>@token.MyBalance <b>@token.Symbol</b></span>
+                            <MudIconButton Icon="@Icons.Filled.ArrowCircleDown" Color="Color.Dark" OnClick="@(async ()=>{ await OnTransferClick(token, true); })"></MudIconButton>
+                        </div>
+                        <div class="dex-dex">
+                            <span>DEX:</span>
+                            <span>@token.DexBalance <b>@token.Symbol</b></span>
+                            <MudIconButton Icon="@Icons.Filled.ArrowCircleUp" Color="Color.Dark" OnClick="@(async ()=>{ await OnTransferClick(token, false); })"></MudIconButton>
+                        </div>
+                    </div>
+                    <div class="deposit-withdraw">
+                        <div class="deposit">
+                            <MudButton Variant="Variant.Filled" Color="Color.Default" OnClick="@(async ()=>{ await OnDepositClick(token); })" style="width: 70%;">
+                                Deposit
+                            </MudButton>
+                        </div>
+                        <div class="withdraw">
+                            <MudButton Variant="Variant.Filled" Color="Color.Default" OnClick="@(async ()=>{ await OnWithdrawClick(token); })" style="width: 70%;">
+                                Withdraw
+                            </MudButton>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+                
+            @* <MudCard Style="width: 300px;" Elevation="8">
                 <MudCardHeader>
                     <CardHeaderAvatar>
                         <MudAvatar Color="Color.Secondary">@token.Name.Substring(0, 1)</MudAvatar>
@@ -68,7 +103,7 @@ else
                         Withdraw
                     </MudButton>
                 </MudCardActions>
-            </MudCard>
+            </MudCard> *@
         }
 
 
@@ -76,7 +111,7 @@ else
 
         <div>
             <MudButton Variant="Variant.Filled" Disabled="@refreshing" FullWidth="true" Color="Color.Primary" 
-                OnClick="@RefreshAllWallets">
+                OnClick="@RefreshAllWallets" style="margin-top:30px;">
                 @if (refreshing)
                 {
                     <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />

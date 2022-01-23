@@ -27,55 +27,41 @@
     }
     else
     {
-        <div>
-            <h3>Scan to Pay Me</h3>
-            <p><QRCodeWriter Text="@walletState.Value.wallet.AccountId" Width="300" Heigth="300"></QRCodeWriter></p>
-            <MudDivider />
-            <p>Your wallet's address is: <a target="_blank" href="@bexpurl/showblock/@walletState.Value.wallet.AccountId">@walletState.Value.wallet.AccountId</a></p>
-            <p>Your wallet's balance is: @walletState.Value.balanceString</p>
- 
-            <p>Your are now voting for: @walletState.Value.wallet.VoteFor</p>
-
-            <p>
-                <MudTextField T="string" Label="Vote For Address" @bind-Value="@voteAddr" />
-            </p>
-            <div>
-                <p style="color: red">Please save private key properly if you want to open this wallet again.</p>
+        
+        <div class="wrap-all-balance setting-sect">
+            <div class="all-balance">
+                <div class="coin-card">
+                    <select name="network" id="" style="background-color: white;">
+                        <option value="">Mainnet</option>
+                        <option value="">TestNet</option>
+                    </select>
+                </div>
+                
+                <div class="coin-card"  @onclick="SaveSettings">
+                    Save
+                </div>
+                <div class="coin-card">
+                    <a style="color: #272c34ff;" href="/backup">Backup wallet</a>
+                </div>
+                <div class="coin-card" @onclick="CloseWallet">
+                    Logout
+                </div>
             </div>
-            <MudDivider />
-
-            <MudButton Variant="Variant.Filled" Disabled="@(fetching)" Color="Color.Primary" 
-                OnClick="@(async() => await Transactions())" class="rounded-pill">
-
-                @if (fetching)
-                {
-                    <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2">Processing</MudText>
-                }
-                else
-                {
-                    <MudText>Show Last 10 Transactions</MudText>
-                }
-            </MudButton>
-
-            @if (txs != null)
-            {
-                <pre>
-                    @foreach (var tx in txs)
-                    {
-                        @tx <br />
-
-                    }
-                        </pre>
-            }
-            &nbsp;<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SaveSettings">Save</MudButton>
-            &nbsp;<a href="/backup"><MudButton Variant="Variant.Filled" Color="Color.Primary">Backup Wallet</MudButton></a>
-            &nbsp;<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="CloseWallet">Close Wallet</MudButton>
+            <div class="voting-sect">
+                <p>Your are now voting for: @walletState.Value.wallet.VoteFor</p>
+                <MudTextField T="string" Label="Vote For Address" @bind-Value="@voteAddr" />
+                <div style="margin-top: 20px;">
+                    <p style="color: red">Please save private key properly if you want to open this wallet again.</p>
+                </div>
+            </div>
+             @* <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SaveSettings">Save</MudButton>
+            <a href="/backup"><MudButton Variant="Variant.Filled" Color="Color.Primary">Backup Wallet</MudButton></a>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="CloseWallet">Close Wallet</MudButton> *@
         </div>
     }
 
-    <MudDivider Style="margin: 30px" />
-    <div style="font-size: xx-small">
+    <div style="font-size: xx-small;position:absolute;bottom:20px;">
+        <hr>
         Main Program Version: @(Assembly.GetEntryAssembly().GetName().Version)<br />
         User Library Version: @(typeof(UserLibrary.Data.WalletView).Assembly.GetName().Version)
     </div>

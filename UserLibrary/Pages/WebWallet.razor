@@ -5,6 +5,8 @@
 
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
+@using CoinGecko.Clients
+@using CoinGecko.Interfaces
 @using BlazorZXingJs
 @using Fluxor
 @using Lyra.Core.API
@@ -39,136 +41,247 @@
 
 @if (walletState.Value.wallet != null)
 {
-    <MudTabs @ref="tabs" Elevation="4" Rounded="true" Centered="true" Color="Color.Secondary">
-        <MudTabPanel Text="Home">
-            <MudButton Variant="Variant.Outlined" Disabled="@busy" Color="Color.Success" OnClick="@Refresh" FullWidth>
-                @if (busy)
-                {
-                    <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2">Processing</MudText>
-                }
-                else
-                {
-                    <MudText>Receive</MudText>
-                }
-            </MudButton>
-
-
-            <div class="cet">
-                @if (walletState.Value.wallet.GetLatestBlock() != null)
-                {
-                    @foreach (var kvp in walletState.Value.wallet.GetLatestBlock().Balances)
-                    {
-                        <MudCard Style="min-width: 200px;" Elevation="8">
-                            <MudCardHeader>
-                                <CardHeaderContent>
-                                    <h4>@kvp.Key.Replace("tether/", "$")</h4>
-                                </CardHeaderContent>
-                                <CardHeaderActions>
-                                    <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                                   OnClick="@(async ()=>{ await SendX(kvp.Key); })">Send</MudButton>
-                                </CardHeaderActions>
-                            </MudCardHeader>
-                            <MudCardContent>
-                                <div>@($"{kvp.Value.ToBalanceDecimal():N4}")</div>
-                            </MudCardContent>
-                        </MudCard>
-                    }
-                }
-                else
-                {
-                    <MudCard Style="width: 200px;" Elevation="8">
-                            <MudCardHeader>
-                                <CardHeaderContent>
-                                    <h4>LYR</h4>
-                                </CardHeaderContent>
-                                <CardHeaderActions>
-                                    <MudButton Variant="Variant.Filled" Disabled="@(true)" Color="Color.Primary"
-                                   OnClick="@(async ()=>{ await SendX("LYR"); })">Send</MudButton>
-                                </CardHeaderActions>
-                            </MudCardHeader>
-                            <MudCardContent>
-                                <div>0.00</div>
-                            </MudCardContent>
-                        </MudCard>
-                }
-
-                <MudCard Style="width: 200px;" Elevation="8">
-                        <MudCardHeader>
-                            <CardHeaderContent>
-                                <h4>Your New Token</h4>
-                            </CardHeaderContent>
-                            <CardHeaderActions>
-
-                            </CardHeaderActions>
-                        </MudCardHeader>
-                        <MudCardContent>
-                            <div style="height: 100%; display: flex; align-items: center; justify-content: center">
-                                <a href="mint">
-                                    <MudFab Color="Color.Secondary" Icon="@Icons.Material.Filled.Add" Size="Size.Small" IconSize="Size.Large" aria-label="add" />
-                                </a>
-                            </div>
-                        </MudCardContent>
-                    </MudCard>
-            </div>
-
-        </MudTabPanel>
-
-        <MudTabPanel Text="Send">
-            <div class="mag">
-                <MudGrid>
-                    <MudItem xs="12">
-                        <MudTextField T="string" Label="Destination Wallet Address" @bind-Value="@dstAddr" />
-                        <a href="/scan">
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary">Scan QR-Code</MudButton>
-                        </a>
-                    </MudItem>
-                    <MudItem xs="12">
-                    <MudTextField T="string" Label="Token Name" @bind-Value="@tokenName" />
-                    </MudItem>
-                    <MudItem xs="12">
-                    <MudNumericField T="decimal" Label="Amount" @bind-Value="@amount" />
-                    </MudItem>
-                    <MudItem xs="12">
-                <MudButton Variant="Variant.Filled" Disabled="@busysend" Color="Color.Primary" OnClick="@(async () => await SendTokenAsync())">
-                    @if (busysend)
+    <MudPaper Height="400px" Width="100%">
+    <MudContainer Fixed="true">
+        <MudTabs @ref="tabs" Rounded="true" Centered="true" >
+            <MudTabPanel Text="Balance">
+                @* <MudButton Variant="Variant.Outlined" Disabled="@busy" Color="Color.Success" OnClick="@Refresh" FullWidth>
+                    @if (busy)
                     {
                         <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                         <MudText Class="ms-2">Processing</MudText>
                     }
                     else
                     {
-                        <MudText>Send Token</MudText>
+                        <MudText>Receive</MudText>
                     }
-                </MudButton>
-                    </MudItem>
-                </MudGrid>
-                
-            </div>
+                </MudButton> *@
+                <div class="wrap-all-balance">
+                    <div class=" all-balance">
+                        @if (walletState.Value.wallet.GetLatestBlock() != null)
+                        {
+                            @foreach (var kvp in walletState.Value.wallet.GetLatestBlock().Balances)
+                            {
+                                <div class="coin-card">
+                                    <div class="logo-balance">
+                                        <div class="logo-dex">@kvp.Key.Substring(0, 1)</div>
+                                    </div>
+                                    <div class="div-balance">
+                                        <h4>@kvp.Key.Replace("tether/", "$")</h4>
+                                        <span>@($"{kvp.Value.ToBalanceDecimal():N4}")</span>
+                                    </div>
 
-        </MudTabPanel>
+                                    <div class="estimation">
+                                        <p>$0.00025</p>
+                                        <p>$100,000</p>
+                                    </div>
+                                    
+                                    <div class="div-button">
+                                        <MudButton OnClick="@(async ()=>{ await SendX(kvp.Key); })" Size="Size.Small">
+                                            <MudIcon Icon="@Icons.Filled.ArrowCircleUp" Title="Send" />
+                                        </MudButton>
+                                        <MudButton OnClick="@(async ()=>{ await SendX(kvp.Key); })" Size="Size.Small">
+                                            <MudIcon Icon="@Icons.Filled.ArrowCircleDown" Title="Receive" />
+                                        </MudButton>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+                        }
+                        
+                        <div style="text-align: center;">
+                            <h4>Add</h4>
+                            <a href="mint">
+                                <MudIcon Icon="@Icons.Filled.AddCircleOutline" Title="Add Your Token" Size="Size.Large"/>
+                            </a>
+                        </div>
+                    </div>
 
-        @if (!string.IsNullOrWhiteSpace(Configuration["faucetPvk"]) && Configuration["network"] != "mainnet" && walletState.Value.wallet.BaseBalance == 0m && !walletState.Value.freeTokenSent) //&& walletState.Value.freeTokenTimes < 3
-        {
-            <MudTabPanel Text="Free Token">
-                <div>
-                    <p>Current balance of faucet account: <em>@walletState.Value.faucetBalance</em> LYR</p>
+                    <div class="transactions" style="position: relative;">
+                        <div class="coin-card" style="align-items: center;justify-content:center;">
+                            <span style="text-align: center;">Latest 10 transaction history</span>
+                        </div>
+                        <div class="coin-card tx">
+                            <div class="icon-tx">
+                                <MudIcon Icon="@Icons.Filled.ArrowCircleUp" Color="Color.Default" Size="Size.Large" />
+                            </div>
+                            <div class="from-to">
+                                <div class="r-s">Send</div>
+                                <div class="f-t">To: LZ83gMsC...</div>
+                            </div>
+                            <div class="amount-date">
+                                <div class="amount">1,000,000,000</div>
+                                <div class="date">01 jan 2022</div>
+                            </div>
+                            <div class="exp-icon">
+                                <a target="blank" href="https://nebula.lyra.live/showblock/"><MudIcon Icon="@Icons.Filled.Link" Color="Color.Default" /></a>
+                            </div>
+                        </div>
+                        <div class="coin-card tx">
+                            <div class="icon-tx">
+                                <MudIcon Icon="@Icons.Filled.ArrowCircleDown" Color="Color.Default" Size="Size.Large" />
+                            </div>
+                            <div class="from-to">
+                                <div class="r-s">Receive</div>
+                                <div class="f-t">From: LZ83gMs...</div>
+                            </div>
+                            <div class="amount-date">
+                                <div class="amount">1,000,000</div>
+                                <div class="date">01 jan 2022</div>
+                            </div>
+                            <div class="exp-icon">
+                                <a target="blank" href="https://nebula.lyra.live/showblock/"><MudIcon Icon="@Icons.Filled.Link" Color="Color.Default" /></a>
+                            </div>
+                        </div>
+                        <div class="coin-card tx">
+                            <div class="icon-tx">
+                                <MudIcon Icon="@Icons.Filled.Repeat" Color="Color.Default" Size="Size.Large" />
+                            </div>
+                            <div class="from-to">
+                                <div class="r-s">Contract</div>
+                                <div class="f-t">To: LZ83gMsC...</div>
+                            </div>
+                            <div class="amount-date">
+                                <div class="amount">1,000,000</div>
+                                <div class="date">01 jan 2022</div>
+                            </div>
+                            <div class="exp-icon">
+                                <a target="blank" href="https://nebula.lyra.live/showblock/"><MudIcon Icon="@Icons.Filled.Link" Color="Color.Default" /></a>
+                            </div>
+                        </div>
+                        @* <MudButton Variant="Variant.Filled" Disabled="@(fetching)" Color="Color.Primary" 
+                            OnClick="@(async() => await Transactions())" class="rounded-pill" style="position: absolute;top:0;width:100%;">
+
+                            @if (fetching)
+                            {
+                                <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                <MudText Class="ms-2">Processing</MudText>
+                            }
+                            else
+                            {
+                                <MudText>Show Last 10 Transactions</MudText>
+                            }
+                        </MudButton>
+
+                        @if (txs != null)
+                        {
+                            @foreach (var tx in txs)
+                            {
+                                <div class="coin-card">
+                                    @tx
+                                </div>
+
+                            }
+                        } *@
+                    </div>
                 </div>
 
-                @*    <div class="section">
-                    <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6Lftd8gZAAAAAK5G9aHUFY7wtV1yocfAf2Vj-EmI" OnSuccess="OnSuccess" OnExpired="OnExpired" />
-                    </div>*@
+                
 
-                <div class="section">
-                    <button class="btn btn-success" @onclick="OnClickPost" disabled="@walletState.Value.DisablePostButton">
-                        Send me Token!
-                    </button>
-                    &nbsp;&nbsp;
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="Return">Return</MudButton>
+            </MudTabPanel>
+
+            <MudTabPanel Text="Send">
+                <div class="flex-container">
+                    <div class="node-list mint-token">
+                        <MudGrid>
+                            <MudItem xs="12">
+                                <div class="coin-card scan-qr" style="align-items: center;">
+                                    <MudTextField T="string" Label="Destination Wallet Address" @bind-Value="@dstAddr" />
+                                    <a href="/scan">
+                                        <MudButton Variant="Variant.Filled" Color="Color.Primary">Scan QR-Code</MudButton>
+                                    </a>
+                                </div>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <div class="coin-card">
+                                    <MudTextField T="string" Label="Token Name" @bind-Value="@tokenName" />
+                                </div>
+                            </MudItem>
+                            
+                            <MudItem xs="12">
+                                <div class="coin-card">
+                                    <MudNumericField T="decimal" Label="Amount" @bind-Value="@amount" />
+                                </div>
+                            
+                            </MudItem>
+                            <MudItem xs="12">
+                                <div style="text-align: center;">
+                                    <MudButton Variant="Variant.Filled" Disabled="@busysend" Color="Color.Primary" OnClick="@(async () => await SendTokenAsync())">
+                                        @if (busysend)
+                                        {
+                                            <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                            <MudText Class="ms-2">Processing</MudText>
+                                        }
+                                        else
+                                        {
+                                            <MudText>Send Token</MudText>
+                                        }
+                                    </MudButton>
+                                </div>
+                            </MudItem>
+                        </MudGrid>
+                    </div>
                 </div>
             </MudTabPanel>
-        }
-    </MudTabs>
+
+            <MudTabPanel Text="receive">
+                <div class="wrap-all">
+                    <div class="wrap-wallet">
+                        <div class="qr">
+                            <h3>Scan or Copy address</h3>
+                            <p><QRCodeWriter Text="@walletState.Value.wallet.AccountId" Width="300" Heigth="300"></QRCodeWriter></p>
+                            <div class="addresses">
+                                <span>
+                                    @walletState.Value.wallet.AccountId.Substring(0, 13)...@walletState.Value.wallet.AccountId.Substring(84)
+                                    <CopyToClipboard Text="@walletState.Value.wallet.AccountId" />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrap-act" style="position: relative;">
+                        @* <div class="act">
+                            <p><b>balance : @walletState.Value.balanceString</b></p>
+                        </div> *@
+                        <div>
+                            <p style="color: #afafaf;">Make sure you ship to the correct address or your assets will be lost forever</p>
+                        </div>
+                        
+                        
+                        <div style="margin-top: 30px;">
+                            <p style="color: red">Please save private key properly if you want to open this wallet again.</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </MudTabPanel>
+
+            @if (!string.IsNullOrWhiteSpace(Configuration["faucetPvk"]) && Configuration["network"] != "mainnet" && walletState.Value.wallet.BaseBalance == 0m && !walletState.Value.freeTokenSent) //&& walletState.Value.freeTokenTimes < 3
+            {
+                <MudTabPanel Text="Free Token">
+                    <div>
+                        <p>Current balance of faucet account: <em>@walletState.Value.faucetBalance</em> LYR</p>
+                    </div>
+
+                    @*    <div class="section">
+                        <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6Lftd8gZAAAAAK5G9aHUFY7wtV1yocfAf2Vj-EmI" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+                        </div>*@
+
+                    <div class="section">
+                        <button class="btn btn-success" @onclick="OnClickPost" disabled="@walletState.Value.DisablePostButton">
+                            Send me Token!
+                        </button>
+                        &nbsp;&nbsp;
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="Return">Return</MudButton>
+                    </div>
+                </MudTabPanel>
+            }
+        </MudTabs>
+    </MudContainer>
+    </MudPaper>
+    
 
 
 
@@ -185,4 +298,112 @@ else
     {
 
     }
+}
+
+
+
+
+
+
+
+@code {
+    
+    [Inject] private IDialogService DialogService { get; set; }
+
+    
+    string bexpurl;
+    bool fetching;
+    List<string> txs;
+
+    private void ToggleKey(MouseEventArgs e)
+    {
+        if (altDisplay == "************")
+            altDisplay = walletState?.Value?.wallet?.PrivateKey;
+        else
+            altDisplay = "************";
+    }
+
+    private void CloseWallet(MouseEventArgs e)
+    {
+        Dispatcher.Dispatch(new WebWalletCloseAction());
+        Navigation.NavigateTo("/login");
+    }
+
+    private void SaveSettings(MouseEventArgs e)
+    {
+        Dispatcher.Dispatch(new WebWalletSaveSettingsAction { VoteFor = voteAddr });
+    }
+
+    private async Task Transactions()
+    {
+        fetching = true;
+        StateHasChanged();
+        try
+        {
+            var client = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
+
+            var result = await walletState.Value.wallet.SyncAsync(client);
+            txs = new List<string>();
+            if (result == Lyra.Core.Blocks.APIResultCodes.Success)
+            {
+                var accHeight = await client.GetAccountHeightAsync(walletState.Value.wallet.AccountId);
+                Dictionary<string, long> oldBalance = null;
+                var start = accHeight.Height - 10;
+                if (start < 1)
+                    start = 1;          // only show the last 100 tx
+                for (long i = start; i <= accHeight.Height; i++)
+                {
+                    var blockResult = await client.GetBlockByIndexAsync(walletState.Value.wallet.AccountId, i);
+                    var block = blockResult.GetBlock() as TransactionBlock;
+                    if (block == null)
+                        txs.Add("Null");
+                    else
+                    {
+                        var str = $"No. {block.Height} {block.TimeStamp}, ";
+                        if (block is SendTransferBlock sb)
+                            str += $"Send to {sb.DestinationAccountId}";
+                        else if (block is ReceiveTransferBlock rb)
+                        {
+                            if (rb.SourceHash == null)
+                            {
+                                str += $"Genesis";
+                            }
+                            else
+                            {
+                                var srcBlockResult = await client.GetBlockAsync(rb.SourceHash);
+                                var srcBlock = srcBlockResult.GetBlock() as TransactionBlock;
+                                str += $"Receive from {srcBlock.AccountID}";
+                            }
+                        }
+                        str += BalanceDifference(oldBalance, block.Balances);
+                        str += $" Balance: {string.Join(", ", block.Balances.Select(m => $"{m.Key}: {m.Value.ToBalanceDecimal()}"))}";
+
+                        txs.Add(str);
+
+                        oldBalance = block.Balances;
+                    }
+                }
+            }
+            txs.Reverse();            
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"In Transactions: {ex}");
+        }
+        fetching = false;
+        StateHasChanged();
+    }
+
+    private string BalanceDifference(Dictionary<string, long> oldBalance, Dictionary<string, long> newBalance)
+    {
+        if (oldBalance == null)
+        {
+            return " Amount: " + string.Join(", ", newBalance.Select(m => $"{m.Key} {m.Value.ToBalanceDecimal()}"));
+        }
+        else
+        {
+            return " Amount: " + string.Join(", ", newBalance.Select(m => $"{m.Key} {(decimal)(m.Value - (oldBalance.ContainsKey(m.Key) ? oldBalance[m.Key] : 0)) / LyraGlobal.TOKENSTORAGERITO}"));
+        }
+    }
+
 }

@@ -1,19 +1,17 @@
 ﻿<MudNavMenu Class="mudblazor-navmenu">
-    <MudNavLink Href="/">Home</MudNavLink>
-    <MudDivider />
-    <MudNavLink Href="/wallet">Wallet</MudNavLink>
-    <MudNavLink Href="/swap">Swap</MudNavLink>
-    <MudNavLink Href="/dex">DEX</MudNavLink>
-    <MudNavLink Href="/staking">Staking</MudNavLink>
-    <MudNavLink Href="/mint">Create Token</MudNavLink>
-    <MudNavLink Href="/profit">Revenue Center</MudNavLink>
-@*    <MudNavGroup Title="/settings" Expanded="true">
-        <MudNavLink Href="/users">Users</MudNavLink>
-        <MudNavLink Href="/security">Security</MudNavLink>
-    </MudNavGroup>*@
-    <MudDivider />
-    <MudNavLink Href="/settings">Settings</MudNavLink>
-    <MudDivider />
-    <MudNavLink Target="_blank" Href="https://lyra.live/">Lyra Main Site &nbsp;<MudIconButton Size="@Size.Small" Icon="@Icons.Filled.OpenInNew" /></MudNavLink>
-    <MudNavLink Target="_blank" Href="https://nebula.lyra.live/">Lyra Block Explorer &nbsp;<MudIconButton Size="@Size.Small" Icon="@Icons.Filled.OpenInNew" /></MudNavLink>
+    <MudNavMenu Margin="Margin.Dense" Color="Color.Primary">
+        <MudNavLink Href="/" Icon="@Icons.Filled.Home">Home</MudNavLink>
+        <MudNavLink Href="/wallet" Icon="@Icons.Filled.AccountBalanceWallet">Wallet</MudNavLink>
+        <MudNavLink Href="/DAO" Icon="@Icons.Filled.HowToVote">DAO</MudNavLink>
+        <MudNavLink Href="/swap" Icon="@Icons.Filled.SwapHoriz">Swap</MudNavLink>
+        <MudNavLink Href="/dex" Icon="@Icons.Filled.Apps">DEX</MudNavLink>
+        <MudNavLink Href="/staking" Icon="@Icons.Filled.Percent">Staking</MudNavLink>
+        <MudNavLink Href="/mint" Icon="@Icons.Filled.Create">Mint</MudNavLink>
+        <MudNavLink Href="/profit" Icon="@Icons.Filled.CardGiftcard">Revenue Center</MudNavLink>
+        <MudNavLink Href="/settings" Icon="@Icons.Filled.Settings">Setting</MudNavLink>
+        <MudDivider />
+        <MudNavLink Target="_blank" Href="https://lyra.live/">Lyra Main Site &nbsp;<MudIconButton Size="@Size.Small" Icon="@Icons.Filled.OpenInNew" /></MudNavLink>
+        <MudNavLink Target="_blank" Href="https://nebula.lyra.live/">Lyra Block Explorer &nbsp;<MudIconButton Size="@Size.Small" Icon="@Icons.Filled.OpenInNew" /></MudNavLink>
+        <MudDivider />
+    </MudNavMenu>
 </MudNavMenu>

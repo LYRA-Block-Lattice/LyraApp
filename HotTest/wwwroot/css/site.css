@@ -32,17 +32,16 @@ html body {
     font-variant-numeric: slashed-zero;
 }
 
-.mag {
-    padding: 3%;
-}
+
 
 .cet {
-    padding: 25px;
-    display: inline-flex;
+    padding: 25px 0;
+    display: flex;
     flex-wrap: wrap;
     flex-flow: column wrap;
     flex-direction: row;
     gap: 25px;
+    width: 100%;
 }
 
 h1:focus {
@@ -106,4 +105,420 @@ a, .btn-link {
 
 .algb2 .mud-input-text {
     margin-top: 0 !important;
+}
+
+.mud-elevation-1 {
+    box-shadow: none;
+}
+
+.mud-tabs {
+    padding: 20px;
+}
+
+.mag {
+    padding: 3%;
+}
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+  
+
+.node-list {
+    width: 48%;
+    padding: 20px;
+    box-shadow: 0 0 5px #afafaf;
+    border-radius: 10px;
+    margin: 10px 1%;
+}
+
+.node-list .node-name {
+    width: 100%;
+    font-size: 2rem;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.node-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.node-list table td {
+    padding: 10px 0;
+    border-bottom: 1px solid #afafaf;
+}
+
+.copy {
+    margin-top: 5px;
+}
+
+.copy-item {
+    border: none;
+    width: 75%;
+    text-overflow: ellipsis;
+}
+
+.copy-item:focus {
+    border: none;
+    outline: none;
+}
+
+.wrap-all-balance {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.all-balance {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    gap: 10px;
+}
+
+.coin-card {
+    display: flex;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 5px #afafaf;
+    padding: 15px;
+}
+
+.all-balance .coin-card {
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-balance {
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.div-balance {
+    width: 40%;
+    text-overflow: ellipsis;
+}
+
+.estimation {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    color: #afafaf;
+    text-overflow: ellipsis;
+}
+
+.transactions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    width: 50%;
+}
+
+.tx {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.icon-tx {
+    width: 10%;
+}
+
+.from-to {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 40%;
+}
+
+.amount-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 40%;
+}
+
+.exp-icon {
+    width: 10%;
+    align-items: center;
+    justify-content: center;
+}
+
+.f-t, .date {
+    font-size: 0.75rem;
+    color: #afafaf;
+}
+
+.div-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    width: 20%;
+    gap: 5px;
+}
+
+.wrap-all {
+    display: flex;
+    margin-top: 20px;
+}
+
+.wrap-wallet {
+    display: flex;
+    width: 35%;
+    flex-direction: column;
+    margin: 20px;
+}
+
+.wrap-act {
+    position: relative;
+    margin: 20px;
+    width: 65%;
+}
+
+.qr  {
+    width: 100%;
+    box-shadow: 0 0 5px #afafaf;
+    border-radius: 10px;
+    text-align: center;
+    padding: 15px;
+}
+
+.addresses span .copy-item {
+    display: none;
+}
+
+.wrap-all-dex {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 20px;
+    justify-content: center;
+}
+
+.wrap-dex {
+    width: 50%;
+    padding: 10px;
+}
+
+.dex-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+}
+
+.dex-coin {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dex-balance {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+.logo-dex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #594ae27c;
+}
+
+.deposit-withdraw {
+    display: flex;
+}
+
+.deposit {
+    display: flex;
+    justify-content: left;
+    width: 50%;
+}
+
+.withdraw {
+    display: flex;
+    justify-content: right;
+    width: 50%;
+}
+
+
+.staking-list  {
+    width: 100%;
+}
+
+.ProfStake-create {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 30px;
+}
+
+.ProfStake-create .card-staking {
+    border-radius: 5px;
+    box-shadow: 0 0 5px #afafaf;
+    padding: 10px;
+}
+
+.card-staking select {
+    border: none;
+    text-align: center;
+}
+
+.card-staking select:focus {
+    border: none;
+    outline: none;
+}
+
+.mint-token {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px !important;
+}
+
+.mint-token .card-staking {
+    border-radius: 5px;
+    box-shadow: 0 0 5px #afafaf;
+    padding: 10px;
+}
+
+.card-DAO {
+    margin-top: 10px;
+    box-shadow: 0 0 5px #afafaf;
+    border-radius: 5px;
+}
+
+.DAO-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.setting-sect .coin-card {
+    cursor: pointer;
+}
+
+.setting-sect select{
+    border: none;
+    cursor: pointer;
+}
+
+.setting-sect select:focus{
+    outline: none;
+}
+
+.backup-flex {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width:540px) {
+    .node-list {
+        width: 100%;
+    }
+
+    .wrap-all {
+        flex-direction: column;
+    }
+
+    .wrap-all, .wrap-wallet, .qr, .wrap-act {
+        width: 100%;
+    }
+
+    .wrap-wallet {
+        margin: 0;
+    }
+
+    .qr {
+        padding: 10px 0;
+    }
+
+    .wrap-act {
+        padding: 0;
+        margin: 0;
+        margin-top: 20px;
+    }
+
+    .wrap-all-balance {
+        flex-direction: column;
+    }
+
+    .all-balance {
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .all-balance .coin-card {
+        padding: 5px;
+    }
+
+    .div-balance, .estimation {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-size: 0.75rem;
+        gap: 15px;
+        text-overflow: ellipsis;
+    }
+
+    .div-button {
+        flex-direction: column;
+        width: 15%;
+    }
+
+    .transactions {
+        width: 100%;
+    }
+
+    .tx {
+        padding: 5px;
+    }
+
+    .scan-qr {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .wrap-all-dex {
+        flex-direction: column;
+    }
+
+    .wrap-dex {
+        width: 100%;
+    }
+
+    .dex-balance {
+        text-align: center;
+    }
+
+    .dex-dialog {
+        width: 100%;
+    }
+
+    
 }

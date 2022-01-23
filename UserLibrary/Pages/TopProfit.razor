@@ -12,12 +12,12 @@
 
 @if (ui == UI.Loading)
 {
-    <p><i>Loading...</i></p>
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
 }
 
 @if (ui == UI.Main)
 {
-    <h1>All Profiting Accounts</h1>
+    @* <h1>All Profiting Accounts</h1>
 
     <div>
         <table class="table">
@@ -33,10 +33,49 @@
                     <th>Owner</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody> *@
+                <div class="flex-container">
                 @foreach (var pft in pfts.OrderByDescending(a => a.totalprofit).ThenBy(x => x.gens.Name))
                 {
-                    <tr style="cursor:pointer" @onclick="@(async () => await NavToPft(pft.gens.AccountID))">
+                    <div class="node-list">
+                        <div class="node-name">@pft.gens.Name</div>
+                        <table>
+                            <tr>
+                                <td>Type</td>
+                                <td>@pft.gens.PType</td>
+                            </tr>
+                            <tr>
+                                <td>Created Time</td>
+                                <td>@pft.gens.TimeStamp</td>
+                            </tr>
+                            <tr>
+                                <td>Share Ratio</td>
+                                <td>@(pft.gens.ShareRito*100) %</td>
+                            </tr>
+                            <tr>
+                                <td>Seats</td>
+                                <td>@pft.gens.Seats</td>
+                            </tr>
+                            <tr>
+                                <td>Total Profit</td>
+                                <td>@pft.totalprofit</td>
+                            </tr>
+                            <tr>
+                                <td>Profiting account ID</td>
+                                <td>
+                                    <p style="width:100%;display:inline;">
+                                        <CopyToClipboard Text="@pft.gens.AccountID" />
+                                        <a target="_blank" href="@bexpurl/showblock/@pft.gens.AccountID"><MudIcon Icon="@Icons.Filled.CallMade" Size="Size.Small" /></a>
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Owner</td>
+                                <td><a target="_blank" href="@bexpurl/showblock/@pft.gens.OwnerAccountId">@pft.gens.OwnerAccountId.Substring(0, 10)...</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                    @* <tr style="cursor:pointer" @onclick="@(async () => await NavToPft(pft.gens.AccountID))">
                         <td style="color: blue">@pft.gens.Name</td>
                         <td>@pft.gens.PType</td>
                         <td>@pft.gens.TimeStamp</td>
@@ -50,11 +89,13 @@
                             <a target="_blank" href="@bexpurl/showblock/@pft.gens.OwnerAccountId">@pft.gens.OwnerAccountId.Substring(0, 10)...</a>
 
                         </td>
-                    </tr>
+                    </tr> *@
                 }
-            </tbody>
+            @* </tbody>
         </table>
+    </div> *@
     </div>
+
 }
 
 @if(ui == UI.Details)
