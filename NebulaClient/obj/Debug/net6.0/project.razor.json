@@ -1,0 +1,41 @@
+{
+  "FilePath": "d:\\program\\LyraNebula\\LyraApp\\NebulaClient\\NebulaClient.csproj",
+  "Configuration": {
+    "ConfigurationName": "Default",
+    "LanguageVersion": "6.0",
+    "Extensions": []
+  },
+  "ProjectWorkspaceState": {
+    "TagHelpers": [],
+    "CSharpLanguageVersion": 1000
+  },
+  "RootNamespace": "NebulaClient",
+  "Documents": [
+    {
+      "FilePath": "d:\\program\\LyraNebula\\LyraApp\\NebulaClient\\Shared\\NavMenu.razor",
+      "TargetPath": "Shared\\NavMenu.razor",
+      "FileKind": "component"
+    },
+    {
+      "FilePath": "d:\\program\\LyraNebula\\LyraApp\\NebulaClient\\App.razor",
+      "TargetPath": "App.razor",
+      "FileKind": "component"
+    },
+    {
+      "FilePath": "d:\\program\\LyraNebula\\LyraApp\\NebulaClient\\Pages\\Index.razor",
+      "TargetPath": "Pages\\Index.razor",
+      "FileKind": "component"
+    },
+    {
+      "FilePath": "d:\\program\\LyraNebula\\LyraApp\\NebulaClient\\_Imports.razor",
+      "TargetPath": "_Imports.razor",
+      "FileKind": "componentImport"
+    },
+    {
+      "FilePath": "d:\\program\\LyraNebula\\LyraApp\\NebulaClient\\Shared\\MainLayout.razor",
+      "TargetPath": "Shared\\MainLayout.razor",
+      "FileKind": "component"
+    }
+  ],
+  "SerializationFormat": "0.2"
+}
