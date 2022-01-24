@@ -1,4 +1,5 @@
-﻿using Lyra.Core.Accounts;
+﻿using Fluxor;
+using Lyra.Core.Accounts;
 using Lyra.Core.Blocks;
 using Lyra.Data.Blocks;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ namespace Nebula.Store.WebWalletUseCase
 {
 	public enum UIStage { Entry, Main, Send, Settings, Transactions, FreeToken, SwapToken, SwapTLYR, Staking, DEX };
 
+	[FeatureState]
 	public class WebWalletState
 	{
 		public bool PendingRecv { get; set; } = false;

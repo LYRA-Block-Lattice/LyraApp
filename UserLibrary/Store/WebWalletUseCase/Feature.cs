@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Nebula.Store.WebWalletUseCase
 {
-	public class Feature : Feature<WebWalletState>
-	{
-		public override string GetName() => "WebWallet";
-		protected override WebWalletState GetInitialState() => new WebWalletState();
-	}
+	//public class Feature : Feature<WebWalletState>
+	//{
+	//	public override string GetName() => "WebWallet";
+	//	protected override WebWalletState GetInitialState() => new WebWalletState();
+	//}
 }
