@@ -49,7 +49,7 @@ namespace UserLibrary.Pages
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            walletState.StateChanged += this.WalletChanged;
+            //walletState.StateChanged += this.WalletChanged;
         }
 
         protected override void OnAfterRender(bool firstRender)
