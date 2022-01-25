@@ -38,7 +38,7 @@
                 @foreach (var pft in pfts.OrderByDescending(a => a.totalprofit).ThenBy(x => x.gens.Name))
                 {
                     <div class="node-list">
-                        <div class="node-name">@pft.gens.Name</div>
+                        <div class="node-name"  @onclick="@(async () => await NavToPft(pft.gens.AccountID))">@pft.gens.Name</div>
                         <table>
                             <tr>
                                 <td>Type</td>
@@ -100,86 +100,130 @@
 
 @if(ui == UI.Details)
 {
-    <h1>Details of profiting account</h1>
-    @if (pft == null)
-    {
-        <p>No profiting account.</p>
-    }
-    else
-    {
-        <div>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="Back">Return</MudButton>
-        </div>
-        <hr />
+    <h1 style="text-align: center;">Details of profiting account</h1>
+    <div class="prof-ID">
+        <div class="node-list" style="width: 100%;">
+            
+            @if (pft == null)
+            {
+                <p>No profiting account.</p>
+            }
+            else
+            {
 
-        <p>Name: <b>@pft.Name</b></p>
-        <p>Type: <b>@pft.PType</b></p>
-        <p>
-            Node Owner Account ID: <a target="_blank" href="@bexpurl/showblock/@pft?.OwnerAccountId">@pft?.OwnerAccountId.Substring(0, 10)...</a>
-        </p>
-        <p>
-            Profiting Account ID:
-            <a target="_blank" href="@bexpurl/showblock/@GetPftID()">@GetPftID()</a>
-        </p>
-        <p>Total Earn: @pftStats.Total LYR</p>
-        <p>Profit sharing ratio: @FormatShare() </p>
-        <p>Pay to stakers: @GetToStakers() LYR</p>
-        <p>Pay to owner: @GetToOwner() LYR</p>
-        <p>
-
-        </p>
-        <p>
-            <div><h4>All Current Stakings</h4></div>
-            <div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Staking Amount</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                            <th>Staking Days</th>                            
-                            <th>Earns</th>                            
-                            <th>Staking Account</th>
-                            <th>Owner Account</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var stk in stks)
-                        {
-                            string style = "";
-                            if (stk.Time <= DateTime.UtcNow && stk.Time.AddDays(stk.Days) >= DateTime.UtcNow)
-                            {
-                                style = "background-color:light-green;";
-                            }
-                            else
-                            {
-                                style = "background-color:light-grey;";
-                            }
-
-                            <tr style="@style">
-                                <td>@stk.Amount LYR</td>
-                                <td>@stk.Time</td>
-                                <td>@(stk.Time.AddDays(stk.Days))</td>
-                                <td>@stk.Days</td>                                
-                                <td>@stkRewards[stk.StkAccount] LYR</td>                                
-                                <td>
-                                    <a target="_blank" href="@bexpurl/showblock/@stk.StkAccount">@stk.StkAccount.Shorten()</a>
-                                </td>
-                                <td>
-                                    <a target="_blank" href="@bexpurl/showblock/@stk.OwnerAccount">@stk.OwnerAccount.Shorten()</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
+                <table>
+                    <tr>
+                        <td>Name</td>
+                        <td>: @pft.Name</td>
+                    </tr>
+                    <tr>
+                        <td>Type</td>
+                        <td>: @pft.PType</td>
+                    </tr>
+                    <tr>
+                        <td>Owner</td>
+                        <td>: <a target="_blank" href="@bexpurl/showblock/@pft?.OwnerAccountId">@pft?.OwnerAccountId.Substring(0, 10)...</a></td>
+                    </tr>
+                    <tr>
+                        <td>Profiting account ID</td>
+                        <td>
+                            :
+                            <p style="width:100%;display:inline;">
+                            <CopyToClipboard Text="@GetPftID()" />
+                            <a target="_blank" href="@bexpurl/showblock/@GetPftID()"><MudIcon Icon="@Icons.Filled.CallMade" Size="Size.Small" /></a>
+                        </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Total earned</td>
+                        <td>: @pftStats.Total LYR</td>
+                    </tr>
+                    <tr>
+                        <td>Profit sharing ratio</td>
+                        <td>: @FormatShare()</td>
+                    </tr>
+                    <tr>
+                        <td>Pay to stakers</td>
+                        <td>: @GetToStakers() LYR</td>
+                    </tr>
+                    <tr>
+                        <td>Pay to owner</td>
+                        <td>: @GetToOwner() LYR</td>
+                    </tr>
                 </table>
+
+
+
+
+
+                <h2 style="margin: 20px; text-align:center; margin-top:50px;">All Current Stakings</h2>
+                <div class="current-staking">
+                    
+                        
+                    @foreach (var stk in stks)
+                    {
+                        <div class="staking-wrap">
+                        <div class="wrap-staking">
+                        
+                            <table>
+                                <tr>
+                                    <td>Staking amount</td>
+                                    <td>: @stk.Amount LYR</td>
+                                </tr>
+                                <tr>
+                                    <td>Start Time</td>
+                                    <td>: @stk.Time</td>
+                                </tr>
+                                <tr>
+                                    <td>End time</td>
+                                    <td>: @(stk.Time.AddDays(stk.Days))</td>
+                                </tr>
+                                <tr>
+                                    <td>Staking days</td>
+                                    <td>: @stk.Days</td>
+                                </tr>
+                                <tr>
+                                    <td>Earns</td>
+                                    <td>: @stkRewards[stk.StkAccount] LYR</td>
+                                </tr>
+                                <tr>
+                                    <td>Staking Account</td>
+                                    <td>: <a target="_blank" href="@bexpurl/showblock/@stk.StkAccount">@stk.StkAccount.Shorten()</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Owner Account</td>
+                                    <td>: <a target="_blank" href="@bexpurl/showblock/@stk.OwnerAccount">@stk.OwnerAccount.Shorten()</a></td>
+                                </tr>
+                            </table>
+                            
+                        </div>
+                        </div>
+
+                        string style = "";
+                        if (stk.Time <= DateTime.UtcNow && stk.Time.AddDays(stk.Days) >= DateTime.UtcNow)
+                        {
+                            style = "background-color:light-green;";
+                        }
+                        else
+                        {
+                            style = "background-color:light-grey;";
+                        }
+
+                        
+                    }
+
+                    
+                    </div>
+                            
+                <p style="font-size:xx-small">Note: Statistics data may not be updated in time. Only for reference.</p>
+            }
+            <hr />
+            <div>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="Back">Return</MudButton>
             </div>
-        </p>
-        <p style="font-size:xx-small">Note: Statistics data may not be updated in time. Only for reference.</p>
-    }
-    <hr />
-    <div>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="Back">Return</MudButton>
+        </div>
     </div>
+    
 }
 
 @if (ui == UI.Error)

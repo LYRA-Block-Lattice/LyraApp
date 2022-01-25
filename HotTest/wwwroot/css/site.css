@@ -143,6 +143,7 @@ a, .btn-link {
     text-overflow: ellipsis;
     text-align: center;
     margin-bottom: 20px;
+    cursor: pointer;
 }
 
 .node-list table {
@@ -436,8 +437,38 @@ a, .btn-link {
     align-items: center;
 }
 
-@media (max-width:540px) {
+.current-staking {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.current-staking .staking-wrap {
+    width: 50%;
+    padding: 10px;
+}
+
+.current-staking .wrap-staking {
+    width: 100%;
+    box-shadow: 0 0 5px #afafaf;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+@media (max-width:912px) {
     .node-list {
+        width: 100%;
+    }
+
+    .prof-ID .node-list {
+        width: 100%;
+    }
+
+    .current-staking {
+        flex-direction: column;
+    }
+
+    .current-staking .staking-wrap {
         width: 100%;
     }
 
@@ -518,6 +549,10 @@ a, .btn-link {
 
     .dex-dialog {
         width: 100%;
+    }
+
+    .from-to, .amount-date {
+        font-size: 0.75rem;
     }
 
     
