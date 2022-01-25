@@ -64,9 +64,12 @@
         if (net == "mainnet")
             net = "";
 
-        WalletChanged(this, walletState.Value);
+        //if(walletState != null)
+        //{
+        //    WalletChanged(this, walletState.Value);
 
-        walletState.StateChanged += this.WalletChanged;
+        //    walletState.StateChanged += this.WalletChanged;
+        //}
 
         base.OnInitialized();
     }
