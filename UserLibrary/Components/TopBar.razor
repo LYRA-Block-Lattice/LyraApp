@@ -28,7 +28,7 @@
     {
         WalletChanged(this, walletState.Value);
 
-        walletState.StateChanged += this.WalletChanged;
+        //walletState.StateChanged += this.WalletChanged;
 
         base.OnInitialized();
     }
@@ -73,6 +73,6 @@
 
     public void Dispose()
     {
-        walletState.StateChanged -= this.WalletChanged;
+        //walletState.StateChanged -= this.WalletChanged;
     }
 }

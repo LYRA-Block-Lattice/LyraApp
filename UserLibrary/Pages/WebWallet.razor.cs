@@ -73,11 +73,6 @@ namespace UserLibrary.Pages
             base.OnAfterRender(firstRender);
         }
 
-        public void Dispose()
-        {
-            walletState.StateChanged -= this.WalletChanged;
-        }
-
         private void WalletChanged(object sender, WebWalletState wallet)
         {
             if(busy)

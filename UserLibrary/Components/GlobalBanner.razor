@@ -32,7 +32,7 @@
     {
         if(firstRender)
         {
-            walletState.StateChanged += this.WalletChanged;
+            //walletState.StateChanged += this.WalletChanged;
 
             if(walletState.Value.wallet != null)
             {
@@ -66,6 +66,6 @@
 
     public void Dispose()
     {
-        walletState.StateChanged -= this.WalletChanged;
+        //walletState.StateChanged -= this.WalletChanged;
     }    
 }
