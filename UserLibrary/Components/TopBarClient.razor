@@ -1,6 +1,8 @@
 ﻿@namespace UserLibrary.Components
+@inherits FluxorComponent
 
 @using Fluxor
+@using Fluxor.Blazor.Web.Components
 @using Lyra.Core.API
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
@@ -64,6 +66,9 @@
         if (net == "mainnet")
             net = "";
 
+        SubscribeToAction<WebWalletChangeTitleAction>(
+            x => title = x.title
+        );
         //if(walletState != null)
         //{
         //    WalletChanged(this, walletState.Value);
