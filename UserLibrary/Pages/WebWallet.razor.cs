@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace UserLibrary.Pages
 {
-    public partial class WebWallet : IDisposable
+    public partial class WebWallet
     {
         [Inject]
         private IState<WebWalletState> walletState { get; set; }
@@ -48,8 +48,15 @@ namespace UserLibrary.Pages
 
         protected override void OnInitialized()
         {
+            //SubscribeToAction<WebWalletResultAction>(a =>
+            //{
+            //    if (a.IsOpening)
+            //    {
+                    
+            //    }
+            //});
+
             base.OnInitialized();
-            //walletState.StateChanged += this.WalletChanged;
         }
 
         protected override void OnAfterRender(bool firstRender)
@@ -68,6 +75,10 @@ namespace UserLibrary.Pages
                 }
                 Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Wallet" });
                 Refresh();
+            }
+            else
+            {
+                WalletChanged(null, null);
             }
 
             base.OnAfterRender(firstRender);

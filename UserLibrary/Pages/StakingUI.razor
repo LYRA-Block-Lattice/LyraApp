@@ -2,7 +2,7 @@
 
 @using Fluxor
 @using Nebula.Store.WebWalletUseCase
-@implements IDisposable
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 <div class="mag">
 @if(walletState.Value.wallet == null)
@@ -38,22 +38,12 @@ else
 
     protected override void OnInitialized()
     {
-        //walletState.StateChanged += this.WalletChanged;
+       SubscribeToAction<WebWalletResultAction>(a =>
+            {
+                StateHasChanged();
+            });
         Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Staking" });
         base.OnInitialized();
     }
-
-    private void WalletChanged(object sender, WebWalletState wallet)
-    {
-        InvokeAsync(() =>
-        {
-            StateHasChanged();
-        }
-        );
-    }
-    
-    public void Dispose()
-    {
-        //walletState.StateChanged -= this.WalletChanged;
-    }
+   
 }

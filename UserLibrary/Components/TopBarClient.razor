@@ -4,11 +4,11 @@
 @using Fluxor
 @using Fluxor.Blazor.Web.Components
 @using Lyra.Core.API
+@using Lyra.Core.Accounts
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
 @inject IConfiguration Configuration
 @inject NavigationManager Navigation
-@implements IDisposable
 
 <div class="top-row">
     <div class="tg" @onclick="@((a) => Navigation.NavigateTo("/"))">
@@ -67,27 +67,26 @@
             net = "";
 
         SubscribeToAction<WebWalletChangeTitleAction>(
-            x => title = x.title
+            x =>
+            {
+                title = x.title;
+                shownew = x.menunew;
+            }
         );
-        //if(walletState != null)
-        //{
-        //    WalletChanged(this, walletState.Value);
-
-        //    walletState.StateChanged += this.WalletChanged;
-        //}
+        SubscribeToAction<WebWalletResultAction>(a =>
+            {
+                WalletChanged(null, a.wallet);
+            });
 
         base.OnInitialized();
     }
 
-    private void WalletChanged(object sender, WebWalletState walletState)
+    private void WalletChanged(object sender, Wallet wallet)
     {
-        title = walletState.Title;
-        shownew = walletState.MenuNew;
-
         decimal balance1 = 0;
-        if (walletState.wallet != null)
+        if (wallet != null)
         {
-            var blk = walletState.wallet.GetLatestBlock();
+            var blk = wallet.GetLatestBlock();
             if (blk != null)
             {
                 if (blk.Balances.ContainsKey("LYR"))
@@ -110,11 +109,6 @@
     ;
 
         InvokeAsync(() => StateHasChanged());
-    }
-
-    public void Dispose()
-    {
-        //walletState.StateChanged -= this.WalletChanged;
     }
 
     private void gonew()

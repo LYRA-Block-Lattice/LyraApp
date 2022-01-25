@@ -2,8 +2,9 @@
 
 @using Fluxor
 @using Lyra.Core.API
+@using Lyra.Core.Accounts
 @using Nebula.Store.WebWalletUseCase
-@implements IDisposable
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 <div class="top-row px-4">
     <div class="tg">
@@ -26,9 +27,10 @@
 
     protected override void OnInitialized()
     {
-        WalletChanged(this, walletState.Value);
-
-        //walletState.StateChanged += this.WalletChanged;
+            SubscribeToAction<WebWalletResultAction>(a =>
+            {
+                WalletChanged(null, a.wallet);
+            });
 
         base.OnInitialized();
     }
@@ -41,12 +43,12 @@
         }
     }
 
-    private void WalletChanged(object sender, WebWalletState wallet)
+    private void WalletChanged(object sender, Wallet wallet)
     {
         decimal balance1 = 0;
-        if (wallet.wallet != null)
+        if (wallet != null)
         {
-            var blk = wallet.wallet.GetLatestBlock();
+            var blk = wallet.GetLatestBlock();
             if(blk!= null)
             {
                 if (blk.Balances.ContainsKey("LYR"))
@@ -71,8 +73,4 @@
         InvokeAsync(() => StateHasChanged());
     }
 
-    public void Dispose()
-    {
-        //walletState.StateChanged -= this.WalletChanged;
-    }
 }

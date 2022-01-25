@@ -5,7 +5,7 @@
 @using Lyra.Core.API
 @using Nebula.Store.WebWalletUseCase
 @using UserLibrary.Data
-@implements IDisposable
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 @if (showbackup)
 {
@@ -32,7 +32,16 @@
     {
         if(firstRender)
         {
-            //walletState.StateChanged += this.WalletChanged;
+            SubscribeToAction<WebWalletBackupAction>(async a =>
+            {
+                if(a.IsBackuped)
+                {
+                    var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+                    var wc = new WalletContainer(wcjson);
+                    var meta = wc.Get(walletState.Value.wallet.AccountName);
+                    showbackup = !meta.Backup;
+                }
+            });
 
             if(walletState.Value.wallet != null)
             {
@@ -48,24 +57,4 @@
         }
         await base.OnAfterRenderAsync(firstRender);
     }
-
-    private void WalletChanged(object sender, WebWalletState wallet)
-    {
-        InvokeAsync(async () =>
-        {
-            if (wallet.wallet != null)
-            {
-                var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
-                var wc = new WalletContainer(wcjson);
-                var meta = wc.Get(walletState.Value.wallet.AccountName);
-                showbackup = !meta.Backup;
-            }
-            StateHasChanged();
-        });
-    }
-
-    public void Dispose()
-    {
-        //walletState.StateChanged -= this.WalletChanged;
-    }    
 }
