@@ -1,0 +1,12 @@
+﻿@using Lyra.Data.API.WorkFlow
+
+<h3>OrderDisplay</h3>
+<div>
+    <p>@Order.Name</p>
+</div>
+
+@code {
+    [Parameter]
+    public IOtcOrder Order { get; set; }
+
+}

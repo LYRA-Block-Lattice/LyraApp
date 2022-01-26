@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HotTest", "HotTest\HotTest.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dealer.Server", "Dealer\Dealer.Server.csproj", "{1AD39200-101E-4DEA-9FA5-3E3DFF91C428}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{7D6CF9B8-B2E1-4082-B830-611A9A9A7CF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{7D6CF9B8-B2E1-4082-B830-611A9A9A7CF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

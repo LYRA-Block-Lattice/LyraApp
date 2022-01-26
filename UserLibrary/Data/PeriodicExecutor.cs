@@ -73,6 +73,10 @@ namespace UserLibrary.Data
                             LyraGlobal.OFFICIALTICKERCODE, 1, 0);
                     myprice.Add(LyraGlobal.OFFICIALTICKERCODE, Math.Round(swapcal.MinimumReceived * myprice["tron"], 8));
                 }
+                else
+                {
+                    myprice.Add(LyraGlobal.OFFICIALTICKERCODE, myprice["lyra"]);
+                }
 
                 // Notify any subscribers to the event
                 OnJobExecuted(myprice);

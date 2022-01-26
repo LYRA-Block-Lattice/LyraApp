@@ -119,6 +119,13 @@
                 }
             }
 
+            @foreach(var odr in tradableOrders)
+            {
+                <MudItem xs="12">
+                    <UserLibrary.Components.OTC.OrderDisplay Order=@odr />
+                </MudItem>
+            }
+
 
 @*            <MudItem xs="12">
                 <MudExpansionPanels Class=".blue .darken-1 .shades-text .text-white">
@@ -175,6 +182,9 @@
 
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] NavigationManager Navigation { get; set; }
+
+    List<IOtcOrder> tradableOrders = new List<IOtcOrder>();
+    List<IDao> daos = new List<IDao>();
 
     string keywords;
 
@@ -235,7 +245,7 @@
             var daoret3 = await walletState.Value.wallet.RPC.GetDaoByNameAsync(seldaoname);
             var daot = daoret3.GetBlock() as TransactionBlock;
 
-            var order = new OTCCryptoOrder
+            var order = new OTCOrder
                 {
                     daoid = daot.AccountID,
                     dir = TradeDirection.Sell,
@@ -316,6 +326,15 @@
     {
         var lc = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
 
+        // get tradable orders
+        var tosret = await lc.FindTradableOtcAsync();
+        if(tosret.Successful())
+        {
+            tradableOrders = tosret.GetBlocks("orders").Cast<IOtcOrder>().ToList();
+            daos = tosret.GetBlocks("daos").Cast<IDao>().ToList();
+        }
+
+        // get sellable tokens
         // for api sign only
         var pk = "n4uh7o2kAerPZQSNBRirzA3pSUBEuEhs6r7oRwpV6Dgbs3FvY";
         var pub = "LBRzScs8NwMcr7U8i9a8sSWETseWf3TLge4CVJy6as24hSB4hwtZ5jKTbHJdoVZBJiNC2LpjN9MQB719Py9YxXo2xpLxnS";
@@ -334,6 +353,6 @@
                 })
             .OrderBy(a => a.Name)
             .ToList();
-        tickers.Insert(0, new Ticker { dbname = "LYR", Name = "LYR" });
+        //tickers.Insert(0, new Ticker { dbname = "LYR", Name = "LYR" });
     }
 }
