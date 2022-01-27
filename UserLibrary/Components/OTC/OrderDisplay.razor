@@ -1,12 +1,30 @@
 ﻿@using Lyra.Data.API.WorkFlow
 
-<h3>OrderDisplay</h3>
-<div>
-    <p>@Order.Name</p>
+<div class="container">
+    <div class="nw">
+        <MudAvatar Color="Color.Primary">@Dao.Name.First()</MudAvatar>
+        <div>@Dao.Name</div>
+    </div>
+    <div class="nw">
+        @Otc.Order.crypto   
+    </div>
+    <div class="nw price">
+        @Otc.Order.price @Otc.Order.fiat
+    </div>
+    <div class="nw">
+         Available: @Otc.Order.amount<br />
+         Limits: 5,000 - 12,000 USD
+    </div>
+    <div>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>
+    </div>
 </div>
 
 @code {
     [Parameter]
-    public IOtcOrder Order { get; set; }
+    public IOtcOrder Otc { get; set; }
+
+    [Parameter]
+    public IDao Dao { get; set; }
 
 }

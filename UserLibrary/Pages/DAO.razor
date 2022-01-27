@@ -121,8 +121,9 @@
 
             @foreach(var odr in tradableOrders)
             {
+                var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoid);
                 <MudItem xs="12">
-                    <UserLibrary.Components.OTC.OrderDisplay Order=@odr />
+                    <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao />
                 </MudItem>
             }
 
@@ -212,18 +213,26 @@
     {
         if (firstRender)
         {
+            if (walletState.Value.wallet == null)
+            {
+                Dispatcher.Dispatch(new WebWalletChangeTitleAction
+                    {
+                        title = "Lyra DAO Central",
+                        menunew = false,
+                    });
+            }
+            else
+            {
+                Dispatcher.Dispatch(new WebWalletChangeTitleAction
+                    {
+                        title = "Lyra DAO Central",
+                        menunew = action != "new"
+                    });
+            }
+
             await GetMyDaos();
             await OpenSwapUI();
             StateHasChanged();
-        }
-
-        if (walletState.Value.wallet != null)
-        {
-            Dispatcher.Dispatch(new WebWalletChangeTitleAction
-                {
-                    title = "Lyra DAO Central",
-                    menunew = action != "new"
-                });
         }
 
         await base.OnAfterRenderAsync(firstRender);
