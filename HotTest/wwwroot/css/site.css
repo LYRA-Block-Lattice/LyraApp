@@ -505,7 +505,9 @@ a, .btn-link {
     }
 
     .all-balance .coin-card {
+        flex-wrap: wrap;
         padding: 5px;
+        gap: 5%;
     }
 
     .div-balance, .estimation {
@@ -518,8 +520,15 @@ a, .btn-link {
     }
 
     .div-button {
-        flex-direction: column;
-        width: 15%;
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+        gap: 20%;
+        margin-top: 15px;
+        border-top: 0.05rem solid #afafaf;
+        border-bottom: 0.05rem solid #afafaf;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
     }
 
     .transactions {
