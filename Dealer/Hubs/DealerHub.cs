@@ -7,28 +7,6 @@ namespace Dealer.Server.Hubs
     // client call this
     public class DealerHub : Hub<IHubPushMethods>, IHubInvokeMethods
     {
-        //public async Task Publish(string user, string message)
-        //{
-        //    // Send to everyone else
-
-        //    // Old way:
-        //    // await Clients.Others.SendAsync("Publish", message);
-
-        //    // New way:
-        //    await Clients.All.OnPublish(user, message);
-        //}
-
-        public async Task Whisper(string connectionIdTarget, string message)
-        {
-            // Send to an individual client
-
-            // Old way:
-            // await Clients.Client(connectionIdTarget).SendAsync("Whisper", message);
-
-            // New way:
-            //await Clients.Client(connectionIdTarget).Whisper(message);
-        }
-
         public async Task GetHistory(string connectionId)
         {
             // Get the history from our pretend database

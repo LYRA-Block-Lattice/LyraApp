@@ -1,9 +1,15 @@
 using Dealer.Server.Hubs;
+using Dealer.Server.Model;
+using Dealer.Server.Services;
 using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<DealerDbSettings>(
+    builder.Configuration.GetSection("DealerDb"));
+
 // Add services to the container.
+builder.Services.AddSingleton<DealerDb>();
 builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -12,7 +18,7 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
-builder.Services.AddHostedService<DealBoss>();
+builder.Services.AddHostedService<Keeper>();
 
 var app = builder.Build();
 
