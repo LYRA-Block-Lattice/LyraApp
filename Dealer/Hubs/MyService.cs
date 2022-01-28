@@ -6,9 +6,9 @@ namespace Dealer.Server.Hubs
     public class MyService : BackgroundService
     {
         // Use a second template parameter when defining the hub context to get the strongly typed hub context
-        private readonly IHubContext<MyHub, IMyHub> _myHub;
+        private readonly IHubContext<DealerHub, IHubPushMethods> _myHub;
         //private readonly ISomeDatabaseRepository _db;
-        public MyService(IHubContext<MyHub, IMyHub> myHub/*, ISomeDatabaseRepository db*/)
+        public MyService(IHubContext<DealerHub, IHubPushMethods> myHub/*, ISomeDatabaseRepository db*/)
         {
             _myHub = myHub;
             //_db = db;
@@ -25,7 +25,7 @@ namespace Dealer.Server.Hubs
             // await _myHub.Clients.Client(connectionId).SendAsync("History", history);
 
             // New way:
-            await _myHub.Clients.Client(connectionId).History(history);
+            //await _myHub.Clients.Client(connectionId).History(history);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -35,7 +35,7 @@ namespace Dealer.Server.Hubs
                 Console.WriteLine($"Worker running at: {DateTime.Now}");
 
                 List<string> history = new List<string> { "line 1", "line 2" };
-                await _myHub.Clients.All.History(history);
+                //await _myHub.Clients.All.OnBar(history);
                 await Task.Delay(5000);
             }
         }

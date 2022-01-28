@@ -1,5 +1,6 @@
 ﻿@page "/dealer"
 @using Microsoft.AspNetCore.SignalR.Client
+@using UserLibrary.Data
 @inject NavigationManager NavigationManager
 @implements IAsyncDisposable
 
@@ -17,7 +18,7 @@
         <input @bind="messageInput" size="50" />
     </label>
 </div>
-<button @onclick="Send" disabled="@(!IsConnected)">Send</button>
+<button @onclick="Send" disabled="@(!wrapper?.IsConnected)">Send</button>
 <button @onclick="Hist" >History</button>
 <hr>
 
@@ -29,60 +30,65 @@
 </ul>
 
 @code {
-    private HubConnection? hubConnection;
+    //private HubConnection? hubConnection;
     private List<string> messages = new List<string>();
     private string? userInput;
     private string? messageInput;
 
+    ConnectionMethodsWrapper? wrapper;
+
     protected override async Task OnInitializedAsync()
     {
-        hubConnection = new HubConnectionBuilder()
-            .WithUrl("https://localhost:7070/chathub")
-            .Build();
+        wrapper = new ConnectionMethodsWrapper(ConnectionFactoryHelper.CreateConnection(new Uri("https://localhost:7070/chathub"), null));
 
-        hubConnection.On<string, string>("OnPublish", (user, message) =>
+        wrapper.RegisterOnFoo(a =>
         {
-            var encodedMsg = $"{user}: {message}";
-            messages.Add(encodedMsg);
+            messages.Add(a.FooPayload);
             StateHasChanged();
         });
 
-        hubConnection.On<List<string>>("History", (hist) =>
-        {
-            foreach(var h in hist)
-                messages.Add("history: " + h);
-            StateHasChanged();
-        });
+        //hubConnection = new HubConnectionBuilder()
+        //    .WithUrl("https://localhost:7070/chathub")
+        //    .Build();
 
-        await hubConnection.StartAsync();
+        //hubConnection.On<string, string>("OnPublish", (user, message) =>
+        //{
+        //    var encodedMsg = $"{user}: {message}";
+        //    messages.Add(encodedMsg);
+        //    StateHasChanged();
+        //});
 
-        await hubConnection.SendAsync("GetHistory", userInput);
+        //hubConnection.On<List<string>>("History", (hist) =>
+        //{
+        //    foreach(var h in hist)
+        //        messages.Add("history: " + h);
+        //    StateHasChanged();
+        //});
+
+        await wrapper.StartAsync();
+
+        //await hubConnection.SendAsync("GetHistory", userInput);
     }
 
     private async Task Send()
-	{
-	    if (hubConnection is not null)
-		{
-            await hubConnection.SendAsync("Publish", userInput, messageInput);
-		}
+    {
+        await wrapper.InvokeFoo(messageInput);
+        //   if (hubConnection is not null)
+		//{
+  //          await hubConnection.SendAsync("Publish", userInput, messageInput);
+		//}
 	}
 
     private async Task Hist()
 	{
-	    if (hubConnection is not null)
-		{
-            await hubConnection.SendAsync("GetHistory", userInput);
-		}
-	}
 
-    public bool IsConnected =>
-        hubConnection?.State == HubConnectionState.Connected;
+	}
 
     public async ValueTask DisposeAsync()
     {
-        if (hubConnection is not null)
+        if (wrapper is not null)
         {
-            await hubConnection.DisposeAsync();
+            await wrapper.DisposeAsync();
         }
     }
 }
