@@ -12,7 +12,7 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
-builder.Services.AddHostedService<MyService>();
+builder.Services.AddHostedService<DealBoss>();
 
 var app = builder.Build();
 

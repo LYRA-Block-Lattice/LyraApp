@@ -3,12 +3,12 @@ using UserLibrary.Data;
 
 namespace Dealer.Server.Hubs
 {
-    public class MyService : BackgroundService
+    public class DealBoss : BackgroundService
     {
         // Use a second template parameter when defining the hub context to get the strongly typed hub context
         private readonly IHubContext<DealerHub, IHubPushMethods> _myHub;
         //private readonly ISomeDatabaseRepository _db;
-        public MyService(IHubContext<DealerHub, IHubPushMethods> myHub/*, ISomeDatabaseRepository db*/)
+        public DealBoss(IHubContext<DealerHub, IHubPushMethods> myHub/*, ISomeDatabaseRepository db*/)
         {
             _myHub = myHub;
             //_db = db;
@@ -20,8 +20,8 @@ namespace Dealer.Server.Hubs
             {
                 Console.WriteLine($"Worker running at: {DateTime.Now}");
 
-                List<string> history = new List<string> { "line 1", "line 2" };
-                //await _myHub.Clients.All.OnBar(history);
+                //List<string> history = new List<string> { "line 1", "line 2" };
+                await _myHub.Clients.All.OnFoo(new FooData { FooPayload = $"{DateTime.Now}"});
                 await Task.Delay(5000);
             }
         }
