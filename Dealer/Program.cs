@@ -37,7 +37,7 @@ app.UseRouting();
 
 app.MapRazorPages();
 app.MapControllers();
-app.MapHub<DealerHub>("/chathub");
+app.MapHub<DealerHub>("/hub");
 app.MapFallbackToFile("index.html");
 
 app.Run();

@@ -39,7 +39,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        wrapper = new ConnectionMethodsWrapper(ConnectionFactoryHelper.CreateConnection(new Uri("https://localhost:7070/chathub"), null));
+        wrapper = new ConnectionMethodsWrapper(ConnectionFactoryHelper.CreateConnection(new Uri("https://localhost:7070/hub"), null));
 
         wrapper.RegisterOnFoo(a =>
         {
@@ -47,27 +47,7 @@
             StateHasChanged();
         });
 
-        //hubConnection = new HubConnectionBuilder()
-        //    .WithUrl("https://localhost:7070/chathub")
-        //    .Build();
-
-        //hubConnection.On<string, string>("OnPublish", (user, message) =>
-        //{
-        //    var encodedMsg = $"{user}: {message}";
-        //    messages.Add(encodedMsg);
-        //    StateHasChanged();
-        //});
-
-        //hubConnection.On<List<string>>("History", (hist) =>
-        //{
-        //    foreach(var h in hist)
-        //        messages.Add("history: " + h);
-        //    StateHasChanged();
-        //});
-
         await wrapper.StartAsync();
-
-        //await hubConnection.SendAsync("GetHistory", userInput);
     }
 
     private async Task Send()

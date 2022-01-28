@@ -14,20 +14,6 @@ namespace Dealer.Server.Hubs
             //_db = db;
         }
 
-        public async Task GetHistory(string connectionId)
-        {
-            // Get the history from our pretend database
-            List<string> history = new List<string> { "line 1", "line 2" }; //await _db.GetHistory();
-
-            // Send the history to the client
-
-            // Old way:
-            // await _myHub.Clients.Client(connectionId).SendAsync("History", history);
-
-            // New way:
-            //await _myHub.Clients.Client(connectionId).History(history);
-        }
-
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)

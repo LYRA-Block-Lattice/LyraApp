@@ -29,10 +29,23 @@ namespace Dealer.Server.Hubs
             //await Clients.Client(connectionIdTarget).Whisper(message);
         }
 
-        public override Task OnConnectedAsync()
+        public async Task GetHistory(string connectionId)
         {
-            
-            return base.OnConnectedAsync();
+            // Get the history from our pretend database
+            List<string> history = new List<string> { "This is chat history", "line 1", "line 2" }; //await _db.GetHistory();
+
+            // Send the history to the client
+            foreach(var hist in history)
+            {
+                var foo = new FooData { FooPayload = hist };
+                await Clients.Client(connectionId).OnFoo(foo);
+            }
+        }
+
+        public override async Task OnConnectedAsync()
+        {
+            await GetHistory(Context.ConnectionId);
+            await base.OnConnectedAsync();
         }
 
         public async Task InvokeFoo(string payload)
