@@ -12,6 +12,7 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
+builder.Services.AddHostedService<MyService>();
 
 var app = builder.Build();
 
@@ -36,7 +37,7 @@ app.UseRouting();
 
 app.MapRazorPages();
 app.MapControllers();
-app.MapHub<ChatHub>("/chathub");
+app.MapHub<MyHub>("/chathub");
 app.MapFallbackToFile("index.html");
 
 app.Run();

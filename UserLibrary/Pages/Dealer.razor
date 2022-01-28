@@ -18,7 +18,7 @@
     </label>
 </div>
 <button @onclick="Send" disabled="@(!IsConnected)">Send</button>
-
+<button @onclick="Hist" >History</button>
 <hr>
 
 <ul id="messagesList">
@@ -40,21 +40,38 @@
             .WithUrl("https://localhost:7070/chathub")
             .Build();
 
-        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        hubConnection.On<string, string>("OnPublish", (user, message) =>
         {
             var encodedMsg = $"{user}: {message}";
             messages.Add(encodedMsg);
             StateHasChanged();
         });
 
+        hubConnection.On<List<string>>("History", (hist) =>
+        {
+            foreach(var h in hist)
+                messages.Add("history: " + h);
+            StateHasChanged();
+        });
+
         await hubConnection.StartAsync();
+
+        await hubConnection.SendAsync("GetHistory", userInput);
     }
 
     private async Task Send()
 	{
 	    if (hubConnection is not null)
 		{
-            await hubConnection.SendAsync("SendMessage", userInput, messageInput);
+            await hubConnection.SendAsync("Publish", userInput, messageInput);
+		}
+	}
+
+    private async Task Hist()
+	{
+	    if (hubConnection is not null)
+		{
+            await hubConnection.SendAsync("GetHistory", userInput);
 		}
 	}
 
