@@ -23,10 +23,10 @@ namespace Dealer.Server.Services
         {            
             while (!stoppingToken.IsCancellationRequested)
             {
-                Console.WriteLine($"Worker running at: {DateTime.Now}");
+                //Console.WriteLine($"Worker running at: {DateTime.Now}");
 
-                //List<string> history = new List<string> { "line 1", "line 2" };
-                await _dealerHub.Clients.All.OnFoo(new FooData { FooPayload = $"{DateTime.Now}"});
+                ////List<string> history = new List<string> { "line 1", "line 2" };
+                //await _dealerHub.Clients.All.OnFoo(new FooData { FooPayload = $"{DateTime.Now}"});
                 await Task.Delay(5000);
             }
         }

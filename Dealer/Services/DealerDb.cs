@@ -1,6 +1,7 @@
 ﻿using Dealer.Server.Model;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using Lyra.Data.API.Identity;
 
 namespace Dealer.Server.Services
 {
@@ -9,6 +10,7 @@ namespace Dealer.Server.Services
         private readonly IOptions<DealerDbSettings> _dbSettings;
 
         private readonly IMongoCollection<PaymentPlatform> _paymentsCollection;
+        private readonly IMongoCollection<LyraUser> _usersCollection;
 
         public DealerDb(IOptions<DealerDbSettings> dbSettings)
         {
@@ -21,9 +23,11 @@ namespace Dealer.Server.Services
                 _dbSettings.Value.DatabaseName);
 
             _paymentsCollection = mongoDatabase.GetCollection<PaymentPlatform>(
-                _dbSettings.Value.PaymentPlatformCollectionName);
-        }
+                "paymentMethods");
 
+            _usersCollection = mongoDatabase.GetCollection<LyraUser>(
+                "lyraUsers");
+        }
 
         #region payments methods
         public async Task<List<PaymentPlatform>> GetPaymentsAsync() =>
@@ -40,6 +44,23 @@ namespace Dealer.Server.Services
 
         public async Task RemovePaymentAsync(string id) =>
             await _paymentsCollection.DeleteOneAsync(x => x.Id == id);
+        #endregion
+
+        #region Lyra User management
+        public async Task<List<LyraUser>> GetUsersAsync() =>
+            await _usersCollection.Find(_ => true).ToListAsync();
+
+        public async Task<LyraUser?> GetUserAsync(string id) =>
+            await _usersCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+
+        public async Task CreatePaymentAsync(LyraUser newUser) =>
+            await _usersCollection.InsertOneAsync(newUser);
+
+        public async Task UpdatePaymentAsync(string id, LyraUser updatedUser) =>
+            await _usersCollection.ReplaceOneAsync(x => x.Id == id, updatedUser);
+
+        public async Task RemoveUserAsync(string id) =>
+            await _usersCollection.DeleteOneAsync(x => x.Id == id);
         #endregion
     }
 }
