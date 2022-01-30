@@ -42,26 +42,32 @@
                         <table>
                             <tr>
                                 <td>Type</td>
+                                <td style="padding: 20px;">:</td>
                                 <td>@pft.gens.PType</td>
                             </tr>
                             <tr>
                                 <td>Created Time</td>
+                                <td style="padding: 20px;">:</td>
                                 <td>@pft.gens.TimeStamp</td>
                             </tr>
                             <tr>
                                 <td>Share Ratio</td>
+                                <td style="padding: 20px;">:</td>
                                 <td>@(pft.gens.ShareRito*100) %</td>
                             </tr>
                             <tr>
                                 <td>Seats</td>
+                                <td style="padding: 20px;">:</td>
                                 <td>@pft.gens.Seats</td>
                             </tr>
                             <tr>
                                 <td>Total Profit</td>
+                                <td style="padding: 20px;">:</td>
                                 <td>@pft.totalprofit</td>
                             </tr>
                             <tr>
                                 <td>Profiting account ID</td>
+                                <td style="padding: 20px;">:</td>
                                 <td>
                                     <p style="width:100%;display:inline;">
                                         <CopyToClipboard Text="@pft.gens.AccountID" />
@@ -71,6 +77,7 @@
                             </tr>
                             <tr>
                                 <td>Owner</td>
+                                <td style="padding: 20px;">:</td>
                                 <td><a target="_blank" href="@bexpurl/showblock/@pft.gens.OwnerAccountId">@pft.gens.OwnerAccountId.Substring(0, 10)...</a></td>
                             </tr>
                         </table>

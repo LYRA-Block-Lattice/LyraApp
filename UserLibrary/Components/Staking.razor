@@ -13,19 +13,20 @@
 <MudTabs SelectedTab="@selectedTab1" Centered="true">
     <MudTabPanel Text="Staking Accounts" >
         <div class="flex-container">
+            @foreach (var stk in walletState.Value.stkAccounts)
+            {
             <div class="node-list staking-list">
                 <table class="table">
                     <tbody>
-                        @foreach (var stk in walletState.Value.stkAccounts)
-                        {
+                        
                             <tr>
                                 <td>Name</td>
-                                <td>:</td>
+                                <td style="padding:20px;">:</td>
                                 <td>@((stk as IStaking).Name)</td>
                             </tr>
                             <tr>
                                 <td>Staking Amount</td>
-                                <td>:</td>
+                                <td style="padding:20px;">:</td>
                                 @if (walletState.Value.stkBalances != null)
                                 {
                                     <td>@walletState.Value.stkBalances[(stk as TransactionBlock).AccountID]</td>
@@ -37,27 +38,27 @@
                             </tr>
                             <tr>
                                 <td>Compund Mode</td>
-                                <td>:</td>
+                                <td style="padding:20px;">:</td>
                                 <td>@((stk as IStaking).CompoundMode)</td>
                             </tr>
                             <tr>
                                 <td>Total Reward</td>
-                                <td>:</td>
+                                <td style="padding:20px;">:</td>
                                 <td>@walletState.Value.stkRewards[(stk as TransactionBlock).AccountID]</td>
                             </tr>
                             <tr>
                                 <td>Start Time</td>
-                                <td>:</td>
+                                <td style="padding:20px;">:</td>
                                 <td>@((stk as IStaking).Start)</td>
                             </tr>
                             <tr>
                                 <td>Staking Days</td>
-                                <td>:</td>
+                                <td style="padding:20px;">:</td>
                                 <td>@((stk as IStaking).Days)</td>
                             </tr>
                             <tr>
                                 <td>Staking to Account</td>
-                                <td>:</td>
+                                <td style="padding:20px;">:</td>
                                 <td>
                                     @((stk as IStaking).Voting.Substring(0, 10))...
                                     <a target="_blank" href="https://nebula.lyra.live/showblock/@((stk as IStaking).Voting)"><MudIcon Icon="@Icons.Filled.CallMade" Size="Size.Small" /></a>
@@ -70,10 +71,11 @@
                                     <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" OnClick="@(async () => {await UnstakingConfirm((stk as TransactionBlock).AccountID, (stk as IStaking).Start, (stk as IStaking).Days);})">Unstaking</MudButton>
                                 </td>
                             </tr>
-                        }
+                        
                     </tbody>
                 </table>
             </div>
+            }
         </div>
     </MudTabPanel>
     <MudTabPanel Text="Profiting Accounts">

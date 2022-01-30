@@ -144,6 +144,7 @@ a, .btn-link {
     text-align: center;
     margin-bottom: 20px;
     cursor: pointer;
+    color: #594AE2;
 }
 
 .node-list table {
@@ -152,7 +153,7 @@ a, .btn-link {
 }
 
 .node-list table td {
-    padding: 10px 0;
+    padding: 15px 0;
     border-bottom: 1px solid #afafaf;
 }
 
@@ -456,6 +457,9 @@ a, .btn-link {
 }
 
 @media (max-width:912px) {
+    .flex-container {
+        padding: 0;
+    }
     .node-list {
         width: 100%;
     }
