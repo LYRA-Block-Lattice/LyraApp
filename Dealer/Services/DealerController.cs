@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Lyra.Data.API.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -6,8 +7,16 @@ namespace Dealer.Server.Services
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TransactionController : ControllerBase
+    public class DealerController : ControllerBase
     {
+        [HttpPost]
+        public void Register([FromBody] LyraUser value)
+        {
+            // validate data
+            // validate hash
+        }
+
+
         // GET: api/<TransactionController>
         [HttpGet]
         public IEnumerable<string> Get()

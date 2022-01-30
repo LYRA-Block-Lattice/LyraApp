@@ -11,6 +11,8 @@ namespace Dealer.Server.Services
 
         private readonly IMongoCollection<PaymentPlatform> _paymentsCollection;
         private readonly IMongoCollection<LyraUser> _usersCollection;
+        private readonly IMongoCollection<TxRecord> _txRecordsCollection;
+        private readonly IMongoCollection<TxRoom> _txRoomsCollection;
 
         public DealerDb(IOptions<DealerDbSettings> dbSettings)
         {
@@ -23,10 +25,16 @@ namespace Dealer.Server.Services
                 _dbSettings.Value.DatabaseName);
 
             _paymentsCollection = mongoDatabase.GetCollection<PaymentPlatform>(
-                "paymentMethods");
+                _dbSettings.Value.NetworkId + "_paymentMethods");
 
             _usersCollection = mongoDatabase.GetCollection<LyraUser>(
-                "lyraUsers");
+                _dbSettings.Value.NetworkId + "_lyraUsers");
+
+            _txRecordsCollection = mongoDatabase.GetCollection<TxRecord>(
+                _dbSettings.Value.NetworkId + "_txRecords");
+
+            _txRoomsCollection = mongoDatabase.GetCollection<TxRoom>(
+                _dbSettings.Value.NetworkId + "_txRooms");
         }
 
         #region payments methods
@@ -61,6 +69,34 @@ namespace Dealer.Server.Services
 
         public async Task RemoveUserAsync(string id) =>
             await _usersCollection.DeleteOneAsync(x => x.Id == id);
+        #endregion
+
+        #region Lyra Tx Record
+        public async Task<List<TxRecord>> GetTxRecordsAsync() =>
+            await _txRecordsCollection.Find(_ => true).ToListAsync();
+
+        public async Task<TxRecord?> GetTxRecordAsync(string id) =>
+            await _txRecordsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+
+        public async Task CreateTxRecordAsync(TxRecord newUser) =>
+            await _txRecordsCollection.InsertOneAsync(newUser);
+        #endregion
+
+        #region Lyra Tx Room
+        public async Task<List<TxRoom>> GetRoomsAsync() =>
+            await _txRoomsCollection.Find(_ => true).ToListAsync();
+
+        public async Task<TxRoom?> GetRoomAsync(string id) =>
+            await _txRoomsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+
+        public async Task CreateRoomAsync(TxRoom newUser) =>
+            await _txRoomsCollection.InsertOneAsync(newUser);
+
+        public async Task UpdateRoomAsync(string id, TxRoom updatedUser) =>
+            await _txRoomsCollection.ReplaceOneAsync(x => x.Id == id, updatedUser);
+
+        public async Task RemoveRoomAsync(string id) =>
+            await _txRoomsCollection.DeleteOneAsync(x => x.Id == id);
         #endregion
     }
 }
