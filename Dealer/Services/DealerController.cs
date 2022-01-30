@@ -9,11 +9,29 @@ namespace Dealer.Server.Services
     [ApiController]
     public class DealerController : ControllerBase
     {
+        private DealerDb _db;
+        public DealerController(DealerDb db)
+        {
+            _db = db;
+        }
+
+        [Route("GetUserByAccountId")]
+        [HttpGet]
+        public async Task<LyraUser?> GetUserByAccountIdAsync(string accountId)
+        {
+            return await _db.GetUserByAccountIdAsync(accountId);
+        }
+
         [HttpPost]
-        public void Register([FromBody] LyraUser value)
+        [Route("Register")]
+        public async Task<bool> RegisterAsync([FromBody] LyraUser user)
         {
             // validate data
             // validate hash
+
+            user.RegistedTime = DateTime.UtcNow;
+            await _db.CreateUserAsync(user);
+            return true;
         }
 
 

@@ -61,10 +61,13 @@ namespace Dealer.Server.Services
         public async Task<LyraUser?> GetUserAsync(string id) =>
             await _usersCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-        public async Task CreatePaymentAsync(LyraUser newUser) =>
+        public async Task<LyraUser?> GetUserByAccountIdAsync(string accountId) =>
+            await _usersCollection.Find(x => x.AccountId == accountId).FirstOrDefaultAsync();
+
+        public async Task CreateUserAsync(LyraUser newUser) =>
             await _usersCollection.InsertOneAsync(newUser);
 
-        public async Task UpdatePaymentAsync(string id, LyraUser updatedUser) =>
+        public async Task UpdateUserAsync(string id, LyraUser updatedUser) =>
             await _usersCollection.ReplaceOneAsync(x => x.Id == id, updatedUser);
 
         public async Task RemoveUserAsync(string id) =>

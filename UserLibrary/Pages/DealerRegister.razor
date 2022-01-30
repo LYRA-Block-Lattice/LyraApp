@@ -1,0 +1,111 @@
+﻿@page "/dealer/register"
+@using Fluxor
+@using Lyra.Data.API.Identity
+@using Microsoft.Extensions.Configuration
+@using UserLibrary.Data
+@using Nebula.Store.WebWalletUseCase
+@inject NavigationManager NavigationManager
+
+<PageTitle>Register to dealer</PageTitle>
+
+<div>
+    <div style="height: 300px; background: #ECEFF1; ">
+        <div style="padding: 25px;">
+            <div style="width: 100%; height: 100px; display: flex">
+                <h1 style="align-self: flex-end; font-size:40px;">Register to dealer</h1>
+            </div>
+            <div style="width: 100%;">
+                Register to dealer and get notified on various event in realtime.
+            </div>
+            <div style="width: 100%; padding-top: 10px; padding-bottom: 10px;">
+                <MudDivider />
+            </div>
+            <div style="width: 100%; font-size: x-small;">
+                Note: Private information only used for communication between buyer and sellers, and by arbitration when necessary.
+            </div>
+        </div>
+    </div>
+    <div style="height:50px;" />
+    <div>
+        <p>
+            <h3>First Name</h3>
+            <MudTextField @bind-Value="@firstname" Label="" />
+        </p>
+        <div style="height:45px;" />
+        <p>
+            <h3>Middle Name</h3>
+            <MudTextField @bind-Value="@middlename" Label="" />
+        </p>
+        <p>
+            <h3>Last Name</h3>
+            <MudTextField @bind-Value="@lastname" Label="" />
+        </p>
+        <div style="height:45px;" />
+        <p>
+            <h3>Email</h3>
+            <MudTextField @bind-Value="@email" Label="" />
+        </p>
+        <div style="height:45px;" />
+        <p>
+            <h3>Mobile Phone</h3>
+            <MudTextField @bind-Value="@mobilephone" Label="" />
+        </p>
+        <p>
+            <h3>Avatar</h3>
+            <MudTextField @bind-Value="@avatar" Label="" />
+        </p>
+        <div style="height:45px;" />
+
+        <div style="height:45px;" />
+        <p>
+            @if (walletState.Value.wallet == null)
+            {
+                <a href="wallet"><MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary">Open wallet to create token</MudButton></a>
+            }
+            else
+            {
+                <RadzenButton style="width: 160px" IsBusy=@busy Click=@OnRegister Text="Register" />
+            }
+
+        </p>
+
+        @if (success)
+        {
+            <p>
+                <a href="dao">Back to DAO</a>
+            </p>
+        }
+
+    </div>
+</div>
+
+@code {
+    [Inject]
+    IConfiguration Configuration { get; set; }
+
+    [Inject]
+    private IState<WebWalletState> walletState { get; set; }
+
+    string firstname, middlename, lastname, email, mobilephone, avatar;
+    bool busy, success;
+
+    async Task OnRegister()
+    {
+        busy = true;
+
+        var user = new LyraUser
+            {
+                FirstName = firstname,
+                MiddleName = middlename,
+                LastName = lastname,
+                Email = email,
+                MobilePhone = mobilephone,
+                AccountId = walletState.Value.wallet.AccountId,
+                AvatarId = avatar,
+            };
+        var client = new DealerClient(Configuration["network"]);
+        success = await client.RegisterAsync(user);
+
+        busy = false;
+    }
+}

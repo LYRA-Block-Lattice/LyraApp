@@ -11,7 +11,7 @@
     "HotTest": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:8098/dealer",
+      "launchUrl": "https://localhost:8098/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

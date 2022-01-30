@@ -238,10 +238,21 @@
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    void ShowCreateOrderUI(string name)
+    async Task ShowCreateOrderUI(string name)
     {
-        showco = !showco;
-        seldaoname = name;
+        //check if user has been registed on dealer server
+        var client = new DealerClient(Configuration["network"]);
+        var user = await client.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
+        if(user == null)
+        {
+            // register user
+            Navigation.NavigateTo("/dealer/register");
+        }
+        else
+        {
+            showco = !showco;
+            seldaoname = name;
+        }
     }
 
     async Task CreateOrder(string daoname)
