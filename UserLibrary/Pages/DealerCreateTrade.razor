@@ -1,0 +1,114 @@
+﻿@page "/dealer/crtrade/{sendhash}"
+@using Fluxor
+@using Lyra.Data.API.Identity
+@using Lyra.Data.API.WorkFlow
+@using Microsoft.Extensions.Configuration
+@using UserLibrary.Data
+@using Nebula.Store.WebWalletUseCase
+@inject NavigationManager NavigationManager
+@implements IDisposable
+
+<div>
+    <div style="height: 300px; background: #ECEFF1; ">
+        <div style="padding: 25px;">
+            <div style="width: 100%; height: 100px; display: flex">
+                <h1 style="align-self: flex-end; font-size:40px;">Dealer Room</h1>
+            </div>
+        </div>
+    </div>
+    <div style="height:50px;" />
+    @if (wfstage < 0)
+    {
+
+    }
+    else
+    {
+        if (wfstage >= 1)
+        {
+            <p>Consensus network got your request.</p>
+        }
+        if (wfstage >= 2)
+        {
+            <p>Your trade is prepared.</p>
+        }
+        if (wfstage >= 3)
+        {
+            <p>Your trade is generated.</p>
+        }
+    }
+
+
+</div>
+
+@code {
+    [Parameter]
+    public string? sendhash { get; set; }
+
+    [Inject]
+    IConfiguration Configuration { get; set; }
+
+    [Inject]
+    private IState<WebWalletState> walletState { get; set; }
+
+    [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] NavigationManager Navigation { get; set; }
+
+    string method;
+    decimal pay, got;
+    bool busy, success;
+
+    Timer _timer;
+    int wfstage = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _timer = new System.Threading.Timer(DoPeriodicCall, null, 
+            0, 200);
+    }
+
+    public void Dispose()
+    {
+        //maybe to a "final" call
+        _timer.Dispose();
+    }
+
+    // query progress. 
+    // 1, dao receive, 
+    // 2, SendTokenFromOrderToTradeAsync,
+    // 3, TradeGenesisReceiveAsync
+    // if got genesis block the work flow is finished.
+    private async void DoPeriodicCall(Object state)
+    {
+        var lstret = await walletState.Value.wallet.RPC.GetBlocksByRelatedTxAsync(sendhash);
+        if (lstret.Successful())
+        {
+            var blocks = lstret.GetBlocks();
+            wfstage = blocks.Count();
+
+            var gen = blocks.FirstOrDefault(a => a.GetBlockType() == BlockTypes.OTCTradeGenesis)
+                as OtcTradeGenesisBlock;
+
+            if(gen != null)
+            {
+                _timer.Change(Timeout.Infinite, Timeout.Infinite);
+
+                await InvokeAsync(() => StateHasChanged());
+                await Task.Delay(300);
+                wfstage = -1;
+
+                Navigation.NavigateTo($"/dealer/room/{gen.AccountID}");
+            }
+
+            await InvokeAsync(() => StateHasChanged());
+        }
+    }
+
+    async Task OnDeal()
+    {
+        busy = true;
+
+
+        busy = false;
+    }
+}

@@ -1,0 +1,129 @@
+﻿@page "/dealer/trade/{accountId}"
+@using Fluxor
+@using Lyra.Data.API.Identity
+@using Lyra.Data.API.WorkFlow
+@using Microsoft.Extensions.Configuration
+@using UserLibrary.Data
+@using Nebula.Store.WebWalletUseCase
+@inject NavigationManager NavigationManager
+
+<div>
+    @if(otc == null)
+    {
+        <p>No such order!</p>
+    }
+    else
+    {
+
+    <div style="height: 300px; background: #ECEFF1; ">
+        <div style="padding: 25px;">
+            <div style="width: 100%; height: 100px; display: flex">
+                <h1 style="align-self: flex-end; font-size:40px;">@(otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell") @otc.Order.crypto</h1>
+            </div>
+        </div>
+    </div>
+    <div style="height:50px;" />
+    <div>
+
+
+        <p>
+            <h3>You will pay</h3>
+            <MudNumericField @bind-Value="@pay" Label="" />
+        </p>
+        <div style="height:45px;" />
+        <p>
+            <h3>Via</h3>
+            <p>Paypal</p>
+        </p>
+        <p>
+            <h3>You will get</h3>
+            @got @otc.Order.crypto
+        </p>
+        <div style="height:45px;" />
+        <p>
+            @if (walletState.Value.wallet == null)
+            {
+                <a href="wallet"><MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary">Open wallet to create token</MudButton></a>
+            }
+            else
+            {
+                <RadzenButton style="width: 160px" IsBusy=@busy Click=@OnDeal Text="@(otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")" />
+            }
+
+        </p>
+    </div>
+
+        @if (success)
+        {
+            <p>
+                <a href="dao">Back to DAO</a>
+            </p>
+        }
+
+    }
+
+    
+</div>
+
+@code {
+    [Parameter]
+    public string? accountId { get; set; }
+
+    [Inject]
+    IConfiguration Configuration { get; set; }
+
+    [Inject]
+    private IState<WebWalletState> walletState { get; set; }
+
+    [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] NavigationManager Navigation { get; set; }
+
+    IOtcOrder otc;
+    string method;
+    decimal pay, got;
+    bool busy, success;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var lstret = await walletState.Value.wallet.RPC.GetLastBlockAsync(accountId);
+        if(lstret.Successful())
+        {
+            otc = lstret.GetBlock() as IOtcOrder;   
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+
+    async Task OnDeal()
+    {
+        busy = true;
+
+        var trade = new OTCTrade
+            {
+                daoid = otc.Order.daoid,
+                orderid = (otc as TransactionBlock).AccountID,
+                dir = otc.Order.dir == TradeDirection.Sell ? TradeDirection.Buy : TradeDirection.Sell,
+                crypto = otc.Order.crypto,
+                fiat = "USD",
+                priceType = PriceType.Fixed,
+                price = otc.Order.price,
+                amount = otc.Order.amount,
+                collateral = 1000000
+            };
+
+        var traderet = await walletState.Value.wallet.CreateOTCTradeAsync(trade);
+        success = traderet.Successful();
+
+        if(success)
+        {
+            Navigation.NavigateTo($"/dealer/crtrade/{traderet.TxHash}");
+        }
+        else
+        {
+            Snackbar.Add($"Error create trade: {traderet.ResultCode}", Severity.Error);
+        }
+
+        busy = false;
+    }
+}

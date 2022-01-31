@@ -123,7 +123,7 @@
             {
                 var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoid);
                 <MudItem xs="12">
-                    <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao />
+                    <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao OrderSelected=@ShowCreateTradeUI />
                 </MudItem>
             }
 
@@ -236,6 +236,22 @@
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task ShowCreateTradeUI(IOtcOrder order)
+    {
+        //check if user has been registed on dealer server
+        var client = new DealerClient(Configuration["network"]);
+        var user = await client.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
+        if(user == null)
+        {
+            // register user
+            Navigation.NavigateTo("/dealer/register");
+        }
+        else
+        {
+            Navigation.NavigateTo($"/dealer/trade/{(order as TransactionBlock).AccountID}");
+        }
     }
 
     async Task ShowCreateOrderUI(string name)
