@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lyra.Core.API;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,14 +8,12 @@ using System.Threading.Tasks;
 namespace UserLibrary.Data
 {
     // Define the hub methods
-    //public interface IDealerClientxxx
-    //{
-    //    Task Publish(string user, string message);
-    //    Task History(List<string> messages);
-    //    Task Whisper(string message);
-
-    //    Task OnPublish(string user, string message);
-    //}
+    public class JoinRoomRequest
+    {
+        public string TradeID { get; set; }
+        public string UserAccountID { get; set; }
+        public string Signature { get; set; }
+    }
 
     public class FooData
     {
@@ -42,6 +41,7 @@ namespace UserLibrary.Data
     /// <summary> SignalR Hub invoke interface (signature for Clients invoking methods on server Hub) </summary>
     public interface IHubInvokeMethods
     {
+        Task<APIResult> JoinRoom(JoinRoomRequest req);
         Task InvokeFoo(string payload);
         Task<BarResult> InvokeBar(double number, double cost);
     }

@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
+using Lyra.Core.API;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace UserLibrary.Data
@@ -74,6 +75,11 @@ namespace UserLibrary.Data
         public ValueTask DisposeAsync()
         {
             return _connection.DisposeAsync();
+        }
+
+        public Task<APIResult> JoinRoom(JoinRoomRequest req)
+        {
+            return _connection.InvokeAsync<APIResult>(nameof(IHubInvokeMethods.JoinRoom), req);
         }
     }
 

@@ -1,0 +1,45 @@
+﻿@using Fluxor
+@using Lyra.Data.API.WorkFlow
+@using Microsoft.Extensions.Configuration
+@using Nebula.Store.WebWalletUseCase
+
+<div class="container">
+    <h1>Show your transactions here.</h1>
+@*    <div class="nw">
+        <MudAvatar Color="Color.Primary">@Dao.Name.First()</MudAvatar>
+        <div>@Dao.Name</div>
+    </div>
+    <div class="nw">
+        @Otc.Order.crypto   
+    </div>
+    <div class="nw price">
+        @Otc.Order.price @Otc.Order.fiat
+    </div>
+    <div class="nw">
+         Available: @Otc.Order.amount<br />
+         Limits: 5,000 - 12,000 USD
+    </div>
+    <div>
+        <MudButton Variant="Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>
+    </div>*@
+</div>
+
+@code {
+    [Inject]
+    IConfiguration Configuration { get; set; }
+
+    [Inject]
+    private IState<WebWalletState> walletState { get; set; }
+
+    [Inject] NavigationManager Navigation { get; set; }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            // get all current trades 
+
+        }
+        return base.OnAfterRenderAsync(firstRender);
+    }
+}

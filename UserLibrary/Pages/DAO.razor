@@ -119,9 +119,13 @@
                 }
             }
 
+            <MudItem xs="12">
+                <UserLibrary.Components.OTC.TransactionsList />
+            </MudItem>
+
             @foreach(var odr in tradableOrders)
             {
-                var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoid);
+                var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoId);
                 <MudItem xs="12">
                     <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao OrderSelected=@ShowCreateTradeUI />
                 </MudItem>
@@ -283,7 +287,7 @@
 
             var order = new OTCOrder
                 {
-                    daoid = daot.AccountID,
+                    daoId = daot.AccountID,
                     dir = TradeDirection.Sell,
                     crypto = selcrypto.dbname,
                     fiat = selfiat,

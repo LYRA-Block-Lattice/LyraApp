@@ -101,8 +101,9 @@
 
         var trade = new OTCTrade
             {
-                daoid = otc.Order.daoid,
-                orderid = (otc as TransactionBlock).AccountID,
+                daoId = otc.Order.daoId,
+                orderId = (otc as TransactionBlock).AccountID,
+                orderOwnerId = otc.OwnerAccountId,
                 dir = otc.Order.dir == TradeDirection.Sell ? TradeDirection.Buy : TradeDirection.Sell,
                 crypto = otc.Order.crypto,
                 fiat = "USD",

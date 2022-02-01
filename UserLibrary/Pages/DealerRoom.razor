@@ -1,5 +1,8 @@
 ﻿@page "/dealer/room/{tradeid}"
+@using Fluxor
+@using Lyra.Data.Crypto
 @using Microsoft.AspNetCore.SignalR.Client
+@using Nebula.Store.WebWalletUseCase
 @using UserLibrary.Data
 @inject NavigationManager NavigationManager
 @implements IAsyncDisposable
@@ -34,6 +37,10 @@
     [Parameter]
     public string? tradeid { get; set; }
 
+    [Inject]
+    private IState<WebWalletState> walletState { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
+
     private List<string> messages = new List<string>();
     private string? userInput;
     private string? messageInput;
@@ -51,6 +58,22 @@
         });
 
         await wrapper.StartAsync();
+
+        var result = await wrapper.JoinRoom(new JoinRoomRequest
+            {
+                TradeID = tradeid,
+                UserAccountID = walletState.Value.wallet.AccountId,
+                Signature = Signatures.GetSignature(walletState.Value.wallet.PrivateKey, tradeid, walletState.Value.wallet.AccountId),
+            });
+
+        if(result.Successful())
+        {
+            Snackbar.Add($"Join dealer room successfully.", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add($"Error join dealer room: {result.ResultCode}", Severity.Error);
+        }
     }
 
     private async Task Send()

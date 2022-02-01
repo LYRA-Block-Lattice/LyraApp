@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Lyra.Core.API;
+using Microsoft.AspNetCore.SignalR;
 using UserLibrary.Data;
 
 namespace Dealer.Server.Hubs
@@ -38,6 +39,14 @@ namespace Dealer.Server.Hubs
             await Clients.All.OnBar(Context.UserIdentifier, bar);
 
             return new BarResult { Id = "Some Id" };
+        }
+
+        public Task<APIResult> JoinRoom(JoinRoomRequest req)
+        {
+            return Task.FromResult(new APIResult
+            {
+                ResultCode = Lyra.Core.Blocks.APIResultCodes.DealerRoomNotExists,
+            });
         }
     }
 }
