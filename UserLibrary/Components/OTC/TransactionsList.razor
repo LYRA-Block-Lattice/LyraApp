@@ -4,24 +4,15 @@
 @using Nebula.Store.WebWalletUseCase
 
 <div class="container">
-    <h1>Show your transactions here.</h1>
-@*    <div class="nw">
-        <MudAvatar Color="Color.Primary">@Dao.Name.First()</MudAvatar>
-        <div>@Dao.Name</div>
-    </div>
-    <div class="nw">
-        @Otc.Order.crypto   
-    </div>
-    <div class="nw price">
-        @Otc.Order.price @Otc.Order.fiat
-    </div>
-    <div class="nw">
-         Available: @Otc.Order.amount<br />
-         Limits: 5,000 - 12,000 USD
-    </div>
-    <div>
-        <MudButton Variant="Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>
-    </div>*@
+    @foreach(var trade in trades)
+    {
+        <div class="nw">
+            <div>@trade.AccountID</div>
+        </div>
+        <div>
+            @*<MudButton Variant="Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>*@
+        </div>
+    }
 </div>
 
 @code {
@@ -31,15 +22,27 @@
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
 
+    [Inject] ISnackbar Snackbar { get; set; }
     [Inject] NavigationManager Navigation { get; set; }
 
-    protected override Task OnAfterRenderAsync(bool firstRender)
+    List<TransactionBlock> trades = new List<TransactionBlock>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if(firstRender)
         {
             // get all current trades 
-
+            var ret = await walletState.Value.wallet.RPC.FindOtcTradeAsync(walletState.Value.wallet.AccountId, false, 0, 10);
+            if(ret.Successful())
+            {
+                trades = ret.GetBlocks().Cast<TransactionBlock>().ToList();
+                StateHasChanged();
+            }
+            else
+            {
+                Snackbar.Add($"Error getting transactions: {ret.ResultCode}", Severity.Error);
+            }
         }
-        return base.OnAfterRenderAsync(firstRender);
+        await base.OnAfterRenderAsync(firstRender);
     }
 }
