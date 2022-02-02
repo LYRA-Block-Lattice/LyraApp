@@ -14,9 +14,13 @@ namespace Dealer.Server.Services
         private readonly IMongoCollection<TxRecord> _txRecordsCollection;
         private readonly IMongoCollection<TxRoom> _txRoomsCollection;
 
+        private string _networkId;
+        public string NetworkId { get => _networkId; set => _networkId = value; }
+
         public DealerDb(IOptions<DealerDbSettings> dbSettings)
         {
             _dbSettings = dbSettings;
+            _networkId = dbSettings.Value.NetworkId;
 
             var mongoClient = new MongoClient(
                 _dbSettings.Value.ConnectionString);
@@ -89,8 +93,8 @@ namespace Dealer.Server.Services
         public async Task<List<TxRoom>> GetRoomsAsync() =>
             await _txRoomsCollection.Find(_ => true).ToListAsync();
 
-        public async Task<TxRoom?> GetRoomAsync(string id) =>
-            await _txRoomsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        public async Task<TxRoom?> GetRoomByTradeAsync(string tradeId) =>
+            await _txRoomsCollection.Find(x => x.TradeId == tradeId).FirstOrDefaultAsync();
 
         public async Task CreateRoomAsync(TxRoom newUser) =>
             await _txRoomsCollection.InsertOneAsync(newUser);
