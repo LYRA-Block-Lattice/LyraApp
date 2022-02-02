@@ -58,17 +58,13 @@ namespace UserLibrary.Data
             return Task.CompletedTask;
         }
 
-        public Task InvokeFoo(string payload)
-            => _connection.InvokeAsync(nameof(IHubInvokeMethods.InvokeFoo), payload);
 
-        public Task<BarResult> InvokeBar(double number, double cost)
-            => _connection.InvokeAsync<BarResult>(nameof(IHubInvokeMethods.InvokeBar), number, cost);
 
-        public IDisposable RegisterOnFoo(Action<FooData> onFoo)
-            => _connection.BindOnInterface(x => x.OnFoo, onFoo);
+        //public Task<BarResult> InvokeBar(double number, double cost)
+        //    => _connection.InvokeAsync<BarResult>(nameof(IHubInvokeMethods.InvokeBar), number, cost);
 
-        public IDisposable RegisterOnBar(Action<string, BarData> onBar)
-            => _connection.BindOnInterface(x => x.OnBar, onBar);
+        public IDisposable RegisterOnChat(Action<ChatMessage> msg)
+            => _connection.BindOnInterface(x => x.OnChat, msg);
 
         public bool IsConnected => _connection.State == HubConnectionState.Connected;
 
@@ -77,9 +73,12 @@ namespace UserLibrary.Data
             return _connection.DisposeAsync();
         }
 
-        public Task<APIResult> JoinRoom(JoinRoomRequest req)
+        public Task Chat(ChatMessage msg)
+            => _connection.InvokeAsync(nameof(IHubInvokeMethods.Chat), msg);
+
+        public Task<JoinRoomResponse> JoinRoom(JoinRoomRequest req)
         {
-            return _connection.InvokeAsync<APIResult>(nameof(IHubInvokeMethods.JoinRoom), req);
+            return _connection.InvokeAsync<JoinRoomResponse>(nameof(IHubInvokeMethods.JoinRoom), req);
         }
     }
 

@@ -82,8 +82,8 @@ namespace Dealer.Server.Services
         public async Task<List<TxRecord>> GetTxRecordsAsync() =>
             await _txRecordsCollection.Find(_ => true).ToListAsync();
 
-        public async Task<TxRecord?> GetTxRecordAsync(string id) =>
-            await _txRecordsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        //public async Task<TxRecord?> GetTxRecordAsync(string id) =>
+        //    await _txRecordsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
         public async Task CreateTxRecordAsync(TxRecord newUser) =>
             await _txRecordsCollection.InsertOneAsync(newUser);

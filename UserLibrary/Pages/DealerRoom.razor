@@ -1,5 +1,6 @@
 ﻿@page "/dealer/room/{tradeid}"
 @using Fluxor
+@using Lyra.Data.API.Identity
 @using Lyra.Data.Crypto
 @using Microsoft.AspNetCore.SignalR.Client
 @using Nebula.Store.WebWalletUseCase
@@ -51,9 +52,9 @@
     {
         wrapper = new ConnectionMethodsWrapper(ConnectionFactoryHelper.CreateConnection(new Uri("https://localhost:7070/hub"), null));
 
-        wrapper.RegisterOnFoo(a =>
+        wrapper.RegisterOnChat(a =>
         {
-            messages.Add(a.FooPayload);
+            messages.Add(a.Content.Text);
             StateHasChanged();
         });
 
@@ -78,11 +79,10 @@
 
     private async Task Send()
     {
-        await wrapper.InvokeFoo(messageInput);
-        //   if (hubConnection is not null)
-		//{
-  //          await hubConnection.SendAsync("Publish", userInput, messageInput);
-		//}
+        await wrapper.Chat(new ChatMessage
+        {
+            Content = new TxMessage { Text = messageInput }
+        });
 	}
 
     private async Task Hist()

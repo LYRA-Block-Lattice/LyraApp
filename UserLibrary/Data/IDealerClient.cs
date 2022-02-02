@@ -1,4 +1,5 @@
 ﻿using Lyra.Core.API;
+using Lyra.Data.API.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,39 +11,31 @@ namespace UserLibrary.Data
     // Define the hub methods
     public class JoinRoomRequest
     {
-        public string TradeID { get; set; }
-        public string UserAccountID { get; set; }
-        public string Signature { get; set; }
+        public string TradeID { get; set; } = null!;
+        public string UserAccountID { get; set; } = null!;
+        public string Signature { get; set; } = null!;
     }
 
-    public class FooData
+    public class ChatMessage
     {
-        public string FooPayload { get; set; }
-    }
-
-    public class BarData
-    {
-        public double Number { get; set; }
-        public double Cost { get; set; }
-    }
-
-    public class BarResult
-    {
-        public string Id { get; set; }
+        public TxMessage Content { get; set; } = null!;
     }
 
     /// <summary> SignalR Hub push interface (signature for Hub pushing notifications to Clients) </summary>
     public interface IHubPushMethods
     {
-        Task OnFoo(FooData fodData);
-        Task OnBar(string id, BarData barData);
+        Task OnChat(ChatMessage msg);
     }
 
     /// <summary> SignalR Hub invoke interface (signature for Clients invoking methods on server Hub) </summary>
     public interface IHubInvokeMethods
     {
-        Task<APIResult> JoinRoom(JoinRoomRequest req);
-        Task InvokeFoo(string payload);
-        Task<BarResult> InvokeBar(double number, double cost);
+        Task<JoinRoomResponse> JoinRoom(JoinRoomRequest req);
+        Task Chat(ChatMessage msg);
+    }
+
+    public class JoinRoomResponse : APIResult
+    {
+        public string RoomId { get; set; } = null!;
     }
 }

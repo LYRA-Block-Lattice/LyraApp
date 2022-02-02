@@ -19,40 +19,25 @@ namespace Dealer.Server.Hubs
             _db = db;
         }
 
-        public async Task GetHistory(string connectionId)
-        {
-            // Get the history from our pretend database
-            List<string> history = new List<string> { "This is chat history", "line 1", "line 2" }; //await _db.GetHistory();
-
-            // Send the history to the client
-            foreach (var hist in history)
-            {
-                var foo = new FooData { FooPayload = hist };
-                await Clients.Client(connectionId).OnFoo(foo);
-            }
-        }
-
         public override async Task OnConnectedAsync()
         {
-            await GetHistory(Context.ConnectionId);
             await base.OnConnectedAsync();
         }
 
-        public async Task InvokeFoo(string payload)
+        public async Task Chat(ChatMessage msg)
         {
-            var foo = new FooData { FooPayload = payload };
-            await Clients.All.OnFoo(foo);
+            await Clients.All.OnChat(msg);
         }
 
-        public async Task<BarResult> InvokeBar(double number, double cost)
-        {
-            var bar = new BarData { Number = number, Cost = cost };
-            await Clients.All.OnBar(Context.UserIdentifier, bar);
+        //public async Task<BarResult> InvokeBar(double number, double cost)
+        //{
+        //    var bar = new BarData { Number = number, Cost = cost };
+        //    await Clients.All.OnBar(Context.UserIdentifier, bar);
 
-            return new BarResult { Id = "Some Id" };
-        }
+        //    return new BarResult { Id = "Some Id" };
+        //}
 
-        public async Task<APIResult> JoinRoom(JoinRoomRequest req)
+        public async Task<JoinRoomResponse> JoinRoom(JoinRoomRequest req)
         {
             // verify the signature
             var ok = Signatures.VerifyAccountSignature(req.TradeID, req.UserAccountID, req.Signature);
@@ -80,7 +65,7 @@ namespace Dealer.Server.Hubs
                             {
                                 var crroom = new TxRoom
                                 {
-                                    TradeId = (tradeblk as TransactionBlock).AccountID,
+                                    TradeId = ((TransactionBlock)tradeblk).AccountID,
                                     Members = new[] { seller, buyer },
                                 };
                                 await _db.CreateRoomAsync(crroom);
@@ -90,18 +75,21 @@ namespace Dealer.Server.Hubs
 
                         if (room != null)
                         {
-                            return new APIResult
+                            return new JoinRoomResponse
                             {
-                                ResultCode = APIResultCodes.Success
+                                ResultCode = APIResultCodes.Success,
+#pragma warning disable CS8601 // Possible null reference assignment.
+                                RoomId = room.Id,
+#pragma warning restore CS8601 // Possible null reference assignment.
                             };
                         }
                     }
                 }
             }
 
-            return new APIResult
+            return new JoinRoomResponse
             {
-                ResultCode = Lyra.Core.Blocks.APIResultCodes.DealerRoomNotExists,
+                ResultCode = APIResultCodes.DealerRoomNotExists,
             };
         }
     }
