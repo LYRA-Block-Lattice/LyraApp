@@ -113,12 +113,12 @@ namespace Dealer.Server.Hubs
                     || tradeblk?.Trade.orderOwnerId == req.UserAccountID)
                 {
                     // in database, one dealer room per trade.
+                    var seller = await _db.GetUserByAccountIdAsync(tradeblk.Trade.orderOwnerId);
+                    var buyer = await _db.GetUserByAccountIdAsync(tradeblk.OwnerAccountId);
+
                     var room = await _db.GetRoomByTradeAsync(req.TradeID);
                     if (room == null)
                     {
-                        var seller = await _db.GetUserByAccountIdAsync(tradeblk.Trade.orderOwnerId);
-                        var buyer = await _db.GetUserByAccountIdAsync(tradeblk.OwnerAccountId);
-
                         if (seller != null && buyer != null)
                         {
                             var crroom = new TxRoom
@@ -133,12 +133,30 @@ namespace Dealer.Server.Hubs
 
                     if (room != null)
                     {
+                        var txmsgs = await _db.GetTxRecordsByTradeAsync(req.TradeID);
+                        var dict = new Dictionary<string, string>()
+                        {
+                            { seller.AccountId, seller.UserName },
+                            { buyer.AccountId, buyer.UserName },
+                            { Consts.DEALER_ACCOUNTID, "Dealer" },
+                        };
                         return new JoinRoomResponse
                         {
                             ResultCode = APIResultCodes.Success,
-#pragma warning disable CS8601 // Possible null reference assignment.
-                            RoomId = room.Id,
-#pragma warning restore CS8601 // Possible null reference assignment.
+                            History = txmsgs.Select(msg =>
+                                new RespMessage
+                                {
+                                    UserName = dict[msg.AccountId],
+                                    Text = (msg as TxMessage).Text,
+                                }
+                            )
+                            .ToArray(),
+                            Roles = new Dictionary<string, string>()
+                            {
+                                { seller.UserName, seller.AccountId == req.UserAccountID ? "me" : "peer"},
+                                { buyer.UserName, buyer.AccountId == req.UserAccountID ? "me" : "peer"},
+                                { "Dealer", "dealer" },
+                            }
                         };
                     }
                 }

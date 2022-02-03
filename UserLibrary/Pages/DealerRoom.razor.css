@@ -1,0 +1,43 @@
+﻿.chatw {
+    width: 400px;
+    padding: 5px;
+}
+
+.para {
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+}
+
+.peerw {
+
+}
+
+.mew {    
+    justify-content: flex-end;
+}
+
+.dealerw {
+    
+}
+
+.peermsg {
+    background-color: lightgray;
+    margin-left: 15px;
+    padding: 10px;
+    display: inline-block;
+    border-radius: 10px;
+}
+
+.memsg {
+    background-color: lawngreen;
+    margin-left: 15px;
+    padding: 10px;
+    display: inline-block;
+    border-radius: 10px;
+    text-align: right;
+}
+
+.dealermsg {
+    background-color: white;
+}

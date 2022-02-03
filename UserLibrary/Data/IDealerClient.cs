@@ -17,7 +17,8 @@ namespace UserLibrary.Data
 
     public class JoinRoomResponse : APIResult
     {
-        public string RoomId { get; set; } = null!;
+        public RespMessage[]? History { get; set; }
+        public Dictionary<string, string> Roles { get; set; }
     }
 
     public class ChatMessage

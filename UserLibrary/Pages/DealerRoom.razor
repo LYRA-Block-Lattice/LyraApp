@@ -7,35 +7,37 @@
 @inject NavigationManager NavigationManager
 @implements IAsyncDisposable
 
-<h1>Dealer Room</h1>
-<p>for trade: @tradeid</p>
+<div class="mag">
 
+    <h1>Dealer Room</h1>
+    <p>for trade: @tradeid</p>
 
+    <div class="chatw">
+            @foreach (var msg in messages)
+            {
+                <div class="para @(joinroom.Roles[msg.UserName])w">
+                    <div>@msg.UserName</div>
+                    <div class="@(joinroom.Roles[msg.UserName])msg">@msg.Text</div>
+                </div>
 
-<div>
-    <ul>
-    @foreach (var message in messages)
-    {
-        <li>@message</li>
-    }
-</ul>
-</div>
+            }
+    </div>
 
-<div>
-    <div class="form-group">
-    <label>
-        Message:
-        <input @bind="messageInput" size="50" />
-    </label>
-</div>
-</div>
+    <div>
+        <div class="form-group">
+            <label>
+                Message:
+                <input @bind="messageInput" size="50" />
+            </label>
+        </div>
+    </div>
     <MudButton Variant="Variant.Filled" Color="Color.Primary"
-        Disabled="@(!(wrapper?.IsConnected) ?? false)" OnClick="Send"
-        >
-                    Send
-                </MudButton>   
+               Disabled="@(!(wrapper?.IsConnected) ?? false)" OnClick="Send">
+        Send
+    </MudButton>
 
 
+</div>
 
 
 @code {
@@ -46,11 +48,12 @@
     private IState<WebWalletState> walletState { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
 
-    private List<string> messages = new List<string>();
+    private List<RespMessage> messages = new List<RespMessage>();
     private string? userInput;
     private string? messageInput;
 
     ConnectionMethodsWrapper? wrapper;
+    JoinRoomResponse joinroom;
 
     protected override async Task OnInitializedAsync()
     {
@@ -58,26 +61,29 @@
 
         wrapper.RegisterOnChat(a =>
         {
-            messages.Add($"{a.UserName}: {a.Text}");
+            messages.Add(a);
             StateHasChanged();
         });
 
         await wrapper.StartAsync();
 
-        var result = await wrapper.JoinRoom(new JoinRoomRequest
+        joinroom = await wrapper.JoinRoom(new JoinRoomRequest
             {
                 TradeID = tradeid,
                 UserAccountID = walletState.Value.wallet.AccountId,
                 Signature = Signatures.GetSignature(walletState.Value.wallet.PrivateKey, tradeid, walletState.Value.wallet.AccountId),
             });
 
-        if(result.Successful())
+        if(joinroom.Successful())
         {
             Snackbar.Add($"Join dealer room successfully.", Severity.Success);
+
+            // populate history
+            messages.AddRange(joinroom.History);
         }
         else
         {
-            Snackbar.Add($"Error join dealer room: {result.ResultCode}", Severity.Error);
+            Snackbar.Add($"Error join dealer room: {joinroom.ResultCode}", Severity.Error);
         }
     }
 
