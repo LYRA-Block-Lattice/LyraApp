@@ -1,5 +1,4 @@
 ﻿using Lyra.Core.API;
-using Lyra.Data.API.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;

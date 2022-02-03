@@ -1,4 +1,5 @@
-﻿using Lyra.Data.API.Identity;
+﻿using Lyra.Core.API;
+using Lyra.Data.API.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -17,21 +18,41 @@ namespace Dealer.Server.Services
 
         [Route("GetUserByAccountId")]
         [HttpGet]
-        public async Task<LyraUser?> GetUserByAccountIdAsync(string accountId)
+        public async Task<APIResult> GetUserByAccountIdAsync(string accountId)
         {
-            return await _db.GetUserByAccountIdAsync(accountId);
+            var user = await _db.GetUserByAccountIdAsync(accountId);
+            return new APIResult
+            {
+                ResultCode = user == null ? Lyra.Core.Blocks.APIResultCodes.NotFound : Lyra.Core.Blocks.APIResultCodes.Success,
+                ResultMessage = user == null ? null : user.UserName,
+            };
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("Register")]
-        public async Task<bool> RegisterAsync([FromBody] LyraUser user)
+        public async Task<APIResult> RegisterAsync(string accountId,
+            string userName, string firstName, string middleName, string lastName,
+            string email, string mibilePhone, string avatarId)
         {
             // validate data
             // validate hash
 
+            var user = new LyraUser
+            {
+                UserName = userName,
+                FirstName = firstName,
+                MiddleName = middleName,
+                LastName = lastName,
+                Email = email,
+                MobilePhone = mibilePhone,
+                AvatarId = avatarId,
+                AccountId = accountId,
+                RegistedTime = DateTime.UtcNow,
+            };
+
             user.RegistedTime = DateTime.UtcNow;
             await _db.CreateUserAsync(user);
-            return true;
+            return APIResult.Success;
         }
 
 

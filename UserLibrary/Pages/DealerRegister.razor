@@ -1,6 +1,5 @@
 ﻿@page "/dealer/register"
 @using Fluxor
-@using Lyra.Data.API.Identity
 @using Microsoft.Extensions.Configuration
 @using UserLibrary.Data
 @using Nebula.Store.WebWalletUseCase
@@ -98,19 +97,16 @@
     {
         busy = true;
 
-        var user = new LyraUser
-            {
-                UserName = username,
-                FirstName = firstname,
-                MiddleName = middlename,
-                LastName = lastname,
-                Email = email,
-                MobilePhone = mobilephone,
-                AccountId = walletState.Value.wallet.AccountId,
-                AvatarId = avatar,
-            };
         var client = new DealerClient(Configuration["network"]);
-        success = await client.RegisterAsync(user);
+        var ret = await client.RegisterAsync(walletState.Value.wallet.AccountId,
+            username, firstname,middlename,lastname,email,mobilephone,avatar
+         );
+        success = ret.Successful();
+
+        if(!success)
+        {
+            //
+        }
 
         busy = false;
     }
