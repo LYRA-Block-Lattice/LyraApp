@@ -58,12 +58,7 @@ namespace UserLibrary.Data
             return Task.CompletedTask;
         }
 
-
-
-        //public Task<BarResult> InvokeBar(double number, double cost)
-        //    => _connection.InvokeAsync<BarResult>(nameof(IHubInvokeMethods.InvokeBar), number, cost);
-
-        public IDisposable RegisterOnChat(Action<ChatMessage> msg)
+        public IDisposable RegisterOnChat(Action<RespMessage> msg)
             => _connection.BindOnInterface(x => x.OnChat, msg);
 
         public bool IsConnected => _connection.State == HubConnectionState.Connected;

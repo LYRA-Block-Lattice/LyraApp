@@ -10,27 +10,33 @@
 <h1>Dealer Room</h1>
 <p>for trade: @tradeid</p>
 
-<div class="form-group">
-    <label>
-        User:
-        <input @bind="userInput" />
-    </label>
-</div>
-<div class="form-group">
-    <label>
-        Message:
-        <input @bind="messageInput" size="50" />
-    </label>
-</div>
-<button @onclick="Send" disabled="@(!wrapper?.IsConnected)">Send</button>
-<hr>
 
-<ul id="messagesList">
+
+<div>
+    <ul>
     @foreach (var message in messages)
     {
         <li>@message</li>
     }
 </ul>
+</div>
+
+<div>
+    <div class="form-group">
+    <label>
+        Message:
+        <input @bind="messageInput" size="50" />
+    </label>
+</div>
+</div>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary"
+        Disabled="@(!(wrapper?.IsConnected) ?? false)" OnClick="Send"
+        >
+                    Send
+                </MudButton>   
+
+
+
 
 @code {
     [Parameter]
@@ -52,7 +58,7 @@
 
         wrapper.RegisterOnChat(a =>
         {
-            messages.Add($"{a.AccountId}: {a.Text} [{a.Hash}]");
+            messages.Add($"{a.UserName}: {a.Text}");
             StateHasChanged();
         });
 
@@ -77,12 +83,15 @@
 
     private async Task Send()
     {
-        await wrapper.Chat(new ChatMessage { 
-            TradeId = tradeid,
-            AccountId = walletState.Value.wallet.AccountId,
-            Text = messageInput        
+        await wrapper.Chat(new ChatMessage {
+                TradeId = tradeid,
+                AccountId = walletState.Value.wallet.AccountId,
+                Text = messageInput,
+                Signature = Signatures.GetSignature(walletState.Value.wallet.PrivateKey,
+                    messageInput, walletState.Value.wallet.AccountId),
         });
-	}
+        messageInput = "";
+    }
 
     private async Task Hist()
 	{

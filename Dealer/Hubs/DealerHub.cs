@@ -23,14 +23,17 @@ namespace Dealer.Server.Hubs
             _db = db;
             _hubContext = hubContext;
             _buffer = new BufferBlock<ChatMessage>();
-            _ = Task.Run(async () => await ConsumeAsync(_buffer));
         }
 
-        public async Task ConsumeAsync(ISourceBlock<ChatMessage> source)
+        bool InConsumer = false;
+        public async Task ConsumeAsync(IReceivableSourceBlock<ChatMessage> source)
         {
-            while (await source.OutputAvailableAsync())
+            if (InConsumer)
+                return;
+
+            InConsumer = true;
+            while (source.TryReceive(out ChatMessage msg))
             {
-                var msg = await source.ReceiveAsync();
                 // save history
                 var room = await _db.GetRoomByTradeAsync(msg.TradeId);
                 if (room.Members.Any(a => a.AccountId == msg.AccountId))
@@ -53,13 +56,20 @@ namespace Dealer.Server.Hubs
 
                     msg.Hash = txmsg.Hash;
 
-                    await _hubContext.Clients.All.SendAsync("OnChat", msg);
+                    var user = await _db.GetUserByAccountIdAsync(msg.AccountId);
+                    var resp = new RespMessage
+                    {
+                        UserName = user.UserName,
+                        Text = msg.Text,
+                    };
+                    await _hubContext.Clients.All.SendAsync("OnChat", resp);
                 }
                 else
                 {
                     Console.WriteLine("Not permited to chat.");
                 }
             }
+            InConsumer = false;
         }
 
         public override async Task OnConnectedAsync()
@@ -69,7 +79,15 @@ namespace Dealer.Server.Hubs
 
         public async Task Chat(ChatMessage msg)
         {
-            _buffer.Post(msg);
+            if(Signatures.VerifyAccountSignature(msg.Text, msg.AccountId, msg.Signature))
+            {
+                _buffer.Post(msg);
+                await ConsumeAsync(_buffer);
+            }
+            else
+            {
+                Console.WriteLine("Message signature verify failed.");
+            }
         }
 
         //public async Task<BarResult> InvokeBar(double number, double cost)

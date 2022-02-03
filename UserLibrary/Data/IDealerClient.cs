@@ -29,10 +29,16 @@ namespace UserLibrary.Data
         public string? Hash { get; set; }
     }
 
+    public class RespMessage
+    {
+        public string UserName { get; set; } = null!;
+        public string Text { set; get; } = null!;   
+    }
+
     /// <summary> SignalR Hub push interface (signature for Hub pushing notifications to Clients) </summary>
     public interface IHubPushMethods
     {
-        Task OnChat(ChatMessage msg);
+        Task OnChat(RespMessage msg);
     }
 
     /// <summary> SignalR Hub invoke interface (signature for Clients invoking methods on server Hub) </summary>
