@@ -16,9 +16,18 @@ namespace UserLibrary.Data
         public string Signature { get; set; } = null!;
     }
 
+    public class JoinRoomResponse : APIResult
+    {
+        public string RoomId { get; set; } = null!;
+    }
+
     public class ChatMessage
     {
-        public TxMessage Content { get; set; } = null!;
+        public string TradeId { get; set; } = null!;
+        public string AccountId { get; set; } = null!;  
+        public string Text { get; set; } = null!;
+        public string Signature { get; set; } = null!;
+        public string? Hash { get; set; }
     }
 
     /// <summary> SignalR Hub push interface (signature for Hub pushing notifications to Clients) </summary>
@@ -34,8 +43,5 @@ namespace UserLibrary.Data
         Task Chat(ChatMessage msg);
     }
 
-    public class JoinRoomResponse : APIResult
-    {
-        public string RoomId { get; set; } = null!;
-    }
+
 }

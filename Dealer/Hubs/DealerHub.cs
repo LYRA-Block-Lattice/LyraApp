@@ -26,7 +26,33 @@ namespace Dealer.Server.Hubs
 
         public async Task Chat(ChatMessage msg)
         {
-            await Clients.All.OnChat(msg);
+            // save history
+            var room = await _db.GetRoomByTradeAsync(msg.TradeId);
+            if(room.Members.Any(a => a.AccountId == msg.AccountId))
+            {
+                var prevMsgs = await _db.GetTxRecordsByTradeAsync(room.TradeId);
+                var txmsg = new TxMessage
+                {
+                    TradeID = room.TradeId,
+                    AccountId = msg.AccountId,
+
+                    Text = msg.Text,
+                };
+
+                TxRecord last = null;
+                if (prevMsgs.Count() > 0)
+                    last = prevMsgs.Last();
+
+                txmsg.Initialize(last, Consts.DEALER_KEY, Consts.DEALER_ACCOUNTID);
+                await _db.CreateTxRecordAsync(txmsg);
+
+                msg.Hash = txmsg.Hash;
+                await Clients.All.OnChat(msg);
+            }
+            else
+            {
+                Console.WriteLine("Not permited to chat.");
+            }
         }
 
         //public async Task<BarResult> InvokeBar(double number, double cost)
@@ -46,43 +72,39 @@ namespace Dealer.Server.Hubs
                 // check if the client belongs to the room
                 // account id should be either buyer or seller
                 var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "Dealer", "0.1");
-                var traderet = await lc.GetLastBlockAsync(req.TradeID);
-                if (traderet.Successful())
+                var tradeblk = (await lc.GetLastBlockAsync(req.TradeID)).As<IOtcTrade>();
+
+                if (tradeblk?.OwnerAccountId == req.UserAccountID
+                    || tradeblk?.Trade.orderOwnerId == req.UserAccountID)
                 {
-                    var tradeblk = traderet.GetBlock() as IOtcTrade;
-                    if (tradeblk != null && (
-                        tradeblk.OwnerAccountId == req.UserAccountID
-                        || tradeblk.Trade.orderOwnerId == req.UserAccountID))
+                    // in database, one dealer room per trade.
+                    var room = await _db.GetRoomByTradeAsync(req.TradeID);
+                    if (room == null)
                     {
-                        // in database, one dealer room per trade.
-                        var room = await _db.GetRoomByTradeAsync(req.TradeID);
-                        if (room == null)
-                        {
-                            var seller = await _db.GetUserByAccountIdAsync(tradeblk.Trade.orderOwnerId);
-                            var buyer = await _db.GetUserByAccountIdAsync(tradeblk.OwnerAccountId);
+                        var seller = await _db.GetUserByAccountIdAsync(tradeblk.Trade.orderOwnerId);
+                        var buyer = await _db.GetUserByAccountIdAsync(tradeblk.OwnerAccountId);
 
-                            if(seller != null && buyer != null)
-                            {
-                                var crroom = new TxRoom
-                                {
-                                    TradeId = ((TransactionBlock)tradeblk).AccountID,
-                                    Members = new[] { seller, buyer },
-                                };
-                                await _db.CreateRoomAsync(crroom);
-                            }
-                        }
-                        room = await _db.GetRoomByTradeAsync(req.TradeID);
-
-                        if (room != null)
+                        if (seller != null && buyer != null)
                         {
-                            return new JoinRoomResponse
+                            var crroom = new TxRoom
                             {
-                                ResultCode = APIResultCodes.Success,
-#pragma warning disable CS8601 // Possible null reference assignment.
-                                RoomId = room.Id,
-#pragma warning restore CS8601 // Possible null reference assignment.
+                                TradeId = ((TransactionBlock)tradeblk).AccountID,
+                                Members = new[] { seller, buyer },
                             };
+                            await _db.CreateRoomAsync(crroom);
                         }
+                    }
+                    room = await _db.GetRoomByTradeAsync(req.TradeID);
+
+                    if (room != null)
+                    {
+                        return new JoinRoomResponse
+                        {
+                            ResultCode = APIResultCodes.Success,
+#pragma warning disable CS8601 // Possible null reference assignment.
+                            RoomId = room.Id,
+#pragma warning restore CS8601 // Possible null reference assignment.
+                        };
                     }
                 }
             }

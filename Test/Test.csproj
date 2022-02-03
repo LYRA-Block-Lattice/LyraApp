@@ -27,6 +27,7 @@
   </ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Dealer\Dealer.Server.csproj" />
 	  <ProjectReference Include="..\UserLibrary\UserLibrary.csproj" />
 	</ItemGroup>
 
