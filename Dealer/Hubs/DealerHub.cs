@@ -5,6 +5,7 @@ using Lyra.Data.API.Identity;
 using Lyra.Data.API.WorkFlow;
 using Lyra.Data.Crypto;
 using Microsoft.AspNetCore.SignalR;
+using System.Threading.Tasks.Dataflow;
 using UserLibrary.Data;
 
 namespace Dealer.Server.Hubs
@@ -14,9 +15,51 @@ namespace Dealer.Server.Hubs
     public class DealerHub : Hub<IHubPushMethods>, IHubInvokeMethods
     {
         DealerDb _db;
-        public DealerHub(DealerDb db)
+        BufferBlock<ChatMessage> _buffer;
+        private readonly IHubContext<DealerHub> _hubContext;
+
+        public DealerHub(DealerDb db, IHubContext<DealerHub> hubContext)
         {
             _db = db;
+            _hubContext = hubContext;
+            _buffer = new BufferBlock<ChatMessage>();
+            _ = Task.Run(async () => await ConsumeAsync(_buffer));
+        }
+
+        public async Task ConsumeAsync(ISourceBlock<ChatMessage> source)
+        {
+            while (await source.OutputAvailableAsync())
+            {
+                var msg = await source.ReceiveAsync();
+                // save history
+                var room = await _db.GetRoomByTradeAsync(msg.TradeId);
+                if (room.Members.Any(a => a.AccountId == msg.AccountId))
+                {
+                    var prevMsgs = await _db.GetTxRecordsByTradeAsync(room.TradeId);
+                    var txmsg = new TxMessage
+                    {
+                        TradeID = room.TradeId,
+                        AccountId = msg.AccountId,
+
+                        Text = msg.Text,
+                    };
+
+                    TxRecord last = null;
+                    if (prevMsgs.Count() > 0)
+                        last = prevMsgs.Last();
+
+                    txmsg.Initialize(last, Consts.DEALER_KEY, Consts.DEALER_ACCOUNTID);
+                    await _db.CreateTxRecordAsync(txmsg);
+
+                    msg.Hash = txmsg.Hash;
+
+                    await _hubContext.Clients.All.SendAsync("OnChat", msg);
+                }
+                else
+                {
+                    Console.WriteLine("Not permited to chat.");
+                }
+            }
         }
 
         public override async Task OnConnectedAsync()
@@ -26,33 +69,7 @@ namespace Dealer.Server.Hubs
 
         public async Task Chat(ChatMessage msg)
         {
-            // save history
-            var room = await _db.GetRoomByTradeAsync(msg.TradeId);
-            if(room.Members.Any(a => a.AccountId == msg.AccountId))
-            {
-                var prevMsgs = await _db.GetTxRecordsByTradeAsync(room.TradeId);
-                var txmsg = new TxMessage
-                {
-                    TradeID = room.TradeId,
-                    AccountId = msg.AccountId,
-
-                    Text = msg.Text,
-                };
-
-                TxRecord last = null;
-                if (prevMsgs.Count() > 0)
-                    last = prevMsgs.Last();
-
-                txmsg.Initialize(last, Consts.DEALER_KEY, Consts.DEALER_ACCOUNTID);
-                await _db.CreateTxRecordAsync(txmsg);
-
-                msg.Hash = txmsg.Hash;
-                await Clients.All.OnChat(msg);
-            }
-            else
-            {
-                Console.WriteLine("Not permited to chat.");
-            }
+            _buffer.Post(msg);
         }
 
         //public async Task<BarResult> InvokeBar(double number, double cost)

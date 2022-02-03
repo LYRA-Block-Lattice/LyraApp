@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Lyra.Data.API.Identity;
+using MongoDB.Bson.Serialization;
 
 namespace Dealer.Server.Services
 {
@@ -21,6 +22,13 @@ namespace Dealer.Server.Services
         {
             _dbSettings = dbSettings;
             _networkId = dbSettings.Value.NetworkId;
+
+            BsonClassMap.RegisterClassMap<TxRecord>(cm =>
+            {
+                cm.AutoMap();
+                cm.SetIsRootClass(true);
+            });
+            BsonClassMap.RegisterClassMap<TxMessage>();
 
             var mongoClient = new MongoClient(
                 _dbSettings.Value.ConnectionString);

@@ -12,7 +12,7 @@ namespace Lyra.Data.API.Identity
 {
     public enum MessageTypes { Null, Text, Image }
 
-    public abstract class TxRecord : SignableObject
+    public class TxRecord : SignableObject
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

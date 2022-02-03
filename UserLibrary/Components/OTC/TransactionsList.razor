@@ -37,7 +37,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender)
+        if(firstRender && walletState.Value.wallet != null)
         {
             // get all current trades 
             var ret = await walletState.Value.wallet.RPC.FindOtcTradeAsync(walletState.Value.wallet.AccountId, false, 0, 10);

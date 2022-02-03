@@ -28,6 +28,11 @@
     <div style="height:50px;" />
     <div>
         <p>
+            <h3>Lyra User Name</h3>
+            <MudTextField @bind-Value="@username" Label="" />
+        </p>
+        <div style="height:45px;" />
+        <p>
             <h3>First Name</h3>
             <MudTextField @bind-Value="@firstname" Label="" />
         </p>
@@ -86,7 +91,7 @@
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
 
-    string firstname, middlename, lastname, email, mobilephone, avatar;
+    string username, firstname, middlename, lastname, email, mobilephone, avatar;
     bool busy, success;
 
     async Task OnRegister()
@@ -95,6 +100,7 @@
 
         var user = new LyraUser
             {
+                UserName = username,
                 FirstName = firstname,
                 MiddleName = middlename,
                 LastName = lastname,
