@@ -13,14 +13,19 @@
     <p>for trade: @tradeid</p>
 
     <div class="chatw">
-            @foreach (var msg in messages)
-            {
-                <div class="para @(joinroom.Roles[msg.UserName])w">
-                    <div>@msg.UserName</div>
-                    <div class="@(joinroom.Roles[msg.UserName])msg">@msg.Text</div>
-                </div>
+        @foreach (var msg in messages)
+        {
+            var align = "left";
+            if (joinroom.Roles[msg.UserName] == "me")
+                align = "right";
+            if (joinroom.Roles[msg.UserName] == "dealer")
+                align = "center";
+            <div align="@align" class="para @(joinroom.Roles[msg.UserName])w">
+                <div>@msg.UserName</div>
+                <div class="@(joinroom.Roles[msg.UserName])msg">@msg.Text</div>
+            </div>
 
-            }
+        }
     </div>
 
     <div>
@@ -74,7 +79,7 @@
                 Signature = Signatures.GetSignature(walletState.Value.wallet.PrivateKey, tradeid, walletState.Value.wallet.AccountId),
             });
 
-        if(joinroom.Successful())
+        if (joinroom.Successful())
         {
             Snackbar.Add($"Join dealer room successfully.", Severity.Success);
 
@@ -89,20 +94,21 @@
 
     private async Task Send()
     {
-        await wrapper.Chat(new ChatMessage {
+        await wrapper.Chat(new ChatMessage
+            {
                 TradeId = tradeid,
                 AccountId = walletState.Value.wallet.AccountId,
                 Text = messageInput,
                 Signature = Signatures.GetSignature(walletState.Value.wallet.PrivateKey,
-                    messageInput, walletState.Value.wallet.AccountId),
-        });
+                        messageInput, walletState.Value.wallet.AccountId),
+            });
         messageInput = "";
     }
 
     private async Task Hist()
-	{
+    {
 
-	}
+    }
 
     public async ValueTask DisposeAsync()
     {

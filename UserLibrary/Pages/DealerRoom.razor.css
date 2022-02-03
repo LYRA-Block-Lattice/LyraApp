@@ -4,16 +4,15 @@
 }
 
 .para {
-    display: flex;
-    flex-flow: column;
+
 }
 
 .peerw {
-
+    
 }
 
 .mew {    
-    justify-content: flex-end;
+    align-content: end;
 }
 
 .dealerw {
@@ -30,7 +29,7 @@
 
 .memsg {
     background-color: lawngreen;
-    margin-left: 15px;
+    margin-right: 15px;
     padding: 10px;
     display: inline-block;
     border-radius: 10px;
