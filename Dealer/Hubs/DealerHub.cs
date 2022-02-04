@@ -127,6 +127,11 @@ namespace Dealer.Server.Hubs
                 foreach (var user in room.Members)
                     await PinMessageAsync(tradeblk, user.AccountId);
 
+                if(tradeblk.OTStatus == OTCTradeStatus.FiatReceived)
+                {
+                    lastStatus = OTCTradeStatus.FiatReceived;
+                    continue;
+                }
                 return;
             }
 
@@ -169,7 +174,7 @@ namespace Dealer.Server.Hubs
                 OTCTradeStatus.Open => $"Buyer send {fiat} to seller",
                 OTCTradeStatus.FiatSent => $"Seller confirm receive of payment {fiat}",
                 OTCTradeStatus.FiatReceived => $"Seller release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer",
-                OTCTradeStatus.CryptoReleased => "Trade completed and wait for close",
+                OTCTradeStatus.CryptoReleased => "None",
                 OTCTradeStatus.Closed => "Trade closed. Nothing to do",
                 OTCTradeStatus.Dispute => "Arbitration",
                 _ => throw new NotImplementedException(),

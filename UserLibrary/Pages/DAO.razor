@@ -244,10 +244,15 @@
 
     private async Task ShowCreateTradeUI(IOtcOrder order)
     {
+        if(walletState.Value.wallet == null)
+        {
+            Navigation.NavigateTo("/wallet");
+            return;
+        }
         //check if user has been registed on dealer server
         var client = new DealerClient(Configuration["network"]);
         var user = await client.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
-        if(user == null)
+        if(!user.Successful())
         {
             // register user
             Navigation.NavigateTo("/dealer/register");

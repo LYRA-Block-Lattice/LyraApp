@@ -1,25 +1,30 @@
 ﻿@using Fluxor
 @using Lyra.Data.API.WorkFlow
+@using Lyra.Data.Shared
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
 
-<div class="container">
+<div>
     @foreach(var trade in trades)
     {
         var dir = "Buy";
-        if((trade as IBrokerAccount).OwnerAccountId == walletState.Value.wallet.AccountId)
+        if((trade as IOtcTrade).Trade.orderOwnerId == walletState.Value.wallet.AccountId)
         {
             dir = "Sell";
         }
-        <div class="nw">
-            <div><a href="/dealer/room/@trade.AccountID"> @trade.AccountID </a></div>
-        </div>
-        <div class="nw">
-            <div>@dir @((trade as IOtcTrade).Trade.crypto) </div>
-        </div>
-        <div>
-            @*<MudButton Variant="Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>*@
-        </div>
+        <a href="/dealer/room/@trade.AccountID">
+        <div class="container">
+            <div class="nw">
+                <div> @trade.AccountID.Shorten() </div>
+            </div>
+            <div class="nw">
+                <div>@dir @((trade as IOtcTrade).Trade.crypto) </div>
+            </div>
+            <div>
+                @trade.TimeStamp
+                @*<MudButton Variant="Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>*@
+            </div>
+        </div></a>
     }
 </div>
 

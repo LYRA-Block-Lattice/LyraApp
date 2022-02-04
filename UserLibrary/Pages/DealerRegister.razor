@@ -7,7 +7,7 @@
 
 <PageTitle>Register to dealer</PageTitle>
 
-<div>
+<div class="mag">
     <div style="height: 300px; background: #ECEFF1; ">
         <div style="padding: 25px;">
             <div style="width: 100%; height: 100px; display: flex">
@@ -97,16 +97,24 @@
     {
         busy = true;
 
-        var client = new DealerClient(Configuration["network"]);
-        var ret = await client.RegisterAsync(walletState.Value.wallet.AccountId,
-            username, firstname,middlename,lastname,email,mobilephone,avatar
-         );
-        success = ret.Successful();
-
-        if(!success)
+        try
         {
+            var client = new DealerClient(Configuration["network"]);
+            var ret = await client.RegisterAsync(walletState.Value.wallet.AccountId,
+                username, firstname,middlename,lastname,email,mobilephone,avatar
+             );
+            success = ret.Successful();
+
+            if(!success)
+            {
             //
+            }
         }
+        catch(Exception ex)
+        {
+            
+        }
+
 
         busy = false;
     }

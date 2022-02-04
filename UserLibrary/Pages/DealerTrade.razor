@@ -96,6 +96,12 @@
 
     async Task OnDeal()
     {
+        if(pay > otc.Order.amount)
+        {
+            Snackbar.Add($"Amount not right.", Severity.Error);
+            return;
+        }
+
         busy = true;
 
         var trade = new OTCTrade
@@ -105,10 +111,10 @@
                 orderOwnerId = otc.OwnerAccountId,
                 dir = otc.Order.dir == TradeDirection.Sell ? TradeDirection.Buy : TradeDirection.Sell,
                 crypto = otc.Order.crypto,
-                fiat = "USD",
+                fiat = otc.Order.fiat,
                 priceType = PriceType.Fixed,
                 price = otc.Order.price,
-                amount = otc.Order.amount,
+                amount = pay,
                 collateral = 1000000
             };
 

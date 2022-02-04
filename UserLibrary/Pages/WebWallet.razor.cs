@@ -121,7 +121,7 @@ namespace UserLibrary.Pages
                 var result2 = await walletState.Value.wallet.SendAsync(amount, dstAddr, tokenName);
                 if (!result2.Successful())
                 {
-                    Snackbar.Add($"Unable to send token: {result2}.", Severity.Error);
+                    Snackbar.Add($"Unable to send token: {result2.ResultCode}.", Severity.Error);
                     busysend = false;
                     StateHasChanged();
                     return;
