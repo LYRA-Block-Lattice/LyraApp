@@ -5,8 +5,10 @@
 @using Fluxor.Blazor.Web.Components
 @using Lyra.Core.API
 @using Lyra.Core.Accounts
+@using Lyra.Data.Crypto
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
+@using UserLibrary.Data
 @inject IConfiguration Configuration
 @inject NavigationManager Navigation
 
@@ -53,6 +55,9 @@
     [Inject]
     private IState<WebWalletState>? walletState { get; set; }
 
+    [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] PeriodicExecutor executor { get; set; }
+
     MudMenu mnu;
 
     RenderFragment? banner;
@@ -78,14 +83,67 @@
                 WalletChanged(null, a.wallet);
             });
 
+        SubscribeToAction<WebWalletCloseAction>(a =>
+            {
+                WalletChanged(null, null);
+            });
+
+
         base.OnInitialized();
     }
 
+    private void Help(string tradeid)
+    {
+        Navigation.NavigateTo($"/dealer/room/{tradeid}");
+    }
+
+    bool once;
     private void WalletChanged(object sender, Wallet wallet)
     {
         decimal balance1 = 0;
         if (wallet != null)
         {
+            if (!once)
+            {
+                once = true;
+
+                InvokeAsync(async () =>
+                {
+                    await executor.ConnectDealer();
+
+                    executor.HotLine.RegisterOnPinned(a =>
+                    {
+                        if (Navigation.Uri.Contains("/dealer/room"))
+                            return;
+
+                        var title = a.Mode switch
+                        {
+                            PinnedMode.Action => "Take Action: ",
+                            PinnedMode.Wait => "Await: ",
+                            PinnedMode.Notify => "",
+                            _ => "",
+                        };
+
+                        Snackbar.Add($"{title}{a.Text}", Severity.Normal, config =>
+                        {
+                            config.Action = "Open Trade";
+                            config.ActionColor = Color.Primary;
+                            config.Onclick = snackbar =>
+                            {
+                                Help(a.TradeId);
+                                return Task.CompletedTask;
+                            };
+                        });
+                    });
+
+                    await executor.HotLine.Join(new JoinRequest
+                        {
+                            UserAccountID = wallet.AccountId,
+                            Signature = Signatures.GetSignature(wallet.PrivateKey, wallet.AccountId, wallet.AccountId),
+                        });
+                });
+            }
+
             var blk = wallet.GetLatestBlock();
             if (blk != null)
             {
@@ -100,13 +158,22 @@
             else
             {
                 banner =
-    @<div>Wallet is empty.</div>;
+    @<div>Wallet is empty.</div>
+    ;
             }
         }
         else
+        {
+            once = false;
+            InvokeAsync(async () =>
+            {
+                await executor.Disconnect();
+            });
             banner =
-    @<div>Wallet is not opened.</div>
-    ;
+                    @<div>Wallet is not opened.</div>
+                    ;       
+        }
+
 
         InvokeAsync(() => StateHasChanged());
     }

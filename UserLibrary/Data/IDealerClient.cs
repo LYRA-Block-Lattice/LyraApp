@@ -8,6 +8,12 @@ using System.Threading.Tasks;
 namespace UserLibrary.Data
 {
     // Define the hub methods
+    public class JoinRequest
+    {
+        public string UserAccountID { get; set; } = null!;
+        public string Signature { get; set; } = null!;
+    }
+
     public class JoinRoomRequest
     {
         public string TradeID { get; set; } = null!;
@@ -40,6 +46,7 @@ namespace UserLibrary.Data
     public class PinnedMessage
     {
         public PinnedMode Mode { get; set; }
+        public string TradeId { get; set; }
         public string Text { set; get; } = null!;
     }
 
@@ -53,6 +60,7 @@ namespace UserLibrary.Data
     /// <summary> SignalR Hub invoke interface (signature for Clients invoking methods on server Hub) </summary>
     public interface IHubInvokeMethods
     {
+        Task Join(JoinRequest req);
         Task<JoinRoomResponse> JoinRoom(JoinRoomRequest req);
         Task Chat(ChatMessage msg);
     }

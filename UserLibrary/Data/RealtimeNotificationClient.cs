@@ -11,7 +11,7 @@ namespace UserLibrary.Data
 {
     public class ConnectionFactoryHelper
     {
-        public static HubConnection CreateConnection(Uri url, ICollection<Cookie> cookies)
+        public static HubConnection CreateConnection(Uri url/*, ICollection<Cookie> cookies*/)
             => new HubConnectionBuilder()
                 .WithUrl(url, options =>
                 {
@@ -20,6 +20,7 @@ namespace UserLibrary.Data
                     //    options.Cookies.Add(cookie);
                     //}
                 })
+                .WithAutomaticReconnect()
                 .Build();
     }
 
@@ -73,6 +74,9 @@ namespace UserLibrary.Data
 
         public Task Chat(ChatMessage msg)
             => _connection.InvokeAsync(nameof(IHubInvokeMethods.Chat), msg);
+
+        public Task Join(JoinRequest msg)
+            => _connection.InvokeAsync(nameof(IHubInvokeMethods.Join), msg);
 
         public Task<JoinRoomResponse> JoinRoom(JoinRoomRequest req)
         {

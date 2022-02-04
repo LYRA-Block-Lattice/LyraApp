@@ -305,6 +305,7 @@ namespace Dealer.Server.Hubs
                 {
                     Mode = next.Item1,
                     Text = next.Item2,
+                    TradeId = (tradeblk as TransactionBlock).AccountID,
                 };
             }
             else    // seller
@@ -325,10 +326,21 @@ namespace Dealer.Server.Hubs
                 {
                     Mode = next.Item1,
                     Text = next.Item2,
+                    TradeId = (tradeblk as TransactionBlock).AccountID,
                 };
             }
 
             await Clients.Group(accountId).OnPinned(pinned);
+            //await _hubContext.Clients.Group(accountId).SendAsync("OnPinned", pinned);
+        }
+
+        public async Task Join(JoinRequest req)
+        {
+            var ok = Signatures.VerifyAccountSignature(req.UserAccountID, req.UserAccountID, req.Signature);
+            if(ok)
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, req.UserAccountID);
+            }
         }
     }
 }

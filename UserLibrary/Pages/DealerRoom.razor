@@ -7,7 +7,6 @@
 @using Nebula.Store.WebWalletUseCase
 @using UserLibrary.Data
 @inject NavigationManager NavigationManager
-@implements IAsyncDisposable
 
 <div class="mag fh">
 
@@ -51,7 +50,7 @@
     <div class="inp">
         <MudTextField @bind-Value="@messageInput" Variant="Variant.Outlined" Lines="3" />
         <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                   Disabled="@(!(wrapper?.IsConnected) ?? false)" OnClick="Send">
+                   Disabled="@(!(executor.HotLine?.IsConnected) ?? false)" OnClick="Send">
             Send
         </MudButton>
     </div>
@@ -67,13 +66,14 @@
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] IJSRuntime JsRuntime { get; set; }
     [Inject] private IDialogService DialogService { get; set; }
+    [Inject] PeriodicExecutor executor { get; set; }
 
     private List<RespMessage> messages = new List<RespMessage>();
     private string? userInput;
     private string? messageInput;
 
     string pinnedmsg = "Connecting dealer and get update...";
-    ConnectionMethodsWrapper? wrapper;
+    
     JoinRoomResponse joinroom;
 
     PinnedMessage lastpin;
@@ -101,16 +101,14 @@
             return;
         }
 
-        wrapper = new ConnectionMethodsWrapper(ConnectionFactoryHelper.CreateConnection(new Uri("https://localhost:7070/hub"), null));
-
-        wrapper.RegisterOnChat(a =>
+        executor.HotLine.RegisterOnChat(a =>
         {
             messages.Add(a);
             addmsg = true;
-            StateHasChanged();
+            InvokeAsync(() => StateHasChanged());
         });
 
-        wrapper.RegisterOnPinned(a =>
+        executor.HotLine.RegisterOnPinned(a =>
         {
             lastpin = a;
             pintitle = a.Mode switch
@@ -122,12 +120,11 @@
             };
             actable = a.Mode == PinnedMode.Action;
             pinnedmsg = a.Text;
-            StateHasChanged();
+
+            InvokeAsync(() => StateHasChanged());
         });
 
-        await wrapper.StartAsync();
-
-        joinroom = await wrapper.JoinRoom(new JoinRoomRequest
+        joinroom = await executor.HotLine.JoinRoom(new JoinRoomRequest
             {
                 TradeID = tradeid,
                 UserAccountID = walletState.Value.wallet.AccountId,
@@ -155,7 +152,7 @@
 
     private async Task Send(string txt)
     {
-        await wrapper.Chat(new ChatMessage
+        await executor.HotLine.Chat(new ChatMessage
             {
                 TradeId = tradeid,
                 AccountId = walletState.Value.wallet.AccountId,
@@ -223,11 +220,4 @@
         
     }
 
-    public async ValueTask DisposeAsync()
-    {
-        if (wrapper is not null)
-        {
-            await wrapper.DisposeAsync();
-        }
-    }
 }

@@ -11,10 +11,12 @@ namespace UserLibrary.Data
         public Dictionary<string, decimal> prices { get; set; }
     }
 
-
-    public class PeriodicExecutor : IDisposable
+    public class PeriodicExecutor : IAsyncDisposable
     {
         public event EventHandler<JobExecutedEventArgs> JobExecuted;
+        ConnectionMethodsWrapper? wrapper;
+
+        public ConnectionMethodsWrapper HotLine => wrapper;
         void OnJobExecuted(Dictionary<string, decimal> prices)
         {
             JobExecuted?.Invoke(this, new JobExecutedEventArgs { prices = prices });
@@ -27,6 +29,49 @@ namespace UserLibrary.Data
         public PeriodicExecutor(string network)
         {
             _network = network;
+        }
+
+        public async Task Disconnect()
+        {
+            if (wrapper != null)
+            {
+                await wrapper.DisposeAsync();
+                wrapper = null;
+            }
+        }
+        public async Task ConnectDealer()
+        {
+            if (wrapper != null)
+            {
+                return;
+            }
+
+            wrapper = new ConnectionMethodsWrapper(ConnectionFactoryHelper.CreateConnection(new Uri("https://localhost:7070/hub")));
+
+            //wrapper.RegisterOnChat(a =>
+            //{
+            //    messages.Add(a);
+            //    addmsg = true;
+            //    StateHasChanged();
+            //});
+
+            //wrapper.RegisterOnPinned(a =>
+            //{
+            //    lastpin = a;
+            //    pintitle = a.Mode switch
+            //    {
+            //        PinnedMode.Action => "Take Action",
+            //        PinnedMode.Wait => "Await",
+            //        PinnedMode.Notify => "",
+            //        _ => "",
+            //    };
+            //    actable = a.Mode == PinnedMode.Action;
+            //    pinnedmsg = a.Text;
+            //    StateHasChanged();
+            //});
+
+            await wrapper.StartAsync();
+            await Task.Delay(1);
         }
 
         public void StartExecuting()
@@ -91,11 +136,20 @@ namespace UserLibrary.Data
             }
 
         }
-        public void Dispose()
+
+        public async ValueTask DisposeAsync()
         {
+            if (wrapper is not null)
+            {
+                await wrapper.DisposeAsync();
+            }
+
             if (_Running)
             {
                 // Clear up the timer
+                _Timer.Stop();
+                _Timer.Close();
+                _Timer.Dispose();
             }
         }
     }
