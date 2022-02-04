@@ -62,7 +62,7 @@ namespace Dealer.Server.Hubs
                         UserName = user.UserName,
                         Text = msg.Text,
                     };
-                    await _hubContext.Clients.All.SendAsync("OnChat", resp);
+                    await _hubContext.Clients.Group(msg.TradeId).SendAsync("OnChat", resp);
                 }
                 else
                 {
@@ -77,6 +77,11 @@ namespace Dealer.Server.Hubs
             await base.OnConnectedAsync();
         }
 
+        public override Task OnDisconnectedAsync(Exception? exception)
+        {
+            return base.OnDisconnectedAsync(exception);
+        }
+
         public async Task Chat(ChatMessage msg)
         {
             if(Signatures.VerifyAccountSignature(msg.Text, msg.AccountId, msg.Signature))
@@ -89,14 +94,6 @@ namespace Dealer.Server.Hubs
                 Console.WriteLine("Message signature verify failed.");
             }
         }
-
-        //public async Task<BarResult> InvokeBar(double number, double cost)
-        //{
-        //    var bar = new BarData { Number = number, Cost = cost };
-        //    await Clients.All.OnBar(Context.UserIdentifier, bar);
-
-        //    return new BarResult { Id = "Some Id" };
-        //}
 
         public async Task<JoinRoomResponse> JoinRoom(JoinRoomRequest req)
         {
@@ -133,6 +130,9 @@ namespace Dealer.Server.Hubs
 
                     if (room != null)
                     {
+                        // join the group
+                        await Groups.AddToGroupAsync(Context.ConnectionId, req.TradeID);
+
                         var txmsgs = await _db.GetTxRecordsByTradeAsync(req.TradeID);
                         var dict = new Dictionary<string, string>()
                         {
@@ -141,7 +141,7 @@ namespace Dealer.Server.Hubs
                             { Consts.DEALER_ACCOUNTID, "Dealer" },
                         };
                         return new JoinRoomResponse
-                        {
+                        {                            
                             ResultCode = APIResultCodes.Success,
                             History = txmsgs.Select(msg =>
                                 new RespMessage
