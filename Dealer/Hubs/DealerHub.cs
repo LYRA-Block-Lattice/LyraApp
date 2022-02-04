@@ -179,7 +179,7 @@ namespace Dealer.Server.Hubs
                         await Groups.AddToGroupAsync(Context.ConnectionId, req.TradeID);
 
                         // pin a message
-                        await Clients.Caller.OnPinned(new RespMessage { Text = "Hello dear trader!" });
+                        await PinMessageAsync(tradeblk, req.UserAccountID);
 
                         var txmsgs = await _db.GetTxRecordsByTradeAsync(req.TradeID);
                         var dict = new Dictionary<string, string>()
@@ -214,6 +214,53 @@ namespace Dealer.Server.Hubs
             {
                 ResultCode = APIResultCodes.DealerRoomNotExists,
             };
+        }
+
+        private async Task PinMessageAsync(IOtcTrade tradeblk, string accountId)
+        {
+            PinnedMessage pinned;
+            if(accountId == tradeblk.OwnerAccountId)    // buyer
+            {
+                var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.price * tradeblk.Trade.amount:N2}";
+                var next = tradeblk.OTStatus switch
+                {
+                    OTCTradeStatus.Open => (PinnedMode.Action, $"Pay {fiat} to seller"),
+                    OTCTradeStatus.FiatSent => (PinnedMode.Wait, "Seller confirm receive of payment {fiat}"),
+                    OTCTradeStatus.FiatReceived => (PinnedMode.Wait, $"Dealer release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer"),
+                    OTCTradeStatus.CryptoReleased => (PinnedMode.Wait, "Trade completed and wait for close"),
+                    OTCTradeStatus.Closed => (PinnedMode.Notify, "Trade closed. Nothing to do"),
+                    OTCTradeStatus.Dispute => (PinnedMode.Wait, "Arbitration"),
+                    _ => throw new NotImplementedException(),
+                };
+
+                pinned = new PinnedMessage
+                {
+                    Mode = next.Item1,
+                    Text = next.Item2,
+                };
+            }
+            else    // seller
+            {
+                var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.price * tradeblk.Trade.amount:N2}";
+                var next = tradeblk.OTStatus switch
+                {
+                    OTCTradeStatus.Open => (PinnedMode.Wait, $"Buyer pay {fiat} to me"),
+                    OTCTradeStatus.FiatSent => (PinnedMode.Action, "Confirm receive of payment {fiat}"),
+                    OTCTradeStatus.FiatReceived => (PinnedMode.Wait, $"Dealer release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer"),
+                    OTCTradeStatus.CryptoReleased => (PinnedMode.Wait, "Trade completed and wait for close"),
+                    OTCTradeStatus.Closed => (PinnedMode.Notify, "Trade closed. Nothing to do"),
+                    OTCTradeStatus.Dispute => (PinnedMode.Wait, "Arbitration"),
+                    _ => throw new NotImplementedException(),
+                };
+
+                pinned = new PinnedMessage
+                {
+                    Mode = next.Item1,
+                    Text = next.Item2,
+                };
+            }
+
+            await Clients.Caller.OnPinned(pinned);
         }
     }
 }

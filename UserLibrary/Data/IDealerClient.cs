@@ -36,11 +36,18 @@ namespace UserLibrary.Data
         public string Text { set; get; } = null!;   
     }
 
+    public enum PinnedMode { Notify, Wait, Action };
+    public class PinnedMessage
+    {
+        public PinnedMode Mode { get; set; }
+        public string Text { set; get; } = null!;
+    }
+
     /// <summary> SignalR Hub push interface (signature for Hub pushing notifications to Clients) </summary>
     public interface IHubPushMethods
     {
         Task OnChat(RespMessage msg);
-        Task OnPinned(RespMessage msg);
+        Task OnPinned(PinnedMessage msg);
     }
 
     /// <summary> SignalR Hub invoke interface (signature for Clients invoking methods on server Hub) </summary>

@@ -1,6 +1,7 @@
 ﻿@page "/dealer/room/{tradeid}"
 @using Fluxor
 @using Lyra.Data.Crypto
+@using Lyra.Data.Shared
 @using Microsoft.AspNetCore.SignalR.Client
 @using Nebula.Store.WebWalletUseCase
 @using UserLibrary.Data
@@ -10,41 +11,48 @@
 <div class="mag fh">
 
     <h1>Dealer Room</h1>
-    <p>for trade: @tradeid</p>
+    <p>for trade: @(tradeid.Shorten())</p>
 
-    <div class="chatw">
-        <div class="top">
-            @pinnedmsg
-        </div>
-        @foreach (var msg in messages)
-        {
-            var align = "left";
-            if (joinroom.Roles[msg.UserName] == "me")
-                align = "right";
-            if (joinroom.Roles[msg.UserName] == "dealer")
-                align = "center";
-            <div align="@align" class="para @(joinroom.Roles[msg.UserName])w">
-                <div>@msg.UserName</div>
-                <div class="@(joinroom.Roles[msg.UserName])msg">@msg.Text</div>
+    <div class="scr">
+        <div class="chatw" @ref="msgsref">
+            <div class="top mud-elevation-3">
+                <div class="act">
+                    @pintitle
+                </div>
+                <div>
+                    @pinnedmsg
+                </div>
+@if(actable)
+                {
+                <div align="right">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Finished</MudButton>
+                </div>
+                }
+
             </div>
+            @foreach (var msg in messages)
+            {
+                var align = "left";
+                if (joinroom.Roles[msg.UserName] == "me")
+                    align = "right";
+                if (joinroom.Roles[msg.UserName] == "dealer")
+                    align = "center";
+                <div align="@align" class="para @(joinroom.Roles[msg.UserName])w">
+                    <div>@msg.UserName</div>
+                    <div class="@(joinroom.Roles[msg.UserName])msg">@msg.Text</div>
+                </div>
 
-        }
-    </div>
-
-    <div>
-        <div class="form-group">
-            <label>
-                Message:
-                <input @bind="messageInput" size="50" />
-            </label>
+            }
         </div>
     </div>
-    <MudButton Variant="Variant.Filled" Color="Color.Primary"
-               Disabled="@(!(wrapper?.IsConnected) ?? false)" OnClick="Send">
-        Send
-    </MudButton>
 
-
+    <div class="inp">
+        <MudTextField @bind-Value="@messageInput" Variant="Variant.Outlined" Lines="3" />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   Disabled="@(!(wrapper?.IsConnected) ?? false)" OnClick="Send">
+            Send
+        </MudButton>
+    </div>
 </div>
 
 
@@ -55,6 +63,7 @@
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] IJSRuntime JsRuntime { get; set; }
 
     private List<RespMessage> messages = new List<RespMessage>();
     private string? userInput;
@@ -64,6 +73,22 @@
     ConnectionMethodsWrapper? wrapper;
     JoinRoomResponse joinroom;
 
+    string pintitle;
+    bool actable;
+
+    ElementReference msgsref { get; set; }
+    bool addmsg;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(addmsg)
+        {
+            await JsRuntime.InvokeVoidAsync("updateScroll", msgsref);
+            addmsg = false;
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
     protected override async Task OnInitializedAsync()
     {
         wrapper = new ConnectionMethodsWrapper(ConnectionFactoryHelper.CreateConnection(new Uri("https://localhost:7070/hub"), null));
@@ -71,11 +96,20 @@
         wrapper.RegisterOnChat(a =>
         {
             messages.Add(a);
+            addmsg = true;
             StateHasChanged();
         });
 
         wrapper.RegisterOnPinned(a =>
         {
+            pintitle = a.Mode switch
+            {
+                PinnedMode.Action => "Take Action",
+                PinnedMode.Wait => "Await",
+                PinnedMode.Notify => "",
+                _ => "",
+            };
+            actable = a.Mode == PinnedMode.Action;
             pinnedmsg = a.Text;
             StateHasChanged();
         });
@@ -95,6 +129,7 @@
 
             // populate history
             messages.AddRange(joinroom.History);
+            addmsg = true;
         }
         else
         {
@@ -110,7 +145,7 @@
                 AccountId = walletState.Value.wallet.AccountId,
                 Text = messageInput,
                 Signature = Signatures.GetSignature(walletState.Value.wallet.PrivateKey,
-                        messageInput, walletState.Value.wallet.AccountId),
+                            messageInput, walletState.Value.wallet.AccountId),
             });
         messageInput = "";
     }
