@@ -56,6 +56,4 @@ namespace UserLibrary.Data
         Task<JoinRoomResponse> JoinRoom(JoinRoomRequest req);
         Task Chat(ChatMessage msg);
     }
-
-
 }

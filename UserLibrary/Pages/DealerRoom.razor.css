@@ -28,6 +28,8 @@
 .inp {
     max-width: 500px;
     display: flex;
+    margin: 5px;
+    padding: 5px;
 }
 
 .para {

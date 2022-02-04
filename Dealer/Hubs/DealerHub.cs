@@ -94,27 +94,89 @@ namespace Dealer.Server.Hubs
                 switch(input.Substring(1))
                 {
                     case "status":
-                        var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "Dealer", "0.1");
-                        var tradeblk = (await lc.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
-                        var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.price * tradeblk.Trade.amount:N2}";
-                        var next = tradeblk.OTStatus switch
-                        {
-                            OTCTradeStatus.Open => $"Buyer send {fiat} to seller",
-                            OTCTradeStatus.FiatSent => "Seller confirm receive of payment {fiat}",
-                            OTCTradeStatus.FiatReceived => $"Seller release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer",
-                            OTCTradeStatus.CryptoReleased => "Trade completed and wait for close",
-                            OTCTradeStatus.Closed => "Trade closed. Nothing to do",
-                            OTCTradeStatus.Dispute => "Arbitration",
-                            _ => throw new NotImplementedException(),
-                        };
-                        var msg = $"Current status of trade: {tradeblk.OTStatus}. Next step: {next}";
-
-                        await SendResponseToRoomAsync(tradeid, Consts.DEALER_ACCOUNTID, msg);
+                        await CommandStatus(tradeid, input);
+                        break;
+                    case "fiatsent":
+                        await CommandFiatSent(tradeid, input);
+                        break;
+                    case "fiatreceived":
+                        await CommandFiatReceived(tradeid, input);
                         break;
                     default:
                         break;
                 }
             }
+        }
+
+        private async Task CommandFiatReceived(string tradeid, string input)
+        {
+            var lastStatus = OTCTradeStatus.FiatSent;
+            var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "Dealer", "0.1");
+            for (var i = 0; i < 50; i++)
+            {
+                var tradeblk = (await lc.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+                if (tradeblk.OTStatus == lastStatus)
+                {
+                    await Task.Delay(100);
+                    continue;
+                }
+
+                await CommandStatus(tradeid, input);
+
+                var room = await _db.GetRoomByTradeAsync(tradeid);
+                foreach (var user in room.Members)
+                    await PinMessageAsync(tradeblk, user.AccountId);
+
+                return;
+            }
+
+            var msg = $"Dealer can't confirm FiAT send. Please try again.";
+            await SendResponseToRoomAsync(tradeid, Consts.DEALER_ACCOUNTID, msg);
+        }
+
+        private async Task CommandFiatSent(string tradeid, string input)
+        {
+            var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "Dealer", "0.1");
+            for(var i = 0; i < 50; i++)
+            {
+                var tradeblk = (await lc.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+                if(tradeblk.OTStatus == OTCTradeStatus.Open)
+                {
+                    await Task.Delay(100);
+                    continue;
+                }
+
+                await CommandStatus(tradeid, input);
+
+                var room = await _db.GetRoomByTradeAsync(tradeid);
+                foreach (var user in room.Members)
+                    await PinMessageAsync(tradeblk, user.AccountId);
+
+                return;
+            }
+
+            var msg = $"Dealer can't confirm FiAT send. Please try again.";
+            await SendResponseToRoomAsync(tradeid, Consts.DEALER_ACCOUNTID, msg);
+        }
+
+        private async Task CommandStatus(string tradeid, string input)
+        {
+            var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "Dealer", "0.1");
+            var tradeblk = (await lc.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+            var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.price * tradeblk.Trade.amount:N2}";
+            var next = tradeblk.OTStatus switch
+            {
+                OTCTradeStatus.Open => $"Buyer send {fiat} to seller",
+                OTCTradeStatus.FiatSent => $"Seller confirm receive of payment {fiat}",
+                OTCTradeStatus.FiatReceived => $"Seller release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer",
+                OTCTradeStatus.CryptoReleased => "Trade completed and wait for close",
+                OTCTradeStatus.Closed => "Trade closed. Nothing to do",
+                OTCTradeStatus.Dispute => "Arbitration",
+                _ => throw new NotImplementedException(),
+            };
+            var msg = $"Current status of trade: {tradeblk.OTStatus}. Next step: {next}";
+
+            await SendResponseToRoomAsync(tradeid, Consts.DEALER_ACCOUNTID, msg);
         }
 
         public override async Task OnConnectedAsync()
@@ -177,6 +239,7 @@ namespace Dealer.Server.Hubs
                     {
                         // join the group
                         await Groups.AddToGroupAsync(Context.ConnectionId, req.TradeID);
+                        await Groups.AddToGroupAsync(Context.ConnectionId, req.UserAccountID);
 
                         // pin a message
                         await PinMessageAsync(tradeblk, req.UserAccountID);
@@ -225,9 +288,9 @@ namespace Dealer.Server.Hubs
                 var next = tradeblk.OTStatus switch
                 {
                     OTCTradeStatus.Open => (PinnedMode.Action, $"Pay {fiat} to seller"),
-                    OTCTradeStatus.FiatSent => (PinnedMode.Wait, "Seller confirm receive of payment {fiat}"),
+                    OTCTradeStatus.FiatSent => (PinnedMode.Wait, $"Seller confirm receive of payment {fiat}"),
                     OTCTradeStatus.FiatReceived => (PinnedMode.Wait, $"Dealer release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer"),
-                    OTCTradeStatus.CryptoReleased => (PinnedMode.Wait, "Trade completed and wait for close"),
+                    OTCTradeStatus.CryptoReleased => (PinnedMode.Notify, "Trade completed successfully!"),
                     OTCTradeStatus.Closed => (PinnedMode.Notify, "Trade closed. Nothing to do"),
                     OTCTradeStatus.Dispute => (PinnedMode.Wait, "Arbitration"),
                     _ => throw new NotImplementedException(),
@@ -245,9 +308,9 @@ namespace Dealer.Server.Hubs
                 var next = tradeblk.OTStatus switch
                 {
                     OTCTradeStatus.Open => (PinnedMode.Wait, $"Buyer pay {fiat} to me"),
-                    OTCTradeStatus.FiatSent => (PinnedMode.Action, "Confirm receive of payment {fiat}"),
+                    OTCTradeStatus.FiatSent => (PinnedMode.Action, $"Confirm receive of payment {fiat}"),
                     OTCTradeStatus.FiatReceived => (PinnedMode.Wait, $"Dealer release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer"),
-                    OTCTradeStatus.CryptoReleased => (PinnedMode.Wait, "Trade completed and wait for close"),
+                    OTCTradeStatus.CryptoReleased => (PinnedMode.Notify, "Trade completed successfully!"),
                     OTCTradeStatus.Closed => (PinnedMode.Notify, "Trade closed. Nothing to do"),
                     OTCTradeStatus.Dispute => (PinnedMode.Wait, "Arbitration"),
                     _ => throw new NotImplementedException(),
@@ -260,7 +323,7 @@ namespace Dealer.Server.Hubs
                 };
             }
 
-            await Clients.Caller.OnPinned(pinned);
+            await Clients.Group(accountId).OnPinned(pinned);
         }
     }
 }

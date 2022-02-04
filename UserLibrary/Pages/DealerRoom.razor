@@ -1,5 +1,6 @@
 ﻿@page "/dealer/room/{tradeid}"
 @using Fluxor
+@using Lyra.Data.API.WorkFlow
 @using Lyra.Data.Crypto
 @using Lyra.Data.Shared
 @using Microsoft.AspNetCore.SignalR.Client
@@ -25,7 +26,8 @@
 @if(actable)
                 {
                 <div align="right">
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Finished</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                        OnClick="FinishAction">Finished</MudButton>
                 </div>
                 }
 
@@ -64,6 +66,7 @@
     private IState<WebWalletState> walletState { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] IJSRuntime JsRuntime { get; set; }
+    [Inject] private IDialogService DialogService { get; set; }
 
     private List<RespMessage> messages = new List<RespMessage>();
     private string? userInput;
@@ -73,6 +76,7 @@
     ConnectionMethodsWrapper? wrapper;
     JoinRoomResponse joinroom;
 
+    PinnedMessage lastpin;
     string pintitle;
     bool actable;
 
@@ -91,6 +95,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if(walletState.Value.wallet == null)
+        {
+            NavigationManager.NavigateTo("/wallet");
+            return;
+        }
+
         wrapper = new ConnectionMethodsWrapper(ConnectionFactoryHelper.CreateConnection(new Uri("https://localhost:7070/hub"), null));
 
         wrapper.RegisterOnChat(a =>
@@ -102,6 +112,7 @@
 
         wrapper.RegisterOnPinned(a =>
         {
+            lastpin = a;
             pintitle = a.Mode switch
             {
                 PinnedMode.Action => "Take Action",
@@ -139,20 +150,77 @@
 
     private async Task Send()
     {
+        await Send(messageInput);
+    }
+
+    private async Task Send(string txt)
+    {
         await wrapper.Chat(new ChatMessage
             {
                 TradeId = tradeid,
                 AccountId = walletState.Value.wallet.AccountId,
-                Text = messageInput,
+                Text = txt,
                 Signature = Signatures.GetSignature(walletState.Value.wallet.PrivateKey,
-                            messageInput, walletState.Value.wallet.AccountId),
+                            txt, walletState.Value.wallet.AccountId),
             });
         messageInput = "";
     }
 
-    private async Task Hist()
+    private async Task FinishAction()
     {
+        var tradeblk = (await walletState.Value.wallet.RPC.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+        var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.price * tradeblk.Trade.amount:N2}";
 
+        if(tradeblk.OTStatus == OTCTradeStatus.Open &&
+            tradeblk.OwnerAccountId == walletState.Value.wallet.AccountId)
+        {
+            // ask if your have paied
+            var result = await DialogService.ShowMessageBox(
+            "Warning",
+                $"Please make sure you have paid {fiat} to the seller.",
+                yesText: "Confirm!", cancelText: "Cancel");
+
+            if (result != null && result.Value)
+            {
+                var payindret = await walletState.Value.wallet.OTCTradeBuyerPaymentSentAsync(tradeid);
+                if(payindret.Successful())
+                {
+                    await Send("/fiatsent");
+
+                    Snackbar.Add($"Successfully.", Severity.Success);
+                }
+                else
+                {
+                    Snackbar.Add($"Failed. {payindret.ResultCode}", Severity.Error);
+                }
+            }
+        }
+
+        if(tradeblk.OTStatus == OTCTradeStatus.FiatSent &&
+            tradeblk.Trade.orderOwnerId == walletState.Value.wallet.AccountId)
+        {
+            // ask if your have paied
+            var result = await DialogService.ShowMessageBox(
+            "Warning",
+                $"Please make sure you have received fiat payment of {fiat}.",
+                yesText: "Confirm!", cancelText: "Cancel");
+
+            if (result != null && result.Value)
+            {
+                var payindret = await walletState.Value.wallet.OTCTradeSellerGotPaymentAsync(tradeid);
+                if(payindret.Successful())
+                {
+                    await Send("/fiatreceived");
+
+                    Snackbar.Add($"Successfully.", Severity.Success);
+                }
+                else
+                {
+                    Snackbar.Add($"Failed. {payindret.ResultCode}", Severity.Error);
+                }
+            }
+        }
+        
     }
 
     public async ValueTask DisposeAsync()
