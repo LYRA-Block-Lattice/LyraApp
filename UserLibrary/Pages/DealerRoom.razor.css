@@ -16,7 +16,7 @@
 }
 
 .dealerw {
-    
+    width: 100%;
 }
 
 .peermsg {
@@ -38,4 +38,5 @@
 
 .dealermsg {
     background-color: white;
+    border: groove;
 }

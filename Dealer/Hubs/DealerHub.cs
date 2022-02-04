@@ -25,6 +25,7 @@ namespace Dealer.Server.Hubs
             _buffer = new BufferBlock<ChatMessage>();
         }
 
+        // room == trade == group, trinity
         bool InConsumer = false;
         public async Task ConsumeAsync(IReceivableSourceBlock<ChatMessage> source)
         {
@@ -37,32 +38,11 @@ namespace Dealer.Server.Hubs
                 // save history
                 var room = await _db.GetRoomByTradeAsync(msg.TradeId);
                 if (room.Members.Any(a => a.AccountId == msg.AccountId))
-                {
-                    var prevMsgs = await _db.GetTxRecordsByTradeAsync(room.TradeId);
-                    var txmsg = new TxMessage
-                    {
-                        TradeID = room.TradeId,
-                        AccountId = msg.AccountId,
+                {                   
 
-                        Text = msg.Text,
-                    };
+                    await SendResponseToRoomAsync(room.TradeId, msg.AccountId, msg.Text);
 
-                    TxRecord last = null;
-                    if (prevMsgs.Count() > 0)
-                        last = prevMsgs.Last();
-
-                    txmsg.Initialize(last, Consts.DEALER_KEY, Consts.DEALER_ACCOUNTID);
-                    await _db.CreateTxRecordAsync(txmsg);
-
-                    msg.Hash = txmsg.Hash;
-
-                    var user = await _db.GetUserByAccountIdAsync(msg.AccountId);
-                    var resp = new RespMessage
-                    {
-                        UserName = user.UserName,
-                        Text = msg.Text,
-                    };
-                    await _hubContext.Clients.Group(msg.TradeId).SendAsync("OnChat", resp);
+                    await ProcessInputAsync(room.TradeId, msg.Text);
                 }
                 else
                 {
@@ -70,6 +50,71 @@ namespace Dealer.Server.Hubs
                 }
             }
             InConsumer = false;
+        }
+
+        private async Task SendResponseToRoomAsync(string tradeid, string speakerAccountId, string text)
+        {
+            var prevMsgs = await _db.GetTxRecordsByTradeAsync(tradeid);
+            var txmsg = new TxMessage
+            {
+                TradeID = tradeid,
+                AccountId = speakerAccountId,
+
+                Text = text,
+            };
+
+            TxRecord last = null;
+            if (prevMsgs.Count() > 0)
+                last = prevMsgs.Last();
+
+            txmsg.Initialize(last, Consts.DEALER_KEY, Consts.DEALER_ACCOUNTID);
+            await _db.CreateTxRecordAsync(txmsg);
+
+            string userName;
+            if (speakerAccountId == Consts.DEALER_ACCOUNTID)
+                userName = "Dealer";
+            else
+            {
+                var user = await _db.GetUserByAccountIdAsync(speakerAccountId);
+                userName = user.UserName;
+            }
+            
+            var resp = new RespMessage
+            {
+                UserName = userName,
+                Text = text,
+            };
+            await _hubContext.Clients.Group(tradeid).SendAsync("OnChat", resp);
+        }
+
+        private async Task ProcessInputAsync(string tradeid, string input)
+        {
+            if(input.StartsWith("/"))   // bot command
+            {
+                switch(input.Substring(1))
+                {
+                    case "status":
+                        var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "Dealer", "0.1");
+                        var tradeblk = (await lc.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+                        var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.price * tradeblk.Trade.amount:N2}";
+                        var next = tradeblk.OTStatus switch
+                        {
+                            OTCTradeStatus.Open => $"Buyer send {fiat} to seller",
+                            OTCTradeStatus.FiatSent => "Seller confirm receive of payment {fiat}",
+                            OTCTradeStatus.FiatReceived => $"Seller release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer",
+                            OTCTradeStatus.CryptoReleased => "Trade completed and wait for close",
+                            OTCTradeStatus.Closed => "Trade closed. Nothing to do",
+                            OTCTradeStatus.Dispute => "Arbitration",
+                            _ => throw new NotImplementedException(),
+                        };
+                        var msg = $"Current status of trade: {tradeblk.OTStatus}. Next step: {next}";
+
+                        await SendResponseToRoomAsync(tradeid, Consts.DEALER_ACCOUNTID, msg);
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         public override async Task OnConnectedAsync()

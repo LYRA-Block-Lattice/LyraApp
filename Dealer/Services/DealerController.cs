@@ -35,7 +35,11 @@ namespace Dealer.Server.Services
             string email, string mibilePhone, string avatarId)
         {
             // validate data
+            if (userName.ToLower().Contains("dealer"))
+                return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidName };
+            
             // validate hash
+
 
             var user = new LyraUser
             {
