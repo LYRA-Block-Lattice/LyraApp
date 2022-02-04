@@ -178,6 +178,9 @@ namespace Dealer.Server.Hubs
                         // join the group
                         await Groups.AddToGroupAsync(Context.ConnectionId, req.TradeID);
 
+                        // pin a message
+                        await Clients.Caller.OnPinned(new RespMessage { Text = "Hello dear trader!" });
+
                         var txmsgs = await _db.GetTxRecordsByTradeAsync(req.TradeID);
                         var dict = new Dictionary<string, string>()
                         {

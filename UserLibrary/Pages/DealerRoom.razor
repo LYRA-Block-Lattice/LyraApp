@@ -7,12 +7,15 @@
 @inject NavigationManager NavigationManager
 @implements IAsyncDisposable
 
-<div class="mag">
+<div class="mag fh">
 
     <h1>Dealer Room</h1>
     <p>for trade: @tradeid</p>
 
     <div class="chatw">
+        <div class="top">
+            @pinnedmsg
+        </div>
         @foreach (var msg in messages)
         {
             var align = "left";
@@ -57,6 +60,7 @@
     private string? userInput;
     private string? messageInput;
 
+    string pinnedmsg = "Connecting dealer and get update...";
     ConnectionMethodsWrapper? wrapper;
     JoinRoomResponse joinroom;
 
@@ -67,6 +71,12 @@
         wrapper.RegisterOnChat(a =>
         {
             messages.Add(a);
+            StateHasChanged();
+        });
+
+        wrapper.RegisterOnPinned(a =>
+        {
+            pinnedmsg = a.Text;
             StateHasChanged();
         });
 

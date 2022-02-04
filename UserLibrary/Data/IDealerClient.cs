@@ -40,6 +40,7 @@ namespace UserLibrary.Data
     public interface IHubPushMethods
     {
         Task OnChat(RespMessage msg);
+        Task OnPinned(RespMessage msg);
     }
 
     /// <summary> SignalR Hub invoke interface (signature for Clients invoking methods on server Hub) </summary>

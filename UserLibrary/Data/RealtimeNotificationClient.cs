@@ -61,6 +61,9 @@ namespace UserLibrary.Data
         public IDisposable RegisterOnChat(Action<RespMessage> msg)
             => _connection.BindOnInterface(x => x.OnChat, msg);
 
+        public IDisposable RegisterOnPinned(Action<RespMessage> msg)
+            => _connection.BindOnInterface(x => x.OnPinned, msg);
+
         public bool IsConnected => _connection.State == HubConnectionState.Connected;
 
         public ValueTask DisposeAsync()
