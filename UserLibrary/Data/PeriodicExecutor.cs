@@ -3,6 +3,7 @@ using CoinGecko.Clients;
 using CoinGecko.Interfaces;
 using Lyra.Core.API;
 using Lyra.Core.Blocks;
+using System.Net;
 using System.Timers;
 
 namespace UserLibrary.Data
@@ -11,8 +12,14 @@ namespace UserLibrary.Data
         public Dictionary<string, decimal> prices { get; set; }
     }
 
+    public delegate void DealerMessageHandler(RespMessage msg);
+    public delegate void DealerPinnedMessageHandler(PinnedMessage msg);
+
     public class PeriodicExecutor : IAsyncDisposable
     {
+        public event DealerMessageHandler OnDealerMessage;
+        public event DealerPinnedMessageHandler OnDealerPinnedMessage;
+
         public event EventHandler<JobExecutedEventArgs> JobExecuted;
         ConnectionMethodsWrapper? wrapper;
 
@@ -39,39 +46,19 @@ namespace UserLibrary.Data
                 wrapper = null;
             }
         }
-        public async Task ConnectDealer()
+        public async Task ConnectDealer(string url)
         {
             if (wrapper != null)
             {
-                return;
+                await wrapper.DisposeAsync();
             }
 
-            wrapper = new ConnectionMethodsWrapper(ConnectionFactoryHelper.CreateConnection(new Uri("https://localhost:7070/hub")));
+            wrapper = new ConnectionMethodsWrapper(ConnectionFactoryHelper.CreateConnection(new Uri(url)));
 
-            //wrapper.RegisterOnChat(a =>
-            //{
-            //    messages.Add(a);
-            //    addmsg = true;
-            //    StateHasChanged();
-            //});
-
-            //wrapper.RegisterOnPinned(a =>
-            //{
-            //    lastpin = a;
-            //    pintitle = a.Mode switch
-            //    {
-            //        PinnedMode.Action => "Take Action",
-            //        PinnedMode.Wait => "Await",
-            //        PinnedMode.Notify => "",
-            //        _ => "",
-            //    };
-            //    actable = a.Mode == PinnedMode.Action;
-            //    pinnedmsg = a.Text;
-            //    StateHasChanged();
-            //});
+            wrapper.RegisterOnChat(a => OnDealerMessage?.Invoke(a));
+            wrapper.RegisterOnPinned(a => OnDealerPinnedMessage?.Invoke(a));
 
             await wrapper.StartAsync();
-            await Task.Delay(1);
         }
 
         public void StartExecuting()

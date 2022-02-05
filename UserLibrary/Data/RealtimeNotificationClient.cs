@@ -11,14 +11,18 @@ namespace UserLibrary.Data
 {
     public class ConnectionFactoryHelper
     {
-        public static HubConnection CreateConnection(Uri url/*, ICollection<Cookie> cookies*/)
+        public static HubConnection CreateConnection(Uri url)
             => new HubConnectionBuilder()
                 .WithUrl(url, options =>
                 {
-                    //foreach (var cookie in cookies)
-                    //{
-                    //    options.Cookies.Add(cookie);
-                    //}
+                    options.HttpMessageHandlerFactory = (message) =>
+                    {
+                        if (message is HttpClientHandler clientHandler)
+                            // always verify the SSL certificate
+                            clientHandler.ServerCertificateCustomValidationCallback +=
+                                (sender, certificate, chain, sslPolicyErrors) => { return true; };
+                        return message;
+                    };
                 })
                 .WithAutomaticReconnect()
                 .Build();

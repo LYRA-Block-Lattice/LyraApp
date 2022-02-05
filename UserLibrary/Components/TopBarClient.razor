@@ -109,12 +109,13 @@
 
                 InvokeAsync(async () =>
                 {
-                    await executor.ConnectDealer();
+                    var url = $"https://localhost:7070/hub?a={wallet.AccountId}";
+                    await executor.ConnectDealer(url);
 
-                    executor.HotLine.RegisterOnPinned(a =>
+                    executor.OnDealerPinnedMessage += a =>
                     {
-                        if (Navigation.Uri.Contains("/dealer/room"))
-                            return;
+                        //if (Navigation.Uri.Contains("/dealer/room"))
+                        //    return;
 
                         var title = a.Mode switch
                         {
@@ -134,7 +135,24 @@
                                 return Task.CompletedTask;
                             };
                         });
-                    });
+                    };
+
+                    executor.OnDealerMessage += a =>
+                    {
+                        //if (Navigation.Uri.Contains("/dealer/room"))
+                        //    return;
+
+                        Snackbar.Add($"{a.UserName}: {a.Text}", Severity.Normal, config =>
+                        {
+                            config.Action = "Open Trade";
+                            config.ActionColor = Color.Primary;
+                            config.Onclick = snackbar =>
+                            {
+                                Help(a.TradeId);
+                                return Task.CompletedTask;
+                            };
+                        });
+                    };
 
                     await executor.HotLine.Join(new JoinRequest
                         {

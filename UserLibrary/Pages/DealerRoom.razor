@@ -101,14 +101,14 @@
             return;
         }
 
-        executor.HotLine.RegisterOnChat(a =>
+        executor.OnDealerMessage += a =>
         {
             messages.Add(a);
             addmsg = true;
             InvokeAsync(() => StateHasChanged());
-        });
+        };
 
-        executor.HotLine.RegisterOnPinned(a =>
+        executor.OnDealerPinnedMessage += a =>
         {
             lastpin = a;
             pintitle = a.Mode switch
@@ -122,7 +122,7 @@
             pinnedmsg = a.Text;
 
             InvokeAsync(() => StateHasChanged());
-        });
+        };
 
         joinroom = await executor.HotLine.JoinRoom(new JoinRoomRequest
             {

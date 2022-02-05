@@ -1,6 +1,7 @@
 using Dealer.Server.Hubs;
 using Dealer.Server.Model;
 using Dealer.Server.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +19,7 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
-builder.Services.AddHostedService<Keeper>();
+//builder.Services.AddHostedService<Keeper>();
 
 var app = builder.Build();
 
@@ -41,9 +42,16 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+//app.UseAuthentication();
+//app.UseAuthorization();
+
 app.MapRazorPages();
 app.MapControllers();
-app.MapHub<DealerHub>("/hub");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<DealerHub>("/hub");
+});
+
 app.MapFallbackToFile("index.html");
 
 app.Run();

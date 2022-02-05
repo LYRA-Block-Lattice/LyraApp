@@ -38,6 +38,7 @@ namespace UserLibrary.Data
 
     public class RespMessage
     {
+        public string TradeId { get; set; } = null!;
         public string UserName { get; set; } = null!;
         public string Text { set; get; } = null!;   
     }

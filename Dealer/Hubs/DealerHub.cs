@@ -4,24 +4,27 @@ using Lyra.Core.Blocks;
 using Lyra.Data.API.Identity;
 using Lyra.Data.API.WorkFlow;
 using Lyra.Data.Crypto;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks.Dataflow;
+using System.Web;
 using UserLibrary.Data;
 
 namespace Dealer.Server.Hubs
 {
     // inherit Hub<T>, where T is your interface defining the messages
     // client call this
-    public class DealerHub : Hub<IHubPushMethods>, IHubInvokeMethods
+    public class DealerHub : Hub//<IHubPushMethods>, IHubInvokeMethods
     {
         DealerDb _db;
         BufferBlock<ChatMessage> _buffer;
-        private readonly IHubContext<DealerHub> _hubContext;
+        //private readonly IHubContext<DealerHub> _hubContext;
 
-        public DealerHub(DealerDb db, IHubContext<DealerHub> hubContext)
+        public DealerHub(DealerDb db/*, IHubContext<DealerHub> hubContext*/)
         {
             _db = db;
-            _hubContext = hubContext;
+            //_hubContext = hubContext;
             _buffer = new BufferBlock<ChatMessage>();
         }
 
@@ -81,10 +84,20 @@ namespace Dealer.Server.Hubs
             
             var resp = new RespMessage
             {
+                TradeId = tradeid,
                 UserName = userName,
                 Text = text,
             };
-            await _hubContext.Clients.Group(tradeid).SendAsync("OnChat", resp);
+            //await Clients.Group(tradeid).OnChat(resp);
+
+            // to all members separately
+            var room = await _db.GetRoomByTradeAsync(tradeid);
+            foreach(var mem in room.Members)
+            {
+                var x = Clients.Group(mem.AccountId);
+                await Clients.Group(mem.AccountId).SendAsync("OnChat", resp);
+                File.AppendAllText("c:\\tmp\\connectionids.txt", $"OnChat: trade: {tradeid}, member: {mem.AccountId}\n");
+            }
         }
 
         private async Task ProcessInputAsync(string tradeid, string input)
@@ -186,6 +199,14 @@ namespace Dealer.Server.Hubs
 
         public override async Task OnConnectedAsync()
         {
+            var qs = Context.GetHttpContext().Request.QueryString;
+            var parsed = HttpUtility.ParseQueryString(qs.Value);
+            var account = parsed["a"];
+            var id = parsed["id"];
+            await Groups.AddToGroupAsync(id, account);
+            File.AppendAllText("c:\\tmp\\connectionids.txt", $"AddToGroupAsync: {id}, {account}\n");
+
+            //File.AppendAllText("c:\\tmp\\connectionids.txt", $"OnConnectedAsync: {Context.ConnectionId}\n");
             await base.OnConnectedAsync();
         }
 
@@ -198,8 +219,22 @@ namespace Dealer.Server.Hubs
         {
             if(Signatures.VerifyAccountSignature(msg.Text, msg.AccountId, msg.Signature))
             {
-                _buffer.Post(msg);
-                await ConsumeAsync(_buffer);
+                //_buffer.Post(msg);
+                //await ConsumeAsync(_buffer);
+                //
+                // save history
+                var room = await _db.GetRoomByTradeAsync(msg.TradeId);
+                if (room.Members.Any(a => a.AccountId == msg.AccountId))
+                {
+
+                    await SendResponseToRoomAsync(room.TradeId, msg.AccountId, msg.Text);
+
+                    await ProcessInputAsync(room.TradeId, msg.Text);
+                }
+                else
+                {
+                    Console.WriteLine("Not permited to chat.");
+                }
             }
             else
             {
@@ -262,6 +297,7 @@ namespace Dealer.Server.Hubs
                             History = txmsgs.Select(msg =>
                                 new RespMessage
                                 {
+                                    TradeId = req.TradeID,
                                     UserName = dict[msg.AccountId],
                                     Text = (msg as TxMessage).Text,
                                 }
@@ -330,8 +366,9 @@ namespace Dealer.Server.Hubs
                 };
             }
 
-            await Clients.Group(accountId).OnPinned(pinned);
-            //await _hubContext.Clients.Group(accountId).SendAsync("OnPinned", pinned);
+            var x = Clients.Group(accountId);
+            //await Clients.Group(accountId).OnPinned(pinned);
+            await Clients.Group(accountId).SendAsync("OnPinned", pinned);
         }
 
         public async Task Join(JoinRequest req)
@@ -339,7 +376,8 @@ namespace Dealer.Server.Hubs
             var ok = Signatures.VerifyAccountSignature(req.UserAccountID, req.UserAccountID, req.Signature);
             if(ok)
             {
-                await Groups.AddToGroupAsync(Context.ConnectionId, req.UserAccountID);
+                //await Groups.AddToGroupAsync(Context.ConnectionId, req.UserAccountID);
+                //File.AppendAllText("c:\\tmp\\connectionids.txt", $"AddToGroupAsync: {Context.ConnectionId}, {req.UserAccountID}\n");
             }
         }
     }
