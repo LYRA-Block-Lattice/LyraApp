@@ -48,7 +48,10 @@
             var ret = await walletState.Value.wallet.RPC.FindOtcTradeAsync(walletState.Value.wallet.AccountId, false, 0, 10);
             if(ret.Successful())
             {
-                trades = ret.GetBlocks().Cast<TransactionBlock>().ToList();
+                trades = ret.GetBlocks()
+                    .OrderByDescending(a => a.TimeStamp)
+                    .Take(3)
+                    .Cast<TransactionBlock>().ToList();
                 StateHasChanged();
             }
             else

@@ -375,7 +375,10 @@
         var tosret = await lc.FindTradableOtcAsync();
         if(tosret.Successful())
         {
-            tradableOrders = tosret.GetBlocks("orders").Cast<IOtcOrder>().ToList();
+            tradableOrders = tosret.GetBlocks("orders").Cast<IOtcOrder>()
+                .Where(a => a.Order.amount > 0)
+                .OrderBy(a => a.Order.price)
+                .ToList();
             daos = tosret.GetBlocks("daos").Cast<IDao>().ToList();
         }
 

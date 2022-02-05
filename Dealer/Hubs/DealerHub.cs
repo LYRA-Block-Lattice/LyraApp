@@ -186,7 +186,7 @@ namespace Dealer.Server.Hubs
             {
                 OTCTradeStatus.Open => $"Buyer send {fiat} to seller",
                 OTCTradeStatus.FiatSent => $"Seller confirm receive of payment {fiat}",
-                OTCTradeStatus.FiatReceived => $"Seller release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer",
+                OTCTradeStatus.FiatReceived => $"Contract to release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer",
                 OTCTradeStatus.CryptoReleased => "None",
                 OTCTradeStatus.Closed => "Trade closed. Nothing to do",
                 OTCTradeStatus.Dispute => "Arbitration",
