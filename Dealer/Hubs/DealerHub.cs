@@ -203,7 +203,7 @@ namespace Dealer.Server.Hubs
             var parsed = HttpUtility.ParseQueryString(qs.Value);
             var account = parsed["a"];
             var id = parsed["id"];
-            await Groups.AddToGroupAsync(id, account);
+            await Groups.AddToGroupAsync(Context.ConnectionId, account);
             File.AppendAllText("c:\\tmp\\connectionids.txt", $"AddToGroupAsync: {id}, {account}\n");
 
             //File.AppendAllText("c:\\tmp\\connectionids.txt", $"OnConnectedAsync: {Context.ConnectionId}\n");

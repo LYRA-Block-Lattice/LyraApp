@@ -114,8 +114,8 @@
 
                     executor.OnDealerPinnedMessage += a =>
                     {
-                        //if (Navigation.Uri.Contains("/dealer/room"))
-                        //    return;
+                        if (Navigation.Uri.Contains("/dealer/room"))
+                            return;
 
                         var title = a.Mode switch
                         {
@@ -139,8 +139,8 @@
 
                     executor.OnDealerMessage += a =>
                     {
-                        //if (Navigation.Uri.Contains("/dealer/room"))
-                        //    return;
+                        if (Navigation.Uri.Contains("/dealer/room"))
+                            return;
 
                         Snackbar.Add($"{a.UserName}: {a.Text}", Severity.Normal, config =>
                         {
