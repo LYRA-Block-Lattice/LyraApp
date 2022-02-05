@@ -96,7 +96,7 @@ namespace Dealer.Server.Hubs
             {
                 var x = Clients.Group(mem.AccountId);
                 await Clients.Group(mem.AccountId).SendAsync("OnChat", resp);
-                File.AppendAllText("c:\\tmp\\connectionids.txt", $"OnChat: trade: {tradeid}, member: {mem.AccountId}\n");
+                //File.AppendAllText("c:\\tmp\\connectionids.txt", $"OnChat: trade: {tradeid}, member: {mem.AccountId}\n");
             }
         }
 
@@ -199,12 +199,21 @@ namespace Dealer.Server.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            var qs = Context.GetHttpContext().Request.QueryString;
-            var parsed = HttpUtility.ParseQueryString(qs.Value);
-            var account = parsed["a"];
-            var id = parsed["id"];
-            await Groups.AddToGroupAsync(Context.ConnectionId, account);
-            File.AppendAllText("c:\\tmp\\connectionids.txt", $"AddToGroupAsync: {id}, {account}\n");
+            try
+            {
+                var qs = Context.GetHttpContext().Request.QueryString;
+                var parsed = HttpUtility.ParseQueryString(qs.Value);
+                var account = parsed["a"];
+                var id = parsed["id"];
+                var sign = parsed["sign"];
+                if (Signatures.VerifyAccountSignature(account, account, sign))
+                    await Groups.AddToGroupAsync(Context.ConnectionId, account);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in OnConnectedAsync: {ex}");
+            }
+            //File.AppendAllText("c:\\tmp\\connectionids.txt", $"AddToGroupAsync: {id}, {account}\n");
 
             //File.AppendAllText("c:\\tmp\\connectionids.txt", $"OnConnectedAsync: {Context.ConnectionId}\n");
             await base.OnConnectedAsync();

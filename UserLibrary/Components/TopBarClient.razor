@@ -109,7 +109,8 @@
 
                 InvokeAsync(async () =>
                 {
-                    var url = $"https://192.168.3.91:7070/hub?a={wallet.AccountId}";
+                    var sign = Signatures.GetSignature(wallet.PrivateKey, wallet.AccountId, wallet.AccountId);
+                    var url = $"https://192.168.3.91:7070/hub?a={wallet.AccountId}&sign={sign}";
                     await executor.ConnectDealer(url);
 
                     executor.OnDealerPinnedMessage += a =>
