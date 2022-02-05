@@ -109,7 +109,7 @@
 
                 InvokeAsync(async () =>
                 {
-                    var url = $"https://localhost:7070/hub?a={wallet.AccountId}";
+                    var url = $"https://192.168.3.91:7070/hub?a={wallet.AccountId}";
                     await executor.ConnectDealer(url);
 
                     executor.OnDealerPinnedMessage += a =>
