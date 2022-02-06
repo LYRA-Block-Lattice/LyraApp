@@ -316,7 +316,15 @@
         {
             try
             {
-                using (var stream = f.OpenReadStream())
+                int MAXALLOWEDSIZE = 5 * 1024 * 1024;      // 5MB
+
+                if(f.Size > MAXALLOWEDSIZE)
+                {
+                    Snackbar.Add($"Files {f.Name} with {f.Size} bytes size are not allowed. (Max {MAXALLOWEDSIZE:N})", Severity.Error);
+                    continue;
+                }
+
+                using (var stream = f.OpenReadStream(MAXALLOWEDSIZE))
                 {
                     using (var memoryStream = new MemoryStream())
                     {
