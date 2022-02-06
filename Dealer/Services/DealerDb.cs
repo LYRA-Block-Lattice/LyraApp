@@ -30,6 +30,8 @@ namespace Dealer.Server.Services
                 cm.SetIsRootClass(true);
             });
             BsonClassMap.RegisterClassMap<TxMessage>();
+            BsonClassMap.RegisterClassMap<TxFile>();
+            BsonClassMap.RegisterClassMap<TxImage>();
 
             var mongoClient = new MongoClient(
                 _dbSettings.Value.ConnectionString);

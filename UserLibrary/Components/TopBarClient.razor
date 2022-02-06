@@ -138,28 +138,42 @@
                         });
                     };
 
-                    executor.OnDealerMessage += a =>
+                    executor.OnDealerMessage += ax =>
                     {
                         if (Navigation.Uri.Contains("/dealer/room"))
                             return;
 
-                        Snackbar.Add($"{a.UserName}: {a.Text}", Severity.Normal, config =>
-                        {
-                            config.Action = "Open Trade";
-                            config.ActionColor = Color.Primary;
-                            config.Onclick = snackbar =>
-                            {
-                                Help(a.TradeId);
-                                return Task.CompletedTask;
-                            };
-                        });
-                    };
+                        var obj = ax.Get();
 
-                    await executor.HotLine.Join(new JoinRequest
+                        if(obj is RespMessage a)
                         {
-                            UserAccountID = wallet.AccountId,
-                            Signature = Signatures.GetSignature(wallet.PrivateKey, wallet.AccountId, wallet.AccountId),
-                        });
+                            Snackbar.Add($"{a.UserName}: {a.Text}", Severity.Normal, config =>
+                            {
+                                config.Action = "Open Trade";
+                                config.ActionColor = Color.Primary;
+                                config.Onclick = snackbar =>
+                                {
+                                    Help(a.TradeId);
+                                    return Task.CompletedTask;
+                                };
+                            });
+                        }
+
+                        if (obj is RespFile fx)
+                        {
+                            Snackbar.Add($"{fx.UserName} send you a file: {fx.FileName}", Severity.Normal, config =>
+                                 {
+                                 config.Action = "Open Trade";
+                                 config.ActionColor = Color.Primary;
+                                 config.Onclick = snackbar =>
+                                 {
+                                     Help(fx.TradeId);
+                                     return Task.CompletedTask;
+                                 };
+                            });
+                        }
+
+                    };
                 });
             }
 

@@ -63,7 +63,7 @@ namespace UserLibrary.Data
             return Task.CompletedTask;
         }
 
-        public IDisposable RegisterOnChat(Action<RespMessage> msg)
+        public IDisposable RegisterOnChat(Action<RespContainer> msg)
             => _connection.BindOnInterface(x => x.OnChat, msg);
 
         public IDisposable RegisterOnPinned(Action<PinnedMessage> msg)
@@ -79,8 +79,8 @@ namespace UserLibrary.Data
         public Task Chat(ChatMessage msg)
             => _connection.InvokeAsync(nameof(IHubInvokeMethods.Chat), msg);
 
-        public Task Join(JoinRequest msg)
-            => _connection.InvokeAsync(nameof(IHubInvokeMethods.Join), msg);
+        public Task SendFile(FileMessage msg)
+            => _connection.InvokeAsync(nameof(IHubInvokeMethods.SendFile), msg);
 
         public Task<JoinRoomResponse> JoinRoom(JoinRoomRequest req)
         {

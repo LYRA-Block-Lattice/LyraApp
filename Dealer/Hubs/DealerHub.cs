@@ -7,6 +7,7 @@ using Lyra.Data.Crypto;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using System.Threading.Tasks.Dataflow;
 using System.Web;
 using UserLibrary.Data;
@@ -18,37 +19,69 @@ namespace Dealer.Server.Hubs
     public class DealerHub : Hub<IHubPushMethods>, IHubInvokeMethods
     {
         DealerDb _db;
-        BufferBlock<ChatMessage> _buffer;
+        BufferBlock<ChatMessage> _messageBuffer;
+        BufferBlock<FileMessage> _fileBuffer;
         private readonly IHubContext<DealerHub> _hubContext;
 
         public DealerHub(DealerDb db, IHubContext<DealerHub> hubContext)
         {
             _db = db;
             _hubContext = hubContext;
-            _buffer = new BufferBlock<ChatMessage>();
+            _messageBuffer = new BufferBlock<ChatMessage>();
+            _fileBuffer = new BufferBlock<FileMessage>();
         }
 
         // room == trade == group, trinity
         bool InConsumer = false;
-        public async Task ConsumeAsync(IReceivableSourceBlock<ChatMessage> source)
+        private async Task ConsumeAsync<T>(IReceivableSourceBlock<T> source)
         {
             if (InConsumer)
                 return;
 
             InConsumer = true;
-            while (source.TryReceive(out ChatMessage msg))
+            while (source.TryReceive(out T post))
             {
-                // save history
-                var room = await _db.GetRoomByTradeAsync(msg.TradeId);
-                if (room.Members.Any(a => a.AccountId == msg.AccountId))
+                if(post is ChatMessage msg)
                 {
-                    await SendResponseToRoomAsync(room.TradeId, msg.AccountId, msg.Text);
+                    // save history
+                    var room = await _db.GetRoomByTradeAsync(msg.TradeId);
+                    if (room.Members.Any(a => a.AccountId == msg.AccountId))
+                    {
+                        await SendResponseToRoomAsync(room.TradeId, msg.AccountId, msg.Text);
 
-                    await ProcessInputAsync(room.TradeId, msg.Text);
+                        await ProcessInputAsync(room.TradeId, msg.Text);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not permited to chat.");
+                    }
                 }
-                else
+                else if(post is FileMessage fm)
                 {
-                    Console.WriteLine("Not permited to chat.");
+                    var room = await _db.GetRoomByTradeAsync(fm.TradeId);
+                    if (room.Members.Any(a => a.AccountId == fm.AccountId))
+                    {
+                        var img = await _db.GetImageDataByIdAsync(fm.FileHash);
+                        if(img != null)
+                        {
+                            var tximg = new TxImage
+                            {
+                                MimeType = img.Mime,
+                                MessageType = img.Mime.StartsWith("image/") ? MessageTypes.Image : MessageTypes.File,
+                                DataHash = img.Hash,
+                                Url = $"https://192.168.3.91:7070/api/dealer/img?hash={img.Hash}",
+
+                                AccountId = fm.AccountId,
+                                TradeID = fm.TradeId,
+                            };
+
+                            await SendFileToRoomAsync(tximg);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not permited to chat.");
+                    }
                 }
             }
             InConsumer = false;
@@ -82,7 +115,35 @@ namespace Dealer.Server.Hubs
                 Text = text,
                 Hash = latestmsg.Hash,
             };
-            await Clients.Group(tradeid).OnChat(resp);
+            await Clients.Group(tradeid).OnChat(new RespContainer(resp));
+        }
+
+        public async Task SendFileToRoomAsync(TxFile file)
+        {
+            var latestmsg = await _db.AppendTxRecordAsync(file);
+
+            string userName;
+            if (file.AccountId == Consts.DEALER_ACCOUNTID)
+                userName = "Dealer";
+            else
+            {
+                var user = await _db.GetUserByAccountIdAsync(file.AccountId);
+                userName = user.UserName;
+            }
+
+            var resp = new RespFile
+            {
+                TradeId = file.TradeID,
+                UserName = userName,
+                Hash = latestmsg.Hash,
+
+                FileHash = file.Hash,
+                Url = file.Url,
+                MimeType = file.MimeType,
+            };
+
+
+            await Clients.Group(file.TradeID).OnChat(new RespContainer(resp));
         }
 
         private async Task ProcessInputAsync(string tradeid, string input)
@@ -214,8 +275,22 @@ namespace Dealer.Server.Hubs
             // PortableSignatures make a better compatibility
             if (PortableSignatures.VerifyAccountSignature(msg.Text, msg.AccountId, msg.Signature))
             {
-                _buffer.Post(msg);
-                await ConsumeAsync(_buffer);
+                _messageBuffer.Post(msg);
+                await ConsumeAsync(_messageBuffer);
+            }
+            else
+            {
+                Console.WriteLine("Message signature verify failed.");
+            }
+        }
+
+        public async Task SendFile(FileMessage file)
+        {
+            // PortableSignatures make a better compatibility
+            if (PortableSignatures.VerifyAccountSignature(file.FileHash, file.AccountId, file.Signature))
+            {
+                _fileBuffer.Post(file);
+                await ConsumeAsync(_fileBuffer);
             }
             else
             {
@@ -275,13 +350,38 @@ namespace Dealer.Server.Hubs
                         return new JoinRoomResponse
                         {                            
                             ResultCode = APIResultCodes.Success,
-                            History = txmsgs.Select(msg =>
-                                new RespMessage
+                            History = txmsgs.Select<TxRecord, RespContainer>(rec =>
+                                rec is TxMessage msg ?
+
+                                new RespContainer
                                 {
-                                    TradeId = req.TradeID,
-                                    UserName = dict[msg.AccountId],
-                                    Text = (msg as TxMessage).Text,
+                                    MsgType = MessageTypes.Text,
+                                    Json = JsonConvert.SerializeObject(
+                                        new RespMessage
+                                        {
+                                            TradeId = req.TradeID,
+                                            UserName = dict[msg.AccountId],
+                                            Text = (msg as TxMessage).Text,
+                                        })
                                 }
+                                :
+                                
+                                new RespContainer
+                                {
+                                    MsgType = MessageTypes.File,
+                                    Json = JsonConvert.SerializeObject(
+                                        new RespFile
+                                        {
+                                            TradeId = req.TradeID,
+                                            UserName = dict[(rec as TxFile).AccountId],
+                                            Hash = rec.Hash,
+
+                                            FileHash = (rec as TxFile).DataHash,
+                                            Url = (rec as TxFile).Url,
+                                            MimeType = (rec as TxFile).MimeType,
+                                        })
+                                }
+                                
                             )
                             .ToArray(),
                             Roles = new Dictionary<string, string>()

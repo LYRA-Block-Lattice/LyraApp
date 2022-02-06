@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System.Drawing;
 using System.Security.Cryptography;
+using UserLibrary.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -112,16 +113,6 @@ namespace Dealer.Server.Services
                                     await _db.CreateImageDataAsync(bin);
                                 }
 
-                                //var tximg = new TxImage
-                                //{
-                                //    Format = img.Format.ToString(),
-                                //    DataHash = hash,
-
-                                //    AccountId = accountId,
-                                //    TradeID = tradeId,
-                                //};
-                                //var ret = await _db.AppendTxRecordAsync(tximg);
-
                                 return new ImageUploadResult
                                 {
                                     ResultCode = Lyra.Core.Blocks.APIResultCodes.Success,
@@ -140,6 +131,8 @@ namespace Dealer.Server.Services
 
             return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidParameterFormat };
         }
+
+
 
         [HttpGet]
         [Route("img")]

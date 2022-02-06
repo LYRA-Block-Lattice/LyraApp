@@ -12,7 +12,7 @@ namespace UserLibrary.Data
         public Dictionary<string, decimal> prices { get; set; }
     }
 
-    public delegate void DealerMessageHandler(RespMessage msg);
+    public delegate void DealerMessageHandler(RespContainer msg);
     public delegate void DealerPinnedMessageHandler(PinnedMessage msg);
 
     public class PeriodicExecutor : IAsyncDisposable

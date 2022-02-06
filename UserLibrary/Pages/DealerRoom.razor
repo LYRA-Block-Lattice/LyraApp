@@ -33,25 +33,40 @@
                 }
 
             </div>
-            @foreach (var msg in messages)
+            @foreach (var cainter in messages)
             {
-                var align = "left";
-                if (joinroom.Roles[msg.UserName] == "me")
-                    align = "right";
-                if (joinroom.Roles[msg.UserName] == "dealer")
-                    align = "center";
-                <div align="@align" class="para @(joinroom.Roles[msg.UserName])w">
-                    <div>@msg.UserName</div>
-                    <div class="@(joinroom.Roles[msg.UserName])msg">@msg.Text</div>
-                </div>
-
+                var obj = cainter.Get();
+                if(obj is RespMessage msg)
+                {
+                    var align = "left";
+                    if (joinroom.Roles[msg.UserName] == "me")
+                        align = "right";
+                    if (joinroom.Roles[msg.UserName] == "dealer")
+                        align = "center";
+                    <div align="@align" class="para @(joinroom.Roles[msg.UserName])w">
+                        <div>@msg.UserName</div>
+                        <div class="@(joinroom.Roles[msg.UserName])msg">@msg.Text</div>
+                    </div>
+                }
+                else if(obj is RespFile file)
+                {
+                    var align = "left";
+                    if (joinroom.Roles[file.UserName] == "me")
+                        align = "right";
+                    if (joinroom.Roles[file.UserName] == "dealer")
+                        align = "center";
+                    <div align="@align" class="para @(joinroom.Roles[file.UserName])w">
+                        <div>@file.UserName</div>
+                        <div class="@(joinroom.Roles[file.UserName])msg"><img class="thumb" src="@file.Url" /></div>
+                    </div>
+                }
             }
         </div>
     </div>
 
     <div class="inp">
         <MudTextField @bind-Value="@messageInput" Variant="Variant.Outlined" Lines="1"
-                      OnKeyDown="@Enter" />
+                      OnKeyUp="@Enter" />
         <MudFab Color="Color.Primary" StartIcon="@Icons.Filled.EmojiEmotions"
                 Size="Size.Small" OnClick="ToggleEmj" />
         <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add"
@@ -100,7 +115,7 @@
     [Inject] private IDialogService DialogService { get; set; }
     [Inject] PeriodicExecutor executor { get; set; }
 
-    private List<RespMessage> messages = new List<RespMessage>();
+    private List<RespContainer> messages = new List<RespContainer>();
     private string? userInput;
     private string? messageInput;
 
@@ -293,7 +308,7 @@
 
         //TODO upload the files to the server
         var client = new DealerClient(Configuration["network"]);
-
+        var wallet = walletState.Value.wallet;
         foreach (var f in entries)
         {
             try
@@ -311,13 +326,19 @@
                             byte[] hash_bytes = sha.ComputeHash(imageData);
                             hash = Base58Encoding.Encode(hash_bytes);
                         }
-                        signature = PortableSignatures.GetSignature(walletState.Value.wallet.PrivateKey, hash);
+                        signature = PortableSignatures.GetSignature(wallet.PrivateKey, hash);
 
-                        var ret = await client.UploadImageAsync(walletState.Value.wallet.AccountId, signature, tradeid,
+                        var ret = await client.UploadImageAsync(wallet.AccountId, signature, tradeid,
                             f.Name, imageData, f.ContentType);
                         if (ret.Successful())
                         {
-                            // server will handle this.
+                            await executor.HotLine.SendFile(new FileMessage
+                            {
+                                AccountId = wallet.AccountId,
+                                Signature = Signatures.GetSignature(wallet.PrivateKey, ret.Hash, wallet.AccountId),
+                                TradeId = tradeid,
+                                FileHash = ret.Hash,
+                            });
                         }
                         else
                         {

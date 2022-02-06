@@ -7,11 +7,10 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.Options;
 using Newtonsoft.Json;
+using UserLibrary.Data;
 
 namespace Lyra.Data.API.Identity
 {
-    public enum MessageTypes { Null, Text, Image }
-
     public class TxRecord : SignableObject
     {
         [BsonId]

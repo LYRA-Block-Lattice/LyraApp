@@ -81,3 +81,8 @@
     background-color: white;
     border: groove;
 }
+
+.thumb {
+    border: 1px solid #ddd; /* Gray border */
+    width: 150px; /* Set a small width */
+}
