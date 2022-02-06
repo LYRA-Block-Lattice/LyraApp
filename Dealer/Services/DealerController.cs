@@ -1,6 +1,12 @@
-﻿using Lyra.Core.API;
+﻿using Dealer.Server.Hubs;
+using ImageMagick;
+using Lyra.Core.API;
 using Lyra.Data.API.Identity;
+using Lyra.Data.Crypto;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using System.Drawing;
+using System.Security.Cryptography;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,9 +17,11 @@ namespace Dealer.Server.Services
     public class DealerController : ControllerBase
     {
         private DealerDb _db;
-        public DealerController(DealerDb db)
+        private IHubContext<DealerHub> _hub;
+        public DealerController(DealerDb db, IHubContext<DealerHub> hub)
         {
             _db = db;
+            _hub = hub;
         }
 
         [Route("GetUserByAccountId")]
@@ -59,6 +67,89 @@ namespace Dealer.Server.Services
             return APIResult.Success;
         }
 
+        public class ImageModel
+        {
+            public IFormFile file { get; set; }
+            public string accountId { get; set; }
+            public string signature { get; set; }
+            public string tradeId { get; set; }
+        }
+
+        [HttpPost]
+        [Route("UploadFile")]
+        public async Task<APIResult> UploadFileAsync([FromForm] ImageModel model)
+        {
+            //ImageModel model = new ImageModel();
+            try
+            {
+                using (var ms = new MemoryStream())
+                {
+                    model.file.CopyTo(ms);
+                    var bindata = ms.ToArray();
+                    using (var img = new MagickImage(bindata))
+                    {
+                        using (var sha = SHA256.Create())
+                        {
+                            byte[] hash_bytes = sha.ComputeHash(bindata);
+                            string hash = Base58Encoding.Encode(hash_bytes);
+
+                            if (Signatures.VerifyAccountSignature(hash, model.accountId, model.signature))
+                            {
+                                // check image hash exists
+                                if (null == await _db.GetImageDataByIdAsync(hash))
+                                {
+                                    var bin = new ImageData
+                                    {
+                                        FileName = model.file.FileName,
+                                        Data = bindata,
+                                        Format = img.Format.ToString(),
+                                        Mime = $"image/{img.Format.ToString().ToLower()}",
+                                        Hash = hash,
+                                        TimeStamp = DateTime.UtcNow,
+                                        TradeId = model.tradeId,
+                                        OwnerAccountId = model.accountId,
+                                    };
+                                    await _db.CreateImageDataAsync(bin);
+                                }
+
+                                //var tximg = new TxImage
+                                //{
+                                //    Format = img.Format.ToString(),
+                                //    DataHash = hash,
+
+                                //    AccountId = accountId,
+                                //    TradeID = tradeId,
+                                //};
+                                //var ret = await _db.AppendTxRecordAsync(tximg);
+
+                                return new ImageUploadResult
+                                {
+                                    ResultCode = Lyra.Core.Blocks.APIResultCodes.Success,
+                                    Hash = hash,
+                                    Url = $"https://192.168.3.91:7070/api/dealer/img?hash={hash}",
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Exception, ResultMessage = ex.ToString() };
+            }
+
+            return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidParameterFormat };
+        }
+
+        [HttpGet]
+        [Route("img")]
+        public async Task<ActionResult> ViewAsync(string hash)
+        {
+            var image = await _db.GetImageDataByIdAsync(hash); //Pull image from the database.
+            if (image == null)
+                return NotFound();
+            return File(image.Data, image.Mime);
+        }
 
         // GET: api/<TransactionController>
         [HttpGet]

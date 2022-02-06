@@ -15,16 +15,16 @@ namespace Dealer.Server.Hubs
 {
     // inherit Hub<T>, where T is your interface defining the messages
     // client call this
-    public class DealerHub : Hub//<IHubPushMethods>, IHubInvokeMethods
+    public class DealerHub : Hub<IHubPushMethods>, IHubInvokeMethods
     {
         DealerDb _db;
         BufferBlock<ChatMessage> _buffer;
-        //private readonly IHubContext<DealerHub> _hubContext;
+        private readonly IHubContext<DealerHub> _hubContext;
 
-        public DealerHub(DealerDb db/*, IHubContext<DealerHub> hubContext*/)
+        public DealerHub(DealerDb db, IHubContext<DealerHub> hubContext)
         {
             _db = db;
-            //_hubContext = hubContext;
+            _hubContext = hubContext;
             _buffer = new BufferBlock<ChatMessage>();
         }
 
@@ -41,8 +41,7 @@ namespace Dealer.Server.Hubs
                 // save history
                 var room = await _db.GetRoomByTradeAsync(msg.TradeId);
                 if (room.Members.Any(a => a.AccountId == msg.AccountId))
-                {                   
-
+                {
                     await SendResponseToRoomAsync(room.TradeId, msg.AccountId, msg.Text);
 
                     await ProcessInputAsync(room.TradeId, msg.Text);
@@ -57,7 +56,6 @@ namespace Dealer.Server.Hubs
 
         private async Task SendResponseToRoomAsync(string tradeid, string speakerAccountId, string text)
         {
-            var prevMsgs = await _db.GetTxRecordsByTradeAsync(tradeid);
             var txmsg = new TxMessage
             {
                 TradeID = tradeid,
@@ -66,12 +64,7 @@ namespace Dealer.Server.Hubs
                 Text = text,
             };
 
-            TxRecord last = null;
-            if (prevMsgs.Count() > 0)
-                last = prevMsgs.Last();
-
-            txmsg.Initialize(last, Consts.DEALER_KEY, Consts.DEALER_ACCOUNTID);
-            await _db.CreateTxRecordAsync(txmsg);
+            var latestmsg = await _db.AppendTxRecordAsync(txmsg);
 
             string userName;
             if (speakerAccountId == Consts.DEALER_ACCOUNTID)
@@ -87,17 +80,9 @@ namespace Dealer.Server.Hubs
                 TradeId = tradeid,
                 UserName = userName,
                 Text = text,
+                Hash = latestmsg.Hash,
             };
-            //await Clients.Group(tradeid).OnChat(resp);
-
-            // to all members separately
-            var room = await _db.GetRoomByTradeAsync(tradeid);
-            foreach(var mem in room.Members)
-            {
-                var x = Clients.Group(mem.AccountId);
-                await Clients.Group(mem.AccountId).SendAsync("OnChat", resp);
-                //File.AppendAllText("c:\\tmp\\connectionids.txt", $"OnChat: trade: {tradeid}, member: {mem.AccountId}\n");
-            }
+            await Clients.Group(tradeid).OnChat(resp);
         }
 
         private async Task ProcessInputAsync(string tradeid, string input)
@@ -148,7 +133,7 @@ namespace Dealer.Server.Hubs
                 return;
             }
 
-            var msg = $"Dealer can't confirm FiAT send. Please try again.";
+            var msg = $"Dealer can't confirm FiaT send. Please try again.";
             await SendResponseToRoomAsync(tradeid, Consts.DEALER_ACCOUNTID, msg);
         }
 
@@ -226,24 +211,11 @@ namespace Dealer.Server.Hubs
 
         public async Task Chat(ChatMessage msg)
         {
-            if(Signatures.VerifyAccountSignature(msg.Text, msg.AccountId, msg.Signature))
+            // PortableSignatures make a better compatibility
+            if (PortableSignatures.VerifyAccountSignature(msg.Text, msg.AccountId, msg.Signature))
             {
-                //_buffer.Post(msg);
-                //await ConsumeAsync(_buffer);
-                //
-                // save history
-                var room = await _db.GetRoomByTradeAsync(msg.TradeId);
-                if (room.Members.Any(a => a.AccountId == msg.AccountId))
-                {
-
-                    await SendResponseToRoomAsync(room.TradeId, msg.AccountId, msg.Text);
-
-                    await ProcessInputAsync(room.TradeId, msg.Text);
-                }
-                else
-                {
-                    Console.WriteLine("Not permited to chat.");
-                }
+                _buffer.Post(msg);
+                await ConsumeAsync(_buffer);
             }
             else
             {
@@ -376,8 +348,7 @@ namespace Dealer.Server.Hubs
             }
 
             var x = Clients.Group(accountId);
-            //await Clients.Group(accountId).OnPinned(pinned);
-            await Clients.Group(accountId).SendAsync("OnPinned", pinned);
+            await Clients.Group(accountId).OnPinned(pinned);
         }
 
         public async Task Join(JoinRequest req)

@@ -28,8 +28,20 @@
 .inp {
     max-width: 500px;
     display: flex;
-    margin: 5px;
-    padding: 5px;
+    margin: 1px;
+    padding: 2px;
+    align-content: center;
+    justify-content: space-between;
+}
+
+.inps {
+    width: 10px;
+    height: 10px;
+}
+
+.emj {
+    padding: 2px;
+    font-size: xx-large;
 }
 
 .para {

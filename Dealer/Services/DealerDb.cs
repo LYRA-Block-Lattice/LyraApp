@@ -14,6 +14,7 @@ namespace Dealer.Server.Services
         private readonly IMongoCollection<LyraUser> _usersCollection;
         private readonly IMongoCollection<TxRecord> _txRecordsCollection;
         private readonly IMongoCollection<TxRoom> _txRoomsCollection;
+        private readonly IMongoCollection<ImageData> _txImageDataCollection;
 
         private string _networkId;
         public string NetworkId { get => _networkId; set => _networkId = value; }
@@ -47,6 +48,9 @@ namespace Dealer.Server.Services
 
             _txRoomsCollection = mongoDatabase.GetCollection<TxRoom>(
                 _dbSettings.Value.NetworkId + "_txRooms");
+
+            _txImageDataCollection = mongoDatabase.GetCollection<ImageData>(
+                _dbSettings.Value.NetworkId + "_imageData");
         }
 
         #region payments methods
@@ -97,6 +101,26 @@ namespace Dealer.Server.Services
 
         public async Task CreateTxRecordAsync(TxRecord newUser) =>
             await _txRecordsCollection.InsertOneAsync(newUser);
+
+        public TxRecord? GetLastRecordForTrade(string tradeId) =>
+            _txRecordsCollection.AsQueryable()
+                .Where(a => a.TradeID == tradeId)
+                .OrderByDescending(x => x.Height)
+                .FirstOrDefault();
+
+        public async Task<TxRecord> AppendTxRecordAsync(TxRecord record)
+        {
+            var prevMsgs = await GetTxRecordsByTradeAsync(record.TradeID);
+
+            var last = GetLastRecordForTrade(record.TradeID);
+
+            record.Initialize(last, Consts.DEALER_KEY, Consts.DEALER_ACCOUNTID);
+            await CreateTxRecordAsync(record);
+
+            return GetLastRecordForTrade(record.TradeID);
+        }
+
+
         #endregion
 
         #region Lyra Tx Room
@@ -116,6 +140,25 @@ namespace Dealer.Server.Services
 
         public async Task RemoveRoomAsync(string id) =>
             await _txRoomsCollection.DeleteOneAsync(x => x.Id == id);
+        #endregion
+
+        #region Image Data
+        public async Task<List<ImageData>> GetImageDataAsync() =>
+            await _txImageDataCollection.Find(_ => true).ToListAsync();
+
+        public async Task<ImageData?> GetImageDataByTradeAsync(string tradeId) =>
+            await _txImageDataCollection.Find(x => x.TradeId == tradeId).FirstOrDefaultAsync();
+        public async Task<ImageData?> GetImageDataByIdAsync(string hash) =>
+            await _txImageDataCollection.Find(x => x.Hash == hash).FirstOrDefaultAsync();
+
+        public async Task CreateImageDataAsync(ImageData bin) =>
+            await _txImageDataCollection.InsertOneAsync(bin);
+
+        public async Task UpdateImageDataAsync(string hash, ImageData updatedUser) =>
+            await _txImageDataCollection.ReplaceOneAsync(x => x.Hash == hash, updatedUser);
+
+        public async Task RemoveImageDataAsync(string hash) =>
+            await _txImageDataCollection.DeleteOneAsync(x => x.Hash == hash);
         #endregion
     }
 }

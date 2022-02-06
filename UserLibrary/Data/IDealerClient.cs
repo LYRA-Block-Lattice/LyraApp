@@ -40,7 +40,16 @@ namespace UserLibrary.Data
     {
         public string TradeId { get; set; } = null!;
         public string UserName { get; set; } = null!;
-        public string Text { set; get; } = null!;   
+        public string Text { set; get; } = null!;  
+        public string Hash { get; set; } = null!;
+    }
+
+    public class RespImage
+    {
+        public string TradeId { get; set; } = null!;
+        public string UserName { get; set; } = null!;
+        public string Hash { get; set; } = null!;
+        public byte[] ImageData { get; set; } = null!;
     }
 
     public enum PinnedMode { Notify, Wait, Action };

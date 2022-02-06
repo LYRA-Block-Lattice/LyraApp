@@ -39,7 +39,7 @@ namespace Lyra.Data.API.Identity
             TimeStamp = DateTime.UtcNow;
         }
 
-        public void Initialize(TxRecord prevRecord, string PrivateKey, string AccountId)
+        public void Initialize(TxRecord? prevRecord, string PrivateKey, string AccountId)
         {
             if (prevRecord != null)
             {
@@ -59,7 +59,7 @@ namespace Lyra.Data.API.Identity
             Sign(PrivateKey, AccountId);
         }
 
-        public async Task InitializeAsync(TxRecord prevRecord, Func<string, Task<string>> signr)
+        public async Task InitializeAsync(TxRecord? prevRecord, Func<string, Task<string>> signr)
         {
             if (prevRecord != null)
             {

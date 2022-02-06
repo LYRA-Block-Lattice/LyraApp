@@ -4,7 +4,9 @@
 @using Lyra.Data.Crypto
 @using Lyra.Data.Shared
 @using Microsoft.AspNetCore.SignalR.Client
+@using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
+@using System.Security.Cryptography
 @using UserLibrary.Data
 @inject NavigationManager NavigationManager
 
@@ -22,12 +24,12 @@
                 <div>
                     @pinnedmsg
                 </div>
-@if(actable)
+                @if (actable)
                 {
-                <div align="right">
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                        OnClick="FinishAction">Finished</MudButton>
-                </div>
+                    <div align="right">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                               OnClick="FinishAction">Finished</MudButton>
+                    </div>
                 }
 
             </div>
@@ -48,12 +50,40 @@
     </div>
 
     <div class="inp">
-        <MudTextField @bind-Value="@messageInput" Variant="Variant.Outlined" Lines="3" />
-        <MudButton Variant="Variant.Filled" Color="Color.Primary"
-                   Disabled="@(!(executor.HotLine?.IsConnected) ?? false)" OnClick="Send">
-            Send
-        </MudButton>
+        <MudTextField @bind-Value="@messageInput" Variant="Variant.Outlined" Lines="1"
+                      OnKeyDown="@Enter" />
+        <MudFab Color="Color.Primary" StartIcon="@Icons.Filled.EmojiEmotions"
+                Size="Size.Small" OnClick="ToggleEmj" />
+        <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add"
+                Size="Size.Small" OnClick="ToggleAdd" />
     </div>
+
+    @if (showadd)
+    {
+        <div>
+            <InputFile id="fileInput112" OnChange="UploadFiles" hidden multiple accept=".jpg, .jpeg, .png" />
+
+            <MudButton HtmlTag="label"
+                   Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Filled.CloudUpload"
+                   for="fileInput112">
+                Upload your images
+            </MudButton>
+        </div>
+    }
+
+    @if (showemoji)
+    {
+        <!-- Emoji Keyboard -->
+        <div class="emj">
+            @foreach (var c in Emoji.MostCommonCollection)
+            {
+                <button type="button" class="btn btn-primary m-1" @onclick="(() => AddEmoji(c))">@c</button>
+            }
+        </div>
+    }
+
 </div>
 
 
@@ -63,6 +93,8 @@
 
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
+    [Inject]
+    IConfiguration Configuration { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] IJSRuntime JsRuntime { get; set; }
     [Inject] private IDialogService DialogService { get; set; }
@@ -73,7 +105,7 @@
     private string? messageInput;
 
     string pinnedmsg = "Connecting dealer and get update...";
-    
+
     JoinRoomResponse joinroom;
 
     PinnedMessage lastpin;
@@ -82,10 +114,11 @@
 
     ElementReference msgsref { get; set; }
     bool addmsg;
+    bool showemoji, showadd;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(addmsg)
+        if (addmsg)
         {
             await JsRuntime.InvokeVoidAsync("updateScroll", msgsref);
             addmsg = false;
@@ -95,7 +128,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if(walletState.Value.wallet == null)
+        if (walletState.Value.wallet == null)
         {
             NavigationManager.NavigateTo("/wallet");
             return;
@@ -145,6 +178,34 @@
         }
     }
 
+    void ToggleEmj()
+    {
+        showemoji = !showemoji;
+        if (showemoji)
+            showadd = false;
+    }
+
+    void ToggleAdd()
+    {
+        showadd = !showadd;
+        if (showadd)
+            showemoji = false;
+    }
+
+    //Add Emoji to Message
+    protected async Task AddEmoji(string emoji)
+    {
+        messageInput += emoji;
+    }
+
+    private async Task Enter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            await Send();
+        }
+    }
+
     private async Task Send()
     {
         await Send(messageInput);
@@ -152,13 +213,14 @@
 
     private async Task Send(string txt)
     {
+        // PortableSignatures make a better compatibility
         await executor.HotLine.Chat(new ChatMessage
             {
                 TradeId = tradeid,
                 AccountId = walletState.Value.wallet.AccountId,
                 Text = txt,
-                Signature = Signatures.GetSignature(walletState.Value.wallet.PrivateKey,
-                            txt, walletState.Value.wallet.AccountId),
+                Signature = PortableSignatures.GetSignature(walletState.Value.wallet.PrivateKey,
+                                txt, walletState.Value.wallet.AccountId),
             });
         messageInput = "";
     }
@@ -168,7 +230,7 @@
         var tradeblk = (await walletState.Value.wallet.RPC.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
         var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.price * tradeblk.Trade.amount:N2}";
 
-        if(tradeblk.OTStatus == OTCTradeStatus.Open &&
+        if (tradeblk.OTStatus == OTCTradeStatus.Open &&
             tradeblk.OwnerAccountId == walletState.Value.wallet.AccountId)
         {
             // ask if your have paied
@@ -180,7 +242,7 @@
             if (result != null && result.Value)
             {
                 var payindret = await walletState.Value.wallet.OTCTradeBuyerPaymentSentAsync(tradeid);
-                if(payindret.Successful())
+                if (payindret.Successful())
                 {
                     await Send("/fiatsent");
 
@@ -193,7 +255,7 @@
             }
         }
 
-        if(tradeblk.OTStatus == OTCTradeStatus.FiatSent &&
+        if (tradeblk.OTStatus == OTCTradeStatus.FiatSent &&
             tradeblk.Trade.orderOwnerId == walletState.Value.wallet.AccountId)
         {
             // ask if your have paied
@@ -205,7 +267,7 @@
             if (result != null && result.Value)
             {
                 var payindret = await walletState.Value.wallet.OTCTradeSellerGotPaymentAsync(tradeid);
-                if(payindret.Successful())
+                if (payindret.Successful())
                 {
                     await Send("/fiatreceived");
 
@@ -217,7 +279,57 @@
                 }
             }
         }
-        
+
     }
 
+    private async Task UploadFiles(InputFileChangeEventArgs e)
+    {
+        var entries = e.GetMultipleFiles();
+        //Do your validations here
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+        //Snackbar.Add($"Files with {entries.FirstOrDefault().Size} bytes size are not allowed", Severity.Error);
+        //Snackbar.Add($"Files starting with letter {entries.FirstOrDefault().Name.Substring(0, 1)} are not recommended", Severity.Warning);
+        //Snackbar.Add($"This file has the extension {entries.FirstOrDefault().Name.Split(".").Last()}", Severity.Info);
+
+        //TODO upload the files to the server
+        var client = new DealerClient(Configuration["network"]);
+
+        foreach (var f in entries)
+        {
+            try
+            {
+                using (var stream = f.OpenReadStream())
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await stream.CopyToAsync(memoryStream);
+                        var imageData = memoryStream.ToArray();
+
+                        string hash, signature;
+                        using (var sha = SHA256.Create())
+                        {
+                            byte[] hash_bytes = sha.ComputeHash(imageData);
+                            hash = Base58Encoding.Encode(hash_bytes);
+                        }
+                        signature = PortableSignatures.GetSignature(walletState.Value.wallet.PrivateKey, hash);
+
+                        var ret = await client.UploadImageAsync(walletState.Value.wallet.AccountId, signature, tradeid,
+                            f.Name, imageData, f.ContentType);
+                        if (ret.Successful())
+                        {
+                            // server will handle this.
+                        }
+                        else
+                        {
+                            Snackbar.Add($"Failed to upload image: {ret.ResultCode}", Severity.Error);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Upload image error: {ex.Message}");
+            }
+        }
+    }
 }
