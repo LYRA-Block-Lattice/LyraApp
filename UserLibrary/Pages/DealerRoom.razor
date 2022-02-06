@@ -57,7 +57,8 @@
                         align = "center";
                     <div align="@align" class="para @(joinroom.Roles[file.UserName])w">
                         <div>@file.UserName</div>
-                        <div class="@(joinroom.Roles[file.UserName])msg"><img class="thumb" src="@file.Url" /></div>
+                        <div class="@(joinroom.Roles[file.UserName])msg">
+                            <img class="thumb" src="@file.Url" @onclick="@(a => Zoom(file.Url))" /></div>
                     </div>
                 }
             }
@@ -65,7 +66,7 @@
     </div>
 
     <div class="inp">
-        <MudTextField @bind-Value="@messageInput" Variant="Variant.Outlined" Lines="1"
+        <MudTextField T="string" @ref="@inputTxt" Variant="Variant.Outlined" Lines="1"
                       OnKeyUp="@Enter" />
         <MudFab Color="Color.Primary" StartIcon="@Icons.Filled.EmojiEmotions"
                 Size="Size.Small" OnClick="ToggleEmj" />
@@ -99,6 +100,9 @@
         </div>
     }
 
+    <div @ref="@fullpage" class="fullpage" style="@fpstyle" @onclick="@(e => CloseFP())">
+
+    </div>
 </div>
 
 
@@ -116,8 +120,6 @@
     [Inject] PeriodicExecutor executor { get; set; }
 
     private List<RespContainer> messages = new List<RespContainer>();
-    private string? userInput;
-    private string? messageInput;
 
     string pinnedmsg = "Connecting dealer and get update...";
 
@@ -127,9 +129,12 @@
     string pintitle;
     bool actable;
 
+    ElementReference fullpage { get; set; }
     ElementReference msgsref { get; set; }
+    MudTextField<string> inputTxt { get; set; }
     bool addmsg;
-    bool showemoji, showadd;
+    bool showemoji, showadd, showfullpage;
+    string fpstyle;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -210,20 +215,19 @@
     //Add Emoji to Message
     protected async Task AddEmoji(string emoji)
     {
-        messageInput += emoji;
+        inputTxt.Text += emoji;
     }
 
     private async Task Enter(KeyboardEventArgs e)
     {
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
-            await Send();
+            if(!string.IsNullOrWhiteSpace(inputTxt.Text))
+            {
+                await Send(inputTxt.Text);
+                await inputTxt.Clear();
+            }
         }
-    }
-
-    private async Task Send()
-    {
-        await Send(messageInput);
     }
 
     private async Task Send(string txt)
@@ -237,7 +241,6 @@
                 Signature = PortableSignatures.GetSignature(walletState.Value.wallet.PrivateKey,
                                 txt, walletState.Value.wallet.AccountId),
             });
-        messageInput = "";
     }
 
     private async Task FinishAction()
@@ -352,5 +355,15 @@
                 Snackbar.Add($"Upload image error: {ex.Message}");
             }
         }
+    }
+
+    private async Task Zoom(string url)
+    {
+        fpstyle = $"background-image: url(\"{url}\"); display: block;";
+    }
+
+    private void CloseFP()
+    {
+        fpstyle = $"display: none;";
     }
 }
