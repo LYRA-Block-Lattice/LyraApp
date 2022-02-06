@@ -73,6 +73,7 @@ namespace Dealer.Server.Hubs
 
                                 AccountId = fm.AccountId,
                                 TradeID = fm.TradeId,
+                                FileName = img.FileName,
                             };
 
                             await SendFileToRoomAsync(tximg);
@@ -115,7 +116,8 @@ namespace Dealer.Server.Hubs
                 Text = text,
                 Hash = latestmsg.Hash,
             };
-            await Clients.Group(tradeid).OnChat(new RespContainer(resp));
+
+            await SendToTradeRoomAsync(txmsg.TradeID, new RespContainer(resp));
         }
 
         public async Task SendFileToRoomAsync(TxFile file)
@@ -140,10 +142,21 @@ namespace Dealer.Server.Hubs
                 FileHash = file.Hash,
                 Url = file.Url,
                 MimeType = file.MimeType,
+                FileName = file.FileName,
             };
 
+            await SendToTradeRoomAsync(file.TradeID, new RespContainer(resp));
+        }
 
-            await Clients.Group(file.TradeID).OnChat(new RespContainer(resp));
+        private async Task SendToTradeRoomAsync(string tradeId, RespContainer container)
+        {
+            // to all members separately
+            var room = await _db.GetRoomByTradeAsync(tradeId);
+            foreach (var mem in room.Members)
+            {
+                var x = Clients.Group(mem.AccountId);
+                await Clients.Group(mem.AccountId).OnChat(container);
+            }
         }
 
         private async Task ProcessInputAsync(string tradeid, string input)
