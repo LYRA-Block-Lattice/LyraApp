@@ -204,4 +204,14 @@ namespace Nebula.Store.WebWalletUseCase
         public string title { get; set; }
         public bool menunew { get; set; }
     }
+
+    public class WebWalletGotSendToMeAction
+    {
+
+    }
+
+    public class WebWalletUpdatePendingRecvAction
+    {
+        public int PendingCount { get; set; }
+    }
 }

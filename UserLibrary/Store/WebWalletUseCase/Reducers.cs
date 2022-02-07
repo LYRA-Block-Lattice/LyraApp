@@ -81,6 +81,7 @@ namespace Nebula.Store.WebWalletUseCase
 			return state.With(new
 			{
 				PendingRecv = action.PendingRecv,
+				PendingRecvCount = state.PendingRecvCount + (action.PendingRecv ? 1 : 0),
 				IsLoading = false,
 				stage = action.stage,
 				IsOpening = action.IsOpening,
@@ -89,7 +90,14 @@ namespace Nebula.Store.WebWalletUseCase
 				VoteFor = action.wallet?.VoteFor,
 				error = ""
 			});
-		}			
+		}
+
+		[ReducerMethod]
+		public static WebWalletState ReduceGotNewSendEventAction(WebWalletState state, WebWalletGotSendToMeAction action)
+			=> state.With(new { 
+				PendingRecvCount = state.PendingRecvCount + 1,
+				PendingRecv = true,
+			});
 
 		[ReducerMethod]
 		public static WebWalletState ReduceOpenSettingsAction(WebWalletState state, WebWalletSettingsAction action) => state.With(new { stage = UIStage.Settings });

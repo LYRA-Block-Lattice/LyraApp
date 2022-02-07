@@ -55,6 +55,8 @@
 {
     [Inject]
     private IState<WebWalletState>? walletState { get; set; }
+    [Inject]
+    private IDispatcher Dispatcher { get; set; }
 
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] PeriodicExecutor executor { get; set; }
@@ -181,6 +183,7 @@
 
                         if (obj is RespRecvEvent recv)
                         {
+                            Dispatcher.Dispatch(new WebWalletGotSendToMeAction ());
                             Snackbar.Add($"Incoming transfer from: {recv.Source.Shorten()}", Severity.Success, config =>
                                  {
                                  config.Action = "Open Wallet";

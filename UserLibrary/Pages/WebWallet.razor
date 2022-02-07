@@ -49,7 +49,12 @@
                 }
                 else
                 {
-                    <MudText>Receive</MudText>
+                    if(walletState.Value.PendingRecv)
+                    {
+                        <MudBadge Content="@(walletState.Value.PendingRecvCount)" Color="Color.Primary" Overlap="true" Class="mx-6 my-4">
+                            <MudText>Receive</MudText>
+                        </MudBadge>                        
+                    }                    
                 }
             </MudButton>
 

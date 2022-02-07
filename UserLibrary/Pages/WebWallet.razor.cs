@@ -48,13 +48,10 @@ namespace UserLibrary.Pages
 
         protected override void OnInitialized()
         {
-            //SubscribeToAction<WebWalletResultAction>(a =>
-            //{
-            //    if (a.IsOpening)
-            //    {
-                    
-            //    }
-            //});
+            SubscribeToAction<WebWalletGotSendToMeAction>(a =>
+            {
+                InvokeAsync(StateHasChanged);
+            });
 
             base.OnInitialized();
         }

@@ -12,6 +12,7 @@ namespace Nebula.Store.WebWalletUseCase
 	public class WebWalletState
 	{
 		public bool PendingRecv { get; set; } = false;
+		public int PendingRecvCount { get; set; }
 		public bool IsBackuped { get; set; } = true;
 		public string Title { get; set; }
 		public bool MenuNew { get; set; }
