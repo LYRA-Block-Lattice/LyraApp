@@ -41,6 +41,8 @@
 {
     <MudTabs @ref="tabs" Elevation="4" Rounded="true" Centered="true" Color="Color.Secondary">
         <MudTabPanel Text="Home">
+            @if(walletState.Value.PendingRecv)
+            {
             <MudButton Variant="Variant.Outlined" Disabled="@busy" Color="Color.Success" OnClick="@Refresh" FullWidth>
                 @if (busy)
                 {
@@ -49,15 +51,13 @@
                 }
                 else
                 {
-                    if(walletState.Value.PendingRecv)
-                    {
-                        <MudBadge Content="@(walletState.Value.PendingRecvCount)" Color="Color.Primary" Overlap="true" Class="mx-6 my-4">
-                            <MudText>Receive</MudText>
-                        </MudBadge>                        
-                    }                    
+
+                    <MudBadge Content="@(walletState.Value.PendingRecvCount)" Color="Color.Primary" Overlap="true" Class="mx-6 my-4">
+                        <MudText>Receive</MudText>
+                    </MudBadge>
                 }
             </MudButton>
-
+            }
 
             <div class="cet">
                 @if (walletState.Value.wallet.GetLatestBlock() != null)

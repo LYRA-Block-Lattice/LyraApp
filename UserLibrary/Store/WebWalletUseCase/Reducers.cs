@@ -81,7 +81,9 @@ namespace Nebula.Store.WebWalletUseCase
 			return state.With(new
 			{
 				PendingRecv = action.PendingRecv,
-				PendingRecvCount = state.PendingRecvCount + (action.PendingRecv ? 1 : 0),
+				PendingRecvCount = action.PendingRecv ? 
+					state.PendingRecvCount + (action.PendingRecv ? 1 : 0) :
+					0,
 				IsLoading = false,
 				stage = action.stage,
 				IsOpening = action.IsOpening,
