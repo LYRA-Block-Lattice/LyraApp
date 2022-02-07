@@ -18,8 +18,8 @@ namespace Dealer.Server.Services
     public class DealerController : ControllerBase
     {
         private DealerDb _db;
-        private IHubContext<DealerHub> _hub;
-        public DealerController(DealerDb db, IHubContext<DealerHub> hub)
+        private IHubContext<DealerHub, IHubPushMethods> _hub;
+        public DealerController(DealerDb db, IHubContext<DealerHub, IHubPushMethods> hub)
         {
             _db = db;
             _hub = hub;
