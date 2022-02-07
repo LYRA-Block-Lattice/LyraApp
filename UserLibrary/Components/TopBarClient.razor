@@ -6,6 +6,7 @@
 @using Lyra.Core.API
 @using Lyra.Core.Accounts
 @using Lyra.Data.Crypto
+@using Lyra.Data.Shared
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
 @using UserLibrary.Data
@@ -97,6 +98,11 @@
         Navigation.NavigateTo($"/dealer/room/{tradeid}");
     }
 
+    private void GoWallet()
+    {
+        Navigation.NavigateTo($"/wallet");
+    }
+
     bool once;
     private void WalletChanged(object sender, Wallet wallet)
     {
@@ -168,6 +174,20 @@
                                  config.Onclick = snackbar =>
                                  {
                                      Help(fx.TradeId);
+                                     return Task.CompletedTask;
+                                 };
+                            });
+                        }
+
+                        if (obj is RespRecvEvent recv)
+                        {
+                            Snackbar.Add($"Incoming transfer from: {recv.Source.Shorten()}", Severity.Success, config =>
+                                 {
+                                 config.Action = "Open Wallet";
+                                 config.ActionColor = Color.Primary;
+                                 config.Onclick = snackbar =>
+                                 {
+                                     GoWallet();
                                      return Task.CompletedTask;
                                  };
                             });

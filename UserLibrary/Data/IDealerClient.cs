@@ -65,7 +65,13 @@ namespace UserLibrary.Data
         public string MimeType { get; set; } = null!;  
     }
 
-    public enum MessageTypes { Null, Text, Image, File }
+    public class RespRecvEvent
+    {
+        public string Source { get; set; } = null!;
+        public string Destination { get; set; } = null!;
+    }
+
+    public enum MessageTypes { Null, Text, Image, File, Event }
 
     public class RespContainer
     {
@@ -86,6 +92,12 @@ namespace UserLibrary.Data
         {
             MsgType = MessageTypes.File;
             Json = JsonConvert.SerializeObject(file);
+        }
+
+        public RespContainer(RespRecvEvent recvevt)
+        {
+            MsgType = MessageTypes.Event;
+            Json = JsonConvert.SerializeObject(recvevt);
         }
 
         public object? Get()

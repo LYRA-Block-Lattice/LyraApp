@@ -1,5 +1,6 @@
 ﻿using Dealer.Server.Hubs;
 using Dealer.Server.Model;
+using Lyra.Core.Blocks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -14,10 +15,10 @@ namespace Dealer.Server.Services
 
         LyraEventClient _eventClient;
         public static Keeper Singleton { get; private set; } = null!;
-        public Keeper(/*IHubContext<DealerHub, IHubPushMethods> dealerHub*/)
+        public Keeper(IHubContext<DealerHub, IHubPushMethods> dealerHub)
         {
             Singleton = this;
-            //_dealerHub = dealerHub;
+            _dealerHub = dealerHub;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -41,7 +42,18 @@ namespace Dealer.Server.Services
 
             _eventClient.RegisterOnConsensus(a =>
             {
-                Console.WriteLine($"Lyra Event: {a.BlockAPIResult.GetBlock().Hash}: {a.Consensus}");
+                var block = a.BlockAPIResult.GetBlock();
+                Console.WriteLine($"Lyra Event: {block.Hash}: {a.Consensus}");
+
+                if(a.Consensus == Lyra.Data.API.ConsensusResult.Yea && block is SendTransferBlock send)
+                {
+                    _dealerHub.Clients.Group(send.DestinationAccountId).OnChat(
+                        new RespContainer(new RespRecvEvent
+                        {
+                            Source = send.AccountID,
+                            Destination = send.DestinationAccountId,
+                        }));
+                }
             });
 
             await _eventClient.StartAsync();
