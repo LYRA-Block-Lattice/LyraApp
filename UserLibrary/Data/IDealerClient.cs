@@ -108,6 +108,7 @@ namespace UserLibrary.Data
                 MessageTypes.Text => JsonConvert.DeserializeObject<RespMessage>(Json),
                 MessageTypes.Image => JsonConvert.DeserializeObject<RespFile>(Json),
                 MessageTypes.File => JsonConvert.DeserializeObject<RespFile>(Json),
+                MessageTypes.Event => JsonConvert.DeserializeObject<RespRecvEvent>(Json),
             };
         }
     }
