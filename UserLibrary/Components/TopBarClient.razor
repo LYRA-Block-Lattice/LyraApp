@@ -198,7 +198,7 @@
                         else
                         if (obj is WorkflowEvent wfevt)
                         {
-                            Snackbar.Add($"Workflow {wfevt.Name} do {wfevt.Action} result {wfevt.Result}", Severity.Info);
+                            Snackbar.Add($"Workflow {wfevt.Name} State {wfevt.State} do {wfevt.Action} result {wfevt.Result}", Severity.Info);
                         }
                     };
                 });

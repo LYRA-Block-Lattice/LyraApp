@@ -41,7 +41,7 @@ namespace Dealer.Server.Services
             var url = $"https://localhost:4504/events";
             _eventClient = new LyraEventClient(LyraEventHelper.CreateConnection(new Uri(url)));
 
-            _eventClient.RegisterOnConsensus(evt =>
+            _eventClient.RegisterOnEvent(evt =>
             {
                 var obj = evt.Get();
                 if(obj is ConsensusEvent a)
@@ -61,7 +61,7 @@ namespace Dealer.Server.Services
                 }
                 else if(obj is WorkflowEvent wf)
                 {
-                    _dealerHub.Clients.Group(wf.Key).OnChat(
+                    _dealerHub.Clients.Group(wf.Owner).OnChat(
                         new RespContainer(wf));
                 }
             });

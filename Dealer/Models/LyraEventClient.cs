@@ -64,7 +64,7 @@ namespace Dealer.Server.Model
             return Task.CompletedTask;
         }
 
-        public IDisposable RegisterOnConsensus(Action<EventContainer> evt)
+        public IDisposable RegisterOnEvent(Action<EventContainer> evt)
             => _connection.BindOnInterface(x => x.OnEvent, evt);
 
         public bool IsConnected => _connection.State == HubConnectionState.Connected;
