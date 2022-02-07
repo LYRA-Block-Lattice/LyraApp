@@ -166,7 +166,7 @@
                                 };
                             });
                         }
-
+                        else
                         if (obj is RespFile fx)
                         {
                             Snackbar.Add($"{fx.UserName} send you a file: {fx.FileName}", Severity.Normal, config =>
@@ -180,7 +180,7 @@
                                  };
                             });
                         }
-
+                        else
                         if (obj is RespRecvEvent recv)
                         {
                             Dispatcher.Dispatch(new WebWalletGotSendToMeAction ());
@@ -195,7 +195,11 @@
                                  };
                             });
                         }
-
+                        else
+                        if (obj is WorkflowEvent wfevt)
+                        {
+                            Snackbar.Add($"Workflow {wfevt.Name} do {wfevt.Action} result {wfevt.Result}", Severity.Info);
+                        }
                     };
                 });
             }

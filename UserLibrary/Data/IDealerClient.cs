@@ -1,4 +1,5 @@
 ﻿using Lyra.Core.API;
+using Lyra.Data.API;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -71,7 +72,7 @@ namespace UserLibrary.Data
         public string Destination { get; set; } = null!;
     }
 
-    public enum MessageTypes { Null, Text, Image, File, Event }
+    public enum MessageTypes { Null, Text, Image, File, RecvEvent, WorkflowEvent }
 
     public class RespContainer
     {
@@ -96,8 +97,14 @@ namespace UserLibrary.Data
 
         public RespContainer(RespRecvEvent recvevt)
         {
-            MsgType = MessageTypes.Event;
+            MsgType = MessageTypes.RecvEvent;
             Json = JsonConvert.SerializeObject(recvevt);
+        }
+
+        public RespContainer(WorkflowEvent wfevt)
+        {
+            MsgType = MessageTypes.WorkflowEvent;
+            Json = JsonConvert.SerializeObject(wfevt);
         }
 
         public object? Get()
@@ -108,7 +115,8 @@ namespace UserLibrary.Data
                 MessageTypes.Text => JsonConvert.DeserializeObject<RespMessage>(Json),
                 MessageTypes.Image => JsonConvert.DeserializeObject<RespFile>(Json),
                 MessageTypes.File => JsonConvert.DeserializeObject<RespFile>(Json),
-                MessageTypes.Event => JsonConvert.DeserializeObject<RespRecvEvent>(Json),
+                MessageTypes.RecvEvent => JsonConvert.DeserializeObject<RespRecvEvent>(Json),
+                MessageTypes.WorkflowEvent => JsonConvert.DeserializeObject<WorkflowEvent>(Json),
             };
         }
     }

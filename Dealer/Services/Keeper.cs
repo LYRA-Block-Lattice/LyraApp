@@ -1,6 +1,7 @@
 ﻿using Dealer.Server.Hubs;
 using Dealer.Server.Model;
 using Lyra.Core.Blocks;
+using Lyra.Data.API;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -40,19 +41,28 @@ namespace Dealer.Server.Services
             var url = $"https://localhost:4504/events";
             _eventClient = new LyraEventClient(LyraEventHelper.CreateConnection(new Uri(url)));
 
-            _eventClient.RegisterOnConsensus(a =>
+            _eventClient.RegisterOnConsensus(evt =>
             {
-                var block = a.BlockAPIResult.GetBlock();
-                Console.WriteLine($"Lyra Event: {block.Hash}: {a.Consensus}");
-
-                if(a.Consensus == Lyra.Data.API.ConsensusResult.Yea && block is SendTransferBlock send)
+                var obj = evt.Get();
+                if(obj is ConsensusEvent a)
                 {
-                    _dealerHub.Clients.Group(send.DestinationAccountId).OnChat(
-                        new RespContainer(new RespRecvEvent
-                        {
-                            Source = send.AccountID,
-                            Destination = send.DestinationAccountId,
-                        }));
+                    var block = a.BlockAPIResult.GetBlock();
+                    Console.WriteLine($"Lyra Event: {block.Hash}: {a.Consensus}");
+
+                    if (a.Consensus == Lyra.Data.API.ConsensusResult.Yea && block is SendTransferBlock send)
+                    {
+                        _dealerHub.Clients.Group(send.DestinationAccountId).OnChat(
+                            new RespContainer(new RespRecvEvent
+                            {
+                                Source = send.AccountID,
+                                Destination = send.DestinationAccountId,
+                            }));
+                    }
+                }
+                else if(obj is WorkflowEvent wf)
+                {
+                    _dealerHub.Clients.Group(wf.Key).OnChat(
+                        new RespContainer(wf));
                 }
             });
 
