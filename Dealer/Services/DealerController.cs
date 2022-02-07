@@ -27,14 +27,18 @@ namespace Dealer.Server.Services
 
         [Route("GetUserByAccountId")]
         [HttpGet]
-        public async Task<APIResult> GetUserByAccountIdAsync(string accountId)
+        public async Task<SimpleJsonAPIResult> GetUserByAccountIdAsync(string accountId)
         {
             var user = await _db.GetUserByAccountIdAsync(accountId);
-            return new APIResult
+            if (user == null)
+                return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.NotFound };
+
+            return SimpleJsonAPIResult.Create(new UserStats
             {
-                ResultCode = user == null ? Lyra.Core.Blocks.APIResultCodes.NotFound : Lyra.Core.Blocks.APIResultCodes.Success,
-                ResultMessage = user == null ? null : user.UserName,
-            };
+                UserName = user.UserName,
+                Total = 100,
+                Ratio = 98.1m
+            });
         }
 
         [HttpGet]

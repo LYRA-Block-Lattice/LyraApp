@@ -66,13 +66,13 @@ namespace Lyra.Data.API
             _cancel = new CancellationTokenSource();
         }
 
-        public async Task<APIResult> GetUserByAccountIdAsync(string accountId)
+        public async Task<SimpleJsonAPIResult> GetUserByAccountIdAsync(string accountId)
         {
             var args = new Dictionary<string, string>
             {
                 { "accountId", accountId },
             };
-            return await GetAsync<APIResult>("GetUserByAccountId", args);
+            return await GetAsync<SimpleJsonAPIResult>("GetUserByAccountId", args);
         }
 
         public async Task<APIResult> RegisterAsync(string accountId,

@@ -23,3 +23,17 @@
 .dir {
 	font-weight: bold;
 }
+
+.b {
+	font-weight: bold;
+}
+
+.ipt {
+	width: 150px;
+}
+
+.getmnt {
+	font-size: xx-large;
+	width: 100%;
+	padding: 20px;
+}

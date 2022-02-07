@@ -2,14 +2,24 @@
 @using Lyra.Data.API.WorkFlow
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
+@using Newtonsoft.Json
+@using UserLibrary.Data
 
 <div class="container">
     <div class="nw">
         <MudAvatar Color="Color.Primary">@Dao.Name.First()</MudAvatar>
-        <div>@Dao.Name</div>
+        <div>
+            <div>@Dao.Name</div>
+            @if(stats != null)
+            {
+                <div class="b">@stats.UserName</div>
+                <div>@stats.Total | @stats.Ratio %</div>
+            }
+        </div>        
     </div>
     <div class="nw">
-        @Otc.Order.crypto   
+        <div class="b">@Otc.Order.dir</div>
+        <div>@Otc.Order.crypto  </div>         
     </div>
     <div class="nw price">
         @Otc.Order.price @Otc.Order.fiat
@@ -41,9 +51,26 @@
 
     [Inject] NavigationManager Navigation { get; set; }
 
+    UserStats stats;
+
     private async Task ShowCreateTradeUI()
     {
         await OrderSelected.InvokeAsync(Otc);
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            // get seller's name
+            var client = new DealerClient(Configuration["network"]);
+            var user = await client.GetUserByAccountIdAsync(Otc.OwnerAccountId);
+            if(user.Successful())
+            {
+                stats = JsonConvert.DeserializeObject<UserStats>(user.JsonString);
+                StateHasChanged();
+            }
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
 }
