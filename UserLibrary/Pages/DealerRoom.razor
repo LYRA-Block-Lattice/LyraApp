@@ -190,6 +190,10 @@
             InvokeAsync(() => StateHasChanged());
         };
 
+        if(!executor.HotLine.IsConnected)
+        {
+            await executor.Reconnect();
+        }
         joinroom = await executor.HotLine.JoinRoom(new JoinRoomRequest
             {
                 TradeID = tradeid,

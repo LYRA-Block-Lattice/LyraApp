@@ -23,6 +23,7 @@ namespace UserLibrary.Data
         public event EventHandler<JobExecutedEventArgs> JobExecuted;
         ConnectionMethodsWrapper? wrapper;
 
+        string eventUrl;
         public ConnectionMethodsWrapper HotLine => wrapper;
         void OnJobExecuted(Dictionary<string, decimal> prices)
         {
@@ -46,14 +47,18 @@ namespace UserLibrary.Data
                 wrapper = null;
             }
         }
+
         public async Task ConnectDealer(string url)
         {
-            if (wrapper != null)
-            {
-                await wrapper.DisposeAsync();
-            }
+            eventUrl = url;
+            await Reconnect();
+        }
 
-            wrapper = new ConnectionMethodsWrapper(ConnectionFactoryHelper.CreateConnection(new Uri(url)));
+        public async Task Reconnect()
+        {
+            await Disconnect();
+
+            wrapper = new ConnectionMethodsWrapper(ConnectionFactoryHelper.CreateConnection(new Uri(eventUrl)));
 
             wrapper.RegisterOnChat(a => OnDealerMessage?.Invoke(a));
             wrapper.RegisterOnPinned(a => OnDealerPinnedMessage?.Invoke(a));
