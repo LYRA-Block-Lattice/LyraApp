@@ -1,7 +1,9 @@
 ﻿using Dealer.Server.Hubs;
 using Dealer.Server.Model;
+using Lyra.Core.API;
 using Lyra.Core.Blocks;
 using Lyra.Data.API;
+using Lyra.Data.Shared;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -14,12 +16,15 @@ namespace Dealer.Server.Services
         // Use a second template parameter when defining the hub context to get the strongly typed hub context
         private readonly IHubContext<DealerHub, IHubPushMethods> _dealerHub;
 
+        DealerDb _db;
         LyraEventClient _eventClient;
         public static Keeper Singleton { get; private set; } = null!;
-        public Keeper(IHubContext<DealerHub, IHubPushMethods> dealerHub)
+        public Keeper(IHubContext<DealerHub, IHubPushMethods> dealerHub,
+            DealerDb db)
         {
             Singleton = this;
             _dealerHub = dealerHub;
+            _db = db;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -38,7 +43,7 @@ namespace Dealer.Server.Services
 
         private async Task InitAsync()
         {
-            var url = $"https://localhost:4504/events";
+            var url = LyraGlobal.SelectNode(_db.NetworkId).Replace("/api/", "/events");
             _eventClient = new LyraEventClient(LyraEventHelper.CreateConnection(new Uri(url)));
 
             _eventClient.RegisterOnEvent(evt =>
@@ -61,8 +66,9 @@ namespace Dealer.Server.Services
                 }
                 else if(obj is WorkflowEvent wf)
                 {
-                    _dealerHub.Clients.Group(wf.Owner).OnChat(
-                        new RespContainer(wf));
+                    Console.WriteLine($"[WF][{wf.Owner.Shorten()}][{wf.Name}]: {wf.State}, {wf.Result}");
+                    //_dealerHub.Clients.Group(wf.Owner).OnChat(
+                    //    new RespContainer(wf));
                 }
             });
 
