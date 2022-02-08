@@ -43,7 +43,8 @@ namespace Dealer.Server.Services
 
         private async Task InitAsync()
         {
-            var url = LyraGlobal.SelectNode(_db.NetworkId).Replace("/api/", "/events");
+            //var url = LyraGlobal.SelectNode(_db.NetworkId).Replace("/api/", "/events");
+            var url = $"https://localhost:4504/events";
             _eventClient = new LyraEventClient(LyraEventHelper.CreateConnection(new Uri(url)));
 
             _eventClient.RegisterOnEvent(evt =>
@@ -66,7 +67,8 @@ namespace Dealer.Server.Services
                 }
                 else if(obj is WorkflowEvent wf)
                 {
-                    Console.WriteLine($"[WF][{wf.Owner.Shorten()}][{wf.Name}]: {wf.State}, {wf.Result}");
+                    Console.WriteLine($"([WF] {DateTime.Now:mm:ss.ff}) [{wf.Owner.Shorten()}][{wf.Name}]: Key is: {wf.Key}, Block {wf.Action} result: {wf.Result} State: {wf.State}, {wf.Message}");
+
                     //_dealerHub.Clients.Group(wf.Owner).OnChat(
                     //    new RespContainer(wf));
                 }

@@ -3,6 +3,7 @@ using Dealer.Server.Model;
 using Dealer.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,13 @@ builder.Services.Configure<DealerDbSettings>(
 
 // Add services to the container.
 builder.Services.AddSingleton<DealerDb>();
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(hubOptions =>
+    {
+        hubOptions.AddFilter<Dealeamon>();      //https://docs.microsoft.com/en-us/aspnet/core/signalr/hub-filters?view=aspnetcore-6.0
+    }
+);
+builder.Services.AddSingleton<Dealeamon>();
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddResponseCompression(opts =>
