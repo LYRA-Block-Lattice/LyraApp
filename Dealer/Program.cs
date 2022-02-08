@@ -14,10 +14,11 @@ builder.Services.Configure<DealerDbSettings>(
 builder.Services.AddSingleton<DealerDb>();
 builder.Services.AddSignalR(hubOptions =>
     {
-        hubOptions.AddFilter<Dealeamon>();      //https://docs.microsoft.com/en-us/aspnet/core/signalr/hub-filters?view=aspnetcore-6.0
+        hubOptions.AddFilter<SigFilter>();      //https://docs.microsoft.com/en-us/aspnet/core/signalr/hub-filters?view=aspnetcore-6.0
     }
 );
-builder.Services.AddSingleton<Dealeamon>();
+builder.Services.AddSingleton<SigFilter>();
+builder.Services.AddTransient<Dealeamon>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();

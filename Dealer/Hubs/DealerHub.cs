@@ -19,14 +19,14 @@ namespace Dealer.Server.Hubs
     public class DealerHub : Hub<IHubPushMethods>, IHubInvokeMethods
     {
         DealerDb _db;
+        Dealeamon _dealer;
         BufferBlock<ChatMessage> _messageBuffer;
         BufferBlock<FileMessage> _fileBuffer;
-        private readonly IHubContext<DealerHub> _hubContext;
 
-        public DealerHub(DealerDb db, IHubContext<DealerHub> hubContext)
+        public DealerHub(DealerDb db, Dealeamon dealer)
         {
             _db = db;
-            _hubContext = hubContext;
+            _dealer = dealer;
             _messageBuffer = new BufferBlock<ChatMessage>();
             _fileBuffer = new BufferBlock<FileMessage>();
         }

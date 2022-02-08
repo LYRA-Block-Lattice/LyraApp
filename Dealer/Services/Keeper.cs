@@ -17,14 +17,16 @@ namespace Dealer.Server.Services
         private readonly IHubContext<DealerHub, IHubPushMethods> _dealerHub;
 
         DealerDb _db;
+        Dealeamon _dealer;
         LyraEventClient _eventClient;
         public static Keeper Singleton { get; private set; } = null!;
         public Keeper(IHubContext<DealerHub, IHubPushMethods> dealerHub,
-            DealerDb db)
+            DealerDb db, Dealeamon dealer)
         {
             Singleton = this;
             _dealerHub = dealerHub;
             _db = db;
+            _dealer = dealer;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -47,17 +49,24 @@ namespace Dealer.Server.Services
             var url = $"https://localhost:4504/events";
             _eventClient = new LyraEventClient(LyraEventHelper.CreateConnection(new Uri(url)));
 
-            _eventClient.RegisterOnEvent(evt =>
+            _eventClient.RegisterOnEvent(async evt => await ProcessEventAsync(evt));
+
+            await _eventClient.StartAsync();
+        }
+
+        private async Task ProcessEventAsync(EventContainer evt)
+        {
+            try
             {
                 var obj = evt.Get();
-                if(obj is ConsensusEvent a)
+                if (obj is ConsensusEvent a)
                 {
                     var block = a.BlockAPIResult.GetBlock();
                     Console.WriteLine($"Lyra Event: {block.Hash}: {a.Consensus}");
 
                     if (a.Consensus == Lyra.Data.API.ConsensusResult.Yea && block is SendTransferBlock send)
                     {
-                        _dealerHub.Clients.Group(send.DestinationAccountId).OnChat(
+                        await _dealerHub.Clients.Group(send.DestinationAccountId).OnChat(
                             new RespContainer(new RespRecvEvent
                             {
                                 Source = send.AccountID,
@@ -65,16 +74,24 @@ namespace Dealer.Server.Services
                             }));
                     }
                 }
-                else if(obj is WorkflowEvent wf)
+                else if (obj is WorkflowEvent wf)
                 {
                     Console.WriteLine($"([WF] {DateTime.Now:mm:ss.ff}) [{wf.Owner.Shorten()}][{wf.Name}]: Key is: {wf.Key}, Block {wf.Action} result: {wf.Result} State: {wf.State}, {wf.Message}");
 
-                    //_dealerHub.Clients.Group(wf.Owner).OnChat(
-                    //    new RespContainer(wf));
+                    if (wf.State == "Finished")
+                    {
+                        foreach (var msg in await _dealer.WorkflowFinished(wf))
+                        {
+                            await _dealerHub.Clients.Group(wf.Owner).OnChat(
+                                new RespContainer(wf));
+                        }
+                    }
                 }
-            });
-
-            await _eventClient.StartAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in ProcessEventAsync: {ex}");
+            }
         }
     }
 }

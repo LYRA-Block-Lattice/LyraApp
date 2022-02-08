@@ -1,35 +1,28 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Lyra.Core.API;
+using Lyra.Core.Blocks;
+using Lyra.Data.API;
+using Lyra.Data.API.WorkFlow;
+using Microsoft.AspNetCore.SignalR;
+using UserLibrary.Data;
 
 namespace Dealer.Server.Services
 {
-    public class Dealeamon : IHubFilter
+    public class PendingMessage
     {
-        public async ValueTask<object> InvokeMethodAsync(
-                HubInvocationContext invocationContext, Func<HubInvocationContext, ValueTask<object>> next)
+        public string groupName { get; set; }
+        public object Response { get; set; }
+    }
+    public class Dealeamon
+    {
+        DealerDb _db;
+        public Dealeamon(DealerDb db)
         {
-            Console.WriteLine($"Calling hub method '{invocationContext.HubMethodName}'");
-            try
-            {
-                return await next(invocationContext);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception calling '{invocationContext.HubMethodName}': {ex}");
-                throw;
-            }
+            _db = db;
         }
 
-        // Optional method
-        public Task OnConnectedAsync(HubLifetimeContext context, Func<HubLifetimeContext, Task> next)
+        public async Task<PendingMessage[]> WorkflowFinished(WorkflowEvent wfevt)
         {
-            return next(context);
-        }
-
-        // Optional method
-        public Task OnDisconnectedAsync(
-            HubLifetimeContext context, Exception exception, Func<HubLifetimeContext, Exception, Task> next)
-        {
-            return next(context, exception);
+            return new PendingMessage[0];
         }
     }
 }
