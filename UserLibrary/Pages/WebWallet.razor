@@ -42,7 +42,6 @@
 @if (walletState.Value.wallet != null)
 {
     <MudPaper Height="400px" Width="100%">
-    <MudContainer Fixed="true">
         <MudTabs @ref="tabs" Rounded="true" Centered="true" >
             <MudTabPanel Text="Balance">
                 @* <MudButton Variant="Variant.Outlined" Disabled="@busy" Color="Color.Success" OnClick="@Refresh" FullWidth>
@@ -80,7 +79,7 @@
                                         <MudButton OnClick="@(async ()=>{ await SendX(kvp.Key); })" Size="Size.Small">
                                             <MudIcon Icon="@Icons.Filled.ArrowCircleUp" Title="Send" />
                                         </MudButton>
-                                        <MudButton OnClick="@(async ()=>{ await SendX(kvp.Key); })" Size="Size.Small">
+                                        <MudButton OnClick="@(async ()=>{ await ReceiveX(kvp.Key); })" Size="Size.Small">
                                             <MudIcon Icon="@Icons.Filled.ArrowCircleDown" Title="Receive" />
                                         </MudButton>
                                     </div>
@@ -279,7 +278,6 @@
                 </MudTabPanel>
             }
         </MudTabs>
-    </MudContainer>
     </MudPaper>
     
 

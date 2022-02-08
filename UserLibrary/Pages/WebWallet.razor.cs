@@ -196,6 +196,12 @@ namespace UserLibrary.Pages
             tabs.ActivatePanel(1);
         }
 
+        private async Task ReceiveX(string name)
+        {
+            tokenName = name;
+            tabs.ActivatePanel(2);
+        }
+
 
 
 
