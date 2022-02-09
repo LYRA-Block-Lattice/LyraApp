@@ -66,6 +66,9 @@ namespace UserLibrary.Data
         public IDisposable RegisterOnChat(Action<RespContainer> msg)
             => _connection.BindOnInterface(x => x.OnChat, msg);
 
+        public IDisposable RegisterOnEvent(Action<RespContainer> msg)
+            => _connection.BindOnInterface(x => x.OnEvent, msg);
+
         public IDisposable RegisterOnPinned(Action<PinnedMessage> msg)
             => _connection.BindOnInterface(x => x.OnPinned, msg);
 
@@ -75,6 +78,9 @@ namespace UserLibrary.Data
         {
             return _connection.DisposeAsync();
         }
+
+        public Task Join(JoinRequest req)
+            => _connection.InvokeAsync(nameof(IHubInvokeMethods.Join), req);
 
         public Task Chat(ChatMessage msg)
             => _connection.InvokeAsync(nameof(IHubInvokeMethods.Chat), msg);

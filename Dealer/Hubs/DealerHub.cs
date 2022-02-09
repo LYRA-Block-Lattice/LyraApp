@@ -23,6 +23,8 @@ namespace Dealer.Server.Hubs
         BufferBlock<ChatMessage> _messageBuffer;
         BufferBlock<FileMessage> _fileBuffer;
 
+        Dictionary<string, string> _idgrps = new Dictionary<string, string>();
+
         public DealerHub(DealerDb db, Dealeamon dealer)
         {
             _db = db;
@@ -260,13 +262,13 @@ namespace Dealer.Server.Hubs
         {
             try
             {
-                var qs = Context.GetHttpContext().Request.QueryString;
-                var parsed = HttpUtility.ParseQueryString(qs.Value);
-                var account = parsed["a"];
-                var id = parsed["id"];
-                var sign = parsed["sign"];
-                if (Signatures.VerifyAccountSignature(account, account, sign))
-                    await Groups.AddToGroupAsync(Context.ConnectionId, account);
+                //var qs = Context.GetHttpContext().Request.QueryString;
+                //var parsed = HttpUtility.ParseQueryString(qs.Value);
+                //var account = parsed["a"];
+                //var id = parsed["id"];
+                //var sign = parsed["sign"];
+                //if (Signatures.VerifyAccountSignature(account, account, sign))
+                //    await Groups.AddToGroupAsync(Context.ConnectionId, account);
             }
             catch (Exception ex)
             {
@@ -469,7 +471,11 @@ namespace Dealer.Server.Hubs
             var ok = Signatures.VerifyAccountSignature(req.UserAccountID, req.UserAccountID, req.Signature);
             if(ok)
             {
-                //await Groups.AddToGroupAsync(Context.ConnectionId, req.UserAccountID);
+                if(_idgrps.ContainsKey(Context.ConnectionId))
+                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, _idgrps[Context.ConnectionId]);
+
+                _idgrps.Add(Context.ConnectionId, req.UserAccountID);
+                await Groups.AddToGroupAsync(Context.ConnectionId, req.UserAccountID);
                 //File.AppendAllText("c:\\tmp\\connectionids.txt", $"AddToGroupAsync: {Context.ConnectionId}, {req.UserAccountID}\n");
             }
         }

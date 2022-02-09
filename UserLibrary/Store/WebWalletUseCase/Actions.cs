@@ -214,4 +214,9 @@ namespace Nebula.Store.WebWalletUseCase
     {
         public int PendingCount { get; set; }
     }
+
+    public class QuoteUpdateAction
+    {
+        public Dictionary<string, decimal> Prices { get; set; } = null!;
+    }
 }

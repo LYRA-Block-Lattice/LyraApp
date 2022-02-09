@@ -72,7 +72,12 @@ namespace UserLibrary.Data
         public string Destination { get; set; } = null!;
     }
 
-    public enum MessageTypes { Null, Text, Image, File, RecvEvent, WorkflowEvent }
+    public class RespQuote
+    {
+        public Dictionary<string, decimal> Prices { get; set; } = null!;
+    }
+
+    public enum MessageTypes { Null, Text, Image, File, RecvEvent, WorkflowEvent, Quote }
 
     public class RespContainer
     {
@@ -107,6 +112,12 @@ namespace UserLibrary.Data
             Json = JsonConvert.SerializeObject(wfevt);
         }
 
+        public RespContainer(RespQuote entity)
+        {
+            MsgType = MessageTypes.Quote;
+            Json = JsonConvert.SerializeObject(entity);
+        }
+
         public object? Get()
         {
             return MsgType switch
@@ -117,6 +128,8 @@ namespace UserLibrary.Data
                 MessageTypes.File => JsonConvert.DeserializeObject<RespFile>(Json),
                 MessageTypes.RecvEvent => JsonConvert.DeserializeObject<RespRecvEvent>(Json),
                 MessageTypes.WorkflowEvent => JsonConvert.DeserializeObject<WorkflowEvent>(Json),
+                MessageTypes.Quote => JsonConvert.DeserializeObject<RespQuote>(Json),
+                _ => throw new NotImplementedException(),
             };
         }
     }
@@ -134,11 +147,13 @@ namespace UserLibrary.Data
     {
         Task OnChat(RespContainer msg);
         Task OnPinned(PinnedMessage msg);
+        Task OnEvent(RespContainer msg);
     }
 
     /// <summary> SignalR Hub invoke interface (signature for Clients invoking methods on server Hub) </summary>
     public interface IHubInvokeMethods
     {
+        Task Join(JoinRequest req);
         Task SendFile(FileMessage fm);
         Task<JoinRoomResponse> JoinRoom(JoinRoomRequest req);
         Task Chat(ChatMessage msg);

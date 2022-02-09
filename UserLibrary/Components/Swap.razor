@@ -1,8 +1,8 @@
 ﻿@namespace UserLibrary.Components
+@inherits FluxorComponent
 
-@using CoinGecko.Clients
-@using CoinGecko.Interfaces
 @using Fluxor
+@using Fluxor.Blazor.Web.Components
 @using Lyra.Core.API
 @using Lyra.Core.Blocks
 @using Lyra.Data.API
@@ -249,25 +249,32 @@
     {
         PeriodicExecutor.StartExecuting();
         Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Swap" });
-        PeriodicExecutor.JobExecuted += HandleJobExecuted;
+
+        SubscribeToAction<QuoteUpdateAction>(
+            async (e) =>
+            {
+                // price updated
+                trxprice = e.Prices["tron"];
+                lyrprice = e.Prices["lyra"];
+                lyrintprice = e.Prices["LYR"];
+
+                // update pool
+                //_ = Task.Run(async () =>
+                await UpdatePool(true);
+            }
+        );
+
         base.OnInitialized();
     }
 
     public void Dispose()
     {
-        PeriodicExecutor.JobExecuted -= HandleJobExecuted;
+
     }
 
     async void HandleJobExecuted(object sender, JobExecutedEventArgs e)
     {
-        // price updated
-        trxprice = e.prices["tron"];
-        lyrprice = e.prices["lyra"];
-        lyrintprice = e.prices["LYR"];
 
-        // update pool
-        //_ = Task.Run(async () =>
-        await UpdatePool(true);
     }
 
     private void updateBtn1()
