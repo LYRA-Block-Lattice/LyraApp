@@ -1,10 +1,14 @@
 ﻿@using Fluxor
+@using Fluxor.Blazor.Web.Components
 @using Lyra.Data.API.WorkFlow
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
 @using Newtonsoft.Json
 @using UserLibrary.Data
+@inherits FluxorComponent
 
+@if(Otc != null)
+{
 <div class="container">
     <div class="nw">
         <MudAvatar Color="Color.Primary">@Dao.Name.First()</MudAvatar>
@@ -21,17 +25,34 @@
         <div class="b">@Otc.Order.dir</div>
         <div>@Otc.Order.crypto  </div>         
     </div>
-    <div class="nw price">
-        @Otc.Order.price @Otc.Order.fiat
+    <div class="price">
+        <div>@Otc.Order.price @Otc.Order.fiat</div>
+        <div class="market">
+        Market: @marketprice @Otc.Order.fiat
+        </div>
     </div>
     <div class="nw">
          Available: @Otc.Order.amount<br />
-         Limits: 5,000 - 12,000 USD
+         Limits: @Otc.Order.limitMin - @Otc.Order.limitMax USD
     </div>
+    <div class="nw">
+        @foreach(var pm in Otc.Order.payBy)
+            {
+                <div class="pm">@pm</div>
+            }
+        </div>
     <div>
-        <MudButton Variant="Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>
+        @if(walletState.Value.wallet != null && Otc.OwnerAccountId == walletState.Value.wallet.AccountId)
+        {
+            <MudButton Variant="Variant.Filled" OnClick="@CloseOrder" Color="Color.Tertiary">Close</MudButton>
+        }
+        else
+        {
+            <MudButton Variant="Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>
+        }        
     </div>
 </div>
+}
 
 @code {
     [Parameter]
@@ -50,12 +71,40 @@
     private IState<WebWalletState> walletState { get; set; }
 
     [Inject] NavigationManager Navigation { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
 
     UserStats stats;
+    Dictionary<string, decimal> prices;
+    decimal marketprice;
+
+    protected override Task OnInitializedAsync()
+    {
+        SubscribeToAction<RespQuote>(async e =>
+        {
+            prices = e.Prices;
+            marketprice = Otc.Order.crypto.EndsWith("ETH") ? e.Prices["ethereum"] : e.Prices["bitcoin"];
+            await InvokeAsync(StateHasChanged);
+        });        
+
+        return base.OnInitializedAsync();
+    }
 
     private async Task ShowCreateTradeUI()
     {
         await OrderSelected.InvokeAsync(Otc);
+    }
+
+    private async Task CloseOrder()
+    {
+        var closeret = await walletState.Value.wallet.CloseOTCOrderAsync((Dao as TransactionBlock).AccountID, (Otc as TransactionBlock).AccountID);
+        if(closeret.Successful())
+        {
+            Otc = null;
+        }
+        else
+        {
+            Snackbar.Add($"Error close order: {closeret.ResultCode}", Severity.Error);
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

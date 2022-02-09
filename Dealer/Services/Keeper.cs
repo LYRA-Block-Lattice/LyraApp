@@ -115,9 +115,8 @@ namespace Dealer.Server.Services
             {
                 // Execute required job
                 ICoinGeckoClient _client = CoinGeckoClient.Instance;
-                const string vsCurrencies = "usd";
                 var coins = new[] { "lyra", "tron", "ethereum", "bitcoin" };
-                var prices = await _client.SimpleClient.GetSimplePrice(coins, new[] { vsCurrencies });
+                var prices = await _client.SimpleClient.GetSimplePrice(coins, new[] { "usd" });
                 foreach (var coin in coins)
                     myprice.Add(coin, (decimal)prices[coin]["usd"]);
 
@@ -145,7 +144,7 @@ namespace Dealer.Server.Services
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine($"in keeper get price: {ex}");
             }
         }
 

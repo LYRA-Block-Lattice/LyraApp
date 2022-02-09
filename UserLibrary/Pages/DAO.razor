@@ -2,11 +2,13 @@
 @page "/dao/{action}"
 
 @using Fluxor
+@using Fluxor.Blazor.Web.Components
 @using Lyra.Data.Crypto
 @using Nebula.Store.WebWalletUseCase
 @using Microsoft.Extensions.Configuration
 @using Lyra.Data.API.WorkFlow
 @using UserLibrary.Data
+@inherits FluxorComponent
 
 <div class="mag cet">
     <MudGrid>
@@ -57,7 +59,17 @@
 
                     </MudExpansionPanels>
 
+                    <MudItem xs="12">
+                        <UserLibrary.Components.OTC.TransactionsList />
+                    </MudItem>
 
+                    @foreach(var odr in tradableOrders)
+                    {
+                        var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoId);
+                        <MudItem xs="12">
+                            <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao OrderSelected=@ShowCreateTradeUI />
+                        </MudItem>
+                    }
 
                 }
                 @if (showco)
@@ -96,18 +108,35 @@
                     </MudItem>
                     <MudItem xs="12">
                         Sell price<br />
-                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@selprice Change=@(args => total=$"{selqty*selprice:N2}") />
+                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@selprice Change="@CalCollat" /><br />
+                        Market Price: @selcryptoprice USD
                     </MudItem>
                     <MudItem xs="12">
                         Quantity<br />
-                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@selqty Change=@(args => total=$"{selqty*selprice:N2}") />
+                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@selqty Change="@CalCollat" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        Min Payment<br />
+                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@paymin Change="@CalCollat" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        Max Payment<br />
+                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@paymax Change="@CalCollat" />
                     </MudItem>
                     <MudItem xs="12">
                         Collateral<br />
-                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@cltlyr />
+                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@cltlyr Change="@CalCollat" /> <br />
+                        Worth: @coltworth USD<br />
+                        Ratio: @coltrito
                     </MudItem>
                     <MudItem xs="12">
-                        Total: @total
+                        Accepted Payment Methods<br />
+                        <RadzenCheckBoxList @bind-Value=@paymths TValue="string" Orientation="Radzen.Orientation.Vertical"
+                            Data="@paymentMethods" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudDivider />
+                        Total: @total USD
                     </MudItem>
                     <MudItem xs="12">
                         <RadzenButton IsBusy=@busy Click=@(async args => await CreateOrder("adddao")) Text="Add New Order" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
@@ -117,18 +146,6 @@
                     </MudItem>
 
                 }
-            }
-
-            <MudItem xs="12">
-                <UserLibrary.Components.OTC.TransactionsList />
-            </MudItem>
-
-            @foreach(var odr in tradableOrders)
-            {
-                var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoId);
-                <MudItem xs="12">
-                    <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao OrderSelected=@ShowCreateTradeUI />
-                </MudItem>
             }
 
 
@@ -208,10 +225,40 @@
     {
         "Fixed price", "Floating price"
     };
+    List<string> paymentMethods = new List<string>
+    {
+        "Paypal", "Bank Transfer", "Alipay", "Wechat Pay"
+    };
+
+    IEnumerable<string> paymths = new string[0];
 
     Ticker selcrypto;
-    string seldaoname, selfiat, selodrtyp;
-    decimal selprice, selqty, cltlyr;
+    string seldaoname, selfiat = "USD", selodrtyp = "Fixed price";
+    decimal selprice, selqty, cltlyr, paymin, paymax;
+    decimal selcryptoprice;
+
+    decimal trxprice, lyrprice, btcprice, lyrintprice;
+    decimal coltworth;
+    string coltrito;
+
+    protected override Task OnInitializedAsync()
+    {
+        SubscribeToAction<RespQuote>(
+            (e) =>
+            {
+            // price updated
+            btcprice = e.Prices["bitcoin"];
+                trxprice = e.Prices["tron"];
+                lyrprice = e.Prices["lyra"];
+                lyrintprice = e.Prices["LYR"];
+
+                if(selcrypto != null)
+                    selcryptoprice = selcrypto.Name.EndsWith("ETH") ? e.Prices["ethereum"] : e.Prices["bitcoin"];
+            }
+        );
+
+        return base.OnInitializedAsync();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -240,6 +287,16 @@
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private void CalCollat(decimal d)
+    {
+        total = $"{(selprice*selqty):N2}";
+        coltworth = cltlyr*lyrprice;
+        if (coltworth > 0 && selprice * selqty > 0)
+            coltrito = $"{coltworth / (selprice * selqty):N2}";
+        else
+            coltrito = "";
     }
 
     private async Task ShowCreateTradeUI(IOtcOrder order)
@@ -300,6 +357,9 @@
                     price = selprice,
                     amount = selqty,
                     collateral = cltlyr,
+                    limitMin = paymin,
+                    limitMax = paymax,
+                    payBy = paymths.ToArray(),
                 };
             var ret = await walletState.Value.wallet.CreateOTCOrderAsync(order);
             if (ret.Successful())

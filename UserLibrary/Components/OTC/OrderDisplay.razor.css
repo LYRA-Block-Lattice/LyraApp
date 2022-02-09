@@ -20,12 +20,18 @@
 	color: green;
 }
 
+.market {
+	font-size: x-small;
+	color: black;
+}
+
 .dir {
 	font-weight: bold;
 }
 
 .b {
 	font-weight: bold;
+	color: navy;
 }
 
 .ipt {
@@ -36,4 +42,10 @@
 	font-size: xx-large;
 	width: 100%;
 	padding: 20px;
+}
+
+.pm {
+	background-color: lightgreen;
+	border-radius: 5px;
+	padding: 5px;
 }
