@@ -22,7 +22,6 @@ Welcome to Lyra Decentralised Business Ecosystem!
 
     protected override void OnInitialized()
     {
-        PeriodicExecutor.StartExecuting();
         Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra App Home" });
         base.OnInitialized();
     }

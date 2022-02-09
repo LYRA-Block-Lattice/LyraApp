@@ -1,5 +1,8 @@
 ﻿@page "/dealer/room/{tradeid}"
+@inherits FluxorComponent
+
 @using Fluxor
+@using Fluxor.Blazor.Web.Components
 @using Lyra.Data.API.WorkFlow
 @using Lyra.Data.Crypto
 @using Lyra.Data.Shared
@@ -167,33 +170,29 @@
             return;
         }
 
-        executor.OnDealerMessage += a =>
-        {
-            messages.Add(a);
-            addmsg = true;
-            InvokeAsync(() => StateHasChanged());
-        };
-
-        executor.OnDealerPinnedMessage += a =>
-        {
-            lastpin = a;
-            pintitle = a.Mode switch
+        SubscribeToAction<RespContainer>(a =>
             {
-                PinnedMode.Action => "Take Action",
-                PinnedMode.Wait => "Await",
-                PinnedMode.Notify => "",
-                _ => "",
-            };
-            actable = a.Mode == PinnedMode.Action;
-            pinnedmsg = a.Text;
+                messages.Add(a);
+                addmsg = true;
+                InvokeAsync(() => StateHasChanged());
+            });
 
-            InvokeAsync(() => StateHasChanged());
-        };
+        SubscribeToAction<PinnedMessage>(a =>
+            {
+                lastpin = a;
+                pintitle = a.Mode switch
+                {
+                    PinnedMode.Action => "Take Action",
+                    PinnedMode.Wait => "Await",
+                    PinnedMode.Notify => "",
+                    _ => "",
+                };
+                actable = a.Mode == PinnedMode.Action;
+                pinnedmsg = a.Text;
 
-        if(!executor.HotLine.IsConnected)
-        {
-            await executor.Reconnect();
-        }
+                InvokeAsync(() => StateHasChanged());
+            });
+
         joinroom = await executor.HotLine.JoinRoom(new JoinRoomRequest
             {
                 TradeID = tradeid,

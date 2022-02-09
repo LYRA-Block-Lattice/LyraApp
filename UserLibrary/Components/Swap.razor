@@ -247,10 +247,9 @@
 
     protected override void OnInitialized()
     {
-        PeriodicExecutor.StartExecuting();
         Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Swap" });
 
-        SubscribeToAction<QuoteUpdateAction>(
+        SubscribeToAction<RespQuote>(
             async (e) =>
             {
                 // price updated

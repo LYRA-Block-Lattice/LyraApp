@@ -80,7 +80,7 @@ namespace Dealer.Server.Services
                     if (a.Consensus == Lyra.Data.API.ConsensusResult.Yea && block is SendTransferBlock send)
                     {
                         await _dealerHub.Clients.Group(send.DestinationAccountId).OnEvent(
-                            new RespContainer(new RespRecvEvent
+                            new NotifyContainer(new RespRecvEvent
                             {
                                 Source = send.AccountID,
                                 Destination = send.DestinationAccountId,
@@ -96,7 +96,7 @@ namespace Dealer.Server.Services
                         foreach (var msg in await _dealer.WorkflowFinished(wf))
                         {
                             await _dealerHub.Clients.Group(wf.Owner).OnEvent(
-                                new RespContainer(wf));
+                                new NotifyContainer(wf));
                         }
                     }
                 }
@@ -138,7 +138,7 @@ namespace Dealer.Server.Services
                 }
 
                 await _dealerHub.Clients.All.OnEvent(
-                    new RespContainer(new RespQuote
+                    new NotifyContainer(new RespQuote
                     {
                         Prices = myprice,
                     }));

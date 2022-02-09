@@ -54,6 +54,8 @@
 @code
 {
     [Inject]
+    PeriodicExecutor _periodic { get; set; }
+    [Inject]
     private IState<WebWalletState>? walletState { get; set; }
     [Inject]
     private IDispatcher Dispatcher { get; set; }
@@ -74,6 +76,8 @@
         if (net == "mainnet")
             net = "";
 
+        await _periodic.Initialization;
+
         SubscribeToAction<WebWalletChangeTitleAction>(
             x =>
             {
@@ -91,105 +95,101 @@
                 WalletChanged(null, null);
             });
 
-        await ConnectSignalR();
+        ConnectSignalR();
         await base.OnInitializedAsync();
     }
 
-    private async Task ConnectSignalR()
+    private void ConnectSignalR()
     {
-                    //        var sign = Signatures.GetSignature(wallet.PrivateKey, wallet.AccountId, wallet.AccountId);
-                    var url = $"https://192.168.3.91:7070/hub";//?a={wallet.AccountId}&sign={sign}";
-                    await executor.ConnectDealer(url);
+        SubscribeToAction<RespContainer>(ax =>
+            {
+                if (Navigation.Uri.Contains("/dealer/room"))
+                    return;
 
-                    executor.OnDealerPinnedMessage += a =>
+                var obj = ax.Get();
+
+                if (obj is RespMessage a)
+                {
+                    Snackbar.Add($"{a.UserName}: {a.Text}", Severity.Normal, config =>
+                {
+                    config.Action = "Open Trade";
+                    config.ActionColor = Color.Primary;
+                    config.Onclick = snackbar =>
                     {
-                        if (Navigation.Uri.Contains("/dealer/room"))
-                            return;
-
-                        var title = a.Mode switch
-                        {
-                            PinnedMode.Action => "Take Action: ",
-                            PinnedMode.Wait => "Await: ",
-                            PinnedMode.Notify => "",
-                            _ => "",
-                        };
-
-                        Snackbar.Add($"{title}{a.Text}", Severity.Normal, config =>
-                        {
-                            config.Action = "Open Trade";
-                            config.ActionColor = Color.Primary;
-                            config.Onclick = snackbar =>
-                            {
-                                Help(a.TradeId);
-                                return Task.CompletedTask;
-                            };
-                        });
+                        Help(a.TradeId);
+                        return Task.CompletedTask;
                     };
+                });
+                }
+                else
+                if (obj is RespFile fx)
+                {
+                    Snackbar.Add($"{fx.UserName} send you a file: {fx.FileName}", Severity.Normal, config =>
+                     {
+                         config.Action = "Open Trade";
+                         config.ActionColor = Color.Primary;
+                         config.Onclick = snackbar =>
+                         {
+                             Help(fx.TradeId);
+                             return Task.CompletedTask;
+                         };
+                     });
+                }
+            });
+        SubscribeToAction<PinnedMessage>(a =>
+            {
+                if (Navigation.Uri.Contains("/dealer/room"))
+                    return;
 
-                    executor.OnDealerMessage += ax =>
+                var title = a.Mode switch
+                {
+                    PinnedMode.Action => "Take Action: ",
+                    PinnedMode.Wait => "Await: ",
+                    PinnedMode.Notify => "",
+                    _ => "",
+                };
+
+                Snackbar.Add($"{title}{a.Text}", Severity.Normal, config =>
+                {
+                    config.Action = "Open Trade";
+                    config.ActionColor = Color.Primary;
+                    config.Onclick = snackbar =>
                     {
-                        if (Navigation.Uri.Contains("/dealer/room"))
-                            return;
-
-                        var obj = ax.Get();
-
-                        if (obj is RespMessage a)
-                        {
-                            Snackbar.Add($"{a.UserName}: {a.Text}", Severity.Normal, config =>
-                            {
-                                config.Action = "Open Trade";
-                                config.ActionColor = Color.Primary;
-                                config.Onclick = snackbar =>
-                                {
-                                    Help(a.TradeId);
-                                    return Task.CompletedTask;
-                                };
-                            });
-                        }
-                        else
-                        if (obj is RespFile fx)
-                        {
-                            Snackbar.Add($"{fx.UserName} send you a file: {fx.FileName}", Severity.Normal, config =>
-                                 {
-                                     config.Action = "Open Trade";
-                                     config.ActionColor = Color.Primary;
-                                     config.Onclick = snackbar =>
-                                     {
-                                         Help(fx.TradeId);
-                                         return Task.CompletedTask;
-                                     };
-                                 });
-                        }
+                        Help(a.TradeId);
+                        return Task.CompletedTask;
                     };
+                });
+            });
 
-                    executor.OnGenericEvent += evtc =>
-                    {
-                        var evt = evtc.Get();
+        SubscribeToAction<NotifyContainer>(evtc =>
+            {
+                var evt = evtc.Get();
 
-                        if (evt is RespRecvEvent recv)
-                        {
-                            Dispatcher.Dispatch(new WebWalletGotSendToMeAction());
-                            Snackbar.Add($"Incoming transfer from: {recv.Source.Shorten()}", Severity.Success, config =>
-                                 {
-                                     config.Action = "Open Wallet";
-                                     config.ActionColor = Color.Primary;
-                                     config.Onclick = snackbar =>
-                                 {
-                                     GoWallet();
-                                     return Task.CompletedTask;
-                                 };
-                                 });
-                        }
-                        else
-                        if (evt is WorkflowEvent wfevt)
-                        {
-                            Snackbar.Add($"Workflow {wfevt.Name} State {wfevt.State} do {wfevt.Action} result {wfevt.Result}", Severity.Info);
-                        }
-                        else if(evt is RespQuote quote)
-                        {
-                            Dispatcher.Dispatch(new QuoteUpdateAction { Prices = quote.Prices });
-                        }
-                    };
+                if (evt is RespRecvEvent recv)
+                {
+                    Dispatcher.Dispatch(new WebWalletGotSendToMeAction());
+                    Snackbar.Add($"Incoming transfer from: {recv.Source.Shorten()}", Severity.Success, config =>
+                     {
+                         config.Action = "Open Wallet";
+                         config.ActionColor = Color.Primary;
+                         config.Onclick = snackbar =>
+                     {
+                         GoWallet();
+                         return Task.CompletedTask;
+                     };
+                     });
+                }
+                else
+                if (evt is WorkflowEvent wfevt)
+                {
+                    Dispatcher.Dispatch(wfevt);
+                    //Snackbar.Add($"Workflow {wfevt.Name} State {wfevt.State} do {wfevt.Action} result {wfevt.Result}", Severity.Info);
+                }
+                else if (evt is RespQuote quote)
+                {
+                    Dispatcher.Dispatch(quote);
+                }
+            });
     }
 
     private void Help(string tradeid)
@@ -202,22 +202,11 @@
         Navigation.NavigateTo($"/wallet");
     }
 
-    bool once;
     private void WalletChanged(object sender, Wallet wallet)
     {
         decimal balance1 = 0;
         if (wallet != null)
         {
-            if (!once)
-            {
-                once = true;
-
-                InvokeAsync(async () =>
-                {
-
-                });
-            }
-
             var blk = wallet.GetLatestBlock();
             if (blk != null)
             {
@@ -238,11 +227,6 @@
         }
         else
         {
-            once = false;
-            InvokeAsync(async () =>
-            {
-                await executor.Disconnect();
-            });
             banner =
     @<div>Wallet is not opened.</div>
                 ;

@@ -66,7 +66,7 @@ namespace UserLibrary.Data
         public IDisposable RegisterOnChat(Action<RespContainer> msg)
             => _connection.BindOnInterface(x => x.OnChat, msg);
 
-        public IDisposable RegisterOnEvent(Action<RespContainer> msg)
+        public IDisposable RegisterOnEvent(Action<NotifyContainer> msg)
             => _connection.BindOnInterface(x => x.OnEvent, msg);
 
         public IDisposable RegisterOnPinned(Action<PinnedMessage> msg)

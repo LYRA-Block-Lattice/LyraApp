@@ -77,8 +77,8 @@ namespace UserLibrary.Data
         public Dictionary<string, decimal> Prices { get; set; } = null!;
     }
 
-    public enum MessageTypes { Null, Text, Image, File, RecvEvent, WorkflowEvent, Quote }
-
+    public enum MessageTypes { Null, Text, Image, File  }
+    public enum EventTypes { Null, RecvEvent, WorkflowEvent, Quote }
     public class RespContainer
     {
         public MessageTypes MsgType { get; set; }
@@ -100,24 +100,6 @@ namespace UserLibrary.Data
             Json = JsonConvert.SerializeObject(file);
         }
 
-        public RespContainer(RespRecvEvent recvevt)
-        {
-            MsgType = MessageTypes.RecvEvent;
-            Json = JsonConvert.SerializeObject(recvevt);
-        }
-
-        public RespContainer(WorkflowEvent wfevt)
-        {
-            MsgType = MessageTypes.WorkflowEvent;
-            Json = JsonConvert.SerializeObject(wfevt);
-        }
-
-        public RespContainer(RespQuote entity)
-        {
-            MsgType = MessageTypes.Quote;
-            Json = JsonConvert.SerializeObject(entity);
-        }
-
         public object? Get()
         {
             return MsgType switch
@@ -126,9 +108,47 @@ namespace UserLibrary.Data
                 MessageTypes.Text => JsonConvert.DeserializeObject<RespMessage>(Json),
                 MessageTypes.Image => JsonConvert.DeserializeObject<RespFile>(Json),
                 MessageTypes.File => JsonConvert.DeserializeObject<RespFile>(Json),
-                MessageTypes.RecvEvent => JsonConvert.DeserializeObject<RespRecvEvent>(Json),
-                MessageTypes.WorkflowEvent => JsonConvert.DeserializeObject<WorkflowEvent>(Json),
-                MessageTypes.Quote => JsonConvert.DeserializeObject<RespQuote>(Json),
+                _ => throw new NotImplementedException(),
+            };
+        }
+    }
+
+    public class NotifyContainer
+    {
+        public EventTypes EvtType { get; set; }
+        public string Json { get; set; } = null!;
+
+        public NotifyContainer()
+        {
+
+        }
+
+        public NotifyContainer(RespRecvEvent recvevt)
+        {
+            EvtType = EventTypes.RecvEvent;
+            Json = JsonConvert.SerializeObject(recvevt);
+        }
+
+        public NotifyContainer(WorkflowEvent wfevt)
+        {
+            EvtType = EventTypes.WorkflowEvent;
+            Json = JsonConvert.SerializeObject(wfevt);
+        }
+
+        public NotifyContainer(RespQuote entity)
+        {
+            EvtType = EventTypes.Quote;
+            Json = JsonConvert.SerializeObject(entity);
+        }
+
+        public object? Get()
+        {
+            return EvtType switch
+            {
+                EventTypes.Null => null,
+                EventTypes.RecvEvent => JsonConvert.DeserializeObject<RespRecvEvent>(Json),
+                EventTypes.WorkflowEvent => JsonConvert.DeserializeObject<WorkflowEvent>(Json),
+                EventTypes.Quote => JsonConvert.DeserializeObject<RespQuote>(Json),
                 _ => throw new NotImplementedException(),
             };
         }
@@ -147,7 +167,7 @@ namespace UserLibrary.Data
     {
         Task OnChat(RespContainer msg);
         Task OnPinned(PinnedMessage msg);
-        Task OnEvent(RespContainer msg);
+        Task OnEvent(NotifyContainer msg);
     }
 
     /// <summary> SignalR Hub invoke interface (signature for Clients invoking methods on server Hub) </summary>
