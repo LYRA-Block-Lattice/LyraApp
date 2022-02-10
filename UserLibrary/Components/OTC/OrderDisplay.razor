@@ -82,7 +82,11 @@
         SubscribeToAction<RespQuote>(async e =>
         {
             prices = e.Prices;
-            marketprice = Otc.Order.crypto.EndsWith("ETH") ? e.Prices["ethereum"] : e.Prices["bitcoin"];
+
+                    if (Otc.Order.crypto.EndsWith("ETH")) marketprice = e.Prices["ethereum"];
+                    if (Otc.Order.crypto.EndsWith("BTC")) marketprice = e.Prices["bitcoin"];
+                    if (Otc.Order.crypto.EndsWith("USDT")) marketprice = e.Prices["tether"];
+
             await InvokeAsync(StateHasChanged);
         });        
 

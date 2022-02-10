@@ -12,17 +12,22 @@
 
 <div class="mag cet">
     <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
-        <MudTabPanel Text="Market">
+        <MudTabPanel Text="OTC Market">
 
             <MudGrid>
+                            @foreach (var odr in tradableOrders)
+                            {
+                                var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoId);
+                                <MudItem xs="12">
+                                    <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao OrderSelected=@ShowCreateTradeUI />
+                                </MudItem>
+                            }
 
-                <MudItem xs="12">
-                    <UserLibrary.Components.OTC.TransactionsList />
-                </MudItem>
 
             </MudGrid>
         </MudTabPanel>
-        <MudTabPanel Text="My Trades">
+        <MudTabPanel Text="DAO">
+
             <MudGrid>
                 <MudItem xs="12">
                     <MudTextField @bind-Value="@keywords" Label="Search DAO" Variant="Variant.Text"></MudTextField>
@@ -47,40 +52,32 @@
                 }
                 else
                 {
-                    @if (mydaos != null)
-                    {
-                        @if (!showco)
-                        {
-                            <MudItem xs="12">
+                                                <MudItem xs="12">
                                 <h1>My Orgnizations</h1>
                             </MudItem>
+                            <MudItem xs="12">
                             <MudExpansionPanels MultiExpansion="true" Class=".blue .darken-1 .shades-text .text-white">
-                                @foreach (var dao in mydaos)
+                                @if (mydaos != null)
                                 {
-                                    <MudExpansionPanel Text="@dao.Name" MaxHeight="1000">
-                                        <p>
-                                            @dao.Description
-                                        </p>
-                                        <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-                                        <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton>
-                                        <MudButton Variant="Variant.Filled" Color="Color.Primary">Join</MudButton>
-                                        <RadzenButton Click=@(args => ShowCreateOrderUI((dao as IBrokerAccount).Name)) Text="Create Order" ButtonStyle="ButtonStyle.Primary" />
+                                    foreach (var dao in mydaos)
+                                    {
+                                        <MudExpansionPanel Text="@dao.Name" MaxHeight="1000">
+                                            <p>
+                                                @dao.Description
+                                            </p>
+                                            <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+                                            <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton>
+                                            <MudButton Variant="Variant.Filled" Color="Color.Primary">Join</MudButton>
+                                            <RadzenButton Click=@(args => ShowCreateOrderUI((dao as IBrokerAccount).Name)) Text="Create Order" ButtonStyle="ButtonStyle.Primary" />
 
-                                    </MudExpansionPanel>
+                                        </MudExpansionPanel>
+                                    }
                                 }
 
+
                             </MudExpansionPanels>
-
-                            @foreach (var odr in tradableOrders)
-                            {
-                                var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoId);
-                                <MudItem xs="12">
-                                    <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao OrderSelected=@ShowCreateTradeUI />
-                                </MudItem>
-                            }
-
-                        }
-                        @if (showco)
+                            </MudItem>
+                                     @if (showco)
                         {
                             <MudItem xs="12">
                                 <RadzenSelectBar @bind-Value=@dir TValue="bool">
@@ -154,7 +151,19 @@
                             </MudItem>
 
                         }
-                    }
+                }
+            </MudGrid>
+        </MudTabPanel>
+        <MudTabPanel Text="My Trades">
+            <MudGrid>
+                
+                <MudItem xs="12">
+                    <UserLibrary.Components.OTC.TransactionsList />
+                </MudItem>
+
+                    @if (mydaos != null)
+                    {
+
 
 
                     @*            <MudItem xs="12">
@@ -254,14 +263,18 @@
         SubscribeToAction<RespQuote>(
             (e) =>
             {
-                // price updated
-                btcprice = e.Prices["bitcoin"];
+            // price updated
+            btcprice = e.Prices["bitcoin"];
                 trxprice = e.Prices["tron"];
                 lyrprice = e.Prices["lyra"];
                 lyrintprice = e.Prices["LYR"];
 
                 if (selcrypto != null)
-                    selcryptoprice = selcrypto.Name.EndsWith("ETH") ? e.Prices["ethereum"] : e.Prices["bitcoin"];
+                {
+                    if (selcrypto.Name.EndsWith("ETH")) selcryptoprice = e.Prices["ethereum"];
+                    if (selcrypto.Name.EndsWith("BTC")) selcryptoprice = e.Prices["bitcoin"];
+                    if (selcrypto.Name.EndsWith("USDT")) selcryptoprice = e.Prices["tether"];
+                }
             }
         );
 

@@ -115,7 +115,7 @@ namespace Dealer.Server.Services
             {
                 // Execute required job
                 ICoinGeckoClient _client = CoinGeckoClient.Instance;
-                var coins = new[] { "lyra", "tron", "ethereum", "bitcoin" };
+                var coins = new[] { "lyra", "tron", "ethereum", "bitcoin", "tether" };
                 var prices = await _client.SimpleClient.GetSimplePrice(coins, new[] { "usd" });
                 foreach (var coin in coins)
                     myprice.Add(coin, (decimal)prices[coin]["usd"]);

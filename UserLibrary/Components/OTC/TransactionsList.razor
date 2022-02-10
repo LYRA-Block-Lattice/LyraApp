@@ -4,7 +4,7 @@
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
 
-<div>
+<div align="left">
     @foreach(var trade in trades)
     {
         var dir = "Buy";
@@ -23,6 +23,9 @@
             <div>
                 @trade.TimeStamp
                 @*<MudButton Variant="Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>*@
+            </div>
+            <div>
+                @((trade as IOtcTrade).OTStatus)
             </div>
         </div></a>
     }
@@ -50,7 +53,7 @@
             {
                 trades = ret.GetBlocks()
                     .OrderByDescending(a => a.TimeStamp)
-                    .Take(3)
+                    //.Take(3)
                     .Cast<TransactionBlock>().ToList();
                 StateHasChanged();
             }
