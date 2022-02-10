@@ -86,7 +86,7 @@
             var blocks = lstret.GetBlocks();
             wfstage = blocks.Count();
 
-            var gen = blocks.FirstOrDefault(a => a.GetBlockType() == BlockTypes.OTCTradeGenesis)
+            var gen = blocks.FirstOrDefault(a => a.BlockType == BlockTypes.OTCTradeGenesis)
                 as OtcTradeGenesisBlock;
 
             if(gen != null)

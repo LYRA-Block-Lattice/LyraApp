@@ -36,7 +36,7 @@
          Limits: @Otc.Order.limitMin - @Otc.Order.limitMax USD
     </div>
     <div class="nw">
-        @foreach(var pm in Otc.Order.payBy)
+        @foreach(var pm in Otc.Order.payBy ?? new string[0])
             {
                 <div class="pm">@pm</div>
             }
