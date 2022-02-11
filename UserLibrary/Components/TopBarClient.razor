@@ -165,19 +165,22 @@
             {
                 var evt = evtc.Get();
 
-                if (evt is RespRecvEvent recv)
+                if (evt is AccountChangedEvent achgevt)
                 {
-                    Dispatcher.Dispatch(new WebWalletGotSendToMeAction());
-                    Snackbar.Add($"Incoming transfer from: {recv.Source.Shorten()}", Severity.Success, config =>
-                     {
-                         config.Action = "Open Wallet";
-                         config.ActionColor = Color.Primary;
-                         config.Onclick = snackbar =>
-                     {
-                         GoWallet();
-                         return Task.CompletedTask;
-                     };
-                     });
+                    if(achgevt.ChangeType == AccountChangeTypes.Receive)
+                    {
+                        Dispatcher.Dispatch(new WebWalletGotSendToMeAction());
+                        Snackbar.Add($"Incoming transfer from: {achgevt.PeerAccountId.Shorten()}", Severity.Success, config =>
+                         {
+                             config.Action = "Open Wallet";
+                             config.ActionColor = Color.Primary;
+                             config.Onclick = snackbar =>
+                         {
+                             GoWallet();
+                             return Task.CompletedTask;
+                         };
+                         });
+                    }
                 }
                 else
                 if (evt is WorkflowEvent wfevt)

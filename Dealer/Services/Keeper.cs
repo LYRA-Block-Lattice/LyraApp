@@ -5,6 +5,7 @@ using Dealer.Server.Model;
 using Lyra.Core.API;
 using Lyra.Core.Blocks;
 using Lyra.Data.API;
+using Lyra.Data.Blocks;
 using Lyra.Data.Shared;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
@@ -77,14 +78,65 @@ namespace Dealer.Server.Services
                     var block = a.BlockAPIResult.GetBlock();
                     Console.WriteLine($"Lyra Event: {block.Hash}: {a.Consensus}");
 
-                    if (a.Consensus == Lyra.Data.API.ConsensusResult.Yea && block is SendTransferBlock send)
+                    // send event to client only when:
+                    // * sender or receiver of transaction;
+                    // * broker account's owner
+                    var notifyTarget = new Dictionary<string, AccountChangedEvent>();
+                    if(a.Consensus == Lyra.Data.API.ConsensusResult.Yea)
                     {
-                        await _dealerHub.Clients.Group(send.DestinationAccountId).OnEvent(
-                            new NotifyContainer(new RespRecvEvent
+                        if(block is IBrokerAccount brkr)
+                        {
+                            notifyTarget.Add(brkr.OwnerAccountId, new AccountChangedEvent
                             {
-                                Source = send.AccountID,
-                                Destination = send.DestinationAccountId,
-                            }));
+                                ChangeType = AccountChangeTypes.Contract,
+                            });
+                        }
+                        
+                        if(block is SendTransferBlock send)
+                        {
+                            notifyTarget.Add(send.AccountID, new AccountChangedEvent
+                            {
+                                ChangeType = AccountChangeTypes.Send,
+                                PeerAccountId = send.DestinationAccountId,
+                            });
+                            notifyTarget.Add(send.DestinationAccountId, new AccountChangedEvent
+                            {
+                                ChangeType = AccountChangeTypes.Receive,
+                                PeerAccountId = send.AccountID,
+                            });
+                        }
+                        else if(block is ReceiveTransferBlock recv)
+                        {
+                            if(recv.SourceHash == null)
+                            {
+                                notifyTarget.Add(recv.AccountID, new AccountChangedEvent
+                                {
+                                    ChangeType = AccountChangeTypes.Receive,
+                                });
+                            }
+                            else
+                            {
+                                var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "DealKeeper", "1.0");
+                                var sendblkret = await lc.GetBlockAsync(recv.SourceHash);
+                                var sendblk = sendblkret.GetBlock() as SendTransferBlock;
+                                notifyTarget.Add(sendblk.AccountID, new AccountChangedEvent
+                                {
+                                    ChangeType = AccountChangeTypes.SendReceived,
+                                    PeerAccountId = sendblk.DestinationAccountId,
+                                });
+                                notifyTarget.Add(recv.AccountID, new AccountChangedEvent
+                                {
+                                    ChangeType = AccountChangeTypes.Receive,
+                                    PeerAccountId = sendblk.AccountID,
+                                });
+                            }                            
+                        }
+                    }
+
+                    foreach(var act in notifyTarget)
+                    {
+                        await _dealerHub.Clients.Group(act.Key).OnEvent(
+                            new NotifyContainer(act.Value));
                     }
                 }
                 else if (obj is WorkflowEvent wf)

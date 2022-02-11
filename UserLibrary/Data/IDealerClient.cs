@@ -66,10 +66,11 @@ namespace UserLibrary.Data
         public string MimeType { get; set; } = null!;  
     }
 
-    public class RespRecvEvent
+    public enum AccountChangeTypes { Send, Receive, SendReceived, Contract }
+    public class AccountChangedEvent
     {
-        public string Source { get; set; } = null!;
-        public string Destination { get; set; } = null!;
+        public AccountChangeTypes ChangeType { get; set; }
+        public string PeerAccountId { get; set; } = null!;
     }
 
     public class RespQuote
@@ -78,7 +79,7 @@ namespace UserLibrary.Data
     }
 
     public enum MessageTypes { Null, Text, Image, File  }
-    public enum EventTypes { Null, RecvEvent, WorkflowEvent, Quote }
+    public enum EventTypes { Null, AccountChanged, WorkflowEvent, Quote }
     public class RespContainer
     {
         public MessageTypes MsgType { get; set; }
@@ -123,10 +124,10 @@ namespace UserLibrary.Data
 
         }
 
-        public NotifyContainer(RespRecvEvent recvevt)
+        public NotifyContainer(AccountChangedEvent achgevt)
         {
-            EvtType = EventTypes.RecvEvent;
-            Json = JsonConvert.SerializeObject(recvevt);
+            EvtType = EventTypes.AccountChanged;
+            Json = JsonConvert.SerializeObject(achgevt);
         }
 
         public NotifyContainer(WorkflowEvent wfevt)
@@ -146,7 +147,7 @@ namespace UserLibrary.Data
             return EvtType switch
             {
                 EventTypes.Null => null,
-                EventTypes.RecvEvent => JsonConvert.DeserializeObject<RespRecvEvent>(Json),
+                EventTypes.AccountChanged => JsonConvert.DeserializeObject<AccountChangedEvent>(Json),
                 EventTypes.WorkflowEvent => JsonConvert.DeserializeObject<WorkflowEvent>(Json),
                 EventTypes.Quote => JsonConvert.DeserializeObject<RespQuote>(Json),
                 _ => throw new NotImplementedException(),

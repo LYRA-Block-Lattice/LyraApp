@@ -468,7 +468,10 @@ namespace Dealer.Server.Hubs
 
         public async Task Join(JoinRequest req)
         {
-            var ok = Signatures.VerifyAccountSignature(req.UserAccountID, req.UserAccountID, req.Signature);
+            var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "Dealer", "0.1");
+            var lsb = await lc.GetLastServiceBlockAsync();
+
+            var ok = Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, req.UserAccountID, req.Signature);
             if(ok)
             {
                 if(_idgrps.ContainsKey(Context.ConnectionId))
