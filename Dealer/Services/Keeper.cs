@@ -81,55 +81,55 @@ namespace Dealer.Server.Services
                     // send event to client only when:
                     // * sender or receiver of transaction;
                     // * broker account's owner
-                    var notifyTarget = new Dictionary<string, AccountChangedEvent>();
+                    var notifyTarget = new List<KeyValuePair<string, AccountChangedEvent>>();
                     if(a.Consensus == Lyra.Data.API.ConsensusResult.Yea)
                     {
                         if(block is IBrokerAccount brkr)
                         {
-                            notifyTarget.Add(brkr.OwnerAccountId, new AccountChangedEvent
+                            notifyTarget.Add(new KeyValuePair<string, AccountChangedEvent>(brkr.OwnerAccountId, new AccountChangedEvent
                             {
                                 ChangeType = AccountChangeTypes.Contract,
                                 PeerAccountId = (brkr as TransactionBlock).AccountID,
-                            });
+                            }));
                         }
                         
                         if(block is SendTransferBlock send)
                         {
-                            notifyTarget.Add(send.AccountID, new AccountChangedEvent
+                            notifyTarget.Add(new KeyValuePair<string, AccountChangedEvent>(send.AccountID, new AccountChangedEvent
                             {
                                 ChangeType = AccountChangeTypes.Send,
                                 PeerAccountId = send.DestinationAccountId,
-                            });
-                            notifyTarget.Add(send.DestinationAccountId, new AccountChangedEvent
+                            }));
+                            notifyTarget.Add(new KeyValuePair<string, AccountChangedEvent>(send.DestinationAccountId, new AccountChangedEvent
                             {
                                 ChangeType = AccountChangeTypes.Receive,
                                 PeerAccountId = send.AccountID,
-                            });
+                            }));
                         }
                         else if(block is ReceiveTransferBlock recv)
                         {
                             if(recv.SourceHash == null)
                             {
-                                notifyTarget.Add(recv.AccountID, new AccountChangedEvent
+                                notifyTarget.Add(new KeyValuePair<string, AccountChangedEvent>(recv.AccountID, new AccountChangedEvent
                                 {
                                     ChangeType = AccountChangeTypes.Receive,
-                                });
+                                }));
                             }
                             else
                             {
                                 var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "DealKeeper", "1.0");
                                 var sendblkret = await lc.GetBlockAsync(recv.SourceHash);
                                 var sendblk = sendblkret.GetBlock() as SendTransferBlock;
-                                notifyTarget.Add(sendblk.AccountID, new AccountChangedEvent
+                                notifyTarget.Add(new KeyValuePair<string, AccountChangedEvent>(sendblk.AccountID, new AccountChangedEvent
                                 {
                                     ChangeType = AccountChangeTypes.SendReceived,
                                     PeerAccountId = sendblk.DestinationAccountId,
-                                });
-                                notifyTarget.Add(recv.AccountID, new AccountChangedEvent
+                                }));
+                                notifyTarget.Add(new KeyValuePair<string, AccountChangedEvent>(recv.AccountID, new AccountChangedEvent
                                 {
                                     ChangeType = AccountChangeTypes.Receive,
                                     PeerAccountId = sendblk.AccountID,
-                                });
+                                }));
                             }                            
                         }
                     }

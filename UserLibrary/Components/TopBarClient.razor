@@ -170,16 +170,24 @@
                     if(achgevt.ChangeType == AccountChangeTypes.Receive)
                     {
                         Dispatcher.Dispatch(new WebWalletGotSendToMeAction());
-                        Snackbar.Add($"Incoming transfer from: {achgevt.PeerAccountId.Shorten()}", Severity.Success, config =>
-                         {
-                             config.Action = "Open Wallet";
-                             config.ActionColor = Color.Primary;
-                             config.Onclick = snackbar =>
-                         {
-                             GoWallet();
-                             return Task.CompletedTask;
-                         };
-                         });
+
+                        if (Navigation.Uri.Contains("/wallet"))
+                        {
+                            Snackbar.Add($"Incoming transfer from: {achgevt.PeerAccountId.Shorten()}", Severity.Success);
+                        }
+                        else
+                        {
+                            Snackbar.Add($"Incoming transfer from: {achgevt.PeerAccountId.Shorten()}", Severity.Success, config =>
+                             {
+                                 config.Action = "Open Wallet";
+                                 config.ActionColor = Color.Primary;
+                                 config.Onclick = snackbar =>
+                             {
+                                 GoWallet();
+                                 return Task.CompletedTask;
+                             };
+                             });
+                        }
                     }
                     else
                     if(achgevt.ChangeType == AccountChangeTypes.SendReceived)
