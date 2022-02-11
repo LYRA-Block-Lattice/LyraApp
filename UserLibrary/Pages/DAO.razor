@@ -52,32 +52,8 @@
                 }
                 else
                 {
-                                                <MudItem xs="12">
-                                <h1>My Orgnizations</h1>
-                            </MudItem>
-                            <MudItem xs="12">
-                            <MudExpansionPanels MultiExpansion="true" Class=".blue .darken-1 .shades-text .text-white">
-                                @if (mydaos != null)
-                                {
-                                    foreach (var dao in mydaos)
-                                    {
-                                        <MudExpansionPanel Text="@dao.Name" MaxHeight="1000">
-                                            <p>
-                                                @dao.Description
-                                            </p>
-                                            <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-                                            <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton>
-                                            <MudButton Variant="Variant.Filled" Color="Color.Primary">Join</MudButton>
-                                            <RadzenButton Click=@(args => ShowCreateOrderUI((dao as IBrokerAccount).Name)) Text="Create Order" ButtonStyle="ButtonStyle.Primary" />
 
-                                        </MudExpansionPanel>
-                                    }
-                                }
-
-
-                            </MudExpansionPanels>
-                            </MudItem>
-                                     @if (showco)
+                    @if (showco)
                         {
                             <MudItem xs="12">
                                 <h1>Sell</h1>
@@ -149,15 +125,63 @@
                             </MudItem>
                             <MudItem xs="12">
                                 <RadzenButton Click=@(args => Back2("")) Text="Back" ButtonStyle="ButtonStyle.Light" />
-                            </MudItem>
+                        </MudItem>
 
-                        }
+                    }
+                    else
+                    {
+                        if(alldaos != null)
+                        foreach (var dao in alldaos)
+                        {
+                            <MudItem xs="12">
+                                <MudExpansionPanel Text="@dao.Name" MaxHeight="1000">
+                                    <p>
+                                        @dao.Description
+                                    </p>
+                                    <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+                                    <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton>
+                                    @if(walletState.Value.IsOpening)
+                                        {
+                                        <MudButton Variant="Variant.Filled" Color="Color.Primary">Join</MudButton>
+                                    <RadzenButton Click=@(args => ShowCreateOrderUI((dao as IBrokerAccount).Name)) Text="Create Order" ButtonStyle="ButtonStyle.Primary" />
+                                        
+                                        }
+
+                                </MudExpansionPanel>
+                             </MudItem>
+                         }
+                    }
                 }
             </MudGrid>
         </MudTabPanel>
         <MudTabPanel Text="My Trades">
             <MudGrid>
-                
+                <MudItem xs="12">
+                    <h1>My Orgnizations</h1>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudExpansionPanels MultiExpansion="true" Class=".blue .darken-1 .shades-text .text-white">
+                        @if (mydaos != null)
+                        {
+                            foreach (var dao in mydaos)
+                            {
+                                <MudExpansionPanel Text="@dao.Name" MaxHeight="1000">
+                                    <p>
+                                        @dao.Description
+                                    </p>
+                                    <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+                                    <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Join</MudButton>
+                                    <RadzenButton Click=@(args => ShowCreateOrderUI((dao as IBrokerAccount).Name)) Text="Create Order" ButtonStyle="ButtonStyle.Primary" />
+
+                                </MudExpansionPanel>
+                            }
+                        }
+
+
+                    </MudExpansionPanels>
+                </MudItem>
+
                 <MudItem xs="12">
                     <UserLibrary.Components.OTC.TransactionsList />
                 </MudItem>
@@ -224,6 +248,7 @@
     [Inject] NavigationManager Navigation { get; set; }
 
     List<IOtcOrder> tradableOrders = new List<IOtcOrder>();
+    List<IDao> alldaos = new List<IDao>();
     List<IDao> daos = new List<IDao>();
 
     string keywords;
@@ -278,6 +303,18 @@
                 }
             }
         );
+
+        SubscribeToAction<NotifyContainer>(async evtc =>
+            {
+                var evt = evtc.Get();
+
+                if (evt is ContractChangeEvent cce)
+                {
+                    await GetMyDaos();
+                    await OpenSwapUI();
+                    await InvokeAsync(() => StateHasChanged());
+                }
+            });
 
         return base.OnInitializedAsync();
     }
@@ -403,6 +440,13 @@
 
     async Task GetMyDaos()
     {
+        var lc = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
+        var alldaoret = await lc.GetAllDaosAsync(0, 10);
+        if(alldaoret.Successful())
+        {
+            alldaos = alldaoret.GetBlocks().Cast<IDao>().ToList();
+        }
+
         if (walletState.Value.wallet == null)
             return;
         var brkblksret = await walletState.Value.wallet.RPC.GetAllBrokerAccountsForOwnerAsync(walletState.Value.wallet.AccountId);

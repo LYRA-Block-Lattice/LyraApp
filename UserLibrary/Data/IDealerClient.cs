@@ -66,6 +66,13 @@ namespace UserLibrary.Data
         public string MimeType { get; set; } = null!;  
     }
 
+    public enum ContractChangeEventTypes { General, Open, Close, Partial }
+    public class ContractChangeEvent
+    {
+        public string ContractId { get; set; } = null!;
+        public ContractChangeEventTypes ChangeType { get; set; }
+    }
+
     public enum AccountChangeTypes { Send, Receive, SendReceived, Contract }
     public class AccountChangedEvent
     {
@@ -79,7 +86,7 @@ namespace UserLibrary.Data
     }
 
     public enum MessageTypes { Null, Text, Image, File  }
-    public enum EventTypes { Null, AccountChanged, WorkflowEvent, Quote }
+    public enum EventTypes { Null, AccountChanged, WorkflowEvent, Quote, ContractChanged }
     public class RespContainer
     {
         public MessageTypes MsgType { get; set; }
@@ -124,6 +131,12 @@ namespace UserLibrary.Data
 
         }
 
+        public NotifyContainer(ContractChangeEvent cntevt)
+        {
+            EvtType = EventTypes.ContractChanged;
+            Json = JsonConvert.SerializeObject(cntevt);
+        }
+
         public NotifyContainer(AccountChangedEvent achgevt)
         {
             EvtType = EventTypes.AccountChanged;
@@ -147,6 +160,7 @@ namespace UserLibrary.Data
             return EvtType switch
             {
                 EventTypes.Null => null,
+                EventTypes.ContractChanged => JsonConvert.DeserializeObject<ContractChangeEvent>(Json),
                 EventTypes.AccountChanged => JsonConvert.DeserializeObject<AccountChangedEvent>(Json),
                 EventTypes.WorkflowEvent => JsonConvert.DeserializeObject<WorkflowEvent>(Json),
                 EventTypes.Quote => JsonConvert.DeserializeObject<RespQuote>(Json),

@@ -5,6 +5,7 @@ using Dealer.Server.Model;
 using Lyra.Core.API;
 using Lyra.Core.Blocks;
 using Lyra.Data.API;
+using Lyra.Data.API.WorkFlow;
 using Lyra.Data.Blocks;
 using Lyra.Data.Shared;
 using Microsoft.AspNetCore.SignalR;
@@ -81,26 +82,32 @@ namespace Dealer.Server.Services
                     // send event to client only when:
                     // * sender or receiver of transaction;
                     // * broker account's owner
-                    var notifyTarget = new List<KeyValuePair<string, AccountChangedEvent>>();
+                    var notifyTarget = new List<KeyValuePair<string, object>>();
                     if(a.Consensus == Lyra.Data.API.ConsensusResult.Yea)
                     {
                         if(block is IBrokerAccount brkr)
                         {
-                            notifyTarget.Add(new KeyValuePair<string, AccountChangedEvent>(brkr.OwnerAccountId, new AccountChangedEvent
+                            notifyTarget.Add(new KeyValuePair<string, object>(brkr.OwnerAccountId, new AccountChangedEvent
                             {
                                 ChangeType = AccountChangeTypes.Contract,
                                 PeerAccountId = (brkr as TransactionBlock).AccountID,
+                            }));
+
+                            notifyTarget.Add(new KeyValuePair<string, object>(brkr.OwnerAccountId, new ContractChangeEvent
+                            {
+                                ChangeType = ContractChangeEventTypes.General,
+                                ContractId = (brkr as TransactionBlock).AccountID,
                             }));
                         }
                         
                         if(block is SendTransferBlock send)
                         {
-                            notifyTarget.Add(new KeyValuePair<string, AccountChangedEvent>(send.AccountID, new AccountChangedEvent
+                            notifyTarget.Add(new KeyValuePair<string, object>(send.AccountID, new AccountChangedEvent
                             {
                                 ChangeType = AccountChangeTypes.Send,
                                 PeerAccountId = send.DestinationAccountId,
                             }));
-                            notifyTarget.Add(new KeyValuePair<string, AccountChangedEvent>(send.DestinationAccountId, new AccountChangedEvent
+                            notifyTarget.Add(new KeyValuePair<string, object>(send.DestinationAccountId, new AccountChangedEvent
                             {
                                 ChangeType = AccountChangeTypes.Receive,
                                 PeerAccountId = send.AccountID,
@@ -110,7 +117,7 @@ namespace Dealer.Server.Services
                         {
                             if(recv.SourceHash == null)
                             {
-                                notifyTarget.Add(new KeyValuePair<string, AccountChangedEvent>(recv.AccountID, new AccountChangedEvent
+                                notifyTarget.Add(new KeyValuePair<string, object>(recv.AccountID, new AccountChangedEvent
                                 {
                                     ChangeType = AccountChangeTypes.Receive,
                                 }));
@@ -120,12 +127,12 @@ namespace Dealer.Server.Services
                                 var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "DealKeeper", "1.0");
                                 var sendblkret = await lc.GetBlockAsync(recv.SourceHash);
                                 var sendblk = sendblkret.GetBlock() as SendTransferBlock;
-                                notifyTarget.Add(new KeyValuePair<string, AccountChangedEvent>(sendblk.AccountID, new AccountChangedEvent
+                                notifyTarget.Add(new KeyValuePair<string, object>(sendblk.AccountID, new AccountChangedEvent
                                 {
                                     ChangeType = AccountChangeTypes.SendReceived,
                                     PeerAccountId = sendblk.DestinationAccountId,
                                 }));
-                                notifyTarget.Add(new KeyValuePair<string, AccountChangedEvent>(recv.AccountID, new AccountChangedEvent
+                                notifyTarget.Add(new KeyValuePair<string, object>(recv.AccountID, new AccountChangedEvent
                                 {
                                     ChangeType = AccountChangeTypes.Receive,
                                     PeerAccountId = sendblk.AccountID,
@@ -136,8 +143,12 @@ namespace Dealer.Server.Services
 
                     foreach(var act in notifyTarget)
                     {
-                        await _dealerHub.Clients.Group(act.Key).OnEvent(
-                            new NotifyContainer(act.Value));
+                        if(act.Value is AccountChangedEvent ace)
+                            await _dealerHub.Clients.Group(act.Key).OnEvent(
+                                new NotifyContainer(ace));
+                        else if (act.Value is ContractChangeEvent cce)
+                            await _dealerHub.Clients.Group(act.Key).OnEvent(
+                                new NotifyContainer(cce));
                     }
                 }
                 else if (obj is WorkflowEvent wf)
