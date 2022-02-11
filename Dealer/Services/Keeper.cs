@@ -89,6 +89,7 @@ namespace Dealer.Server.Services
                             notifyTarget.Add(brkr.OwnerAccountId, new AccountChangedEvent
                             {
                                 ChangeType = AccountChangeTypes.Contract,
+                                PeerAccountId = (brkr as TransactionBlock).AccountID,
                             });
                         }
                         

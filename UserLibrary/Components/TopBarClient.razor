@@ -181,6 +181,16 @@
                          };
                          });
                     }
+                    else
+                    if(achgevt.ChangeType == AccountChangeTypes.SendReceived)
+                    {
+                        Snackbar.Add($"Your send to: {achgevt.PeerAccountId.Shorten()} is received.", Severity.Success);
+                    }
+                    else
+                    if(achgevt.ChangeType == AccountChangeTypes.Contract)
+                    {
+                        Snackbar.Add($"Your contract {achgevt.PeerAccountId.Shorten()} is changed.", Severity.Success);
+                    }
                 }
                 else
                 if (evt is WorkflowEvent wfevt)
