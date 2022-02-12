@@ -44,6 +44,14 @@
                         <RadzenTextArea @bind-Value=@desc Placeholder="Orgnization description..." Class="w-100" />
                     </MudItem>
                     <MudItem xs="12">
+                        Seller Collateral Percentage <br />
+                        <RadzenNumeric TValue="int" @bind-Value=@sellerPar /> %
+                    </MudItem>
+                    <MudItem xs="12">
+                        Buyer Collateral Percentage <br />
+                        <RadzenNumeric TValue="int" @bind-Value=@buyerPar /> %
+                    </MudItem>
+                    <MudItem xs="12">
                         <RadzenButton IsBusy=@busy Click=@(args => OnClick("adddao")) Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
                     </MudItem>
                     <MudItem xs="12">
@@ -254,6 +262,7 @@
     string keywords;
 
     string name, desc;
+    int sellerPar, buyerPar;
     bool busy;
 
     List<IDao> mydaos;
@@ -462,7 +471,7 @@
         try
         {
             var lc = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
-            var dcret = await walletState.Value.wallet.CreateDAOAsync(name, desc);
+            var dcret = await walletState.Value.wallet.CreateDAOAsync(name, desc, sellerPar, buyerPar);
             if (dcret.Successful())
             {
                 Snackbar.Add($"Orgnization {name} created successfully.", Severity.Success);
