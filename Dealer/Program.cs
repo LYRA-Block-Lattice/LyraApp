@@ -3,7 +3,6 @@ using Dealer.Server.Model;
 using Dealer.Server.Services;
 using Lyra.Core.API;
 using Lyra.Data.API;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
 

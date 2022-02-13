@@ -76,7 +76,7 @@
         if (net == "mainnet")
             net = "";
 
-        await _periodic.Initialization;
+        await _periodic.InitializeAsync();
 
         SubscribeToAction<WebWalletChangeTitleAction>(
             x =>

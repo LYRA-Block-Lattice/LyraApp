@@ -5,8 +5,6 @@ using Lyra.Data.API;
 using Lyra.Data.API.Identity;
 using Lyra.Data.API.WorkFlow;
 using Lyra.Data.Crypto;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using System.Threading.Tasks.Dataflow;

@@ -12,7 +12,7 @@ namespace UserLibrary.Data
         public Dictionary<string, decimal> prices { get; set; }
     }
 
-    public class PeriodicExecutor : AsyncInitialized
+    public class PeriodicExecutor
     {
         static ConnectionMethodsWrapper? wrapper;
 
@@ -27,12 +27,11 @@ namespace UserLibrary.Data
             _dispatcher = dispatcher;
         }
 
-        protected override async Task InitializeAsync()
+        public async Task InitializeAsync()
         {
             if(!_Running)
             {
                 _Running = true;
-                await base.InitializeAsync();
 
                 var eventUrl = "https://192.168.3.91:7070/hub";
                 if (_network == "testnet")
@@ -41,12 +40,12 @@ namespace UserLibrary.Data
                     eventUrl = "https://dealer.lyra.live/hub";
                 wrapper = new ConnectionMethodsWrapper(ConnectionFactoryHelper.CreateConnection(new Uri(eventUrl)));
 
+                wrapper.RegisterOnChat(a => _dispatcher.Dispatch(a));
+                wrapper.RegisterOnPinned(a => _dispatcher.Dispatch(a));
+                wrapper.RegisterOnEvent(a => _dispatcher.Dispatch(a));
+
                 await wrapper.StartAsync();
             }
-
-            wrapper.RegisterOnChat(a => _dispatcher.Dispatch(a));
-            wrapper.RegisterOnPinned(a => _dispatcher.Dispatch(a));
-            wrapper.RegisterOnEvent(a => _dispatcher.Dispatch(a));
         }
     }
 }
