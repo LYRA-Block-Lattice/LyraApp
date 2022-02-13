@@ -17,12 +17,15 @@ namespace Dealer.Server.Services
     [ApiController]
     public class DealerController : ControllerBase
     {
+        private IConfiguration _config;
         private DealerDb _db;
         private IHubContext<DealerHub, IHubPushMethods> _hub;
-        public DealerController(DealerDb db, IHubContext<DealerHub, IHubPushMethods> hub)
+        public DealerController(DealerDb db, IHubContext<DealerHub, IHubPushMethods> hub,
+            IConfiguration Configuration)
         {
             _db = db;
             _hub = hub;
+            _config = Configuration;
         }
 
         [Route("GetUserByAccountId")]
@@ -121,7 +124,7 @@ namespace Dealer.Server.Services
                                 {
                                     ResultCode = Lyra.Core.Blocks.APIResultCodes.Success,
                                     Hash = hash,
-                                    Url = $"https://192.168.3.91:7070/api/dealer/img?hash={hash}",
+                                    Url = $"{_config["baseUrl"]}/api/dealer/img?hash={hash}",
                                 };
                             }
                         }

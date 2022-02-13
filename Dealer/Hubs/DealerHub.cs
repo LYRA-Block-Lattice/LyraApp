@@ -19,6 +19,7 @@ namespace Dealer.Server.Hubs
     // client call this
     public class DealerHub : Hub<IHubPushMethods>, IHubInvokeMethods
     {
+        IConfiguration _config;
         ILyraAPI _lyraApi;
         DealerDb _db;
         Dealeamon _dealer;
@@ -27,8 +28,9 @@ namespace Dealer.Server.Hubs
 
         Dictionary<string, string> _idgrps = new Dictionary<string, string>();
 
-        public DealerHub(DealerDb db, Dealeamon dealer, ILyraAPI lyraApi)
+        public DealerHub(DealerDb db, Dealeamon dealer, ILyraAPI lyraApi, IConfiguration Configuration)
         {
+            _config = Configuration;
             _lyraApi = lyraApi;
             _db = db;
             _dealer = dealer;
@@ -74,7 +76,7 @@ namespace Dealer.Server.Hubs
                                 MimeType = img.Mime,
                                 MessageType = img.Mime.StartsWith("image/") ? MessageTypes.Image : MessageTypes.File,
                                 DataHash = img.Hash,
-                                Url = $"https://192.168.3.91:7070/api/dealer/img?hash={img.Hash}",
+                                Url = $"{_config["baseUrl"]}/api/dealer/img?hash={img.Hash}",
 
                                 AccountId = fm.AccountId,
                                 TradeID = fm.TradeId,
