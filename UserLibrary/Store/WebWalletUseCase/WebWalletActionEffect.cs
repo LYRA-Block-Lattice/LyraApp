@@ -126,9 +126,7 @@ namespace Nebula.Store.WebWalletUseCase
 
 		private async Task RefreshStakingAsync(Wallet wallet, IDispatcher dispatcher)
         {
-			var lcx = LyraRestClient.Create(config["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
-
-			var result = await lcx.GetAllBrokerAccountsForOwnerAsync(wallet.AccountId);
+			var result = await client.GetAllBrokerAccountsForOwnerAsync(wallet.AccountId);
 			if (result.ResultCode == APIResultCodes.Success)
 			{
 				var blks = result.GetBlocks();
@@ -144,7 +142,7 @@ namespace Nebula.Store.WebWalletUseCase
 				foreach (var stk in allStks)
                 {
 					dtstart = stk.Start;
-					var ret = await lcx.GetLastBlockAsync(stk.AccountID);
+					var ret = await client.GetLastBlockAsync(stk.AccountID);
 					if(ret.Successful())
                     {
 						var stkblk = ret.GetBlock() as TransactionBlock;
@@ -160,7 +158,7 @@ namespace Nebula.Store.WebWalletUseCase
 						list.Add(stk);
                     }
 
-					var stats = await lcx.GetBenefitStatsAsync(stk.Voting, stk.AccountID, DateTime.MinValue, DateTime.MaxValue);
+					var stats = await client.GetBenefitStatsAsync(stk.Voting, stk.AccountID, DateTime.MinValue, DateTime.MaxValue);
 					rwds.Add(stk.AccountID, stats.Total);
 				}
 
@@ -237,9 +235,7 @@ namespace Nebula.Store.WebWalletUseCase
 				var wallet = Wallet.Open(aib, action.name, action.password);
 
 				//await wallet.SyncAsync(client);
-				var lcx = LyraRestClient.Create(config["network"], Environment.OSVersion.ToString(), "Nebula", "1.4",
-					"https://192.168.3.62:4504/api/Node/");
-				wallet.SetClient(lcx);
+				wallet.SetClient(client);
 				var pending = await wallet.GetPendingRecvAsync();
 				dispatcher.Dispatch(new WebWalletResultAction(wallet, true, UIStage.Main, pending));
 			}

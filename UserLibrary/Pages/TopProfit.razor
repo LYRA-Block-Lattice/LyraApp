@@ -158,6 +158,7 @@
 
     [Inject]
     private IDispatcher Dispatcher { get; set; }
+    [Inject] ILyraAPI lyraApi { get; set; }
 
     string error;
 
@@ -182,8 +183,7 @@
         try
         {
             ui = UI.Loading;
-            var lcx = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
-            pfts = await lcx.FindAllProfitingAccountsAsync(DateTime.MinValue, DateTime.MaxValue);
+            pfts = await lyraApi.FindAllProfitingAccountsAsync(DateTime.MinValue, DateTime.MaxValue);
 
             ui = UI.Main;
 
@@ -214,20 +214,18 @@
 
     async Task GetDetails(string pftid)
     {
-        var lcx = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
-
-        var ret = await lcx.GetBlockByIndexAsync(pftid, 1);
+        var ret = await lyraApi.GetBlockByIndexAsync(pftid, 1);
         if (ret.Successful())
         {
             pft = ret.GetBlock() as ProfitingGenesis;
 
-            stks = await lcx.FindAllStakingsAsync(pftid, DateTime.UtcNow);
-            pftStats = await lcx.GetAccountStatsAsync(pftid, DateTime.MinValue, DateTime.MaxValue);
+            stks = lyraApi.FindAllStakings(pftid, DateTime.UtcNow);
+            pftStats = await lyraApi.GetAccountStatsAsync(pftid, DateTime.MinValue, DateTime.MaxValue);
 
             var rwds = new Dictionary<string, decimal>();
             foreach (var stk in stks)
             {
-                var stats = await lcx.GetBenefitStatsAsync(pftid, stk.StkAccount, DateTime.MinValue, DateTime.MaxValue);
+                var stats = await lyraApi.GetBenefitStatsAsync(pftid, stk.StkAccount, DateTime.MinValue, DateTime.MaxValue);
                 rwds.Add(stk.StkAccount, stats.Total);
             }
             stkRewards = rwds;

@@ -427,7 +427,6 @@ else
             //_tokens = ext.Asserts;
 
             var wallet = walletState.Value.wallet;
-            //var lc = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
             var brks = await wallet.GetAllDexWalletsAsync(wallet.AccountId);
             await wallet.SyncAsync(null);
 

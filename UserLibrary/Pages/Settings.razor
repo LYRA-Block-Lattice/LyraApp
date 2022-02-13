@@ -92,6 +92,7 @@
 
     [Inject] private IDialogService DialogService { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] ILyraAPI lyraApi { get; set; }
 
     string voteAddr, altDisplay;
     string bexpurl;
@@ -130,20 +131,18 @@
         StateHasChanged();
         try
         {
-            var client = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
-
-            var result = await walletState.Value.wallet.SyncAsync(client);
+            var result = await walletState.Value.wallet.SyncAsync(lyraApi);
             txs = new List<string>();
             if (result == Lyra.Core.Blocks.APIResultCodes.Success)
             {
-                var accHeight = await client.GetAccountHeightAsync(walletState.Value.wallet.AccountId);
+                var accHeight = await lyraApi.GetAccountHeightAsync(walletState.Value.wallet.AccountId);
                 Dictionary<string, long> oldBalance = null;
                 var start = accHeight.Height - 10;
                 if (start < 1)
                     start = 1;          // only show the last 100 tx
                 for (long i = start; i <= accHeight.Height; i++)
                 {
-                    var blockResult = await client.GetBlockByIndexAsync(walletState.Value.wallet.AccountId, i);
+                    var blockResult = await lyraApi.GetBlockByIndexAsync(walletState.Value.wallet.AccountId, i);
                     var block = blockResult.GetBlock() as TransactionBlock;
                     if (block == null)
                         txs.Add("Null");
@@ -160,7 +159,7 @@
                             }
                             else
                             {
-                                var srcBlockResult = await client.GetBlockAsync(rb.SourceHash);
+                                var srcBlockResult = await lyraApi.GetBlockAsync(rb.SourceHash);
                                 var srcBlock = srcBlockResult.GetBlock() as TransactionBlock;
                                 str += $"Receive from {srcBlock.AccountID}";
                             }

@@ -35,6 +35,10 @@ namespace UserLibrary.Data
                 await base.InitializeAsync();
 
                 var eventUrl = "https://192.168.3.91:7070/hub";
+                if (_network == "testnet")
+                    eventUrl = "https://dealertestnet.lyra.live/hub";
+                else if(_network == "mainnet")
+                    eventUrl = "https://dealer.lyra.live/hub";
                 wrapper = new ConnectionMethodsWrapper(ConnectionFactoryHelper.CreateConnection(new Uri(eventUrl)));
 
                 await wrapper.StartAsync();

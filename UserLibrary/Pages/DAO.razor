@@ -254,6 +254,7 @@
 
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] NavigationManager Navigation { get; set; }
+    [Inject] ILyraAPI lyraApi { get; set; }
 
     List<IOtcOrder> tradableOrders = new List<IOtcOrder>();
     List<IDao> alldaos = new List<IDao>();
@@ -449,8 +450,7 @@
 
     async Task GetMyDaos()
     {
-        var lc = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
-        var alldaoret = await lc.GetAllDaosAsync(0, 10);
+        var alldaoret = await lyraApi.GetAllDaosAsync(0, 10);
         if(alldaoret.Successful())
         {
             alldaos = alldaoret.GetBlocks().Cast<IDao>().ToList();
@@ -470,7 +470,6 @@
 
         try
         {
-            var lc = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
             var dcret = await walletState.Value.wallet.CreateDAOAsync(name, desc, sellerPar, buyerPar);
             if (dcret.Successful())
             {
@@ -504,10 +503,8 @@
 
     private async Task OpenSwapUI()
     {
-        var lc = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
-
         // get tradable orders
-        var tosret = await lc.FindTradableOtcAsync();
+        var tosret = await lyraApi.FindTradableOtcAsync();
         if (tosret.Successful())
         {
             tradableOrders = tosret.GetBlocks("orders").Cast<IOtcOrder>()
@@ -522,10 +519,10 @@
         var pk = "n4uh7o2kAerPZQSNBRirzA3pSUBEuEhs6r7oRwpV6Dgbs3FvY";
         var pub = "LBRzScs8NwMcr7U8i9a8sSWETseWf3TLge4CVJy6as24hSB4hwtZ5jKTbHJdoVZBJiNC2LpjN9MQB719Py9YxXo2xpLxnS";
 
-        var lsbret = await lc.GetLastServiceBlockAsync();
+        var lsbret = await lyraApi.GetLastServiceBlockAsync();
 
         var sign = Signatures.GetSignature(pk, (lsbret.GetBlock() as ServiceBlock).Hash, pub);
-        var tokens = await lc.GetTokenNamesAsync(pub, sign, "(null)");
+        var tokens = await lyraApi.GetTokenNamesAsync(pub, sign, "(null)");
 
         tickers = tokens.Entities
             .Where(a => !a.StartsWith("unittest/"))

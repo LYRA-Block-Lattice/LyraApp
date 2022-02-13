@@ -179,6 +179,7 @@
     private IDispatcher Dispatcher { get; set; }
 
     [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] ILyraAPI lyraApi { get; set; }
     double intervalBeforeMsgClose = 2000;
 
     enum UI { Entry, Adding }
@@ -366,16 +367,14 @@
 
     private async Task OpenAddLiquidityUI()
     {
-        var lc = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
-
         // for api sign only
         var pk = "n4uh7o2kAerPZQSNBRirzA3pSUBEuEhs6r7oRwpV6Dgbs3FvY";
         var pub = "LBRzScs8NwMcr7U8i9a8sSWETseWf3TLge4CVJy6as24hSB4hwtZ5jKTbHJdoVZBJiNC2LpjN9MQB719Py9YxXo2xpLxnS";
 
-        var lsbret = await lc.GetLastServiceBlockAsync();
+        var lsbret = await lyraApi.GetLastServiceBlockAsync();
 
         var sign = Signatures.GetSignature(pk, (lsbret.GetBlock() as ServiceBlock).Hash, pub);
-        var tokens = await lc.GetTokenNamesAsync(pub, sign, "(null)");
+        var tokens = await lyraApi.GetTokenNamesAsync(pub, sign, "(null)");
 
         tickers = tokens.Entities
             .Where(a => !a.StartsWith("unittest/"))
@@ -423,8 +422,7 @@
 
     private async Task RefreshPool(decimal a)
     {
-        var lc = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
-        var existspool = await lc.GetPoolAsync(selectedTicker1.dbname, selectedTicker2.dbname);
+        var existspool = await lyraApi.GetPoolAsync(selectedTicker1.dbname, selectedTicker2.dbname);
         if (existspool.PoolAccountId != null)
         {
             havepool = true;
@@ -433,7 +431,7 @@
             pairinfo =
     @<div>@info</div>
     ;
-            var latestret = await lc.GetLastBlockAsync(existspool.PoolAccountId);
+            var latestret = await lyraApi.GetLastBlockAsync(existspool.PoolAccountId);
             if (latestret.Successful())
             {
                 var latestblk = latestret.GetBlock() as TransactionBlock;

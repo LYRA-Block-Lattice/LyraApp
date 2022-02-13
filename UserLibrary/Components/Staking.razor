@@ -168,6 +168,7 @@
 
     [Inject] private IDialogService DialogService { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] ILyraAPI lyraApi { get; set; }
 
     string selectedTab1 = "staking";
     bool adding;
@@ -374,9 +375,7 @@
 
     private async Task RefreshStakingAsync(Wallet wallet)
     {
-        var lcx = LyraRestClient.Create(Configuration["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
-
-        var result = await lcx.GetAllBrokerAccountsForOwnerAsync(wallet.AccountId);
+        var result = await lyraApi.GetAllBrokerAccountsForOwnerAsync(wallet.AccountId);
         if (result.ResultCode == APIResultCodes.Success)
         {
             var blks = result.GetBlocks();
@@ -392,7 +391,7 @@
             foreach (var stk in allStks)
             {
                 dtstart = stk.Start;
-                var ret = await lcx.GetLastBlockAsync(stk.AccountID);
+                var ret = await lyraApi.GetLastBlockAsync(stk.AccountID);
                 if (ret.Successful())
                 {
                     var stkblk = ret.GetBlock() as TransactionBlock;
@@ -408,7 +407,7 @@
                     list.Add(stk);
                 }
 
-                var stats = await lcx.GetBenefitStatsAsync(stk.Voting, stk.AccountID, DateTime.MinValue, DateTime.MaxValue);
+                var stats = await lyraApi.GetBenefitStatsAsync(stk.Voting, stk.AccountID, DateTime.MinValue, DateTime.MaxValue);
                 rwds.Add(stk.AccountID, stats.Total);
             }
 
