@@ -1,6 +1,7 @@
 ﻿using Dealer.Server.Services;
 using Lyra.Core.API;
 using Lyra.Core.Blocks;
+using Lyra.Data.API;
 using Lyra.Data.API.Identity;
 using Lyra.Data.API.WorkFlow;
 using Lyra.Data.Crypto;
@@ -18,6 +19,7 @@ namespace Dealer.Server.Hubs
     // client call this
     public class DealerHub : Hub<IHubPushMethods>, IHubInvokeMethods
     {
+        ILyraAPI _lyraApi;
         DealerDb _db;
         Dealeamon _dealer;
         BufferBlock<ChatMessage> _messageBuffer;
@@ -25,8 +27,9 @@ namespace Dealer.Server.Hubs
 
         Dictionary<string, string> _idgrps = new Dictionary<string, string>();
 
-        public DealerHub(DealerDb db, Dealeamon dealer)
+        public DealerHub(DealerDb db, Dealeamon dealer, ILyraAPI lyraApi)
         {
+            _lyraApi = lyraApi;
             _db = db;
             _dealer = dealer;
             _messageBuffer = new BufferBlock<ChatMessage>();
@@ -185,10 +188,9 @@ namespace Dealer.Server.Hubs
         private async Task CommandFiatReceived(string tradeid, string input)
         {
             var lastStatus = OTCTradeStatus.FiatSent;
-            var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "Dealer", "0.1");
             for (var i = 0; i < 50; i++)
             {
-                var tradeblk = (await lc.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+                var tradeblk = (await _lyraApi.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
                 if (tradeblk.OTStatus == lastStatus)
                 {
                     await Task.Delay(100);
@@ -215,10 +217,9 @@ namespace Dealer.Server.Hubs
 
         private async Task CommandFiatSent(string tradeid, string input)
         {
-            var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "Dealer", "0.1");
             for(var i = 0; i < 50; i++)
             {
-                var tradeblk = (await lc.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+                var tradeblk = (await _lyraApi.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
                 if(tradeblk.OTStatus == OTCTradeStatus.Open)
                 {
                     await Task.Delay(100);
@@ -240,8 +241,7 @@ namespace Dealer.Server.Hubs
 
         private async Task CommandStatus(string tradeid, string input)
         {
-            var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "Dealer", "0.1");
-            var tradeblk = (await lc.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+            var tradeblk = (await _lyraApi.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
             var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.price * tradeblk.Trade.amount:N2}";
             var next = tradeblk.OTStatus switch
             {
@@ -321,8 +321,7 @@ namespace Dealer.Server.Hubs
             {
                 // check if the client belongs to the room
                 // account id should be either buyer or seller
-                var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "Dealer", "0.1");
-                var tradeblk = (await lc.GetLastBlockAsync(req.TradeID)).As<IOtcTrade>();
+                var tradeblk = (await _lyraApi.GetLastBlockAsync(req.TradeID)).As<IOtcTrade>();
 
                 if (tradeblk?.OwnerAccountId == req.UserAccountID
                     || tradeblk?.Trade.orderOwnerId == req.UserAccountID)
@@ -468,8 +467,7 @@ namespace Dealer.Server.Hubs
 
         public async Task Join(JoinRequest req)
         {
-            var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "Dealer", "0.1");
-            var lsb = await lc.GetLastServiceBlockAsync();
+            var lsb = await _lyraApi.GetLastServiceBlockAsync();
 
             var ok = Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, req.UserAccountID, req.Signature);
             if(ok)

@@ -19,10 +19,10 @@ namespace Dealer.Server.Services
         private string _networkId;
         public string NetworkId { get => _networkId; set => _networkId = value; }
 
-        public DealerDb(IOptions<DealerDbSettings> dbSettings)
+        public DealerDb(IConfiguration Configuration, IOptions<DealerDbSettings> dbSettings)
         {
             _dbSettings = dbSettings;
-            _networkId = dbSettings.Value.NetworkId;
+            _networkId = Configuration["network"];
 
             BsonClassMap.RegisterClassMap<TxRecord>(cm =>
             {
@@ -40,19 +40,19 @@ namespace Dealer.Server.Services
                 _dbSettings.Value.DatabaseName);
 
             _paymentsCollection = mongoDatabase.GetCollection<PaymentPlatform>(
-                _dbSettings.Value.NetworkId + "_paymentMethods");
+                _networkId + "_paymentMethods");
 
             _usersCollection = mongoDatabase.GetCollection<LyraUser>(
-                _dbSettings.Value.NetworkId + "_lyraUsers");
+                _networkId + "_lyraUsers");
 
             _txRecordsCollection = mongoDatabase.GetCollection<TxRecord>(
-                _dbSettings.Value.NetworkId + "_txRecords");
+                _networkId + "_txRecords");
 
             _txRoomsCollection = mongoDatabase.GetCollection<TxRoom>(
-                _dbSettings.Value.NetworkId + "_txRooms");
+                _networkId + "_txRooms");
 
             _txImageDataCollection = mongoDatabase.GetCollection<ImageData>(
-                _dbSettings.Value.NetworkId + "_imageData");
+                _networkId + "_imageData");
         }
 
         #region payments methods

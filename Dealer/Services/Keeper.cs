@@ -20,7 +20,7 @@ namespace Dealer.Server.Services
     {
         // Use a second template parameter when defining the hub context to get the strongly typed hub context
         private readonly IHubContext<DealerHub, IHubPushMethods> _dealerHub;
-
+        ILyraAPI _lyraApi;
         DealerDb _db;
         Dealeamon _dealer;
         LyraEventClient _eventClient;
@@ -28,13 +28,14 @@ namespace Dealer.Server.Services
         System.Timers.Timer _Timer;
 
         public static Keeper Singleton { get; private set; } = null!;
-        public Keeper(IHubContext<DealerHub, IHubPushMethods> dealerHub,
+        public Keeper(IHubContext<DealerHub, IHubPushMethods> dealerHub, ILyraAPI lyraApi,
             DealerDb db, Dealeamon dealer)
         {
             Singleton = this;
             _dealerHub = dealerHub;
             _db = db;
             _dealer = dealer;
+            _lyraApi = lyraApi;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -54,7 +55,7 @@ namespace Dealer.Server.Services
         private async Task InitAsync()
         {
             var url = LyraGlobal.SelectNode(_db.NetworkId).Replace("/api/", "/events");
-            //var url = $"https://localhost:4504/events";
+            //var url = $"https://192.168.3.62:4504/events";
             _eventClient = new LyraEventClient(LyraEventHelper.CreateConnection(new Uri(url)));
 
             _eventClient.RegisterOnEvent(async evt => await ProcessEventAsync(evt));
@@ -124,8 +125,7 @@ namespace Dealer.Server.Services
                             }
                             else
                             {
-                                var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "DealKeeper", "1.0");
-                                var sendblkret = await lc.GetBlockAsync(recv.SourceHash);
+                                var sendblkret = await _lyraApi.GetBlockAsync(recv.SourceHash);
                                 var sendblk = sendblkret.GetBlock() as SendTransferBlock;
                                 notifyTarget.Add(new KeyValuePair<string, object>(sendblk.AccountID, new AccountChangedEvent
                                 {
@@ -186,8 +186,7 @@ namespace Dealer.Server.Services
 
                 // calculate lyra price based on lyr/USDT liquidate pool
                 // TODO: just once. remember we have block feeds.
-                var lc = LyraRestClient.Create(_db.NetworkId, Environment.OSVersion.ToString(), "DealKeeper", "1.0");
-                var existspool = await lc.GetPoolAsync(LyraGlobal.OFFICIALTICKERCODE, "tether/usdt");
+                var existspool = await _lyraApi.GetPoolAsync(LyraGlobal.OFFICIALTICKERCODE, "tether/usdt");
                 if (existspool != null && existspool.Successful() && existspool.PoolAccountId != null)
                 {
                     var poollatest = existspool.GetBlock() as TransactionBlock;

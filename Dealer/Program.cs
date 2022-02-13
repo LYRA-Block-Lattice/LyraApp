@@ -1,6 +1,8 @@
 using Dealer.Server.Hubs;
 using Dealer.Server.Model;
 using Dealer.Server.Services;
+using Lyra.Core.API;
+using Lyra.Data.API;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
@@ -9,6 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<DealerDbSettings>(
     builder.Configuration.GetSection("DealerDb"));
+
+builder.Services.AddTransient<ILyraAPI>(provider =>
+                {
+                    var lcx = LyraRestClient.Create(builder.Configuration["network"], Environment.OSVersion.ToString(), "Dealer", "1.0",
+                            "https://192.168.3.62:4504/api/Node/");
+                    return lcx;
+                });
 
 // Add services to the container.
 builder.Services.AddSingleton<DealerDb>();

@@ -237,7 +237,8 @@ namespace Nebula.Store.WebWalletUseCase
 				var wallet = Wallet.Open(aib, action.name, action.password);
 
 				//await wallet.SyncAsync(client);
-				var lcx = LyraRestClient.Create(config["network"], Environment.OSVersion.ToString(), "Nebula", "1.4");
+				var lcx = LyraRestClient.Create(config["network"], Environment.OSVersion.ToString(), "Nebula", "1.4",
+					"https://192.168.3.62:4504/api/Node/");
 				wallet.SetClient(lcx);
 				var pending = await wallet.GetPendingRecvAsync();
 				dispatcher.Dispatch(new WebWalletResultAction(wallet, true, UIStage.Main, pending));
