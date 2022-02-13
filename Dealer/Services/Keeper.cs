@@ -54,8 +54,14 @@ namespace Dealer.Server.Services
 
         private async Task InitAsync()
         {
-            var url = LyraGlobal.SelectNode(_db.NetworkId).Replace("/api/", "/events");
+            //var url = LyraGlobal.SelectNode(_db.NetworkId).Replace("/api/", "/events");
             //var url = $"https://192.168.3.62:4504/events";
+            var url = $"https://seed1.testnet.lyra.live:4504/events";
+            if(_db.NetworkId == "mainnet")
+                url = $"https://seed1.mainnet.lyra.live:5504/events";
+            else if(_db.NetworkId == "devnet")
+                url = $"https://devnet.lyra.live:4504/events";
+
             _eventClient = new LyraEventClient(LyraEventHelper.CreateConnection(new Uri(url)));
 
             _eventClient.RegisterOnEvent(async evt => await ProcessEventAsync(evt));

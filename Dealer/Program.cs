@@ -14,8 +14,14 @@ builder.Services.Configure<DealerDbSettings>(
 
 builder.Services.AddTransient<ILyraAPI>(provider =>
                 {
-                    var lcx = LyraRestClient.Create(builder.Configuration["network"], Environment.OSVersion.ToString(), "Dealer", "1.0",
-                            "https://192.168.3.62:4504/api/Node/");
+                    var networkid = builder.Configuration["network"];
+                    var url = $"https://seed1.testnet.lyra.live:4504/api/Node/";
+                    if (networkid == "mainnet")
+                        url = $"https://seed1.mainnet.lyra.live:5504/api/Node/";
+                    else if (networkid == "devnet")
+                        url = $"https://devnet.lyra.live:4504/api/Node/";
+
+                    var lcx = LyraRestClient.Create(networkid, Environment.OSVersion.ToString(), "Dealer", "1.0", url);
                     return lcx;
                 });
 
