@@ -5,8 +5,23 @@ using Lyra.Core.API;
 using Lyra.Data.API;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
+using Serilog;
+using Serilog.Events;
+
+var config = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: false)
+    .Build();
+
+var path = config.GetValue<string>("logPath");
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .Enrich.FromLogContext()
+    .WriteTo.File(path)
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.AddSerilog(Log.Logger);
 
 builder.Services.Configure<DealerDbSettings>(
     builder.Configuration.GetSection("DealerDb"));
@@ -43,6 +58,19 @@ builder.Services.AddResponseCompression(opts =>
 });
 builder.Services.AddHostedService<Keeper>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    builder.WithOrigins(
+        "https://localhost:8098",
+        "https://lyra.live",
+        "https://apptestnet.lyra.live",
+        "https://app.lyra.live"
+        )
+    .AllowAnyHeader()
+    .AllowAnyMethod());
+});
+
 var app = builder.Build();
 
 app.UseResponseCompression();
@@ -63,6 +91,7 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseCors();
 
 //app.UseAuthentication();
 //app.UseAuthorization();

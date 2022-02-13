@@ -40,6 +40,6 @@ builder.Services.AddMudServices(config =>
 });
 
 builder.Services.AddTransient<NebulaConsts>();
-builder.Services.AddSingleton<PeriodicExecutor>();
+builder.Services.AddScoped<PeriodicExecutor>();
 
 await builder.Build().RunAsync();

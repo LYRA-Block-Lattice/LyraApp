@@ -24,18 +24,20 @@ namespace Dealer.Server.Services
         DealerDb _db;
         Dealeamon _dealer;
         LyraEventClient _eventClient;
+        ILogger<Keeper> _logger;
 
         System.Timers.Timer _Timer;
 
         public static Keeper Singleton { get; private set; } = null!;
         public Keeper(IHubContext<DealerHub, IHubPushMethods> dealerHub, ILyraAPI lyraApi,
-            DealerDb db, Dealeamon dealer)
+            DealerDb db, Dealeamon dealer, ILogger<Keeper> logger)
         {
             Singleton = this;
             _dealerHub = dealerHub;
             _db = db;
             _dealer = dealer;
             _lyraApi = lyraApi;
+            _logger = logger;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -44,7 +46,7 @@ namespace Dealer.Server.Services
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                //Console.WriteLine($"Worker running at: {DateTime.Now}");
+                //_logger.LogInformation($"Worker running at: {DateTime.Now}");
 
                 ////List<string> history = new List<string> { "line 1", "line 2" };
                 //await _dealerHub.Clients.All.OnFoo(new FooData { FooPayload = $"{DateTime.Now}"});
@@ -61,6 +63,8 @@ namespace Dealer.Server.Services
                 url = $"https://seed1.mainnet.lyra.live:5504/events";
             else if(_db.NetworkId == "devnet")
                 url = $"https://devnet.lyra.live:4504/events";
+
+            _logger.LogInformation($"Lyra event on {_db.NetworkId} using {url}");
 
             _eventClient = new LyraEventClient(LyraEventHelper.CreateConnection(new Uri(url)));
 
@@ -84,7 +88,7 @@ namespace Dealer.Server.Services
                 if (obj is ConsensusEvent a)
                 {
                     var block = a.BlockAPIResult.GetBlock();
-                    Console.WriteLine($"Lyra Event: {block.Hash}: {a.Consensus}");
+                    _logger.LogInformation($"Lyra Event: {block.Hash}: {a.Consensus}");                    
 
                     // send event to client only when:
                     // * sender or receiver of transaction;
@@ -159,7 +163,7 @@ namespace Dealer.Server.Services
                 }
                 else if (obj is WorkflowEvent wf)
                 {
-                    Console.WriteLine($"([WF] {DateTime.Now:mm:ss.ff}) [{wf.Owner.Shorten()}][{wf.Name}]: Key is: {wf.Key}, Block {wf.Action} result: {wf.Result} State: {wf.State}, {wf.Message}");
+                    _logger.LogInformation($"([WF] {DateTime.Now:mm:ss.ff}) [{wf.Owner.Shorten()}][{wf.Name}]: Key is: {wf.Key}, Block {wf.Action} result: {wf.Result} State: {wf.State}, {wf.Message}");
 
                     if (wf.State == "Finished")
                     {
@@ -173,7 +177,7 @@ namespace Dealer.Server.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in ProcessEventAsync: {ex}");
+                _logger.LogInformation($"Error in ProcessEventAsync: {ex}");
             }
         }
 
@@ -213,7 +217,7 @@ namespace Dealer.Server.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"in keeper get price: {ex}");
+                _logger.LogInformation($"in keeper get price: {ex}");
             }
         }
 
