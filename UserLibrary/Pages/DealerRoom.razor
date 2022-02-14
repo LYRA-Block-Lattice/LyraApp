@@ -185,10 +185,9 @@
                     {
                         config.Action = "Open Trade";
                         config.ActionColor = Color.Primary;
-                        config.Onclick = snackbar =>
+                        config.Onclick = async snackbar =>
                         {
-                            Help(obj.TradeId);
-                            return Task.CompletedTask;
+                            await Help(obj.TradeId);
                         };
                     });
                 }
@@ -250,17 +249,18 @@
         }
     }
 
-    private void Help(string newtradeid)
+    private async Task Help(string newtradeid)
     {
         // rejoin room
         Navigation.NavigateTo($"/dealer/room/{newtradeid}");
-        //messages.Clear();
-        //lastpin = null;
-        //pintitle = null;
-        //actable = false;
+        messages.Clear();
+        lastpin = null;
+        pintitle = null;
+        actable = false;
 
-        //tradeid = newtradeid;
-        //await JoinDealerRoom();
+        tradeid = newtradeid;
+        await JoinDealerRoom();
+        await InvokeAsync(() => StateHasChanged());
     } 
 
     void ToggleEmj()
