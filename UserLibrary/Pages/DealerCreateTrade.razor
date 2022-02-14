@@ -78,8 +78,11 @@
     // 2, SendTokenFromOrderToTradeAsync,
     // 3, TradeGenesisReceiveAsync
     // if got genesis block the work flow is finished.
+    private bool finished = false;
     private async void DoPeriodicCall(Object state)
     {
+        if (finished)
+            return;
         var lstret = await walletState.Value.wallet.RPC.GetBlocksByRelatedTxAsync(sendhash);
         if (lstret.Successful())
         {
@@ -91,6 +94,7 @@
 
             if(gen != null)
             {
+                finished = true;
                 _timer.Change(Timeout.Infinite, Timeout.Infinite);
 
                 await InvokeAsync(() => StateHasChanged());

@@ -17,6 +17,8 @@ namespace Dealer.Server.Hubs
     // client call this
     public class DealerHub : Hub<IHubPushMethods>, IHubInvokeMethods
     {
+        private string _dealerId, _dealerKey;
+
         IConfiguration _config;
         ILyraAPI _lyraApi;
         DealerDb _db;
@@ -34,6 +36,9 @@ namespace Dealer.Server.Hubs
             _dealer = dealer;
             _messageBuffer = new BufferBlock<ChatMessage>();
             _fileBuffer = new BufferBlock<FileMessage>();
+
+            _dealerId = Configuration["DealerID"];
+            _dealerKey = Configuration["DealerKey"];
         }
 
         // room == trade == group, trinity
@@ -106,7 +111,7 @@ namespace Dealer.Server.Hubs
             var latestmsg = await _db.AppendTxRecordAsync(txmsg);
 
             string userName;
-            if (speakerAccountId == Consts.DEALER_ACCOUNTID)
+            if (speakerAccountId == _dealerId)
                 userName = "Dealer";
             else
             {
@@ -130,7 +135,7 @@ namespace Dealer.Server.Hubs
             var latestmsg = await _db.AppendTxRecordAsync(file);
 
             string userName;
-            if (file.AccountId == Consts.DEALER_ACCOUNTID)
+            if (file.AccountId == _dealerId)
                 userName = "Dealer";
             else
             {
@@ -212,7 +217,7 @@ namespace Dealer.Server.Hubs
             }
 
             var msg = $"Dealer can't confirm FiaT send. Please try again.";
-            await SendResponseToRoomAsync(tradeid, Consts.DEALER_ACCOUNTID, msg);
+            await SendResponseToRoomAsync(tradeid, _dealerId, msg);
         }
 
         private async Task CommandFiatSent(string tradeid, string input)
@@ -236,7 +241,7 @@ namespace Dealer.Server.Hubs
             }
 
             var msg = $"Dealer can't confirm FiAT send. Please try again.";
-            await SendResponseToRoomAsync(tradeid, Consts.DEALER_ACCOUNTID, msg);
+            await SendResponseToRoomAsync(tradeid, _dealerId, msg);
         }
 
         private async Task CommandStatus(string tradeid, string input)
@@ -255,7 +260,7 @@ namespace Dealer.Server.Hubs
             };
             var msg = $"Current status of trade: {tradeblk.OTStatus}. Next step: {next}";
 
-            await SendResponseToRoomAsync(tradeid, Consts.DEALER_ACCOUNTID, msg);
+            await SendResponseToRoomAsync(tradeid, _dealerId, msg);
         }
 
         public override async Task OnConnectedAsync()
@@ -359,31 +364,24 @@ namespace Dealer.Server.Hubs
                         {
                             { seller.AccountId, seller.UserName },
                             { buyer.AccountId, buyer.UserName },
-                            { Consts.DEALER_ACCOUNTID, "Dealer" },
+                            { _dealerId, "Dealer" },
                         };
                         return new JoinRoomResponse
                         {                            
                             ResultCode = APIResultCodes.Success,
-                            History = txmsgs.Select<TxRecord, RespContainer>(rec =>
+                            History = txmsgs.Select(rec =>
                                 rec is TxMessage msg ?
 
-                                new RespContainer
-                                {
-                                    MsgType = MessageTypes.Text,
-                                    Json = JsonConvert.SerializeObject(
+                                new RespContainer(
                                         new RespMessage
                                         {
                                             TradeId = req.TradeID,
                                             UserName = dict[msg.AccountId],
-                                            Text = (msg as TxMessage).Text,
+                                            Text = msg.Text,
                                         })
-                                }
                                 :
                                 
-                                new RespContainer
-                                {
-                                    MsgType = MessageTypes.File,
-                                    Json = JsonConvert.SerializeObject(
+                                new RespContainer(
                                         new RespFile
                                         {
                                             TradeId = req.TradeID,
@@ -393,11 +391,9 @@ namespace Dealer.Server.Hubs
                                             FileHash = (rec as TxFile).DataHash,
                                             Url = (rec as TxFile).Url,
                                             MimeType = (rec as TxFile).MimeType,
-                                        })
-                                }
-                                
-                            )
-                            .ToArray(),
+                                        })                                
+                                )
+                                .ToArray(),
                             Roles = new Dictionary<string, string>()
                             {
                                 { seller.UserName, seller.AccountId == req.UserAccountID ? "me" : "peer"},

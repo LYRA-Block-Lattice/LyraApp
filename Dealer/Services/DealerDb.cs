@@ -19,10 +19,13 @@ namespace Dealer.Server.Services
         private string _networkId;
         public string NetworkId { get => _networkId; set => _networkId = value; }
 
+        private string _dealerId, _dealerKey;
         public DealerDb(IConfiguration Configuration, IOptions<DealerDbSettings> dbSettings)
         {
             _dbSettings = dbSettings;
             _networkId = Configuration["network"];
+            _dealerId = Configuration["DealerID"];
+            _dealerKey = Configuration["DealerKey"];
 
             BsonClassMap.RegisterClassMap<TxRecord>(cm =>
             {
@@ -116,7 +119,7 @@ namespace Dealer.Server.Services
 
             var last = GetLastRecordForTrade(record.TradeID);
 
-            record.Initialize(last, Consts.DEALER_KEY, Consts.DEALER_ACCOUNTID);
+            record.Initialize(last, _dealerKey, _dealerId);
             await CreateTxRecordAsync(record);
 
             return GetLastRecordForTrade(record.TradeID);

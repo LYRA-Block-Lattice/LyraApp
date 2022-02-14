@@ -21,6 +21,8 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddEnvironmentVariables(prefix: "DEALER_");
+
 builder.Logging.AddSerilog(Log.Logger);
 
 builder.Services.Configure<DealerDbSettings>(
