@@ -420,7 +420,7 @@ namespace Dealer.Server.Hubs
             PinnedMessage pinned;
             if(accountId == tradeblk.OwnerAccountId)    // buyer
             {
-                var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.price * tradeblk.Trade.amount:N2}";
+                var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.pay:N2}";
                 var next = tradeblk.OTStatus switch
                 {
                     OTCTradeStatus.Open => (PinnedMode.Action, $"Pay {fiat} to seller"),
