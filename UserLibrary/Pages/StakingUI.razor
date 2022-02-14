@@ -4,15 +4,17 @@
 @using Nebula.Store.WebWalletUseCase
 @implements IDisposable
 
-<div style="margin-top: 10px;">
+<div style="margin-top: 10px;height:100%;width:100%;">
 @if(walletState.Value.wallet == null)
 {
-    <a href="/wallet">
-        <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
-            <MudIcon Icon="@Icons.Filled.LockOpen" />
-            Open Wallet
-        </MudButton>
-    </a>
+    <div class="center-item">
+        <a href="/wallet" style="width:90%;">
+            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
+                <MudIcon Icon="@Icons.Filled.LockOpen" />
+                Open Wallet
+            </MudButton>
+        </a>
+    </div>
 }
 else
 {

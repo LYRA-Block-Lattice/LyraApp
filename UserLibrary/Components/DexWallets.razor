@@ -18,7 +18,14 @@
 @if (walletState.Value.wallet == null)
 {
 
-    <a href="/wallet"><MudButton Variant="Variant.Filled" Color="Color.Primary">Open Wallet</MudButton></a>
+    <div class="center-item" style="width:100%;margin-top:25%;">
+        <a href="/wallet" style="width:90%;">
+            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
+                <MudIcon Icon="@Icons.Filled.LockOpen" />
+                Open Wallet
+            </MudButton>
+        </a>
+    </div>
 }
 else
 {
@@ -53,12 +60,12 @@ else
                     </div>
                     <div class="deposit-withdraw">
                         <div class="deposit">
-                            <MudButton Variant="Variant.Filled" Color="Color.Default" OnClick="@(async ()=>{ await OnDepositClick(token); })" style="width: 70%;">
+                            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="@(async ()=>{ await OnDepositClick(token); })" style="width: 70%;">
                                 Deposit
                             </MudButton>
                         </div>
                         <div class="withdraw">
-                            <MudButton Variant="Variant.Filled" Color="Color.Default" OnClick="@(async ()=>{ await OnWithdrawClick(token); })" style="width: 70%;">
+                            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="@(async ()=>{ await OnWithdrawClick(token); })" style="width: 70%;">
                                 Withdraw
                             </MudButton>
                         </div>

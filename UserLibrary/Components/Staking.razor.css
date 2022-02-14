@@ -1,0 +1,62 @@
+.node-flex {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.flex-left, .flex-right {
+    font-size: 0.7rem;
+    padding : 5px 0;
+}
+
+.node-flex .flex-right {
+   width: 50%;
+   text-align: right;
+   font-weight: bold;
+}
+
+.node-flex .flex-left {
+    width: 50%;
+    text-align: left;
+}
+
+.node-head {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.node-list .node-name {
+    font-size: 1.5rem !important;
+}
+
+.node-account {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.node-details {
+    display: flex;
+    margin-top: 20px;
+}
+
+.total-profit {
+    width: 50%;
+    text-align: left;
+}
+
+.share {
+    width: 50%;
+    text-align: right;
+}
+
+.btn-stake {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    border-top: #ccc 1px solid;
+    padding-top: 20px;
+}

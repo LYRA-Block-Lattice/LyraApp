@@ -15,7 +15,7 @@
         <div class="flex-container">
             @foreach (var stk in walletState.Value.stkAccounts)
             {
-            <div class="node-list staking-list">
+            @* <div class="node-list staking-list">
                 <table class="table">
                     <tbody>
                         
@@ -74,6 +74,54 @@
                         
                     </tbody>
                 </table>
+            </div> *@
+            <div class="node-list">
+                <div class="node-head">
+                    <div class="node-name">@((stk as IStaking).Name)</div>
+                    <div class="node-details">
+                        <div class="total-profit">
+                            <div style="font-weight: bold;font-size:0.7rem">Total Reward</div>
+                            <div style="font-size: 0.75rem;">@walletState.Value.stkRewards[(stk as TransactionBlock).AccountID] LYR</div>
+                        </div>
+                        <div class="share">
+                            <div style="font-weight: bold;font-size:0.7rem">Staking Amount</div>
+                            <div style="font-size: 0.75rem;">
+                                    @if (walletState.Value.stkBalances != null)
+                                    {
+                                        <p>@walletState.Value.stkBalances[(stk as TransactionBlock).AccountID] LYR</p>
+                                    }
+                                    else
+                                    {
+                                        <p>0 LYR</p>
+                                    }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="node-flex">
+                    <div class="flex-left">Compund Mode</div>
+                    <div class="flex-right">@((stk as IStaking).CompoundMode)</div>
+                </div>
+                <div class="node-flex">
+                    <div class="flex-left">Start Time</div>
+                    <div class="flex-right">@((stk as IStaking).Start)</div>
+                </div>
+            
+                <div class="node-flex">
+                    <div class="flex-left">Staking Days</div>
+                    <div class="flex-right">@((stk as IStaking).Days)</div>
+                </div>
+                
+                <div class="node-flex">
+                    <div class="flex-left">Staking for</div>
+                    <div class="flex-right">
+                        <a target="_blank" href="https://nebula.lyra.live/showblock/@((stk as IStaking).Voting)"> @((stk as IStaking).Voting.Substring(0, 10))...</a>
+                    </div>
+                </div>
+                <div class="btn-stake">
+                    <MudButton Variant="Variant.Outlined" FullWidth="true" Size="Size.Small" Color="Color.Primary" OnClick="@(async (e) => await AddStkAsync(e, (stk as TransactionBlock).AccountID))">Stake</MudButton>
+                    <MudButton Variant="Variant.Outlined" FullWidth="true" Size="Size.Small" Color="Color.Primary" OnClick="@(async () => {await UnstakingConfirm((stk as TransactionBlock).AccountID, (stk as IStaking).Start, (stk as IStaking).Days);})">Unstake</MudButton>
+                </div>
             </div>
             }
         </div>

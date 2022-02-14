@@ -17,90 +17,96 @@
 
 @if (ui == UI.Main)
 {
-    @* <h1>All Profiting Accounts</h1>
-
-    <div>
-        <table class="table">
-            <thead>
+    <div class="flex-container">
+        @foreach (var pft in pfts.OrderByDescending(a => a.totalprofit).ThenBy(x => x.gens.Name))
+        {
+        @* <div class="node-list">
+            <div class="node-name"  @onclick="@(async () => await NavToPft(pft.gens.AccountID))">@pft.gens.Name</div>
+            <table>
                 <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Created Time</th>
-                    <th>Share Ratio</th>
-                    <th>Seats</th>
-                    <th>Total Profit</th>
-                    <th>Profiting Account ID</th>
-                    <th>Owner</th>
+                    <td>Type</td>
+                    <td style="padding: 20px;">:</td>
+                    <td>@pft.gens.PType</td>
                 </tr>
-            </thead>
-            <tbody> *@
-                <div class="flex-container">
-                @foreach (var pft in pfts.OrderByDescending(a => a.totalprofit).ThenBy(x => x.gens.Name))
-                {
-                    <div class="node-list">
-                        <div class="node-name"  @onclick="@(async () => await NavToPft(pft.gens.AccountID))">@pft.gens.Name</div>
-                        <table>
-                            <tr>
-                                <td>Type</td>
-                                <td style="padding: 20px;">:</td>
-                                <td>@pft.gens.PType</td>
-                            </tr>
-                            <tr>
-                                <td>Created Time</td>
-                                <td style="padding: 20px;">:</td>
-                                <td>@pft.gens.TimeStamp</td>
-                            </tr>
-                            <tr>
-                                <td>Share Ratio</td>
-                                <td style="padding: 20px;">:</td>
-                                <td>@(pft.gens.ShareRito*100) %</td>
-                            </tr>
-                            <tr>
-                                <td>Seats</td>
-                                <td style="padding: 20px;">:</td>
-                                <td>@pft.gens.Seats</td>
-                            </tr>
-                            <tr>
-                                <td>Total Profit</td>
-                                <td style="padding: 20px;">:</td>
-                                <td>@pft.totalprofit</td>
-                            </tr>
-                            <tr>
-                                <td>Profiting account ID</td>
-                                <td style="padding: 20px;">:</td>
-                                <td>
-                                    <p style="width:100%;display:inline;">
-                                        <CopyToClipboard Text="@pft.gens.AccountID" />
-                                        <a target="_blank" href="@bexpurl/showblock/@pft.gens.AccountID"><MudIcon Icon="@Icons.Filled.CallMade" Size="Size.Small" /></a>
-                                    </p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Owner</td>
-                                <td style="padding: 20px;">:</td>
-                                <td><a target="_blank" href="@bexpurl/showblock/@pft.gens.OwnerAccountId">@pft.gens.OwnerAccountId.Substring(0, 10)...</a></td>
-                            </tr>
-                        </table>
-                    </div>
-                    @* <tr style="cursor:pointer" @onclick="@(async () => await NavToPft(pft.gens.AccountID))">
-                        <td style="color: blue">@pft.gens.Name</td>
-                        <td>@pft.gens.PType</td>
-                        <td>@pft.gens.TimeStamp</td>
-                        <td>@(pft.gens.ShareRito*100) %</td>
-                        <td>@pft.gens.Seats</td>
-                        <td>@pft.totalprofit</td>
-                        <td>
-                            <a target="_blank" href="@bexpurl/showblock/@pft.gens.AccountID">@pft.gens.AccountID</a>
-                        </td>
-                        <td>
-                            <a target="_blank" href="@bexpurl/showblock/@pft.gens.OwnerAccountId">@pft.gens.OwnerAccountId.Substring(0, 10)...</a>
+                <tr>
+                    <td>Created Time</td>
+                    <td style="padding: 20px;">:</td>
+                    <td>@pft.gens.TimeStamp</td>
+                </tr>
+                <tr>
+                    <td>Share Ratio</td>
+                    <td style="padding: 20px;">:</td>
+                    <td>@(pft.gens.ShareRito*100) %</td>
+                </tr>
+                <tr>
+                    <td>Seats</td>
+                    <td style="padding: 20px;">:</td>
+                    <td>@pft.gens.Seats</td>
+                </tr>
+                <tr>
+                    <td>Total Profit</td>
+                    <td style="padding: 20px;">:</td>
+                    <td>@pft.totalprofit</td>
+                </tr>
+                <tr>
+                    <td>Profiting account ID</td>
+                    <td style="padding: 20px;">:</td>
+                    <td>
+                        <p style="width:100%;display:inline;">
+                            <CopyToClipboard Text="@pft.gens.AccountID" />
+                            <a target="_blank" href="@bexpurl/showblock/@pft.gens.AccountID"><MudIcon Icon="@Icons.Filled.CallMade" Size="Size.Small" /></a>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Owner</td>
+                    <td style="padding: 20px;">:</td>
+                    <td><a target="_blank" href="@bexpurl/showblock/@pft.gens.OwnerAccountId">@pft.gens.OwnerAccountId.Substring(0, 10)...</a></td>
+                </tr>
+            </table>
+        </div> *@
 
-                        </td>
-                    </tr> *@
-                }
-            @* </tbody>
-        </table>
-    </div> *@
+        <div class="node-list">
+            <div class="node-head">
+                <div class="node-name" @onclick="@(async () => await NavToPft(pft.gens.AccountID))">@pft.gens.Name</div>
+                <div class="node-account">
+                    <p style="width:100%;display:inline;text-align:center;">
+                        <CopyToClipboard Text="@pft.gens.AccountID" />
+                        <a target="_blank" href="@bexpurl/showblock/@pft.gens.AccountID"><MudIcon Icon="@Icons.Filled.CallMade" Size="Size.Small" /></a>
+                    </p>
+                </div>
+                <div class="node-details">
+                    <div class="total-profit">
+                        <div style="font-weight: bold;font-size:0.7rem">Total Profit</div>
+                        <div>@pft.totalprofit LYR</div>
+                    </div>
+                    <div class="share">
+                        <div style="font-weight: bold;font-size:0.7rem">Share Ratio</div>
+                        <div >@(pft.gens.ShareRito*100)%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="node-flex">
+                <div class="flex-left">Type</div>
+                <div class="flex-right">@pft.gens.PType</div>
+            </div>
+            <div class="node-flex">
+                <div class="flex-left">Created Time</div>
+                <div class="flex-right">@pft.gens.TimeStamp</div>
+            </div>
+           
+            <div class="node-flex">
+                <div class="flex-left">Seats</div>
+                <div class="flex-right">@pft.gens.Seats</div>
+            </div>
+            
+            <div class="node-flex">
+                <div class="flex-left">Owner</div>
+                <div class="flex-right"><a target="_blank" href="@bexpurl/showblock/@pft.gens.OwnerAccountId">@pft.gens.OwnerAccountId.Substring(0, 10)...</a></div>
+            </div>
+        </div>
+        }
     </div>
 
 }
