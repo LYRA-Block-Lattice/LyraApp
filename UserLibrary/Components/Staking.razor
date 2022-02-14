@@ -80,12 +80,12 @@
     </MudTabPanel>
     <MudTabPanel Text="Profiting Accounts">
         <div class="flex-container">
+                        
+           @foreach (var pft in walletState.Value.pftAccounts)
+           {
             <div class="node-list staking-list">
                 <table class="table">
                     <tbody>
-                        
-                        @foreach (var pft in walletState.Value.pftAccounts)
-                        {
                             <tr>
                                 <td>Name</td>
                                 <td>:</td>
@@ -115,10 +115,11 @@
                                     </p>
                                 </td>
                             </tr>
-                        }
                     </tbody>
                 </table>
             </div>
+             }
+                    
         </div>
     </MudTabPanel>
 </MudTabs>
