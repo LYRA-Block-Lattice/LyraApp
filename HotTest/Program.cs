@@ -39,7 +39,7 @@ builder.Services.AddMudServices(config =>
 });
 
 builder.Services.AddTransient<NebulaConsts>();
-builder.Services.AddScoped<PeriodicExecutor>();
+builder.Services.AddSingleton<PeriodicExecutor>();
 
 var app = builder.Build();
 
