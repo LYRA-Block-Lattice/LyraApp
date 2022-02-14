@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Lyra.Core.API;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Configuration;
 
 namespace UserLibrary.Data
 {
@@ -35,16 +36,22 @@ namespace UserLibrary.Data
     {
         private readonly HubConnection _connection;
 
+        private static bool _started = false;
+
+        public bool IsStarted => _started;
         public ConnectionMethodsWrapper(HubConnection connection)
         {
             _connection = connection;
-            _connection.Closed += _connection_Closed;
-            _connection.Reconnected += _connection_Reconnected;
-            _connection.Reconnecting += _connection_Reconnecting;
         }
 
         public async Task StartAsync()
         {
+            _started = true;
+
+            _connection.Closed += _connection_Closed;
+            _connection.Reconnected += _connection_Reconnected;
+            _connection.Reconnecting += _connection_Reconnecting;
+
             await _connection.StartAsync();
         }
 

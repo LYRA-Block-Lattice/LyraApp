@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Lyra.Data.API
+namespace UserLibrary.Data
 {
     public class DealerClient
     {

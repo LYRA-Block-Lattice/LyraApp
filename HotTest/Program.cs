@@ -5,6 +5,7 @@ using Lyra.Data.API;
 using Lyra.Data.Crypto;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
 using MudBlazor.Services;
 using UserLibrary.Data;
@@ -39,7 +40,22 @@ builder.Services.AddMudServices(config =>
 });
 
 builder.Services.AddTransient<NebulaConsts>();
-builder.Services.AddSingleton<PeriodicExecutor>();
+
+// Register a preconfigure SignalR hub connection.
+// Note the connection isnt yet started, this will be done as part of the App.razor component
+// to avoid blocking the application startup in case the connection cannot be established
+builder.Services.AddSingleton<HubConnection>(sp => {
+    var eventUrl = "https://192.168.3.91:7070/hub";
+    if (networkid == "testnet")
+        eventUrl = "https://dealertestnet.lyra.live/hub";
+    else if (networkid == "mainnet")
+        eventUrl = "https://dealer.lyra.live/hub";
+    var hub = ConnectionFactoryHelper.CreateConnection(new Uri(eventUrl));
+
+    return hub;
+});
+
+builder.Services.AddSingleton<ConnectionMethodsWrapper>();
 
 var app = builder.Build();
 

@@ -54,14 +54,12 @@
 @code
 {
     [Inject]
-    PeriodicExecutor _periodic { get; set; }
-    [Inject]
     private IState<WebWalletState>? walletState { get; set; }
     [Inject]
     private IDispatcher Dispatcher { get; set; }
 
     [Inject] ISnackbar Snackbar { get; set; }
-    [Inject] PeriodicExecutor executor { get; set; }
+    [Inject] ConnectionMethodsWrapper Realconn { get; set; }
 
     MudMenu mnu;
 
@@ -75,8 +73,6 @@
         net = Configuration["network"];
         if (net == "mainnet")
             net = "";
-
-        await _periodic.InitializeAsync();
 
         SubscribeToAction<WebWalletChangeTitleAction>(
             x =>
@@ -96,6 +92,11 @@
             });
 
         ConnectSignalR();
+        
+        Realconn.RegisterOnChat(a => Dispatcher.Dispatch(a));
+        Realconn.RegisterOnPinned(a => Dispatcher.Dispatch(a));
+        Realconn.RegisterOnEvent(a => Dispatcher.Dispatch(a));
+
         await base.OnInitializedAsync();
     }
 

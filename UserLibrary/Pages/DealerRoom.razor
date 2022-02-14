@@ -133,7 +133,7 @@
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] IJSRuntime JsRuntime { get; set; }
     [Inject] private IDialogService DialogService { get; set; }
-    [Inject] PeriodicExecutor executor { get; set; }
+    [Inject] ConnectionMethodsWrapper Realconn { get; set; }
 
     private List<RespContainer> messages = new List<RespContainer>();
 
@@ -193,7 +193,7 @@
                 InvokeAsync(() => StateHasChanged());
             });
 
-        joinroom = await executor.HotLine.JoinRoom(new JoinRoomRequest
+        joinroom = await Realconn.JoinRoom(new JoinRoomRequest
             {
                 TradeID = tradeid,
                 UserAccountID = walletState.Value.wallet.AccountId,
@@ -249,7 +249,7 @@
     private async Task Send(string txt)
     {
         // PortableSignatures make a better compatibility
-        await executor.HotLine.Chat(new ChatMessage
+        await Realconn.Chat(new ChatMessage
             {
                 TradeId = tradeid,
                 AccountId = walletState.Value.wallet.AccountId,
@@ -359,7 +359,7 @@
                             f.Name, imageData, f.ContentType);
                         if (ret.Successful())
                         {
-                            await executor.HotLine.SendFile(new FileMessage
+                            await Realconn.SendFile(new FileMessage
                             {
                                 AccountId = wallet.AccountId,
                                 Signature = Signatures.GetSignature(wallet.PrivateKey, ret.Hash, wallet.AccountId),
