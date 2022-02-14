@@ -11,7 +11,7 @@
 @using Nebula.Store.WebWalletUseCase
 @using System.Security.Cryptography
 @using UserLibrary.Data
-@inject NavigationManager NavigationManager
+@inject NavigationManager Navigation
 
 <div class="mag fh">
 
@@ -39,7 +39,7 @@
             @foreach (var cainter in messages)
             {
                 var obj = cainter.Get();
-                if(obj is RespMessage msg)
+                if(obj is RespMessage msg && msg.TradeId == tradeid)
                 {
                     var align = "left";
                     if (joinroom.Roles[msg.UserName] == "me")
@@ -51,7 +51,7 @@
                         <div class="@(joinroom.Roles[msg.UserName])msg">@msg.Text</div>
                     </div>
                 }
-                else if(obj is RespFile file)
+                else if(obj is RespFile file && file.TradeId == tradeid)
                 {
                     var align = "left";
                     if (joinroom.Roles[file.UserName] == "me")
@@ -166,31 +166,62 @@
     {
         if (walletState.Value.wallet == null)
         {
-            NavigationManager.NavigateTo("/wallet");
+            Navigation.NavigateTo("/wallet");
             return;
         }
 
         SubscribeToAction<RespContainer>(a =>
             {
-                messages.Add(a);
-                addmsg = true;
-                InvokeAsync(() => StateHasChanged());
+                var obj = a.Get();
+                if(obj.TradeId == tradeid)
+                {
+                    messages.Add(a);
+                    addmsg = true;
+                    InvokeAsync(() => StateHasChanged());
+                }
+                else
+                {
+                    Snackbar.Add($"New message for trade: {obj.TradeId}", Severity.Normal, config =>
+                    {
+                        config.Action = "Open Trade";
+                        config.ActionColor = Color.Primary;
+                        config.Onclick = snackbar =>
+                        {
+                            Help(obj.TradeId);
+                            return Task.CompletedTask;
+                        };
+                    });
+                }
             });
 
         SubscribeToAction<PinnedMessage>(a =>
             {
-                lastpin = a;
-                pintitle = a.Mode switch
+                if(a.TradeId == tradeid)
                 {
-                    PinnedMode.Action => "Take Action",
-                    PinnedMode.Wait => "Await",
-                    PinnedMode.Notify => "",
-                    _ => "",
-                };
-                actable = a.Mode == PinnedMode.Action;
-                pinnedmsg = a.Text;
+                    lastpin = a;
+                    pintitle = a.Mode switch
+                    {
+                        PinnedMode.Action => "Take Action",
+                        PinnedMode.Wait => "Await",
+                        PinnedMode.Notify => "",
+                        _ => "",
+                    };
+                    actable = a.Mode == PinnedMode.Action;
+                    pinnedmsg = a.Text;
 
-                InvokeAsync(() => StateHasChanged());
+                    InvokeAsync(() => StateHasChanged());
+                }
+                else
+                {
+                    if(a.Mode == PinnedMode.Action)
+                    {
+                        Snackbar.Add($"Trade changed. Need action: {a.Text}", Severity.Info);
+                    }
+                    else
+                    {
+                        Snackbar.Add($"Trade changed. {a.Text}", Severity.Normal);
+                    }
+                }
             });
 
         joinroom = await Realconn.JoinRoom(new JoinRoomRequest
@@ -213,6 +244,11 @@
             Snackbar.Add($"Error join dealer room: {joinroom.ResultCode}", Severity.Error);
         }
     }
+
+    private void Help(string tradeid)
+    {
+        Navigation.NavigateTo($"/dealer/room/{tradeid}");
+    } 
 
     void ToggleEmj()
     {

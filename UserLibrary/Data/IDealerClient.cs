@@ -38,7 +38,13 @@ namespace UserLibrary.Data
         public string? Hash { get; set; }
     }
 
-    public class RespMessage
+    public interface IChatResp
+    {
+        string TradeId { get; set; }
+        string UserName { get; set; }
+        string Hash { get; set; }
+    }
+    public class RespMessage : IChatResp
     {
         public string TradeId { get; set; } = null!;
         public string UserName { get; set; } = null!;
@@ -55,7 +61,7 @@ namespace UserLibrary.Data
         public string? Hash { get; set; }
     }
 
-    public class RespFile
+    public class RespFile : IChatResp
     {
         public string TradeId { get; set; } = null!;
         public string UserName { get; set; } = null!;
@@ -108,7 +114,7 @@ namespace UserLibrary.Data
             Json = JsonConvert.SerializeObject(file);
         }
 
-        public object? Get()
+        public IChatResp? Get()
         {
             return MsgType switch
             {

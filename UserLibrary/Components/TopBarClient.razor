@@ -112,15 +112,15 @@
                 if (obj is RespMessage a)
                 {
                     Snackbar.Add($"{a.UserName}: {a.Text}", Severity.Normal, config =>
-                {
-                    config.Action = "Open Trade";
-                    config.ActionColor = Color.Primary;
-                    config.Onclick = snackbar =>
                     {
-                        Help(a.TradeId);
-                        return Task.CompletedTask;
-                    };
-                });
+                        config.Action = "Open Trade";
+                        config.ActionColor = Color.Primary;
+                        config.Onclick = snackbar =>
+                        {
+                            Help(a.TradeId);
+                            return Task.CompletedTask;
+                        };
+                    });
                 }
                 else
                 if (obj is RespFile fx)
