@@ -43,10 +43,10 @@ builder.Services.AddTransient<ILyraAPI>(provider =>
 builder.Services.AddSingleton<DealerDb>();
 builder.Services.AddSignalR(hubOptions =>
     {
-        hubOptions.AddFilter<SigFilter>();      //https://docs.microsoft.com/en-us/aspnet/core/signalr/hub-filters?view=aspnetcore-6.0
+        //hubOptions.AddFilter<SigFilter>();      //https://docs.microsoft.com/en-us/aspnet/core/signalr/hub-filters?view=aspnetcore-6.0
     }
 );
-builder.Services.AddSingleton<SigFilter>();
+//builder.Services.AddSingleton<SigFilter>();
 builder.Services.AddTransient<Dealeamon>();
 
 builder.Services.AddControllersWithViews();
