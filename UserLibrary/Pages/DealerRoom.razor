@@ -181,7 +181,7 @@
                 }
                 else
                 {
-                    Snackbar.Add($"New message for trade: {obj.TradeId}", Severity.Normal, config =>
+                    Snackbar.Add($"New message for trade: {obj.TradeId.Shorten()}", Severity.Normal, config =>
                     {
                         config.Action = "Open Trade";
                         config.ActionColor = Color.Primary;
@@ -224,6 +224,11 @@
                 }
             });
 
+        await JoinDealerRoom();
+    }
+
+    private async Task JoinDealerRoom()
+    {
         joinroom = await Realconn.JoinRoom(new JoinRoomRequest
             {
                 TradeID = tradeid,
@@ -245,9 +250,17 @@
         }
     }
 
-    private void Help(string tradeid)
+    private void Help(string newtradeid)
     {
-        Navigation.NavigateTo($"/dealer/room/{tradeid}");
+        // rejoin room
+        Navigation.NavigateTo($"/dealer/room/{newtradeid}");
+        //messages.Clear();
+        //lastpin = null;
+        //pintitle = null;
+        //actable = false;
+
+        //tradeid = newtradeid;
+        //await JoinDealerRoom();
     } 
 
     void ToggleEmj()
