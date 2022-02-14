@@ -285,14 +285,21 @@
     private async Task Send(string txt)
     {
         // PortableSignatures make a better compatibility
-        await Realconn.Chat(new ChatMessage
-            {
-                TradeId = tradeid,
-                AccountId = walletState.Value.wallet.AccountId,
-                Text = txt,
-                Signature = PortableSignatures.GetSignature(walletState.Value.wallet.PrivateKey,
-                                txt, walletState.Value.wallet.AccountId),
-            });
+        if(Realconn.IsConnected)
+        {
+            await Realconn.Chat(new ChatMessage
+                {
+                    TradeId = tradeid,
+                    AccountId = walletState.Value.wallet.AccountId,
+                    Text = txt,
+                    Signature = PortableSignatures.GetSignature(walletState.Value.wallet.PrivateKey,
+                                    txt, walletState.Value.wallet.AccountId),
+                });
+        }
+        else
+        {
+            Snackbar.Add($"Not connected to dealer. Please retry again.", Severity.Error);
+        }
     }
 
     private async Task FinishAction()
