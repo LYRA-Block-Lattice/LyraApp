@@ -65,6 +65,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(builder =>
     builder.WithOrigins(
         "https://localhost:8098",
+        "http://localhost:5098",
         "https://lyra.live",
         "https://apptestnet.lyra.live",
         "https://app.lyra.live"

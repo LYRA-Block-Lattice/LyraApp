@@ -82,7 +82,7 @@
         <div class="ext">
             <InputFile id="fileInput112" OnChange="UploadFiles" hidden multiple accept=".jpg, .jpeg, .png" />
 
-            <MudButton
+            <MudButton HtmlTag="label"
                    Variant="Variant.Filled"
                    StartIcon="@Icons.Filled.Image"
                    for="fileInput112">
@@ -317,59 +317,65 @@
 
     private async Task FinishAction()
     {
-        var tradeblk = (await walletState.Value.wallet.RPC.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
-        var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.price * tradeblk.Trade.amount:N2}";
-
-        if (tradeblk.OTStatus == OTCTradeStatus.Open &&
-            tradeblk.OwnerAccountId == walletState.Value.wallet.AccountId)
+        try
         {
-            // ask if your have paied
-            var result = await DialogService.ShowMessageBox(
-            "Warning",
-                $"Please make sure you have paid {fiat} to the seller.",
-                yesText: "Confirm!", cancelText: "Cancel");
+            var tradeblk = (await walletState.Value.wallet.RPC.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+            var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.price * tradeblk.Trade.amount:N2}";
 
-            if (result != null && result.Value)
+            if (tradeblk.OTStatus == OTCTradeStatus.Open &&
+                tradeblk.OwnerAccountId == walletState.Value.wallet.AccountId)
             {
-                var payindret = await walletState.Value.wallet.OTCTradeBuyerPaymentSentAsync(tradeid);
-                if (payindret.Successful())
-                {
-                    await Send("/fiatsent");
+                // ask if your have paied
+                var result = await DialogService.ShowMessageBox(
+                "Warning",
+                    $"Please make sure you have paid {fiat} to the seller.",
+                    yesText: "Confirm!", cancelText: "Cancel");
 
-                    Snackbar.Add($"Successfully.", Severity.Success);
-                }
-                else
+                if (result != null && result.Value)
                 {
-                    Snackbar.Add($"Failed. {payindret.ResultCode}", Severity.Error);
+                    var payindret = await walletState.Value.wallet.OTCTradeBuyerPaymentSentAsync(tradeid);
+                    if (payindret.Successful())
+                    {
+                        await Send("/fiatsent");
+
+                        Snackbar.Add($"Successfully.", Severity.Success);
+                    }
+                    else
+                    {
+                        Snackbar.Add($"Failed. {payindret.ResultCode}", Severity.Error);
+                    }
+                }
+            }
+
+            if (tradeblk.OTStatus == OTCTradeStatus.FiatSent &&
+                tradeblk.Trade.orderOwnerId == walletState.Value.wallet.AccountId)
+            {
+                // ask if your have paied
+                var result = await DialogService.ShowMessageBox(
+                "Warning",
+                    $"Please make sure you have received fiat payment of {fiat}.",
+                    yesText: "Confirm!", cancelText: "Cancel");
+
+                if (result != null && result.Value)
+                {
+                    var payindret = await walletState.Value.wallet.OTCTradeSellerGotPaymentAsync(tradeid);
+                    if (payindret.Successful())
+                    {
+                        await Send("/fiatreceived");
+
+                        Snackbar.Add($"Successfully.", Severity.Success);
+                    }
+                    else
+                    {
+                        Snackbar.Add($"Failed. {payindret.ResultCode}", Severity.Error);
+                    }
                 }
             }
         }
-
-        if (tradeblk.OTStatus == OTCTradeStatus.FiatSent &&
-            tradeblk.Trade.orderOwnerId == walletState.Value.wallet.AccountId)
+        catch(Exception ex)
         {
-            // ask if your have paied
-            var result = await DialogService.ShowMessageBox(
-            "Warning",
-                $"Please make sure you have received fiat payment of {fiat}.",
-                yesText: "Confirm!", cancelText: "Cancel");
-
-            if (result != null && result.Value)
-            {
-                var payindret = await walletState.Value.wallet.OTCTradeSellerGotPaymentAsync(tradeid);
-                if (payindret.Successful())
-                {
-                    await Send("/fiatreceived");
-
-                    Snackbar.Add($"Successfully.", Severity.Success);
-                }
-                else
-                {
-                    Snackbar.Add($"Failed. {payindret.ResultCode}", Severity.Error);
-                }
-            }
+            Snackbar.Add($"Failed, please retry. {ex.Message}", Severity.Error);
         }
-
     }
 
     private async Task UploadFiles(InputFileChangeEventArgs e)
