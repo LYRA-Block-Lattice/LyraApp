@@ -28,12 +28,15 @@ namespace Dealer.Server.Hubs
 
         Dictionary<string, string> _idgrps = new Dictionary<string, string>();
 
-        public DealerHub(DealerDb db, Dealeamon dealer, ILyraAPI lyraApi, IConfiguration Configuration)
+        ILogger<DealerHub> _logger;
+
+        public DealerHub(DealerDb db, Dealeamon dealer, ILyraAPI lyraApi, IConfiguration Configuration, ILogger<DealerHub> logger)
         {
             _config = Configuration;
             _lyraApi = lyraApi;
             _db = db;
             _dealer = dealer;
+            _logger = logger;
             _messageBuffer = new BufferBlock<ChatMessage>();
             _fileBuffer = new BufferBlock<FileMessage>();
 
@@ -63,7 +66,7 @@ namespace Dealer.Server.Hubs
                     }
                     else
                     {
-                        Console.WriteLine("Not permited to chat.");
+                        _logger.LogInformation("Not permited to chat.");
                     }
                 }
                 else if(post is FileMessage fm)
@@ -91,7 +94,7 @@ namespace Dealer.Server.Hubs
                     }
                     else
                     {
-                        Console.WriteLine("Not permited to chat.");
+                        _logger.LogInformation("Not permited to chat.");
                     }
                 }
             }
@@ -263,6 +266,15 @@ namespace Dealer.Server.Hubs
             await SendResponseToRoomAsync(tradeid, _dealerId, msg);
         }
 
+        // print peer info
+        private async Task CommandInfo(string tradeid, string input)
+        {
+            var tradeblk = (await _lyraApi.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+            var msg = $"Trade ID:";
+
+            await SendResponseToRoomAsync(tradeid, _dealerId, msg);
+        }
+
         public override async Task OnConnectedAsync()
         {
             try
@@ -277,7 +289,7 @@ namespace Dealer.Server.Hubs
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in OnConnectedAsync: {ex}");
+                _logger.LogInformation($"Error in OnConnectedAsync: {ex}");
             }
             //File.AppendAllText("c:\\tmp\\connectionids.txt", $"AddToGroupAsync: {id}, {account}\n");
 
@@ -300,7 +312,7 @@ namespace Dealer.Server.Hubs
             }
             else
             {
-                Console.WriteLine("Message signature verify failed.");
+                _logger.LogInformation("Message signature verify failed.");
             }
         }
 
@@ -314,7 +326,7 @@ namespace Dealer.Server.Hubs
             }
             else
             {
-                Console.WriteLine("Message signature verify failed.");
+                _logger.LogInformation("Message signature verify failed.");
             }
         }
 
