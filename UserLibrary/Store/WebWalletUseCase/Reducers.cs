@@ -74,8 +74,7 @@ namespace Nebula.Store.WebWalletUseCase
 			}
 			else
             {
-				var bst = action.wallet.GetDisplayBalancesAsync().ContinueWith(a => bs = a.Result);
-				bst.Wait();
+				bs = action.wallet.GetDisplayBalances();
 			}
 
 			return state.With(new

@@ -17,7 +17,7 @@
             <MudGrid>
                 @if(tradableOrders == null)
                 {
-                    <MudItem xs="12">
+                    <MudItem xs="12" Style="align-content: center;">
                     <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
                     </MudItem>
                 }
@@ -328,7 +328,7 @@
                 if (evt is ContractChangeEvent cce)
                 {
                     await GetMyDaos();
-                    await OpenSwapUI();
+                    await RefreshOrders();
                     await InvokeAsync(() => StateHasChanged());
                 }
             });
@@ -358,7 +358,7 @@
             }
 
             await GetMyDaos();
-            await OpenSwapUI();
+            await RefreshOrders();
             StateHasChanged();
         }
 
@@ -508,7 +508,7 @@
         Navigation.NavigateTo("/dao");
     }
 
-    private async Task OpenSwapUI()
+    private async Task RefreshOrders()
     {
         // get tradable orders
         var tosret = await lyraApi.FindTradableOtcAsync();
