@@ -510,7 +510,7 @@
     {
         if (walletState.Value.wallet != null)
         {
-            var blk = walletState.Value.wallet.GetLatestBlock();
+            var blk = walletState.Value.wallet.GetLastSyncBlock();
             if (blk != null && blk.Balances.ContainsKey(selectedTicker1.dbname))
                 balance1 = blk.Balances[selectedTicker1.dbname].ToBalanceDecimal();
             else
@@ -525,7 +525,7 @@
     {
         if (walletState.Value.wallet != null)
         {
-            var blk = walletState.Value.wallet.GetLatestBlock();
+            var blk = walletState.Value.wallet.GetLastSyncBlock();
             if (blk != null && blk.Balances.ContainsKey(selectedTicker2.dbname))
                 balance2 = blk.Balances[selectedTicker2.dbname].ToBalanceDecimal();
             else
@@ -541,7 +541,7 @@
     {
         if (walletState.Value.wallet != null)
         {
-            var blk = walletState.Value.wallet.GetLatestBlock();
+            var blk = walletState.Value.wallet.GetLastSyncBlock();
             if (blk != null && blk.Balances.ContainsKey(selectedTicker1.dbname))
                 balance1 = blk.Balances[selectedTicker1.dbname].ToBalanceDecimal();
             else

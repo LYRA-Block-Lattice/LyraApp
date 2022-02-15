@@ -60,9 +60,9 @@
             }
 
             <div class="cet">
-                @if (walletState.Value.wallet.GetLatestBlock() != null)
+                @if (walletState.Value.wallet.GetLastSyncBlock() != null)
                 {
-                    @foreach (var kvp in walletState.Value.wallet.GetLatestBlock().Balances)
+                    @foreach (var kvp in walletState.Value.wallet.GetLastSyncBlock().Balances)
                     {
                         <MudCard Style="min-width: 200px;" Elevation="8">
                             <MudCardHeader>

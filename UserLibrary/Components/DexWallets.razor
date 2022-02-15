@@ -460,7 +460,7 @@ else
                 else
                     wv.DexBalance = 0;
 
-                var lb = wallet.GetLatestBlock();
+                var lb = wallet.GetLastSyncBlock();
                 if (lb != null && lb.Balances.ContainsKey(key))
                 {
                     wv.MyBalance = lb.Balances[key].ToBalanceDecimal();

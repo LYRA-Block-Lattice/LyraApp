@@ -110,7 +110,7 @@ namespace UserLibrary.Pages
                     return;
                 }
 
-                var oldbalance = walletState.Value.wallet.GetLatestBlock().Balances.ToDecimalDict();
+                var oldbalance = walletState.Value.wallet.GetLastSyncBlock().Balances.ToDecimalDict();
 
                 Snackbar.Add($"Current balance is {oldbalance[tokenName]} {tokenName}");
                 Snackbar.Add($"Sending {amount} {tokenName}");
@@ -135,7 +135,7 @@ namespace UserLibrary.Pages
                     return;
                 }
 
-                var newbalance = walletState.Value.wallet.GetLatestBlock().Balances.ToDecimalDict();
+                var newbalance = walletState.Value.wallet.GetLastSyncBlock().Balances.ToDecimalDict();
                 var changed = oldbalance[tokenName] - newbalance[tokenName];
                 Snackbar.Add($"The latest balance is {newbalance[tokenName]} {tokenName} Changed: -{changed} {tokenName}");
                 busysend = false;

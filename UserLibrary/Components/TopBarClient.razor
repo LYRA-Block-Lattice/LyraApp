@@ -14,7 +14,7 @@
 @inject NavigationManager Navigation
 
 <div class="top-row">
-    <div class="tg" @onclick="@((a) => Navigation.NavigateTo("/"))">
+    <div class="tg" @onclick="@(() => Navigation.NavigateTo("/"))">
         @title
     </div>
     <div class="tg">
@@ -229,7 +229,7 @@
         decimal balance1 = 0;
         if (wallet != null)
         {
-            var blk = wallet.GetLatestBlock();
+            var blk = wallet.GetLastSyncBlock();
             if (blk != null)
             {
                 if (blk.Balances.ContainsKey("LYR"))

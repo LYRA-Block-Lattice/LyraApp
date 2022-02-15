@@ -244,7 +244,7 @@ namespace Nebula.Store.WebWalletUseCase
 				logger.LogError($"IN HandleOpen: {ex}");
 				dispatcher.Dispatch(new WalletErrorResultAction
 				{
-					error = "Unable to open wallet."
+					error = $"Unable to open wallet: {ex.Message}"
 				});
 			}
 
@@ -352,7 +352,7 @@ namespace Nebula.Store.WebWalletUseCase
 			var wallet = Wallet.Open(store, name, "");
 			await wallet.SyncAsync(client);
 
-			dispatcher.Dispatch(new WebWalletFreeTokenResultAction { faucetBalance = (decimal)wallet.GetLatestBlock().Balances[LyraGlobal.OFFICIALTICKERCODE] / LyraGlobal.TOKENSTORAGERITO });
+			dispatcher.Dispatch(new WebWalletFreeTokenResultAction { faucetBalance = (decimal)wallet.GetLastSyncBlock().Balances[LyraGlobal.OFFICIALTICKERCODE] / LyraGlobal.TOKENSTORAGERITO });
 		}
 
 		[EffectMethod]

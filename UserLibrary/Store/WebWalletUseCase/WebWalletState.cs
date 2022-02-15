@@ -23,7 +23,7 @@ namespace Nebula.Store.WebWalletUseCase
 		public string error { get; set; }
 
 		// staking
-		public List<Block> stkAccounts { get; set; }
+		public List<TransactionBlock> stkAccounts { get; set; }
 		public List<ProfitingGenesis> pftAccounts { get; set; }
 		public Dictionary<string, decimal> stkBalances { get; set; }
 		public Dictionary<string, decimal> stkRewards { get; set; }

@@ -590,7 +590,7 @@
     {
         if (walletState.Value.wallet != null)
         {
-            var blk = walletState.Value.wallet.GetLatestBlock();
+            var blk = walletState.Value.wallet.GetLastSyncBlock();
 
             if (selectedTicker1 != null)
                 if (blk != null && blk.Balances.ContainsKey(selectedTicker1.dbname))
