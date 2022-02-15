@@ -60,19 +60,23 @@ builder.Services.AddResponseCompression(opts =>
 });
 builder.Services.AddHostedService<Keeper>();
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(builder =>
-    builder.WithOrigins(
-        "https://localhost:8098",
-        "http://localhost:5098",
-        "https://lyra.live",
-        "https://apptestnet.lyra.live",
-        "https://app.lyra.live"
-        )
-    .AllowAnyHeader()
-    .AllowAnyMethod());
-});
+//builder.Services.AddCors(options =>
+//{
+//    options.AddDefaultPolicy(builder =>
+//    builder.WithOrigins(
+//        "https://dealertestnet.lyra.live",
+//        "https://dealer.lyra.live",
+//        "https://localhost:8098",
+//        "http://localhost:5098",
+//        "https://lyra.live",
+//        "https://apptestnet.lyra.live",
+//        "https://app.lyra.live"
+//        )
+//    .AllowAnyHeader()
+//    .AllowAnyMethod()
+//    .AllowCredentials()
+//    );
+//});
 
 var app = builder.Build();
 
@@ -89,20 +93,35 @@ else
     app.UseHsts();
 }
 
+app.UseCors(builder =>
+    builder.WithOrigins(
+        "https://dealertestnet.lyra.live",
+        "https://dealer.lyra.live",
+        "https://localhost:8098",
+        "http://localhost:5098",
+        "https://lyra.live",
+        "https://apptestnet.lyra.live",
+        "https://app.lyra.live"
+        )
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials()
+    );
+
 app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseCors();
 
 //app.UseAuthentication();
 //app.UseAuthorization();
 
 app.MapRazorPages();
-app.MapControllers();
+
 app.UseEndpoints(endpoints =>
 {
+    endpoints.MapControllers();
     endpoints.MapHub<DealerHub>("/hub");
 });
 
