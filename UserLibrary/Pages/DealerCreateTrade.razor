@@ -83,29 +83,34 @@
     {
         if (finished)
             return;
-        var lstret = await walletState.Value.wallet.RPC.GetBlocksByRelatedTxAsync(sendhash);
-        if (lstret.Successful())
+
+        try
         {
-            var blocks = lstret.GetBlocks();
-            wfstage = blocks.Count();
-
-            var gen = blocks.FirstOrDefault(a => a.BlockType == BlockTypes.OTCTradeGenesis)
-                as OtcTradeGenesisBlock;
-
-            if(gen != null)
+            var lstret = await walletState.Value.wallet.RPC.GetBlocksByRelatedTxAsync(sendhash);
+            if (lstret.Successful())
             {
-                finished = true;
-                _timer.Change(Timeout.Infinite, Timeout.Infinite);
+                var blocks = lstret.GetBlocks();
+                wfstage = blocks.Count();
+
+                var gen = blocks.FirstOrDefault(a => a.BlockType == BlockTypes.OTCTradeGenesis)
+                    as OtcTradeGenesisBlock;
+
+                if (gen != null && !finished)
+                {
+                    finished = true;
+                    _timer.Change(Timeout.Infinite, Timeout.Infinite);
+
+                    await InvokeAsync(() => StateHasChanged());
+                    await Task.Delay(300);
+                    wfstage = -1;
+
+                    Navigation.NavigateTo($"/dealer/room/{gen.AccountID}");
+                }
 
                 await InvokeAsync(() => StateHasChanged());
-                await Task.Delay(300);
-                wfstage = -1;
-
-                Navigation.NavigateTo($"/dealer/room/{gen.AccountID}");
             }
-
-            await InvokeAsync(() => StateHasChanged());
         }
+        catch { }
     }
 
     async Task OnDeal()

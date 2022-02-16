@@ -15,8 +15,8 @@ namespace Nebula.Store.WebWalletUseCase
 		[ReducerMethod]
 		public static WebWalletState RestoreWalletActionHandler(WebWalletState state, WebWalletRestoreAction action) => state.With(new { IsLoading = true });
 
-		[ReducerMethod]
-		public static WebWalletState RefreshBalanceActionHandler(WebWalletState state, WebWalletRefreshBalanceAction action) => state.With(new { IsLoading = true });
+		//[ReducerMethod]
+		//public static WebWalletState RefreshBalanceActionHandler(WebWalletState state, WebWalletRefreshBalanceAction action) => state.With(new { IsLoading = true });
 
         [ReducerMethod]
 		public static WebWalletState CloseAction(WebWalletState state, WebWalletCloseAction action) => new WebWalletState();
