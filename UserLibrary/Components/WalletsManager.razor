@@ -132,13 +132,20 @@
     {
         if(firstRender)
         {
-            var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
-            var wc = new WalletContainer(wcjson);
+            try
+            {
+                var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+                var wc = new WalletContainer(wcjson);
 
-            Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Wallet Manager" });
+                Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Wallet Manager" });
 
-            walletNames = wc.Names;
-            StateHasChanged();
+                walletNames = wc.Names;
+                StateHasChanged();
+            }
+            catch(Exception ex)
+            {
+                Snackbar.Add($"Error init: {ex}", Severity.Error);
+            }
         }
         await base.OnAfterRenderAsync(firstRender);
     }

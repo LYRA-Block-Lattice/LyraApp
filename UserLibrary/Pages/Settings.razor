@@ -31,7 +31,8 @@
             <h3>Scan to Pay Me</h3>
             <p><QRCodeWriter Text="@walletState.Value.wallet.AccountId" Width="300" Heigth="300"></QRCodeWriter></p>
             <MudDivider />
-            <p>Your wallet's address is: <a target="_blank" href="@bexpurl/showblock/@walletState.Value.wallet.AccountId">@walletState.Value.wallet.AccountId</a></p>
+            <p>Your wallet's address is: <CopyToClipboard Text="@walletState.Value.wallet.AccountId" />                
+                </p>
             <p>Your wallet's balance is: @walletState.Value.balanceString</p>
  
             <p>Your are now voting for: @walletState.Value.wallet.VoteFor</p>
@@ -75,10 +76,10 @@
     }
 
     <MudDivider Style="margin: 30px" />
-    <div style="font-size: xx-small">
+@*    <div style="font-size: xx-small">
         Main Program Version: @(Assembly.GetEntryAssembly().GetName().Version)<br />
         User Library Version: @(typeof(UserLibrary.Data.WalletView).Assembly.GetName().Version)
-    </div>
+    </div>*@
 </div>
 @code {
     [Inject]
