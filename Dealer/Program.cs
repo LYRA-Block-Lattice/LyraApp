@@ -28,7 +28,7 @@ builder.Logging.AddSerilog(Log.Logger);
 builder.Services.Configure<DealerDbSettings>(
     builder.Configuration.GetSection("DealerDb"));
 
-builder.Services.AddTransient<ILyraAPI>(provider =>
+builder.Services.AddScoped<ILyraAPI>(provider =>
                 {
                     var networkid = builder.Configuration["network"];
                     var url = $"https://seed1.testnet.lyra.live:4504/api/Node/";

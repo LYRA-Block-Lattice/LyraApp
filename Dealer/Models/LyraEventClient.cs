@@ -36,9 +36,9 @@ namespace Dealer.Server.Model
         public LyraEventClient(HubConnection connection)
         {
             _connection = connection;
-            _connection.Closed += _connection_Closed;
-            _connection.Reconnected += _connection_Reconnected;
-            _connection.Reconnecting += _connection_Reconnecting;
+            _connection.Closed += Connection_ClosedAsync;
+            _connection.Reconnected += Connection_ReconnectedAsync;
+            _connection.Reconnecting += Connection_ReconnectingAsync;
         }
 
         public async Task StartAsync()
@@ -46,19 +46,19 @@ namespace Dealer.Server.Model
             await _connection.StartAsync();
         }
 
-        private Task _connection_Reconnecting(Exception? arg)
+        private Task Connection_ReconnectingAsync(Exception? arg)
         {
             Console.WriteLine($"Reconnecting: {arg}");
             return Task.CompletedTask;
         }
 
-        private Task _connection_Reconnected(string? arg)
+        private Task Connection_ReconnectedAsync(string? arg)
         {
             Console.WriteLine($"Reconnected: {arg}");
             return Task.CompletedTask;
         }
 
-        private Task _connection_Closed(Exception? arg)
+        private Task Connection_ClosedAsync(Exception? arg)
         {
             Console.WriteLine($"Connection closed. {arg?.Message}");
             return Task.CompletedTask;
