@@ -17,15 +17,24 @@ namespace Dealer.Server.Services
     [ApiController]
     public class DealerController : ControllerBase
     {
+        private Keeper _keeper;
         private IConfiguration _config;
         private DealerDb _db;
         private IHubContext<DealerHub, IHubPushMethods> _hub;
         public DealerController(DealerDb db, IHubContext<DealerHub, IHubPushMethods> hub,
-            IConfiguration Configuration)
+            IConfiguration Configuration, Keeper keeper)
         {
             _db = db;
             _hub = hub;
             _config = Configuration;
+            _keeper = keeper;
+        }
+
+        [Route("GetPrices")]
+        [HttpGet]
+        public Task<SimpleJsonAPIResult> GetPricesAsync()
+        {
+            return Task.FromResult(SimpleJsonAPIResult.Create(_keeper.Prices));
         }
 
         [Route("GetUserByAccountId")]

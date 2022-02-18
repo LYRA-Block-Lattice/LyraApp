@@ -277,9 +277,15 @@ namespace Nebula.Store.WebWalletUseCase
 			var result = await action.wallet.SyncAsync(null);
 			if (result == Lyra.Core.Blocks.APIResultCodes.Success)
 			{
-
+				dispatcher.Dispatch(new WebWalletResultAction(action.wallet, true, UIStage.Main));
 			}
-			dispatcher.Dispatch(new WebWalletResultAction(action.wallet, true, UIStage.Main));
+			else
+            {
+				dispatcher.Dispatch(new WalletErrorResultAction
+				{
+					error = result.ToString()
+				});
+			}
 		}
 
 		[EffectMethod]
