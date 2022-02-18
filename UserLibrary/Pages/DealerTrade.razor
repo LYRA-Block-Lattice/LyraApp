@@ -47,6 +47,12 @@
         </div>
         <div style="height:45px;" />
         <div>
+            <h3>Collateral</h3>
+            <MudNumericField @bind-Value="@cltlyr" DebounceInterval="500" OnDebounceIntervalElapsed="calc2" 
+                Label="In LYR" Variant="Variant.Outlined"  />
+        </div>
+        <div style="height:45px;" />
+        <div>
             <h3>You will get</h3>
             <div class="getmnt">@got</div>
             <div> @otc.Order.crypto </div>
@@ -95,6 +101,7 @@
     decimal pay, got;
     bool busy, success;
     decimal marketprice;
+    decimal cltlyr;
 
     protected override async Task OnInitializedAsync()
     {
@@ -108,9 +115,9 @@
         SubscribeToAction<RespQuote>(async e =>
         {
 
-                    if (otc.Order.crypto.EndsWith("ETH")) marketprice = e.Prices["ethereum"];
-                    if (otc.Order.crypto.EndsWith("BTC")) marketprice = e.Prices["bitcoin"];
-                    if (otc.Order.crypto.EndsWith("USDT")) marketprice = e.Prices["tether"];
+            if (otc.Order.crypto.EndsWith("ETH")) marketprice = e.Prices["ETH"];
+            if (otc.Order.crypto.EndsWith("BTC")) marketprice = e.Prices["BTC"];
+            if (otc.Order.crypto.EndsWith("USDT")) marketprice = e.Prices["USDT"];
 
             await InvokeAsync(StateHasChanged);
         });  
@@ -123,6 +130,11 @@
         got = Math.Round(pay / otc.Order.price, 8);
     }
 
+    void calc2()
+    {
+        
+    }
+
     async Task OnDeal()
     {
         if(got > otc.Order.amount || got <= 0)
@@ -132,6 +144,21 @@
         }
 
         busy = true;
+
+        var daoret3 = await walletState.Value.wallet.RPC.GetLastBlockAsync(otc.Order.daoId);
+        var daot = daoret3.GetBlock() as TransactionBlock;
+
+        var dealer = new DealerClient(Configuration["network"]);
+        var prices = await dealer.GetPricesAsync();
+        var tokenSymbol = otc.Order.crypto.Split('/')[1];
+        var neededLyr = Math.Round(prices[tokenSymbol] * got * ((daot as IDao).BuyerPar / 100) / prices["LYR"] * 1.03m);
+
+            if (cltlyr < neededLyr)
+            {
+                Snackbar.Add($"Not enough collateral. Need > {neededLyr} LYR", Severity.Warning);
+                busy = false;
+                return;
+            }
 
         var trade = new OTCTrade
             {
@@ -144,7 +171,7 @@
                 price = otc.Order.price,
                 amount = got,
                 pay = pay,
-                collateral = 10,
+                collateral = cltlyr,
                 payVia = method,
             };
 

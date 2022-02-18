@@ -83,9 +83,9 @@
         {
             prices = e.Prices;
 
-                    if (Otc.Order.crypto.EndsWith("ETH")) marketprice = e.Prices["ethereum"];
-                    if (Otc.Order.crypto.EndsWith("BTC")) marketprice = e.Prices["bitcoin"];
-                    if (Otc.Order.crypto.EndsWith("USDT")) marketprice = e.Prices["tether"];
+                    if (Otc.Order.crypto.EndsWith("ETH")) marketprice = e.Prices["ETH"];
+                    if (Otc.Order.crypto.EndsWith("BTC")) marketprice = e.Prices["BTC"];
+                    if (Otc.Order.crypto.EndsWith("USDT")) marketprice = e.Prices["USDT"];
 
             await InvokeAsync(StateHasChanged);
         });        

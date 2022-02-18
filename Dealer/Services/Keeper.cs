@@ -32,14 +32,14 @@ namespace Dealer.Server.Services
         System.Timers.Timer _Timer;
 
         public static Keeper Singleton { get; private set; } = null!;
-        public Keeper(IHubContext<DealerHub, IHubPushMethods> dealerHub, ILyraAPI lyraApi,
+        public Keeper(IHubContext<DealerHub, IHubPushMethods> dealerHub, IConfiguration config,
             DealerDb db, Dealeamon dealer, ILogger<Keeper> logger)
         {
             Singleton = this;
             _dealerHub = dealerHub;
             _db = db;
             _dealer = dealer;
-            _lyraApi = lyraApi;
+            _lyraApi = LyraRestClient.Create(config["network"], Environment.OSVersion.ToString(), "Dealer", "1.0");
             _logger = logger;
             Prices = new ConcurrentDictionary<string, decimal>();
         }
@@ -194,7 +194,19 @@ namespace Dealer.Server.Services
                 var coins = new[] { "lyra", "tron", "ethereum", "bitcoin", "tether" };
                 var prices = await _client.SimpleClient.GetSimplePrice(coins, new[] { "usd" });
                 foreach (var coin in coins)
-                    Prices.AddOrUpdate(coin, (decimal)prices[coin]["usd"], (key, old) => (decimal)prices[coin]["usd"]);
+                {
+                    var pric = (decimal)prices[coin]["usd"];
+                    var symbol = coin switch
+                    {
+                        "tron" => "TRX",
+                        "ethereum" => "ETH",
+                        "bitcoin" => "BTC",
+                        "tether" => "USDT",
+                        "lyra" => "LYR",
+                        _ => coin,
+                    };
+                    Prices.AddOrUpdate(symbol, pric, (key, old) => pric);
+                }
 
                 // calculate lyra price based on lyr/USDT liquidate pool
                 // TODO: just once. remember we have block feeds.
@@ -204,11 +216,11 @@ namespace Dealer.Server.Services
                     var poollatest = existspool.GetBlock() as TransactionBlock;
                     var swapcal = new SwapCalculator(existspool.Token0, existspool.Token1, poollatest,
                             LyraGlobal.OFFICIALTICKERCODE, 1, 0);
-                    Prices.AddOrUpdate(LyraGlobal.OFFICIALTICKERCODE, Math.Round(swapcal.MinimumReceived, 8), (key, old) => Math.Round(swapcal.MinimumReceived, 8));
+                    Prices.AddOrUpdate("LYR_INT", Math.Round(swapcal.MinimumReceived, 8), (key, old) => Math.Round(swapcal.MinimumReceived, 8));
                 }
                 else
                 {
-                    Prices.AddOrUpdate(LyraGlobal.OFFICIALTICKERCODE, (decimal)prices["lyra"]["usd"], (key, old) => (decimal)prices["lyra"]["usd"]);
+                    Prices.AddOrUpdate("LYR_INT", (decimal)prices["lyra"]["usd"], (key, old) => (decimal)prices["lyra"]["usd"]);
                 }
 
                 await _dealerHub.Clients.All.OnEvent(

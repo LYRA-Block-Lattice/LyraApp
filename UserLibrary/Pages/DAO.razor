@@ -307,16 +307,16 @@
             (e) =>
             {
             // price updated
-            btcprice = e.Prices["bitcoin"];
-                trxprice = e.Prices["tron"];
-                lyrprice = e.Prices["lyra"];
-                lyrintprice = e.Prices["LYR"];
+            btcprice = e.Prices["BTC"];
+                trxprice = e.Prices["TRX"];
+                lyrprice = e.Prices["LYR"];
+                lyrintprice = e.Prices["LYR_INT"];
 
                 if (selcrypto != null)
                 {
-                    if (selcrypto.Name.EndsWith("ETH")) selcryptoprice = e.Prices["ethereum"];
-                    if (selcrypto.Name.EndsWith("BTC")) selcryptoprice = e.Prices["bitcoin"];
-                    if (selcrypto.Name.EndsWith("USDT")) selcryptoprice = e.Prices["tether"];
+                    if (selcrypto.Name.EndsWith("ETH")) selcryptoprice = e.Prices["ETH"];
+                    if (selcrypto.Name.EndsWith("BTC")) selcryptoprice = e.Prices["BTC"];
+                    if (selcrypto.Name.EndsWith("USDT")) selcryptoprice = e.Prices["USDT"];
                 }
             }
         );
@@ -422,6 +422,17 @@
         {
             var daoret3 = await walletState.Value.wallet.RPC.GetDaoByNameAsync(seldaoname);
             var daot = daoret3.GetBlock() as TransactionBlock;
+
+            var dealer = new DealerClient(Configuration["network"]);
+            var prices = await dealer.GetPricesAsync();
+            var tokenSymbol = selcrypto.dbname.Split('/')[1];
+            var neededLyr = Math.Round(prices[tokenSymbol] * selqty * ((daot as IDao).SellerPar / 100) / prices["LYR"] * 1.03m);
+            if (cltlyr < neededLyr)
+            {
+                Snackbar.Add($"Not enough collateral. Need > {neededLyr} LYR", Severity.Warning);
+                busy = false;
+                return;
+            }
 
             var order = new OTCOrder
                 {
