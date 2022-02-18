@@ -30,13 +30,6 @@
     <div style="z-index: 5;" class="spinner"></div>
 }
 
-@if (!string.IsNullOrEmpty(walletState.Value.error))
-{
-    <p>
-        @walletState.Value.error
-    </p>
-}
-
 @if (walletState.Value.wallet != null)
 {
     <MudTabs @ref="tabs" Elevation="4" Rounded="true" Centered="true" Color="Color.Secondary">
