@@ -58,25 +58,9 @@ builder.Services.AddResponseCompression(opts =>
     opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
         new[] { "application/octet-stream" });
 });
-builder.Services.AddHostedService<Keeper>();
 
-//builder.Services.AddCors(options =>
-//{
-//    options.AddDefaultPolicy(builder =>
-//    builder.WithOrigins(
-//        "https://dealertestnet.lyra.live",
-//        "https://dealer.lyra.live",
-//        "https://localhost:8098",
-//        "http://localhost:5098",
-//        "https://lyra.live",
-//        "https://apptestnet.lyra.live",
-//        "https://app.lyra.live"
-//        )
-//    .AllowAnyHeader()
-//    .AllowAnyMethod()
-//    .AllowCredentials()
-//    );
-//});
+builder.Services.AddSingleton<Keeper>();
+builder.Services.AddHostedService<Keeper>(provider => provider.GetService<Keeper>());
 
 var app = builder.Build();
 
@@ -94,18 +78,19 @@ else
 }
 
 app.UseCors(builder =>
-    builder.WithOrigins(
-        "https://dealertestnet.lyra.live",
-        "https://dealer.lyra.live",
-        "https://localhost:8098",
-        "http://localhost:5098",
-        "https://lyra.live",
-        "https://apptestnet.lyra.live",
-        "https://app.lyra.live"
-        )
+    builder
+    //.WithOrigins(
+    //    "https://dealertestnet.lyra.live",
+    //    "https://dealer.lyra.live",
+    //    "https://localhost:8098",
+    //    "http://localhost:5098",
+    //    "https://lyra.live",
+    //    "https://apptestnet.lyra.live",
+    //    "https://app.lyra.live"
+    //    )
+    .AllowAnyOrigin()
     .AllowAnyHeader()
     .AllowAnyMethod()
-    .AllowCredentials()
     );
 
 app.UseHttpsRedirection();
