@@ -16,11 +16,14 @@
     else
     {
 
-    <div style="height: 300px; background: #ECEFF1; ">
+    <div style="height: 150px; background: #ECEFF1; ">
         <div style="padding: 25px;">
             <div style="width: 100%; height: 100px; vertical-align: middle; ">
                 <h1 style="align-self: flex-end; font-size:40px;">@(otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell") @otc.Order.crypto</h1>
                 <MudDivider />
+                <div class="market">
+                Buying Price: @otc.Order.price @otc.Order.fiat
+                </div>
                 <div class="market">
                 Market Price: @marketprice @otc.Order.fiat
                 </div>
@@ -50,12 +53,18 @@
             <h3>Collateral</h3>
             <MudNumericField @bind-Value="@cltlyr" DebounceInterval="500" OnDebounceIntervalElapsed="calc2" 
                 Label="In LYR" Variant="Variant.Outlined"  />
+            <div> Equivalent US Dollar: $@(Math.Round(lyraprice * cltlyr, 2))</div>
         </div>
         <div style="height:45px;" />
         <div>
             <h3>You will get</h3>
-            <div class="getmnt">@got</div>
-            <div> @otc.Order.crypto </div>
+            <div class="getmnt">@got @otc.Order.crypto</div>
+        </div>
+        <div style="height:45px;" />
+        <div>
+            <h3>Your trade is guaranteed by max to</h3>
+            <div class="getmnt">Seller Collateral: @otc.Order.collateral LYR</div>
+            <div> Equivalent US Dollar: $@(Math.Round(lyraprice * otc.Order.collateral, 2))</div>
         </div>
         <div style="height:45px;" />
         <div>
@@ -101,7 +110,7 @@
     decimal pay, got;
     bool busy, success;
     decimal marketprice;
-    decimal cltlyr;
+    decimal cltlyr, lyraprice;
 
     protected override async Task OnInitializedAsync()
     {
@@ -118,6 +127,8 @@
             if (otc.Order.crypto.EndsWith("ETH")) marketprice = e.Prices["ETH"];
             if (otc.Order.crypto.EndsWith("BTC")) marketprice = e.Prices["BTC"];
             if (otc.Order.crypto.EndsWith("USDT")) marketprice = e.Prices["USDT"];
+
+            lyraprice = e.Prices["LYR"];
 
             await InvokeAsync(StateHasChanged);
         });  
