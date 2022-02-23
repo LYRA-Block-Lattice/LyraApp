@@ -1,0 +1,251 @@
+﻿@page "/dao/detail/{daoid}"
+
+@using Fluxor
+@using Fluxor.Blazor.Web.Components
+@using Lyra.Data.Crypto
+@using Nebula.Store.WebWalletUseCase
+@using Microsoft.Extensions.Configuration
+@using Lyra.Data.API.WorkFlow
+@using UserLibrary.Data
+@inherits FluxorComponent
+
+<div class="mag cet">
+
+    <MudGrid>
+
+        <MudItem xs="12">
+            @if (dao != null)
+            {
+                <p>
+                    @dao.Description
+                </p>
+                <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton>
+                @if (walletState.Value.IsOpening)
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Join</MudButton>
+                    <RadzenButton Click=@(args => ShowCreateVote((dao as IBrokerAccount).Name)) Text="Create Vote" ButtonStyle="ButtonStyle.Primary" />
+
+                }
+
+                <p>show all votes if any</p>
+            }
+
+        </MudItem>
+
+    </MudGrid>
+
+</div>
+
+
+@code {
+    [Parameter]
+    public string daoid { get; set; }
+
+    [Inject]
+    private IState<WebWalletState> walletState { get; set; }
+
+    [Inject]
+    private IDispatcher Dispatcher { get; set; }
+
+    [Inject]
+    IConfiguration Configuration { get; set; }
+
+    [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] NavigationManager Navigation { get; set; }
+    [Inject] ILyraAPI lyraApi { get; set; }
+
+    string name, desc;
+    int sellerPar, buyerPar;
+    bool busy;
+
+    IDao dao;
+    bool showco, dir;
+    string total;
+    List<Ticker> tickers;
+    List<string> fiats = new List<string>
+    {
+        "USD", "EUR", "JPY", "CNY", "CHF"
+    };
+    List<string> odrtyps = new List<string>
+    {
+        "Fixed price", "Floating price"
+    };
+    List<string> paymentMethods = new List<string>
+    {
+        "Paypal", "Bank Transfer", "Alipay", "Wechat Pay"
+    };
+
+    IEnumerable<string> paymths = new string[0];
+
+    Ticker selcrypto;
+    string seldaoname, selfiat = "USD", selodrtyp = "Fixed price";
+    decimal selprice, selqty, cltlyr, paymin, paymax;
+    decimal selcryptoprice;
+
+    decimal trxprice, lyrprice, btcprice, lyrintprice;
+    decimal coltworth;
+    string coltrito;
+
+    protected override Task OnInitializedAsync()
+    {
+        SubscribeToAction<RespQuote>(
+            (e) =>
+            {
+            // price updated
+            btcprice = e.Prices["BTC"];
+                trxprice = e.Prices["TRX"];
+                lyrprice = e.Prices["LYR"];
+                lyrintprice = e.Prices["LYR_INT"];
+
+                if (selcrypto != null)
+                {
+                    if (selcrypto.Name.EndsWith("ETH")) selcryptoprice = e.Prices["ETH"];
+                    if (selcrypto.Name.EndsWith("BTC")) selcryptoprice = e.Prices["BTC"];
+                    if (selcrypto.Name.EndsWith("USDT")) selcryptoprice = e.Prices["USDT"];
+                }
+            }
+        );
+
+        return base.OnInitializedAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Dispatcher.Dispatch(new WebWalletChangeTitleAction
+                    {
+                        title = "DAO Detail",
+                        menunew = false,
+                    });
+
+
+            await GetDao();
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private void CalCollat(decimal d)
+    {
+        total = $"{(selprice * selqty):N2}";
+        coltworth = cltlyr * lyrprice;
+        if (coltworth > 0 && selprice * selqty > 0)
+            coltrito = $"{coltworth / (selprice * selqty):N2}";
+        else
+            coltrito = "";
+    }
+
+    private async Task ShowCreateTradeUI(IOtcOrder order)
+    {
+        if (walletState.Value.wallet == null)
+        {
+            Navigation.NavigateTo("/wallet");
+            return;
+        }
+        //check if user has been registed on dealer server
+        var client = new DealerClient(Configuration["network"]);
+        var user = await client.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
+        if (!user.Successful())
+        {
+            // register user
+            Navigation.NavigateTo("/dealer/register");
+        }
+        else
+        {
+            Navigation.NavigateTo($"/dealer/trade/{(order as TransactionBlock).AccountID}");
+        }
+    }
+
+    async Task ShowCreateVote(string name)
+    {
+        //check if user has been registed on dealer server
+        var client = new DealerClient(Configuration["network"]);
+        var user = await client.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
+        if (!user.Successful())
+        {
+            // register user
+            Navigation.NavigateTo("/dealer/register");
+        }
+        else
+        {
+            showco = !showco;
+            seldaoname = name;
+        }
+    }
+
+    async Task CreateOrder(string daoname)
+    {
+        busy = true;
+        Snackbar.Add("Creating Order...", Severity.Info);
+
+        try
+        {
+            var daoret3 = await walletState.Value.wallet.RPC.GetDaoByNameAsync(seldaoname);
+            var daot = daoret3.GetBlock() as TransactionBlock;
+
+            var dealer = new DealerClient(Configuration["network"]);
+            var prices = await dealer.GetPricesAsync();
+            var tokenSymbol = selcrypto.dbname.Split('/')[1];
+            var neededLyr = Math.Round(prices[tokenSymbol] * selqty * ((daot as IDao).SellerPar / 100) / prices["LYR"] * 1.03m);
+            if (cltlyr < neededLyr)
+            {
+                Snackbar.Add($"Not enough collateral. Need > {neededLyr} LYR", Severity.Warning);
+                busy = false;
+                return;
+            }
+
+            var order = new OTCOrder
+                {
+                    daoId = daot.AccountID,
+                    dir = TradeDirection.Sell,
+                    crypto = selcrypto.dbname,
+                    fiat = selfiat,
+                    priceType = PriceType.Fixed,
+                    price = selprice,
+                    amount = selqty,
+                    collateral = cltlyr,
+                    limitMin = paymin,
+                    limitMax = paymax,
+                    payBy = paymths.ToArray(),
+                };
+            var ret = await walletState.Value.wallet.CreateOTCOrderAsync(order);
+            if (ret.Successful())
+            {
+                Snackbar.Add("Order created.", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add($"Order failed to create: {ret.ResultCode}", Severity.Error);
+            }
+        }
+        catch (Exception e)
+        {
+            Snackbar.Add($"Order failed to create: {e}", Severity.Error);
+        }
+
+        busy = false;
+    }
+
+    async Task GetDao()
+    {
+        var alldaoret = await lyraApi.GetLastBlockAsync(daoid);
+        if (alldaoret.Successful())
+        {
+            dao = alldaoret.GetBlock() as IDao;
+        }
+   }
+
+    async Task Back(string buttonName)
+    {
+        Navigation.NavigateTo("/dao");
+    }
+
+    async Task Back2(string buttonName)
+    {
+        showco = !showco;
+        Navigation.NavigateTo("/dao");
+    }
+}

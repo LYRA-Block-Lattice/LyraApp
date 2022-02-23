@@ -1,4 +1,5 @@
-﻿@page "/dao"
+﻿@page "/otc"
+@page "/otc/{action}"
 
 @using Fluxor
 @using Fluxor.Blazor.Web.Components
@@ -10,67 +11,137 @@
 @inherits FluxorComponent
 
 <div class="mag cet">
+    <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6"
+        @bind-ActivePanelIndex="activeIndex">
+        <MudTabPanel Text="OTC Market">
 
-    <MudGrid>
-        <MudItem xs="12">
-            <MudTextField @bind-Value="@keywords" Label="Search DAO" Variant="Variant.Text"></MudTextField>
-        </MudItem>
-            @if (alldaos != null)
-            {
-                foreach (var dao in alldaos)
+            <MudGrid>
+                @if (tradableOrders == null)
                 {
-                    <MudItem xs="12">
-                            <p>
-                                @dao.Description
-                            </p>
-                            <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-                            <a href="/dao/detail/@((dao as TransactionBlock).AccountID)">
-                            <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton></a>
-                         
-
+                    <MudItem xs="12" Style="align-content: center;">
+                        <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
                     </MudItem>
                 }
-            }
+                else
+                {
+                    @foreach (var odr in tradableOrders)
+                    {
+                        var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoId);
+                        <MudItem xs="12">
+                            <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao OrderSelected=@ShowCreateTradeUI />
+                        </MudItem>
+                    }
+                }
+            </MudGrid>
+        </MudTabPanel>
+        <MudTabPanel Text="Create Order">
 
-        @if (mydaos != null)
-        {
-
-
-
-            @*            <MudItem xs="12">
-                <MudExpansionPanels Class=".blue .darken-1 .shades-text .text-white">
-                <MudExpansionPanel Text="The Lyra Council" MaxHeight="1000">
-                <p>
-                Formed by all (Total 19) Lyra node owners, The Lyra Council
-                is the final arbitration institution for almost all fairs of
-                the whole Lyra network. Decisions are made by voting of members.
-                </p>
-                <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-                <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Join</MudButton>
-                </MudExpansionPanel>
-                <MudExpansionPanel Text="OTC Exchange" MaxHeight="500">
-                <p>
-                Trade Token/Fiat without a broker.
-                </p>
-                <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-                <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Sell</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Buy</MudButton>
-                </MudExpansionPanel>
-                <MudExpansionPanel Text="Simple Buy & Sell" MaxHeight="1000">
-                <p>
-                A simple buy/sell business model.
-                </p>
-                <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-                <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Sell</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Buy</MudButton>
-                </MudExpansionPanel>
-                </MudExpansionPanels>
-                </MudItem>*@
-        }
-    </MudGrid>
+            <MudGrid>
+                @if (showco)
+                {
+                    <MudItem xs="12">
+                        <h1>Sell</h1>
+                        @*                                <RadzenSelectBar @bind-Value=@dir TValue="bool">
+                            <Items>
+                            <RadzenSelectBarItem Text="Buy" Value="true" />
+                            <RadzenSelectBarItem Text="Sell" Value="false" />
+                            </Items>
+                            </RadzenSelectBar>*@
+                    </MudItem>
+                    <MudItem xs="12">
+                        In Orgnization:<br />
+                        <RadzenDropDown AllowClear="false" TValue="String" Class="w-100"
+                                    @bind-Value=@seldaoname
+                                    Data=@(mydaos.Select(a => (a as IBrokerAccount).Name)) />
+                    </MudItem>
+                    <MudItem xs="12">
+                        Token To Sell<br />
+                        <RadzenDropDown AllowClear="false" TValue="Ticker" Class="w-100"
+                                    @bind-Value=@selcrypto
+                                    Data=@tickers />
+                    </MudItem>
+                    <MudItem xs="12">
+                        Fiat currency<br />
+                        <RadzenDropDown AllowClear="false" TValue="string" Class="w-100"
+                                    @bind-Value=@selfiat
+                                    Data=@fiats />
+                    </MudItem>
+                    <MudItem xs="12">
+                        Order Type<br />
+                        <RadzenDropDown AllowClear="false" TValue="string" Class="w-100"
+                                    @bind-Value=@selodrtyp
+                                    Data=@odrtyps />
+                    </MudItem>
+                    <MudItem xs="12">
+                        Sell price<br />
+                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@selprice Change="@CalCollat" /><br />
+                        Market Price: @selcryptoprice USD
+                    </MudItem>
+                    <MudItem xs="12">
+                        Quantity<br />
+                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@selqty Change="@CalCollat" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        Min Payment<br />
+                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@paymin Change="@CalCollat" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        Max Payment<br />
+                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@paymax Change="@CalCollat" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        Collateral<br />
+                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@cltlyr Change="@CalCollat" /> <br />
+                        Worth: @coltworth USD<br />
+                        Ratio: @coltrito
+                    </MudItem>
+                    <MudItem xs="12">
+                        Accepted Payment Methods<br />
+                        <RadzenCheckBoxList @bind-Value=@paymths TValue="string" Orientation="Radzen.Orientation.Vertical"
+                                        Data="@paymentMethods" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudDivider />
+                        Total: @total USD
+                    </MudItem>
+                    <MudItem xs="12">
+                        <RadzenButton IsBusy=@busy Click=@(async args => await CreateOrder("adddao")) Text="Add New Order" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <RadzenButton Click=@(args => Back2("")) Text="Back" ButtonStyle="ButtonStyle.Light" />
+                    </MudItem>
+                }
+                else
+                {
+                    <MudItem xs="12">
+                        @if (walletState.Value.wallet == null)
+                        {
+                            <a href="/wallet">Open wallet to create order</a>
+                        }
+                        else
+                        {
+                            <a href="/dealer/register">Register on Lyra deal server</a>
+                        }
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudTabPanel>
+        <MudTabPanel Text="My Trades">
+            <MudGrid>
+                <MudItem xs="12">
+                        @if (walletState.Value.wallet == null)
+                        {
+                            <a href="/wallet">Open wallet to view trades.</a>
+                        }
+                        else
+                        {
+                            <UserLibrary.Components.OTC.TransactionsList />
+                        }
+                    
+                </MudItem>
+            </MudGrid>
+        </MudTabPanel>
+    </MudTabs>
 
 </div>
 
@@ -96,7 +167,7 @@
     List<IDao> alldaos = new List<IDao>();
     List<IDao> daos = new List<IDao>();
 
-    string keywords;
+    int activeIndex = 0;
 
     string name, desc;
     int sellerPar, buyerPar;
@@ -135,8 +206,8 @@
         SubscribeToAction<RespQuote>(
             (e) =>
             {
-                // price updated
-                btcprice = e.Prices["BTC"];
+            // price updated
+            btcprice = e.Prices["BTC"];
                 trxprice = e.Prices["TRX"];
                 lyrprice = e.Prices["LYR"];
                 lyrintprice = e.Prices["LYR_INT"];
@@ -167,13 +238,19 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (action == "new")
+        {
+            activeIndex = 1;
+            StateHasChanged();
+        }
+
         if (firstRender)
         {
             if (walletState.Value.wallet == null)
             {
                 Dispatcher.Dispatch(new WebWalletChangeTitleAction
                     {
-                        title = "Lyra DAO Central",
+                        title = "Lyra P2P Trade Market",
                         menunew = false,
                     });
             }
@@ -181,13 +258,14 @@
             {
                 Dispatcher.Dispatch(new WebWalletChangeTitleAction
                     {
-                        title = "Lyra DAO Central",
+                        title = "Lyra P2P Trade Market",
                         menunew = action != "new"
                     });
             }
 
             await GetMyDaos();
             await RefreshOrders();
+            await ShowCreateOrderUI();
             StateHasChanged();
         }
 
@@ -225,20 +303,22 @@
         }
     }
 
-    async Task ShowCreateVote(string name)
+    async Task ShowCreateOrderUI()
     {
-        //check if user has been registed on dealer server
-        var client = new DealerClient(Configuration["network"]);
-        var user = await client.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
-        if (!user.Successful())
+        if (walletState.Value.wallet != null)
         {
-            // register user
-            Navigation.NavigateTo("/dealer/register");
-        }
-        else
-        {
-            showco = !showco;
-            seldaoname = name;
+            //check if user has been registed on dealer server
+            var client = new DealerClient(Configuration["network"]);
+            var user = await client.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
+            if (!user.Successful())
+            {
+                // register user
+                Navigation.NavigateTo("/dealer/register");
+            }
+            else
+            {
+                showco = !showco;
+            }
         }
     }
 
@@ -300,13 +380,16 @@
         var alldaoret = await lyraApi.GetAllDaosAsync(0, 10);
         if (alldaoret.Successful())
         {
-            alldaos = alldaoret.GetBlocks().Cast<IDao>().ToList();
+            mydaos = alldaoret.GetBlocks().Cast<IDao>().ToList();
         }
-
-        if (walletState.Value.wallet == null)
-            return;
-        var brkblksret = await walletState.Value.wallet.RPC.GetAllBrokerAccountsForOwnerAsync(walletState.Value.wallet.AccountId);
-        mydaos = brkblksret.GetBlocks().Where(a => a is DaoGenesisBlock).Cast<IDao>().ToList();
+        else
+        {
+            mydaos = new List<IDao>();
+        }
+    //    if (walletState.Value.wallet == null)
+    //        return;
+    //    var brkblksret = await walletState.Value.wallet.RPC.GetAllBrokerAccountsForOwnerAsync(walletState.Value.wallet.AccountId);
+    //    mydaos = brkblksret.GetBlocks().Where(a => a is DaoGenesisBlock).Cast<IDao>().ToList();
     }
 
     async Task OnClick(string buttonName)
@@ -362,14 +445,7 @@
         }
 
         // get sellable tokens
-        // for api sign only
-        var pk = "n4uh7o2kAerPZQSNBRirzA3pSUBEuEhs6r7oRwpV6Dgbs3FvY";
-        var pub = "LBRzScs8NwMcr7U8i9a8sSWETseWf3TLge4CVJy6as24hSB4hwtZ5jKTbHJdoVZBJiNC2LpjN9MQB719Py9YxXo2xpLxnS";
-
-        var lsbret = await lyraApi.GetLastServiceBlockAsync();
-
-        var sign = Signatures.GetSignature(pk, (lsbret.GetBlock() as ServiceBlock).Hash, pub);
-        var tokens = await lyraApi.GetTokenNamesAsync(pub, sign, "(null)");
+        var tokens = await lyraApi.GetTokenNamesAsync(null, null, "(null)");
 
         tickers = tokens.Entities
             .Where(a => !a.StartsWith("unittest/"))

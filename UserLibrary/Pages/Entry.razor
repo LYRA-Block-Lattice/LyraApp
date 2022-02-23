@@ -14,7 +14,7 @@
                     <MudLink Href="@kvp.link" Underline="Underline.None">
                         <div class="progicon align-center" Style="@($"color:{Theme.Palette.SuccessLighten};")">
                             <MudIcon Icon="@kvp.icon" Style="font-size: 4rem;" Title="@kvp.name"/>
-                            <MudText Style="font-size: large;">@kvp.name</MudText>
+                            <MudText Style="font-size: large; white-space: nowrap;">@kvp.name</MudText>
                         </div>
                     </MudLink>
                 </MudPaper>
@@ -64,7 +64,8 @@
                 ("Wallet", "/wallet", Icons.Filled.AccountBalanceWallet),
                 ("DEX", "/dex", Icons.Filled.Money),
                 ("Staking", "/staking", Icons.Filled.WhereToVote),
-                ("DAO", "/dao", Icons.Filled.AppRegistration),
+                ("DAO", "/dao", @Icons.Filled.Groups),
+                ("P2P Trade", "/otc", @Icons.Filled.OfflineShare),
                 ("Mint", "/mint", Icons.Filled.GeneratingTokens),
                 ("Revenue", "/profit", Icons.Filled.CalendarViewMonth),
                 ("Settings", "/settings", Icons.Filled.Settings),

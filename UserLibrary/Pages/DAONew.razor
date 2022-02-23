@@ -1,4 +1,4 @@
-﻿@page "/dao"
+﻿@page "/dao/new"
 
 @using Fluxor
 @using Fluxor.Blazor.Web.Components
@@ -12,64 +12,29 @@
 <div class="mag cet">
 
     <MudGrid>
-        <MudItem xs="12">
-            <MudTextField @bind-Value="@keywords" Label="Search DAO" Variant="Variant.Text"></MudTextField>
-        </MudItem>
-            @if (alldaos != null)
-            {
-                foreach (var dao in alldaos)
-                {
-                    <MudItem xs="12">
-                            <p>
-                                @dao.Description
-                            </p>
-                            <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-                            <a href="/dao/detail/@((dao as TransactionBlock).AccountID)">
-                            <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton></a>
-                         
-
-                    </MudItem>
-                }
-            }
-
-        @if (mydaos != null)
-        {
-
-
-
-            @*            <MudItem xs="12">
-                <MudExpansionPanels Class=".blue .darken-1 .shades-text .text-white">
-                <MudExpansionPanel Text="The Lyra Council" MaxHeight="1000">
-                <p>
-                Formed by all (Total 19) Lyra node owners, The Lyra Council
-                is the final arbitration institution for almost all fairs of
-                the whole Lyra network. Decisions are made by voting of members.
-                </p>
-                <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-                <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Join</MudButton>
-                </MudExpansionPanel>
-                <MudExpansionPanel Text="OTC Exchange" MaxHeight="500">
-                <p>
-                Trade Token/Fiat without a broker.
-                </p>
-                <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-                <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Sell</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Buy</MudButton>
-                </MudExpansionPanel>
-                <MudExpansionPanel Text="Simple Buy & Sell" MaxHeight="1000">
-                <p>
-                A simple buy/sell business model.
-                </p>
-                <MudDivider DividerType="DividerType.Middle" Class="my-6" />
-                <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Sell</MudButton>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Buy</MudButton>
-                </MudExpansionPanel>
-                </MudExpansionPanels>
-                </MudItem>*@
-        }
+            <MudItem xs="12">
+                <h1>Create Orgnization</h1>
+            </MudItem>
+            <MudItem xs="12">
+                <RadzenTextBox @bind-Value=@name Placeholder="Name" Class="w-100" />
+            </MudItem>
+            <MudItem xs="12">
+                <RadzenTextArea @bind-Value=@desc Placeholder="Orgnization description..." Class="w-100" />
+            </MudItem>
+            <MudItem xs="12">
+                Seller Collateral Percentage <br />
+                <RadzenNumeric TValue="int" @bind-Value=@sellerPar /> %
+            </MudItem>
+            <MudItem xs="12">
+                Buyer Collateral Percentage <br />
+                <RadzenNumeric TValue="int" @bind-Value=@buyerPar /> %
+            </MudItem>
+            <MudItem xs="12">
+                <RadzenButton IsBusy=@busy Click=@(args => OnClick("adddao")) Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
+            </MudItem>
+            <MudItem xs="12">
+                <RadzenButton Click=@(args => Back("")) Text="Back" ButtonStyle="ButtonStyle.Light" />
+            </MudItem>
     </MudGrid>
 
 </div>
