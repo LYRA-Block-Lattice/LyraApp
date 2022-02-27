@@ -88,8 +88,8 @@ namespace Dealer.Server.Services
         public async Task CreateUserAsync(LyraUser newUser) =>
             await _usersCollection.InsertOneAsync(newUser);
 
-        public async Task UpdateUserAsync(string id, LyraUser updatedUser) =>
-            await _usersCollection.ReplaceOneAsync(x => x.Id == id, updatedUser);
+        public async Task UpdateUserAsync(LyraUser updatedUser) =>
+            await _usersCollection.ReplaceOneAsync(x => x.AccountId == updatedUser.AccountId, updatedUser);
 
         public async Task RemoveUserAsync(string id) =>
             await _usersCollection.DeleteOneAsync(x => x.Id == id);

@@ -61,15 +61,15 @@
         Apps = new (string name, string link, string icon)[]
             {
                 ("Swap", "/swap", Icons.Filled.SwapCalls),
-                ("Wallet", "/wallet", Icons.Filled.AccountBalanceWallet),
+                ("P2P Trade", "/otc", @Icons.Filled.OfflineShare),                
                 ("DEX", "/dex", Icons.Filled.Money),
                 ("Staking", "/staking", Icons.Filled.WhereToVote),
                 ("DAO", "/dao", @Icons.Filled.Groups),
-                ("P2P Trade", "/otc", @Icons.Filled.OfflineShare),
-                ("Mint", "/mint", Icons.Filled.GeneratingTokens),
                 ("Revenue", "/profit", Icons.Filled.CalendarViewMonth),
+                ("Mint", "/mint", Icons.Filled.GeneratingTokens),
+                ("Wallet", "/wallet", Icons.Filled.AccountBalanceWallet),
+                ("Contacts", "/contact", @Icons.Filled.Contacts),
                 ("Settings", "/settings", Icons.Filled.Settings),
-
             };
 
         Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra" });

@@ -1,0 +1,96 @@
+﻿@page "/dao/createvote/{daoid}"
+@using Fluxor
+@using Fluxor.Blazor.Web.Components
+@using Lyra.Data.API.WorkFlow
+@using Nebula.Store.WebWalletUseCase
+@inherits FluxorComponent
+
+<div class="mag">
+    <div>DAO ID</div>
+    <div>
+        @daoid
+    </div>
+    <div>Vote Type</div>
+    <div>
+            <RadzenDropDown AllowClear="true" TValue="string" Class="w-100" 
+                            Data=@types />
+    </div>
+    <div>Valid Time Span</div>
+    <div>
+        <RadzenNumeric TValue="int" @bind-Value=@days class="w-10" /> Days <RadzenNumeric TValue="int" @bind-Value=@hours /> Hours <RadzenNumeric TValue="int" @bind-Value=@minutes /> Minutes 
+    </div>
+    <div>Title</div>
+    <div>
+        <RadzenTextBox @bind-Value=@title Class="w-100" />
+    </div>
+    <div>Description</div>
+    <div>
+        <RadzenTextArea @bind-Value=@desc Class="w-100" />
+    </div>
+    <div>Options</div>
+    <div>
+        <RadzenButton Text="Add" Click=@AddOption />
+        @for(var i = 0; i < options.Count; i++)
+        {
+            var x = i;
+            <div>
+            <span>@(i+1).&nbsp;</span><RadzenTextBox Value="@options[i]" /><RadzenButton Text="Remove" Click=@(a => DelOption(x)) />
+            </div>
+        }
+    </div>
+    <div>
+        <MudDivider />
+    </div>
+    <div>
+        <RadzenButton Text="Create Vote" Click=@CreateVote />
+    </div>
+</div>
+
+@code {
+    [Parameter] public string daoid { get; set; }
+
+    [Inject]
+    private IState<WebWalletState> walletState { get; set; }
+
+    [Inject] ISnackbar Snackbar { get; set; }
+
+    List<string> options = new List<string>{ "Option 1", "Option 2"};
+    List<string> types = Enum.GetValues(typeof(SubjectType)).Cast<SubjectType>().Select(a => a.ToString()).ToList();
+
+    int seed;
+    int days, hours, minutes;
+    string title, desc;
+
+    void AddOption()
+    {
+        options.Add($"Option {seed++}");
+    }
+    void DelOption(int ndx)
+    {
+        options.RemoveAt(ndx);
+    }
+
+    async Task CreateVote()
+    {
+        VotingSubject subject = new VotingSubject
+            {
+                Type = SubjectType.OTCDispute,
+                DaoId = daoid,
+                Issuer = walletState.Value.wallet.AccountId,
+                TimeSpan = (int)(new TimeSpan(days, hours, minutes, 0).TotalMinutes),
+                Title = title,
+                Description = desc,
+                Options = options.ToArray(),
+            };
+
+        var voteCrtRet = await walletState.Value.wallet.CreateVoteSubject(subject);
+        if(voteCrtRet.Successful())
+        {
+            Snackbar.Add($"Vote created.", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add($"Failed to create vote: {voteCrtRet.ResultCode}.", Severity.Error);
+        }
+    }
+}

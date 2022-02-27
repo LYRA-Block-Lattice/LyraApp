@@ -1,6 +1,7 @@
 ﻿using Dealer.Server.Hubs;
 using ImageMagick;
 using Lyra.Core.API;
+using Lyra.Data.API;
 using Lyra.Data.API.Identity;
 using Lyra.Data.Crypto;
 using Microsoft.AspNetCore.Mvc;
@@ -21,13 +22,16 @@ namespace Dealer.Server.Services
         private IConfiguration _config;
         private DealerDb _db;
         private IHubContext<DealerHub, IHubPushMethods> _hub;
+        ILyraAPI _client;
+
         public DealerController(DealerDb db, IHubContext<DealerHub, IHubPushMethods> hub,
-            IConfiguration Configuration, Keeper keeper)
+            IConfiguration Configuration, Keeper keeper, ILyraAPI client)
         {
             _db = db;
             _hub = hub;
             _config = Configuration;
             _keeper = keeper;
+            _client = client;
         }
 
         [Route("GetPrices")]
@@ -53,18 +57,36 @@ namespace Dealer.Server.Services
             });
         }
 
+        [Route("GetUserDetailsByAccountId")]
+        [HttpGet]
+        public async Task<SimpleJsonAPIResult> GetUserDetailsByAccountIdAsync(string accountId, string signature)
+        {
+            // validate signature
+            var lsb = await _client.GetLastServiceBlockAsync();
+            if (!Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature))
+                return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
+
+            var user = await _db.GetUserByAccountIdAsync(accountId);
+            if (user == null)
+                return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.NotFound };
+
+            return SimpleJsonAPIResult.Create(user);
+        }
+
         [HttpGet]
         [Route("Register")]
         public async Task<APIResult> RegisterAsync(string accountId,
             string userName, string firstName, string? middleName, string lastName,
-            string email, string mibilePhone, string? avatarId)
+            string email, string mibilePhone, string? avatarId, string signature)
         {
             // validate data
             if (userName.ToLower().Contains("dealer"))
                 return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidName };
-            
-            // validate hash
 
+            // validate signature
+            var lsb = await _client.GetLastServiceBlockAsync();
+            if(!Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature))
+                return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
 
             var user = new LyraUser
             {
@@ -80,7 +102,11 @@ namespace Dealer.Server.Services
             };
 
             user.RegistedTime = DateTime.UtcNow;
-            await _db.CreateUserAsync(user);
+            if (_db.GetUserByAccountIdAsync(user.AccountId) == null)
+                await _db.CreateUserAsync(user);
+            else
+                await _db.UpdateUserAsync(user);
+
             return APIResult.Success;
         }
 
@@ -147,8 +173,6 @@ namespace Dealer.Server.Services
 
             return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidParameterFormat };
         }
-
-
 
         [HttpGet]
         [Route("img")]

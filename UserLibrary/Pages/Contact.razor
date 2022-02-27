@@ -1,0 +1,82 @@
+﻿@page "/contact"
+@page "/contact/{action}"
+
+@using Fluxor
+@using Fluxor.Blazor.Web.Components
+@using Lyra.Data.API.WorkFlow
+@using Nebula.Store.WebWalletUseCase
+@inherits FluxorComponent
+
+<div class="mag">
+    @if (walletState.Value.wallet == null)
+    {
+        <a href="/wallet"><MudButton Variant="Variant.Filled" Color="Color.Primary">Open Wallet</MudButton></a>
+    }
+    else
+    {
+        <div><h3>Contact</h3></div>
+        
+
+        @if (action == "new")
+        {
+            <div>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary">Scan to Add</MudButton>
+                <MudDivider />
+            </div>
+            <div>
+                Name: <RadzenTextBox />
+            </div>
+            <div>
+                Lyra Wallet Address: <RadzenTextBox />
+            </div>
+            <div>
+                Image: <RadzenTextBox />
+                </div>
+            <div>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary">Add</MudButton>
+                </div>
+        }
+        else
+        {
+            
+        }
+    }
+    
+</div>
+
+
+@code {
+    [Inject]
+    private IState<WebWalletState> walletState { get; set; }
+    [Inject]
+    private IDispatcher Dispatcher { get; set; }
+
+    [Inject] ISnackbar Snackbar { get; set; }
+
+    [Parameter] public string action { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (walletState.Value.wallet == null)
+            {
+                Dispatcher.Dispatch(new WebWalletChangeTitleAction
+                    {
+                        title = "Contacts",
+                        menunew = false,
+                    });
+            }
+            else
+            {
+                Dispatcher.Dispatch(new WebWalletChangeTitleAction
+                    {
+                        title = "Contacts",
+                        menunew = action != "new"
+                    });
+            }
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}

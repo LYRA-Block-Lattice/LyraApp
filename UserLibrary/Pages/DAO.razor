@@ -76,9 +76,6 @@
 
 
 @code {
-    [Parameter]
-    public string action { get; set; }
-
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
 
@@ -177,14 +174,14 @@
                         menunew = false,
                     });
             }
-            else
-            {
-                Dispatcher.Dispatch(new WebWalletChangeTitleAction
-                    {
-                        title = "Lyra DAO Central",
-                        menunew = action != "new"
-                    });
-            }
+            //else
+            //{
+            //    Dispatcher.Dispatch(new WebWalletChangeTitleAction
+            //        {
+            //            title = "Lyra DAO Central",
+            //            menunew = action != "new"
+            //        });
+            //}
 
             await GetMyDaos();
             await RefreshOrders();
