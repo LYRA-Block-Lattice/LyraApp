@@ -24,6 +24,7 @@
 @inject ILogger<WebWallet> logger
 @inject ILyraAPI lyraClient
 @using UserLibrary.Components
+@using UserLibrary.Data
 
 @if (walletState.Value.IsLoading || busy || busysend)
 {
@@ -120,6 +121,8 @@
                         <a href="/scan">
                             <MudButton Variant="Variant.Filled" Color="Color.Primary">Scan QR-Code</MudButton>
                         </a>
+                        <RadzenDropDown AllowClear="true" TValue="ContactItem" Class="w-100" 
+                            Data=@contacts Change=@(args => OnContact(args as ContactItem)) />
                     </MudItem>
                     <MudItem xs="12">
                     <MudTextField T="string" Label="Token Name" @bind-Value="@tokenName" />

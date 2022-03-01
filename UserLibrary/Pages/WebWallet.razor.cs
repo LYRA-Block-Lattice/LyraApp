@@ -1,4 +1,5 @@
-﻿using Fluxor;
+﻿using Blazored.LocalStorage;
+using Fluxor;
 using Lyra.Core.API;
 using Lyra.Data.Crypto;
 using Microsoft.AspNetCore.Components;
@@ -6,11 +7,13 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using MudBlazor;
 using Nebula.Store.WebWalletUseCase;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UserLibrary.Data;
 
 namespace UserLibrary.Pages
 {
@@ -27,6 +30,9 @@ namespace UserLibrary.Pages
 
         [Inject] ISnackbar Snackbar { get; set; }
 
+        [Inject] ILocalStorageService localStorage { get; set; }
+        [Inject] NebulaConsts _consts { get; set; }
+
         [Parameter]
         public string action { get; set; }
         [Parameter]
@@ -40,6 +46,8 @@ namespace UserLibrary.Pages
         public string dstAddr { get; set; }
         public string tokenName { get; set; }
         public decimal amount { get; set; }
+
+        public List<ContactItem> contacts { get; set; }
 
         // for settings
         public string voteAddr { get; set; }
@@ -56,8 +64,8 @@ namespace UserLibrary.Pages
             base.OnInitialized();
         }
 
-        protected override void OnAfterRender(bool firstRender)
-        {
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {          
             if(firstRender)
             {
                 if (walletState.Value.wallet == null)
@@ -71,6 +79,10 @@ namespace UserLibrary.Pages
                     tabs.ActivatePanel(1);
                 }
                 Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Wallet" });
+
+                var storStr = await localStorage.GetItemAsync<string>(_consts.ContactStorName) ?? "[]";
+                contacts = JsonConvert.DeserializeObject<List<ContactItem>>(storStr);
+
                 Refresh();
             }
             else
@@ -78,7 +90,7 @@ namespace UserLibrary.Pages
                 WalletChanged(null, null);
             }
 
-            base.OnAfterRender(firstRender);
+            await base.OnAfterRenderAsync(firstRender);
         }
 
         private void WalletChanged(object sender, WebWalletState wallet)
@@ -199,11 +211,10 @@ namespace UserLibrary.Pages
             tabs.ActivatePanel(1);
         }
 
-
-
-
-
-
+        void OnContact(ContactItem value)
+        {
+            dstAddr = value.address;
+        }
 
         private void Return(MouseEventArgs e)
         {

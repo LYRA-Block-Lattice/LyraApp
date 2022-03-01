@@ -15,5 +15,6 @@ namespace UserLibrary.Data
             _config = configuration;
         }
         public string NebulaStorName => $"nebdat_{_config["network"]}";
+        public string ContactStorName => $"nebcontacts_{_config["network"]}";
     }
 }

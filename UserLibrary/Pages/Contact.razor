@@ -1,19 +1,16 @@
 ﻿@page "/contact"
 @page "/contact/{action}"
 
+@using Blazored.LocalStorage
 @using Fluxor
 @using Fluxor.Blazor.Web.Components
 @using Lyra.Data.API.WorkFlow
 @using Nebula.Store.WebWalletUseCase
+@using Newtonsoft.Json
+@using UserLibrary.Data
 @inherits FluxorComponent
 
 <div class="mag">
-    @if (walletState.Value.wallet == null)
-    {
-        <a href="/wallet"><MudButton Variant="Variant.Filled" Color="Color.Primary">Open Wallet</MudButton></a>
-    }
-    else
-    {
         <div><h3>Contact</h3></div>
         
 
@@ -24,21 +21,36 @@
                 <MudDivider />
             </div>
             <div>
-                Name: <RadzenTextBox />
+                Name: <RadzenTextBox @bind-Value=@name />
             </div>
             <div>
-                Lyra Wallet Address: <RadzenTextBox />
+                Wallet Address: <RadzenTextBox @bind-Value=@address />                
             </div>
-            <div>
+@*            <div>
                 Image: <RadzenTextBox />
-                </div>
+                </div>*@
             <div>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Add</MudButton>
-                </div>
-        }
-        else
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="add">Add</MudButton>
+        </div>
+    }
+    
+    @if(contacts != null)
+    {
+        foreach(var c in contacts)
         {
-            
+            <div style="padding: 3px;">
+                <div style="white-space: nowrap;">                    
+                    <MudAvatar Color="Color.Secondary">@c.name.Substring(0, 1)</MudAvatar>
+                    @c.name
+                </div>
+                <div>
+                    <CopyToClipboard Text="@c.address" />
+                </div>
+                <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="@(() => send(c))">Send To</MudButton>
+
+                <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="@(() => del(c))">Del</MudButton>
+                <hr />
+            </div>
         }
     }
     
@@ -50,33 +62,51 @@
     private IState<WebWalletState> walletState { get; set; }
     [Inject]
     private IDispatcher Dispatcher { get; set; }
+    [Inject] ILocalStorageService localStorage { get; set; }
+    [Inject] NebulaConsts _consts { get; set; }
 
     [Inject] ISnackbar Snackbar { get; set; }
 
     [Parameter] public string action { get; set; }
 
+    string name, address;
+    List<ContactItem> contacts;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            if (walletState.Value.wallet == null)
-            {
-                Dispatcher.Dispatch(new WebWalletChangeTitleAction
-                    {
-                        title = "Contacts",
-                        menunew = false,
-                    });
-            }
-            else
-            {
-                Dispatcher.Dispatch(new WebWalletChangeTitleAction
-                    {
-                        title = "Contacts",
-                        menunew = action != "new"
-                    });
-            }
+            Dispatcher.Dispatch(new WebWalletChangeTitleAction
+                {
+                    title = "Contacts",
+                    menunew = action != "new"
+                });
+            var storStr = await localStorage.GetItemAsync<string>(_consts.ContactStorName) ?? "[]";
+            contacts = JsonConvert.DeserializeObject<List<ContactItem>>(storStr);
+            StateHasChanged();
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    async Task add()
+    {
+        contacts.Add(new ContactItem
+        {
+            name = name,
+            address = address
+        });
+        await localStorage.SetItemAsStringAsync(_consts.ContactStorName, JsonConvert.SerializeObject(contacts));
+    }
+
+    async Task del(ContactItem item)
+    {
+        contacts.Remove(item);
+        await localStorage.SetItemAsStringAsync(_consts.ContactStorName, JsonConvert.SerializeObject(contacts));
+    }
+
+    async Task send(ContactItem item)
+    {
+        
     }
 }
