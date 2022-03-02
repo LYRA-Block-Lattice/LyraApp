@@ -392,34 +392,6 @@
     //    mydaos = brkblksret.GetBlocks().Where(a => a is DaoGenesisBlock).Cast<IDao>().ToList();
     }
 
-    async Task OnClick(string buttonName)
-    {
-        busy = true;
-
-        Snackbar.Add("Creating orgnization...", Severity.Info);
-
-        try
-        {
-            var dcret = await walletState.Value.wallet.CreateDAOAsync(name, desc, sellerPar, buyerPar);
-            if (dcret.Successful())
-            {
-                Snackbar.Add($"Orgnization {name} created successfully.", Severity.Success);
-                await GetMyDaos();
-            }
-            else
-            {
-                Snackbar.Add($"Failed to create orgnization: {dcret.ResultCode}", Severity.Error);
-            }
-        }
-        catch (Exception ex)
-        {
-            Snackbar.Add($"Failed to create orgnization: {ex.Message}", Severity.Error);
-        }
-
-        busy = false;
-
-    }
-
     async Task Back(string buttonName)
     {
         Navigation.NavigateTo("/dao");

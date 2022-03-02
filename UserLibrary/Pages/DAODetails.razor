@@ -17,26 +17,46 @@ else
 {
     <div class="mag cet">
 
-    <MudTabs Elevation="2" Rounded="true" PanelClass="pa-6">
-        <MudTabPanel Text="About">
             <h1>@dao.Name</h1>
-                    <p>
+                    <div>
                         @dao.Description
-                    </p>
+                    </div>
+                    <div>
+                        Profit Share Ratio: @(dao.ShareRito * 100) %
+                    </div>
+                    <div>
+                        Seats: @dao.Treasure.Count / @dao.Seats
+                    </div>
+                    <div>
+                        Seller collateral Ratio: @dao.SellerPar %
+                    </div>
+                    <div>
+                        Buyer collateral Ratio: @dao.BuyerPar %
+                    </div>
 
-                    <a href="/dao/createvote/@((dao as TransactionBlock).AccountID)"><RadzenButton Text="Create Vote" ButtonStyle="ButtonStyle.Primary" />
-                        </a>
+                <div>
+                @if(dao.Treasure.ContainsKey(walletState.Value.wallet.AccountId))
+                {
+                    <RadzenButton Text="Leave this DAO" ButtonStyle="ButtonStyle.Primary" />
+                }
+                else
+                {
+                    <RadzenButton Text="Invest this DAO" ButtonStyle="ButtonStyle.Primary" />
+                }
+            
+                </div>
                 @if(walletState.Value.wallet != null && dao.OwnerAccountId == walletState.Value.wallet.AccountId)
                 {
+                    <a href="/dao/createvote/@((dao as TransactionBlock).AccountID)"><RadzenButton Text="Create Vote" ButtonStyle="ButtonStyle.Primary" />
+                        </a>
                     <RadzenButton Text="Edit DAO" ButtonStyle="ButtonStyle.Secondary" />
                 }
+                <br />
+                <div>
                 <p>show all votes if any</p>
                 <p>show all votes if any</p>
-        </MudTabPanel>
-        <MudTabPanel Text="Join">
-            <h1>Yes, you can join one of the 100 seats.</h1>
-        </MudTabPanel>
-    </MudTabs>
+                </div>
+
 
     </div>
 }

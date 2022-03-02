@@ -31,11 +31,13 @@
             <h3>Scan to Pay Me</h3>
             <p><QRCodeWriter Text="@walletState.Value.wallet.AccountId" Width="300" Heigth="300"></QRCodeWriter></p>
             <MudDivider />
-            <p>Your wallet's address is: <CopyToClipboard Text="@walletState.Value.wallet.AccountId" />                
+            <p>Current wallet's name is: <b>@walletState.Value.wallet.AccountName      </b>      
                 </p>
-            <p>Your wallet's balance is: @walletState.Value.balanceString</p>
+            <p>Current wallet's address is: <CopyToClipboard Text="@walletState.Value.wallet.AccountId" />                
+                </p>
+            <p>Current wallet's balance is: @walletState.Value.balanceString</p>
  
-            <p>Your are now voting for: @walletState.Value.wallet.VoteFor</p>
+            <p>Current voting for: @walletState.Value.wallet.VoteFor</p>
 
             <p>
                 <MudTextField T="string" Label="Vote For Address" @bind-Value="@voteAddr" />

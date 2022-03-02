@@ -20,13 +20,16 @@
                 foreach (var dao in alldaos)
                 {
                     <MudItem xs="12">
+                        <p>
+                            <b>@dao.Name</b>
+                        </p>
                             <p>
                                 @dao.Description
                             </p>
-                            <MudDivider DividerType="DividerType.Middle" Class="my-6" />
                             <a href="/dao/detail/@((dao as TransactionBlock).AccountID)">
                             <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton></a>
                          
+                            <MudDivider DividerType="DividerType.Middle" Class="my-6" />
 
                     </MudItem>
                 }
@@ -166,14 +169,11 @@
     {
         if (firstRender)
         {
-            if (walletState.Value.wallet == null)
-            {
                 Dispatcher.Dispatch(new WebWalletChangeTitleAction
                     {
                         title = "Lyra DAO Central",
-                        menunew = false,
+                        menunew = true,
                     });
-            }
             //else
             //{
             //    Dispatcher.Dispatch(new WebWalletChangeTitleAction
@@ -304,34 +304,6 @@
             return;
         var brkblksret = await walletState.Value.wallet.RPC.GetAllBrokerAccountsForOwnerAsync(walletState.Value.wallet.AccountId);
         mydaos = brkblksret.GetBlocks().Where(a => a is DaoGenesisBlock).Cast<IDao>().ToList();
-    }
-
-    async Task OnClick(string buttonName)
-    {
-        busy = true;
-
-        Snackbar.Add("Creating orgnization...", Severity.Info);
-
-        try
-        {
-            var dcret = await walletState.Value.wallet.CreateDAOAsync(name, desc, sellerPar, buyerPar);
-            if (dcret.Successful())
-            {
-                Snackbar.Add($"Orgnization {name} created successfully.", Severity.Success);
-                await GetMyDaos();
-            }
-            else
-            {
-                Snackbar.Add($"Failed to create orgnization: {dcret.ResultCode}", Severity.Error);
-            }
-        }
-        catch (Exception ex)
-        {
-            Snackbar.Add($"Failed to create orgnization: {ex.Message}", Severity.Error);
-        }
-
-        busy = false;
-
     }
 
     async Task Back(string buttonName)
