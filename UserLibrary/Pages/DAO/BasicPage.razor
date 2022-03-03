@@ -1,0 +1,72 @@
+﻿@using Fluxor
+@using Fluxor.Blazor.Web.Components
+@using Lyra.Data.API.WorkFlow
+@using Nebula.Store.WebWalletUseCase
+@using UserLibrary.Data
+@inherits FluxorComponent
+
+@code {
+    [Inject]
+    public IState<WebWalletState> walletState { get; set; }
+
+    [Inject]
+    public IDispatcher Dispatcher { get; set; }
+
+    [Inject] public ISnackbar Snackbar { get; set; }
+    [Inject] public NavigationManager Navigation { get; set; }
+    [Inject] public ILyraAPI lyraApi { get; set; }
+
+    public virtual string DaoId { get; }
+    public virtual string Title { get; }
+
+    public bool loading = true;
+    public IDao dao;
+
+    protected override Task OnInitializedAsync()
+    {
+        SubscribeToAction<NotifyContainer>(async evtc =>
+            {
+                var evt = evtc.Get();
+
+                if (evt is ContractChangeEvent cce)
+                {
+                    await GetDao();                    
+                }
+            });
+
+        return base.OnInitializedAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Dispatcher.Dispatch(new WebWalletChangeTitleAction
+                {
+                    title = Title,
+                    menunew = false,
+                });
+
+            await GetDao();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    async Task GetDao()
+    {
+        var alldaoret = await lyraApi.GetLastBlockAsync(DaoId);
+        if (alldaoret.Successful())
+        {
+            dao = alldaoret.GetBlock() as IDao;
+            loading = false;
+
+            await InvokeAsync(() => StateHasChanged());
+        }
+    }
+
+    async Task Back(string buttonName)
+    {
+        Navigation.NavigateTo("/dao");
+    }
+}

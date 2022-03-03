@@ -1,14 +1,72 @@
 ﻿@page "/dao/invest/{daoid}"
+@using Fluxor
+@using Fluxor.Blazor.Web.Components
+@using Lyra.Data.API.WorkFlow
+@using Lyra.Data.Shared
+@using Nebula.Store.WebWalletUseCase
+@inherits BasicPage
 
-<h3>InvestDao</h3>
 <div class="mag">
-    <div>
-        @daoid
-    </div>
+    <h3>Invest Dao</h3>
+
+    @if(loading)
+    {
+        <div style="z-index: 5;" class="spinner"></div>
+    }
+    else
+    {
+        <div>
+            @dao.Name
+        </div>
+        <div>
+            Stake Holders:
+        </div>
+        @foreach(var sh in dao.Treasure.OrderByDescending(a => a.Value))
+        {
+            <div>
+                @sh.Key.Shorten() <b>@(sh.Value.ToRitoDecimal() * Total) LYR</b> @(sh.Value.ToRitoDecimal() * 100) %
+            @if(sh.Key == walletState.Value.wallet.AccountId)
+                {
+                    <MudIcon Title="Me" Icon="@Icons.Filled.Check" Class="mr-3 mb-n1"/>
+                }
+            </div>
+        }
+        <div>
+        Invest <RadzenNumeric TValue="int" @bind-Value=@amount /> LYR
+        <hr />
+        <RadzenButton Text="Invest" Click=@Invest /> 
+        <RadzenButton Text="Leave" Click=@Leave />
+        </div>
+    }
+
 </div>
 
 @code {
     [Parameter]
     public string daoid { get; set; }
 
+    public override string DaoId => daoid;
+    public override string Title => "Invest to DAO";
+
+    int amount;
+
+    async Task Invest()
+    {
+        var invret = await walletState.Value.wallet.JoinDAOAsync(DaoId, amount);
+        if(invret.Successful())
+        {
+            Snackbar.Add($"Success invested to {dao.Name}", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add($"Failed to invested to {dao.Name}, {invret.ResultCode}", Severity.Error);
+        }
+    }
+
+    async Task Leave()
+    {
+        Snackbar.Add($"Not implemented", Severity.Info);
+    }
+
+    decimal Total => (dao as TransactionBlock).Balances["LYR"].ToBalanceDecimal();
 }

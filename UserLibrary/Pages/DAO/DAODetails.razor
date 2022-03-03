@@ -45,11 +45,13 @@ else
                 <br />
                 @if (dao.Treasure.ContainsKey(walletState.Value.wallet.AccountId))
                 {
-                    <RadzenButton Text="Leave this DAO" ButtonStyle="ButtonStyle.Primary" />
+                    <RadzenButton Text="Join or Leave" ButtonStyle="ButtonStyle.Primary"
+                         Click="@(a => Navigation.NavigateTo($"/dao/invest/{(dao as TransactionBlock).AccountID}"))"
+                   />
                 }
                 else
                 {
-                    <RadzenButton Text="Invest this DAO" ButtonStyle="ButtonStyle.Primary"
+                    <RadzenButton Text="Join or Leave" ButtonStyle="ButtonStyle.Primary"
                         Click="@(a => Navigation.NavigateTo($"/dao/invest/{(dao as TransactionBlock).AccountID}"))"
                     />
                 }
