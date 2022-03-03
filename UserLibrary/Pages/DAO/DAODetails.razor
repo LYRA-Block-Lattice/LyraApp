@@ -9,7 +9,7 @@
 @using UserLibrary.Data
 @inherits FluxorComponent
 
-@if(loading)
+@if (loading)
 {
     <div style="z-index: 5;" class="spinner"></div>
 }
@@ -17,45 +17,58 @@ else
 {
     <div class="mag cet">
 
-            <h1>@dao.Name</h1>
-                    <div>
-                        @dao.Description
-                    </div>
-                    <div>
-                        Profit Share Ratio: @(dao.ShareRito * 100) %
-                    </div>
-                    <div>
-                        Seats: @dao.Treasure.Count / @dao.Seats
-                    </div>
-                    <div>
-                        Seller collateral Ratio: @dao.SellerPar %
-                    </div>
-                    <div>
-                        Buyer collateral Ratio: @dao.BuyerPar %
-                    </div>
+        <h1>@dao.Name</h1>
+        <div>
+            @dao.Description
+        </div>
+        <div>
+            Profit Share Ratio: @(dao.ShareRito * 100) %
+        </div>
+        <div>
+            Seats: @dao.Treasure.Count / @dao.Seats
+        </div>
+        <div>
+            Seller collateral Ratio: @dao.SellerPar %
+        </div>
+        <div>
+            Buyer collateral Ratio: @dao.BuyerPar %
+        </div>
 
-                <div>
-                @if(dao.Treasure.ContainsKey(walletState.Value.wallet.AccountId))
+        @if (walletState.Value.wallet == null)
+        {
+            <a href="/wallet"><MudButton Variant="Variant.Filled" Color="Color.Primary">Open Wallet</MudButton></a>
+            <br />
+        }
+        else
+        {
+            <div>
+                <br />
+                @if (dao.Treasure.ContainsKey(walletState.Value.wallet.AccountId))
                 {
                     <RadzenButton Text="Leave this DAO" ButtonStyle="ButtonStyle.Primary" />
                 }
                 else
                 {
-                    <RadzenButton Text="Invest this DAO" ButtonStyle="ButtonStyle.Primary" />
+                    <RadzenButton Text="Invest this DAO" ButtonStyle="ButtonStyle.Primary"
+                        Click="@(a => Navigation.NavigateTo($"/dao/invest/{(dao as TransactionBlock).AccountID}"))"
+                    />
                 }
-            
-                </div>
-                @if(walletState.Value.wallet != null && dao.OwnerAccountId == walletState.Value.wallet.AccountId)
-                {
-                    <a href="/dao/createvote/@((dao as TransactionBlock).AccountID)"><RadzenButton Text="Create Vote" ButtonStyle="ButtonStyle.Primary" />
-                        </a>
-                    <RadzenButton Text="Edit DAO" ButtonStyle="ButtonStyle.Secondary" />
-                }
-                <br />
-                <div>
-                <p>show all votes if any</p>
-                <p>show all votes if any</p>
-                </div>
+
+            </div>
+            <br />
+            @if (dao.OwnerAccountId == walletState.Value.wallet.AccountId)
+            {
+                <a href="/dao/createvote/@((dao as TransactionBlock).AccountID)">
+                    <RadzenButton Text="Create Vote" ButtonStyle="ButtonStyle.Primary" />
+                </a>
+                <RadzenButton Text="Edit DAO" ButtonStyle="ButtonStyle.Secondary" />
+            }
+        }
+        <br />
+        <div>
+            <p>show all votes if any</p>
+            <p>show all votes if any</p>
+        </div>
 
 
     </div>
@@ -120,8 +133,8 @@ else
         SubscribeToAction<RespQuote>(
             (e) =>
             {
-            // price updated
-            btcprice = e.Prices["BTC"];
+                // price updated
+                btcprice = e.Prices["BTC"];
                 trxprice = e.Prices["TRX"];
                 lyrprice = e.Prices["LYR"];
                 lyrintprice = e.Prices["LYR_INT"];
@@ -143,10 +156,10 @@ else
         if (firstRender)
         {
             Dispatcher.Dispatch(new WebWalletChangeTitleAction
-                    {
-                        title = "DAO Detail",
-                        menunew = false,
-                    });
+                {
+                    title = "DAO Detail",
+                    menunew = false,
+                });
         }
 
         await base.OnAfterRenderAsync(firstRender);
@@ -160,27 +173,6 @@ else
             coltrito = $"{coltworth / (selprice * selqty):N2}";
         else
             coltrito = "";
-    }
-
-    private async Task ShowCreateTradeUI(IOtcOrder order)
-    {
-        if (walletState.Value.wallet == null)
-        {
-            Navigation.NavigateTo("/wallet");
-            return;
-        }
-        //check if user has been registed on dealer server
-        var client = new DealerClient(Configuration["network"]);
-        var user = await client.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
-        if (!user.Successful())
-        {
-            // register user
-            Navigation.NavigateTo("/dealer/register");
-        }
-        else
-        {
-            Navigation.NavigateTo($"/dealer/trade/{(order as TransactionBlock).AccountID}");
-        }
     }
 
     async Task ShowCreateVote(string name)
@@ -207,10 +199,12 @@ else
             dao = alldaoret.GetBlock() as IDao;
             loading = false;
         }
-   }
+    }
 
     async Task Back(string buttonName)
     {
         Navigation.NavigateTo("/dao");
     }
+
+
 }

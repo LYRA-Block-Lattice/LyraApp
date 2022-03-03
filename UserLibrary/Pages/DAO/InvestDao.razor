@@ -1,0 +1,14 @@
+﻿@page "/dao/invest/{daoid}"
+
+<h3>InvestDao</h3>
+<div class="mag">
+    <div>
+        @daoid
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string daoid { get; set; }
+
+}
