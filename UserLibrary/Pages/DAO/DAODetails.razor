@@ -3,11 +3,12 @@
 @using Fluxor
 @using Fluxor.Blazor.Web.Components
 @using Lyra.Data.Crypto
+@using Lyra.Data.Shared
 @using Nebula.Store.WebWalletUseCase
 @using Microsoft.Extensions.Configuration
 @using Lyra.Data.API.WorkFlow
 @using UserLibrary.Data
-@inherits FluxorComponent
+@inherits BasicPage
 
 @if (loading)
 {
@@ -15,11 +16,14 @@
 }
 else
 {
-    <div class="mag cet">
+    <div class="mag cet fb">
 
         <h1>@dao.Name</h1>
         <div>
             @dao.Description
+        </div>
+        <div>
+            Owner: @dao.OwnerAccountId.Shorten()
         </div>
         <div>
             Profit Share Ratio: @(dao.ShareRito * 100) %
@@ -68,8 +72,12 @@ else
         }
         <br />
         <div>
-            <p>show all votes if any</p>
-            <p>show all votes if any</p>
+            @foreach(var vt in votings)
+            {
+                <div>
+                    <a href="/dao/vote/@((vt as TransactionBlock).AccountID)">@vt.Subject.Title</a>
+                </div>
+            }
         </div>
 
 
@@ -83,98 +91,23 @@ else
     [Parameter]
     public string daoid { get; set; }
 
-    [Inject]
-    private IState<WebWalletState> walletState { get; set; }
+    public override string DaoId => daoid;
+    public override string Title => "DAO Details";
 
-    [Inject]
-    private IDispatcher Dispatcher { get; set; }
-
-    [Inject]
-    IConfiguration Configuration { get; set; }
-
-    [Inject] ISnackbar Snackbar { get; set; }
-    [Inject] NavigationManager Navigation { get; set; }
-    [Inject] ILyraAPI lyraApi { get; set; }
-
-    string name, desc;
-    int sellerPar, buyerPar;
-    bool busy;
-
-    IDao dao;
-    bool loading = true;
-    string total;
-    List<Ticker> tickers;
-    List<string> fiats = new List<string>
-    {
-        "USD", "EUR", "JPY", "CNY", "CHF"
-    };
-    List<string> odrtyps = new List<string>
-    {
-        "Fixed price", "Floating price"
-    };
-    List<string> paymentMethods = new List<string>
-    {
-        "Paypal", "Bank Transfer", "Alipay", "Wechat Pay"
-    };
-
-    IEnumerable<string> paymths = new string[0];
-
-    Ticker selcrypto;
-    string seldaoname, selfiat = "USD", selodrtyp = "Fixed price";
-    decimal selprice, selqty, cltlyr, paymin, paymax;
-    decimal selcryptoprice;
-
-    decimal trxprice, lyrprice, btcprice, lyrintprice;
-    decimal coltworth;
-    string coltrito;
-
-    protected async override Task OnInitializedAsync()
-    {
-        await GetDao();
-
-        SubscribeToAction<RespQuote>(
-            (e) =>
-            {
-                // price updated
-                btcprice = e.Prices["BTC"];
-                trxprice = e.Prices["TRX"];
-                lyrprice = e.Prices["LYR"];
-                lyrintprice = e.Prices["LYR_INT"];
-
-                if (selcrypto != null)
-                {
-                    if (selcrypto.Name.EndsWith("ETH")) selcryptoprice = e.Prices["ETH"];
-                    if (selcrypto.Name.EndsWith("BTC")) selcryptoprice = e.Prices["BTC"];
-                    if (selcrypto.Name.EndsWith("USDT")) selcryptoprice = e.Prices["USDT"];
-                }
-            }
-        );
-
-        await base.OnInitializedAsync();
-    }
+    List<IVoting> votings = new List<IVoting>();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if(firstRender)
         {
-            Dispatcher.Dispatch(new WebWalletChangeTitleAction
-                {
-                    title = "DAO Detail",
-                    menunew = false,
-                });
+            // get all votes
+            var allvotret = await lyraApi.FindAllVotesByDaoAsync(DaoId, false);
+            if (allvotret.Successful())
+            {
+                votings = allvotret.GetBlocks().Cast<IVoting>().ToList();
+            }
         }
-
         await base.OnAfterRenderAsync(firstRender);
-    }
-
-    private void CalCollat(decimal d)
-    {
-        total = $"{(selprice * selqty):N2}";
-        coltworth = cltlyr * lyrprice;
-        if (coltworth > 0 && selprice * selqty > 0)
-            coltrito = $"{coltworth / (selprice * selqty):N2}";
-        else
-            coltrito = "";
     }
 
     async Task ShowCreateVote(string name)
@@ -187,26 +120,5 @@ else
             // register user
             Navigation.NavigateTo("/dealer/register");
         }
-        else
-        {
-            seldaoname = name;
-        }
     }
-
-    async Task GetDao()
-    {
-        var alldaoret = await lyraApi.GetLastBlockAsync(daoid);
-        if (alldaoret.Successful())
-        {
-            dao = alldaoret.GetBlock() as IDao;
-            loading = false;
-        }
-    }
-
-    async Task Back(string buttonName)
-    {
-        Navigation.NavigateTo("/dao");
-    }
-
-
 }

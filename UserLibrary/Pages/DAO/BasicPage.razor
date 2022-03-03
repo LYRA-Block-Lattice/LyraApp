@@ -1,6 +1,7 @@
 ﻿@using Fluxor
 @using Fluxor.Blazor.Web.Components
 @using Lyra.Data.API.WorkFlow
+@using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
 @using UserLibrary.Data
 @inherits FluxorComponent
@@ -11,6 +12,9 @@
 
     [Inject]
     public IDispatcher Dispatcher { get; set; }
+
+    [Inject]
+    public IConfiguration Configuration { get; set; }
 
     [Inject] public ISnackbar Snackbar { get; set; }
     [Inject] public NavigationManager Navigation { get; set; }

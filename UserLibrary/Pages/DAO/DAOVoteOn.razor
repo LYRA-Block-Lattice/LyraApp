@@ -1,8 +1,114 @@
 ﻿@page "/dao/vote/{voteid}"
+@using Lyra.Data.API.WorkFlow
+@using Lyra.Data.Shared
+@using UserLibrary.Data
+@inherits BasicPage
 
-<h3>Vote on @voteid</h3>
+@if (loading)
+{
+    <div style="z-index: 5;" class="spinner"></div>
+}
+else
+{
+<div class="mag">
+    <h3>@vg.Subject.Title</h3>
+    <div>
+        @vg.Subject.Description
+    </div>
+    <div>
+        Options:
+                    <RadzenRadioButtonList @bind-Value=@selIndex TValue="int" Orientation="Radzen.Orientation.Vertical" >
+                        <Items>
+                            @for (int i = 0; i < vg.Subject.Options.Length; i++)
+                            {
+                                <RadzenRadioButtonListItem Text="@vg.Subject.Options[i]" Value="@i" />
+                            }
+                        </Items>
+                    </RadzenRadioButtonList>
+            <RadzenButton Disabled=@(selIndex == -1 || !walletState.Value.IsOpening) Text="Vote" Click=@Vote /> 
+    </div>
+
+    <div class="">
+        <h3>All votings</h3>
+        @foreach(var v in votes)
+            {
+                <div>
+                    @((v as TransactionBlock).TimeStamp) @((v as IBrokerAccount).OwnerAccountId.Shorten()) 
+                        Voted on @vg.Subject.Options[(v as VotingBlock).OptionIndex]
+                </div>
+            }
+    </div>
+</div>
+}
 
 @code {
     [Parameter]
     public string voteid { get; set; }
+
+    public override string DaoId => daoid;
+    public override string Title => "Invest to DAO";
+
+    string daoid;
+    IVoting vg; // voting genesis
+    List<IVoting> votes = new List<IVoting>();
+
+    int selIndex = -1;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            SubscribeToAction<NotifyContainer>(async evtc =>
+            {
+                var evt = evtc.Get();
+
+                if (evt is ContractChangeEvent cce && cce.ContractId == voteid)
+                {
+                    await Refresh();
+                    await InvokeAsync(() => StateHasChanged());
+                }
+            });
+
+            await Refresh();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    async Task Refresh()
+    {
+        // get all votes
+        var ret = await lyraApi.GetLastBlockAsync(voteid);
+        if (ret.Successful())
+        {
+            var latestblk = ret.GetBlock();
+            var vt = latestblk as IVoting;
+            var blk = latestblk as TransactionBlock;
+            daoid = vt.Subject.DaoId;
+
+            // load
+            votes.Clear();
+            var genret = await lyraApi.GetBlockByIndexAsync(voteid, 1);
+            vg = genret.GetBlock() as IVoting;
+
+            for (int i = 2; i <= blk.Height; i++)
+            {
+                var vret = await lyraApi.GetBlockByIndexAsync(voteid, i);
+                votes.Add(vret.GetBlock() as IVoting);
+            }
+        }
+    }
+
+    async Task Vote()
+    {
+        var voteRet = await walletState.Value.wallet.Vote(voteid, selIndex);
+        if(voteRet.Successful())
+        {
+            Snackbar.Add($"Success voted to {vg.Subject.Title}", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add($"Failed to vote, {voteRet.ResultCode}", Severity.Error);
+        }
+    }
 }
