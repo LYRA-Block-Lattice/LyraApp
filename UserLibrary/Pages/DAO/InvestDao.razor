@@ -24,7 +24,7 @@
         @foreach(var sh in dao.Treasure.OrderByDescending(a => a.Value))
         {
             <div>
-                @sh.Key.Shorten() <b>@(sh.Value.ToRitoDecimal() * Total) LYR</b> @(sh.Value.ToRitoDecimal() * 100) %
+                @sh.Key.Shorten() <b>@(Math.Round(sh.Value.ToRitoDecimal() * Total)) LYR</b> @(Math.Round(sh.Value.ToRitoDecimal() * 100, 4)) %
             @if(sh.Key == walletState.Value.wallet.AccountId)
                 {
                     <MudIcon Title="Me" Icon="@Icons.Filled.Check" Class="mr-3 mb-n1"/>
@@ -65,7 +65,15 @@
 
     async Task Leave()
     {
-        Snackbar.Add($"Not implemented", Severity.Info);
+        var invret = await walletState.Value.wallet.LeaveDAOAsync(DaoId);
+        if(invret.Successful())
+        {
+            Snackbar.Add($"Success left {dao.Name}", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add($"Failed to leave {dao.Name}, {invret.ResultCode}", Severity.Error);
+        }
     }
 
     decimal Total => (dao as TransactionBlock).Balances["LYR"].ToBalanceDecimal();
