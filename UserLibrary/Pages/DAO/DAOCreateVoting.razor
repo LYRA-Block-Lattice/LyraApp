@@ -83,7 +83,7 @@
                 Options = options.ToArray(),
             };
 
-        var voteCrtRet = await walletState.Value.wallet.CreateVoteSubject(subject);
+        var voteCrtRet = await walletState.Value.wallet.CreateVoteSubject(subject, null);
         if(voteCrtRet.Successful())
         {
             Snackbar.Add($"Vote created.", Severity.Success);
