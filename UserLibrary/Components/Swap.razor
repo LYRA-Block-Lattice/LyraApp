@@ -252,14 +252,18 @@
         SubscribeToAction<RespQuote>(
             async (e) =>
             {
-                // price updated
-                trxprice = e.Prices["tron"];
-                lyrprice = e.Prices["lyra"];
-                lyrintprice = e.Prices["LYR"];
+                try
+                {
+                    // price updated
+                    trxprice = e.Prices["TRX"];
+                    lyrprice = e.Prices["LYR"];
+                    lyrintprice = e.Prices["LYR_INT"];
 
-                // update pool
-                //_ = Task.Run(async () =>
-                await UpdatePool(true);
+                    // update pool
+                    //_ = Task.Run(async () =>
+                    await UpdatePool(true);
+                }
+                catch{}
             }
         );
 
