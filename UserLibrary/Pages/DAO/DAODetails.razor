@@ -67,7 +67,9 @@ else
                 <a href="/dao/createvote/@((dao as TransactionBlock).AccountID)">
                     <RadzenButton Text="Create Vote" ButtonStyle="ButtonStyle.Primary" />
                 </a>
-                <RadzenButton Text="Edit DAO" ButtonStyle="ButtonStyle.Secondary" />
+                <a href="/dao/modify/@((dao as TransactionBlock).AccountID)">
+                    <RadzenButton Text="Modify DAO Settings" ButtonStyle="ButtonStyle.Secondary" />
+                </a>
             }
         }
         <br />

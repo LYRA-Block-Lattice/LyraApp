@@ -1,6 +1,8 @@
 ﻿@page "/dao/vote/{voteid}"
+@using Lyra.Data.API.ODR
 @using Lyra.Data.API.WorkFlow
 @using Lyra.Data.Shared
+@using Newtonsoft.Json
 @using UserLibrary.Data
 @inherits BasicPage
 
@@ -38,6 +40,45 @@ else
                 </div>
             }
     </div>
+
+    @if(summary != null)
+        {
+            <div>
+            Current State <br />
+            Determinated: @summary.IsDecided
+            @if(summary.IsDecided)
+                {
+                    <div>
+                        Winning Option: @vg.Subject.Options[summary.DecidedIndex]
+                    </div>
+                    
+                    @if(execed)
+                    {
+                        <div>
+                            This vote has already been executed.
+                        </div>
+                    }
+                    else
+                    {
+                        @if(dao.OwnerAccountId == walletState.Value.wallet.AccountId)
+                        {
+                            <div>
+                                <RadzenButton Text="Execute Modification" Click=@Modify />
+                            </div>
+                        }
+                        else
+                        {
+                        <div>
+                            Wait for DAO owner to execute voted result.
+                        </div>
+                        }
+
+                    }
+
+                }
+            </div>
+        }
+
 </div>
 }
 
@@ -53,6 +94,9 @@ else
     List<IVoting> votes = new List<IVoting>();
 
     int selIndex = -1;
+
+    VotingSummary summary;
+    bool execed;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -96,6 +140,12 @@ else
                 var vret = await lyraApi.GetBlockByIndexAsync(voteid, i);
                 votes.Add(vret.GetBlock() as IVoting);
             }
+
+            var ret2 = await lyraApi.GetVoteSummaryAsync(voteid);
+            summary = JsonConvert.DeserializeObject<VotingSummary>(ret2.JsonString);
+
+            var ret3 = await lyraApi.FindExecForVoteAsync(voteid);
+            execed = ret3.Successful();
         }
     }
 
@@ -105,10 +155,27 @@ else
         if(voteRet.Successful())
         {
             Snackbar.Add($"Success voted to {vg.Subject.Title}", Severity.Success);
+
+            await Refresh();
         }
         else
         {
             Snackbar.Add($"Failed to vote, {voteRet.ResultCode}", Severity.Error);
+        }
+    }
+
+    async Task Modify()
+    {
+        var ret = await walletState.Value.wallet.ChangeDAO((dao as TransactionBlock).AccountID, 
+            (vg as Lyra.Core.Blocks.TransactionBlock).AccountID, vg.Proposal.Deserialize() as DAOChange);
+
+        if (ret.Successful())
+        {
+            Snackbar.Add("DAO Changed.", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add($"Failed to modify DAO, {ret.ResultCode}", Severity.Error);
         }
     }
 }

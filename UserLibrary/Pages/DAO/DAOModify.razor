@@ -1,0 +1,152 @@
+﻿@page "/dao/modify/{daoid}"
+@using Lyra.Data.API.ODR
+@using Lyra.Data.API.WorkFlow
+@using Lyra.Data.Shared
+@using Newtonsoft.Json
+@using UserLibrary.Data
+@inherits BasicPage
+
+@if (loading)
+{
+    <div style="z-index: 5;" class="spinner"></div>
+}
+else
+{
+<div class="mag">
+    <MudGrid>
+            <MudItem xs="12">
+                <h1>@dao.Name</h1>
+            </MudItem>
+            <MudItem xs="12">
+                Description: <br />
+                <RadzenTextArea @bind-Value=@desc Placeholder="Orgnization description..." Class="w-100" />
+            </MudItem>
+        <MudItem xs="12">
+            Ratio to share to staking (0% - 100%):<br />
+            <RadzenNumeric TValue="decimal" @bind-Value="@pftShare" Class="w-100" /> %
+        </MudItem>
+        <MudItem xs="12">
+            Number of staking (0 - 100): <br />
+            <RadzenNumeric TValue="int" @bind-Value="@pftSeats" Class="w-100" />
+        </MudItem>
+            <MudItem xs="12">
+                Seller Collateral Percentage <br />
+                <RadzenNumeric TValue="int" @bind-Value=@sellerPar Class="w-100" /> %
+            </MudItem>
+            <MudItem xs="12">
+                Buyer Collateral Percentage <br />
+                <RadzenNumeric TValue="int" @bind-Value=@buyerPar Class="w-100" /> %
+            </MudItem>
+            
+                @if(needVote)
+                {
+                    <MudItem xs="12">
+                        Vote Title:<br /> 
+                        <RadzenTextBox @bind-Value=@votetitle Class="w-100" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        Description: <br />
+                        <RadzenTextArea @bind-Value=@votedesc  Class="w-100" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        Options:<br />
+                        Yay <br />
+                        Nay <br />
+                    </MudItem>
+
+                    <MudItem xs="12">
+                    <RadzenButton Text="Modify By Vote" Click=@Modify />
+                    </MudItem>
+                }
+                else
+                {
+                    <MudItem xs="12">
+                    <RadzenButton Text="Modify" Click=@Modify />
+                    </MudItem>
+                }                
+    </MudGrid>
+
+</div>
+}
+
+@code {
+    [Parameter]
+    public string daoid { get; set; }
+
+    public override string DaoId => daoid;
+    public override string Title => "Modify DAO Setting";
+
+    string desc;
+    decimal pftShare;
+    int pftSeats, sellerPar, buyerPar;
+    bool needVote;
+    string votetitle, votedesc;
+
+    protected override Task OnGotDAO()
+    {
+        desc = dao.Description;
+        pftShare = dao.ShareRito * 100;
+        pftSeats = dao.Seats;
+        sellerPar = dao.SellerPar;
+        buyerPar = dao.BuyerPar;
+        needVote = dao.Treasure.Count > 0;
+
+        votetitle = "We need to modify DAO to ...";
+        votedesc = "Change these settings ...";
+
+        return Task.CompletedTask;
+    }
+
+    async Task Modify()
+    {
+        var change = new DAOChange
+            {
+                creator = walletState.Value.wallet.AccountId,
+                settings = new Dictionary<string, string>
+                {
+                    { "ShareRito", $"{pftShare / 100}" },
+                    { "Seats", $"{pftSeats}" },
+                    { "SellerPar", $"{sellerPar}" },
+                    { "BuyerPar", $"{buyerPar}" },
+                    { "Description", $"{desc}" },
+                }
+            };
+
+        APIResult ret;
+        if(needVote)
+        {
+            VotingSubject daochg = new VotingSubject
+            {
+                Type = SubjectType.DAOModify,
+                DaoId = (dao as TransactionBlock).AccountID,
+                Issuer = walletState.Value.wallet.AccountId,
+                TimeSpan = (int)TimeSpan.FromDays(1).TotalMinutes,
+                Title = votetitle,
+                Description = votedesc,
+                Options = new[] { "Yay", "Nay" },
+            };
+
+            var daoprosl = new VoteProposal
+            {
+                pptype = ProposalType.DAOSettingChanges,
+                data = JsonConvert.SerializeObject(change),
+            };
+
+            ret = await walletState.Value.wallet.CreateVoteSubject(daochg, daoprosl);
+        }
+        else
+        {
+            ret = await walletState.Value.wallet.ChangeDAO(daoid, null, change);
+        }
+
+        if (ret.Successful())
+        {
+            var msg = needVote ? $"Success created vote." : $"Success changed DAO";
+            Snackbar.Add(msg, Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add($"Failed to modify DAO, {ret.ResultCode}", Severity.Error);
+        }
+    }
+}

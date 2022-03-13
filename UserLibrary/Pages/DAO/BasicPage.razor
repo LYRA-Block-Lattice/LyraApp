@@ -65,8 +65,14 @@
             dao = alldaoret.GetBlock() as IDao;
             loading = false;
 
+            await OnGotDAO();
             await InvokeAsync(() => StateHasChanged());
         }
+    }
+
+    protected virtual Task OnGotDAO()
+    {
+        return Task.CompletedTask;
     }
 
     async Task Back(string buttonName)

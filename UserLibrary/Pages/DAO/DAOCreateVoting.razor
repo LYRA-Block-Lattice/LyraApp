@@ -13,7 +13,7 @@
     <div>Vote Type</div>
     <div>
             <RadzenDropDown AllowClear="true" TValue="string" Class="w-100" 
-                            Data=@types />
+                            Data=@types ValueChanged=@changed />
     </div>
     <div>Valid Time Span</div>
     <div>
@@ -27,6 +27,16 @@
     <div>
         <RadzenTextArea @bind-Value=@desc Class="w-100" />
     </div>
+
+    @if(curtype == SubjectType.DAOModify)
+    {
+        <div>you do dao</div>
+    }
+    else if(curtype == SubjectType.OTCDispute)
+    {
+        <div>you do dispute</div>
+    }
+
     <div>Options</div>
     <div>
         <RadzenButton Text="Add" Click=@AddOption />
@@ -60,6 +70,7 @@
     int seed;
     int days, hours, minutes;
     string title, desc;
+    SubjectType curtype = SubjectType.None;
 
     void AddOption()
     {
@@ -92,5 +103,11 @@
         {
             Snackbar.Add($"Failed to create vote: {voteCrtRet.ResultCode}.", Severity.Error);
         }
+    }
+
+    Task changed(string o)
+    {
+        Enum.TryParse(o, out curtype);
+        return Task.CompletedTask;
     }
 }
