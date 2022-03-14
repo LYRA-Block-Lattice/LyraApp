@@ -1,9 +1,11 @@
 ﻿@page "/dao/createvote/{daoid}"
 @using Fluxor
 @using Fluxor.Blazor.Web.Components
+@using Lyra.Data.API.ODR
 @using Lyra.Data.API.WorkFlow
 @using Nebula.Store.WebWalletUseCase
-@inherits FluxorComponent
+@using Newtonsoft.Json
+@inherits BasicPage
 
 <div class="mag">
     <div>DAO ID</div>
@@ -28,15 +30,46 @@
         <RadzenTextArea @bind-Value=@desc Class="w-100" />
     </div>
 
+    <MudGrid>    
     @if(curtype == SubjectType.DAOModify)
     {
-        <div>you do dao</div>
+        <MudItem xs="12">
+            DAO' new description:<br />
+            <RadzenTextArea @bind-Value=@daonewdesc Class="w-100" />
+        </MudItem>
+                <MudItem xs="12">
+            Ratio to share to staking (0% - 100%):<br />
+            <RadzenNumeric TValue="decimal" @bind-Value="@pftShare" Class="w-100" /> %
+        </MudItem>
+        <MudItem xs="12">
+            Number of staking (0 - 100): <br />
+            <RadzenNumeric TValue="int" @bind-Value="@pftSeats" Class="w-100" />
+        </MudItem>
+            <MudItem xs="12">
+                Seller Collateral Percentage <br />
+                <RadzenNumeric TValue="int" @bind-Value=@sellerPar Class="w-100" /> %
+            </MudItem>
+            <MudItem xs="12">
+                Buyer Collateral Percentage <br />
+                <RadzenNumeric TValue="int" @bind-Value=@buyerPar Class="w-100" /> %
+            </MudItem>
     }
     else if(curtype == SubjectType.OTCDispute)
     {
-        <div>you do dispute</div>
-    }
-
+            <MudItem xs="12">
+                Dispute Trade ID: <br />
+                <RadzenTextBox @bind-Value=@tradeId Class="w-100" />
+            </MudItem>
+            <MudItem xs="12">
+                Resolution: <br />
+                some transfer goes here
+            </MudItem>
+        }
+        else
+        {
+            <div>No execute plan.</div>
+        }
+    </MudGrid>
     <div>Options</div>
     <div>
         <RadzenButton Text="Add" Click=@AddOption />
@@ -57,7 +90,11 @@
 </div>
 
 @code {
-    [Parameter] public string daoid { get; set; }
+    [Parameter]
+    public string daoid { get; set; }
+
+    public override string DaoId => daoid;
+    public override string Title => "Create Vote";
 
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
@@ -72,6 +109,15 @@
     string title, desc;
     SubjectType curtype = SubjectType.None;
 
+    // settings for dao change
+    string daonewdesc;
+    decimal pftShare;
+    int pftSeats, sellerPar, buyerPar;
+
+    // settings for dispute trade
+    string tradeId;
+    IOtcTrade curtrade;
+
     void AddOption()
     {
         options.Add($"Option {seed++}");
@@ -80,6 +126,17 @@
     {
         options.RemoveAt(ndx);
     }
+
+    protected override Task OnGotDAO()
+    {
+        daonewdesc = dao.Description;
+        pftShare = dao.ShareRito * 100;
+        pftSeats = dao.Seats;
+        sellerPar = dao.SellerPar;
+        buyerPar = dao.BuyerPar;
+
+        return Task.CompletedTask;
+    }    
 
     async Task CreateVote()
     {
@@ -94,7 +151,58 @@
                 Options = options.ToArray(),
             };
 
-        var voteCrtRet = await walletState.Value.wallet.CreateVoteSubject(subject, null);
+        VoteProposal daoprosl;
+
+        if(curtype == SubjectType.DAOModify)
+        {
+            var change2 = new DAOChange
+            {
+                creator = walletState.Value.wallet.AccountId,
+                settings = new Dictionary<string, string>
+                {
+                    { "ShareRito", $"{pftShare / 100}" },
+                    { "Seats", $"{pftSeats}" },
+                    { "SellerPar", $"{sellerPar}" },
+                    { "BuyerPar", $"{buyerPar}" },
+                    { "Description", daonewdesc },
+                }
+            };
+
+            daoprosl = new VoteProposal
+            {
+                pptype = ProposalType.DAOSettingChanges,
+                data = JsonConvert.SerializeObject(change2),
+            };
+        }
+        else if(curtype == SubjectType.OTCDispute)
+        {
+            var resolution = new ODRResolution
+            {
+                RType = ResolutionType.OTCTrade,
+                creator = walletState.Value.wallet.AccountId,
+                tradeid = tradeId,
+                actions = new []
+                {
+                    new TransMove
+                    {
+                        to = curtrade.OwnerAccountId,
+                        amount = 100,
+                        desc = "compensate"
+                    }
+                }
+            };
+            daoprosl = new VoteProposal
+            {
+                pptype = ProposalType.DAOSettingChanges,
+                data = JsonConvert.SerializeObject(resolution),
+            };
+        }
+        else
+        {
+            daoprosl = null;
+        }
+
+        var voteCrtRet = await walletState.Value.wallet.CreateVoteSubject(subject, daoprosl);
         if(voteCrtRet.Successful())
         {
             Snackbar.Add($"Vote created.", Severity.Success);
