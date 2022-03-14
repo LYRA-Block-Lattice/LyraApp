@@ -47,10 +47,14 @@ namespace Dealer.Server.Hubs
 
             BotCommands = new Dictionary<string, Func<ChatMessage, Task>>
             {
+                // OTC Trade
                 { "status", CommandStatus },
                 { "fiatsent", CommandFiatSent },
                 { "fiatreceived", CommandFiatReceived },
                 { "info", CommandInfo },
+
+                // ODR
+                { "complaint", CommandComplain }
             };
         }
 
@@ -185,13 +189,17 @@ namespace Dealer.Server.Hubs
 
         private async Task ProcessInputAsync(ChatMessage msg)
         {
-            var cmd = msg.Text.Substring(1);
-
-            if (BotCommands.ContainsKey(cmd))
-                await BotCommands[cmd](msg);
-            else
+            if (msg.Text.StartsWith('/'))
             {
-                await CommandHelp(msg);
+                var secs = msg.Text.Split(' ');
+                var cmd = secs[0].Substring(1);
+
+                if (BotCommands.ContainsKey(cmd))
+                    await BotCommands[cmd](msg);
+                else
+                {
+                    await CommandHelp(msg);
+                }
             }
         }
 
@@ -508,9 +516,47 @@ namespace Dealer.Server.Hubs
         #endregion
 
         #region ODR
-        private async Task CommandComplain(string tradeid, string input)
+        private async Task CommandComplain(ChatMessage msg)
         {
+            var room = await _db.GetRoomByTradeAsync(msg.TradeId);
+            var delay = room.DisputeLevel switch
+            {
+                //DisputeLevels.Peer => TimeSpan.FromDays(1),
+                //DisputeLevels.DAO => TimeSpan.FromDays(4),
+                //DisputeLevels.LyraCouncil => TimeSpan.FromDays(7),
+                _ => TimeSpan.Zero,
+            };
 
+            var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IOtcTrade>();
+            if (tradeblk.OTStatus == OTCTradeStatus.Dispute ||
+                tradeblk.OTStatus == OTCTradeStatus.DisputeClosed)
+            {
+                await SendResponseToRoomAsync(msg.TradeId, _dealerId, "Inappropriate");
+                return;
+            }
+
+            var dispute = new DisputeRaiseHistory
+            {
+                DisputeRaisedBy = msg.AccountId,
+                DisputeRaisedTime = DateTime.UtcNow,
+                ClaimedLost = decimal.Parse(msg.Text.Split(' ')[1]),
+            };
+
+            room.Claim(dispute);
+            await _db.UpdateRoomAsync(room.Id, room);
+                        
+            string from;
+            if (msg.AccountId == tradeblk.OwnerAccountId)    // buyer
+            {
+                from = "Buyer";
+            }
+            else  // seller
+            {
+                from = "Seller";
+            }
+
+            var text = $"{from} issued a complaint about lost of {dispute.ClaimedLost} LYR. Please be noted. ";
+            await SendResponseToRoomAsync(msg.TradeId, _dealerId, text);
         }
         #endregion
     }

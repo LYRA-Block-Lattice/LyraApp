@@ -100,6 +100,7 @@
             <MudButton
                    Variant="Variant.Filled"
                    StartIcon="@Icons.Filled.Balance"
+                   OnClick="Complaint"
                    >
                 Complaint
             </MudButton>
@@ -452,5 +453,24 @@
     private void CloseFP()
     {
         fpstyle = $"display: none;";
+    }
+
+    private async Task Complaint()
+    {
+        // ask for lost
+        var result = await DialogService.ShowMessageBox(
+                "Warning",
+                    @$"You will inform your trade peer that there is an potential dispute.",
+                    yesText: "Confirm!", cancelText: "Cancel");
+        if (result != null && result.Value)
+        {
+            var tradeblk = (await walletState.Value.wallet.RPC.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+
+            await Send($"/complaint {tradeblk.Trade.collateral}");
+        }
+        else
+        {
+            
+        }
     }
 }

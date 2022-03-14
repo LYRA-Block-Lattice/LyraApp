@@ -36,7 +36,16 @@ namespace Lyra.Data.API.Identity
         // dispute
         public DisputeLevels DisputeLevel { get; set; }
 
-        public DisputeRaiseHistory[] DisputeHistory { get; set; }
+        public List<DisputeRaiseHistory> DisputeHistory { get; set; }
+
+        public void Claim(DisputeRaiseHistory hist)
+        {
+            if(DisputeHistory == null)
+                DisputeHistory = new List<DisputeRaiseHistory>();
+
+            DisputeHistory.Add(hist);
+            DisputeLevel = (DisputeLevels)((int)DisputeLevel + 1);
+        }
     }
 
     /// <summary>
