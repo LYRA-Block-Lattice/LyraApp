@@ -30,6 +30,8 @@ namespace Dealer.Server.Hubs
 
         ILogger<DealerHub> _logger;
 
+        Dictionary<string, Func<ChatMessage, Task>> BotCommands;
+
         public DealerHub(DealerDb db, Dealeamon dealer, ILyraAPI lyraApi, IConfiguration Configuration, ILogger<DealerHub> logger)
         {
             _config = Configuration;
@@ -42,8 +44,17 @@ namespace Dealer.Server.Hubs
 
             _dealerId = Configuration["DealerID"];
             _dealerKey = Configuration["DealerKey"];
+
+            BotCommands = new Dictionary<string, Func<ChatMessage, Task>>
+            {
+                { "status", CommandStatus },
+                { "fiatsent", CommandFiatSent },
+                { "fiatreceived", CommandFiatReceived },
+                { "info", CommandInfo },
+            };
         }
 
+        #region the main chat Logic
         // room == trade == group, trinity
         bool InConsumer = false;
         private async Task ConsumeAsync<T>(IReceivableSourceBlock<T> source)
@@ -62,7 +73,7 @@ namespace Dealer.Server.Hubs
                     {
                         await SendResponseToRoomAsync(room.TradeId, msg.AccountId, msg.Text);
 
-                        await ProcessInputAsync(room.TradeId, msg.Text);
+                        await ProcessInputAsync(msg);
                     }
                     else
                     {
@@ -172,42 +183,44 @@ namespace Dealer.Server.Hubs
             }
         }
 
-        private async Task ProcessInputAsync(string tradeid, string input)
+        private async Task ProcessInputAsync(ChatMessage msg)
         {
-            if(input.StartsWith("/"))   // bot command
+            var cmd = msg.Text.Substring(1);
+
+            if (BotCommands.ContainsKey(cmd))
+                await BotCommands[cmd](msg);
+            else
             {
-                switch(input.Substring(1))
-                {
-                    case "status":
-                        await CommandStatus(tradeid, input);
-                        break;
-                    case "fiatsent":
-                        await CommandFiatSent(tradeid, input);
-                        break;
-                    case "fiatreceived":
-                        await CommandFiatReceived(tradeid, input);
-                        break;
-                    default:
-                        break;
-                }
+                await CommandHelp(msg);
             }
         }
 
-        private async Task CommandFiatReceived(string tradeid, string input)
+        // help
+        private async Task CommandHelp(ChatMessage msg)
+        {
+            var text = @$"Supported commands: {string.Join(",", BotCommands.Keys.ToArray())}";
+
+            await SendResponseToRoomAsync(msg.TradeId, _dealerId, text);
+        }
+
+        #endregion
+
+        #region OTC state changes
+        private async Task CommandFiatReceived(ChatMessage msg)
         {
             var lastStatus = OTCTradeStatus.FiatSent;
-            for (var i = 0; i < 50; i++)
+            for (var i = 0; i < 50; i++) // TODO: create a better solution
             {
-                var tradeblk = (await _lyraApi.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+                var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IOtcTrade>();
                 if (tradeblk.OTStatus == lastStatus)
                 {
                     await Task.Delay(100);
                     continue;
                 }
 
-                await CommandStatus(tradeid, input);
+                await CommandStatus(msg);
 
-                var room = await _db.GetRoomByTradeAsync(tradeid);
+                var room = await _db.GetRoomByTradeAsync(msg.TradeId);
                 foreach (var user in room.Members)
                     await PinMessageAsync(tradeblk, user.AccountId);
 
@@ -219,37 +232,37 @@ namespace Dealer.Server.Hubs
                 return;
             }
 
-            var msg = $"Dealer can't confirm FiaT send. Please try again.";
-            await SendResponseToRoomAsync(tradeid, _dealerId, msg);
+            var text = $"Dealer can't confirm FiaT send. Please try again.";
+            await SendResponseToRoomAsync(msg.TradeId, _dealerId, text);
         }
 
-        private async Task CommandFiatSent(string tradeid, string input)
+        private async Task CommandFiatSent(ChatMessage msg)
         {
             for(var i = 0; i < 50; i++)
             {
-                var tradeblk = (await _lyraApi.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+                var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IOtcTrade>();
                 if(tradeblk.OTStatus == OTCTradeStatus.Open)
                 {
                     await Task.Delay(100);
                     continue;
                 }
 
-                await CommandStatus(tradeid, input);
+                await CommandStatus(msg);
 
-                var room = await _db.GetRoomByTradeAsync(tradeid);
+                var room = await _db.GetRoomByTradeAsync(msg.TradeId);
                 foreach (var user in room.Members)
                     await PinMessageAsync(tradeblk, user.AccountId);
 
                 return;
             }
 
-            var msg = $"Dealer can't confirm FiAT send. Please try again.";
-            await SendResponseToRoomAsync(tradeid, _dealerId, msg);
+            var text = $"Dealer can't confirm FiAT send. Please try again.";
+            await SendResponseToRoomAsync(msg.TradeId, _dealerId, text);
         }
 
-        private async Task CommandStatus(string tradeid, string input)
+        private async Task CommandStatus(ChatMessage msg)
         {
-            var tradeblk = (await _lyraApi.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+            var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IOtcTrade>();
             var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.price * tradeblk.Trade.amount:N2}";
             var next = tradeblk.OTStatus switch
             {
@@ -261,20 +274,22 @@ namespace Dealer.Server.Hubs
                 OTCTradeStatus.Dispute => "Arbitration",
                 _ => throw new NotImplementedException(),
             };
-            var msg = $"Current status of trade: {tradeblk.OTStatus}. Next step: {next}";
+            var text = $"Current status of trade: {tradeblk.OTStatus}. Next step: {next}";
 
-            await SendResponseToRoomAsync(tradeid, _dealerId, msg);
+            await SendResponseToRoomAsync(msg.TradeId, _dealerId, text);
         }
 
         // print peer info
-        private async Task CommandInfo(string tradeid, string input)
+        private async Task CommandInfo(ChatMessage msg)
         {
-            var tradeblk = (await _lyraApi.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
-            var msg = $"Trade ID:";
+            var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IOtcTrade>();
+            var text = $"Trade ID: {(tradeblk as TransactionBlock).AccountID}";
 
-            await SendResponseToRoomAsync(tradeid, _dealerId, msg);
+            await SendResponseToRoomAsync(msg.TradeId, _dealerId, text);
         }
+        #endregion
 
+        #region signalR events
         public override async Task OnConnectedAsync()
         {
             try
@@ -301,7 +316,9 @@ namespace Dealer.Server.Hubs
         {
             return base.OnDisconnectedAsync(exception);
         }
+        #endregion
 
+        #region client API
         public async Task Chat(ChatMessage msg)
         {
             // PortableSignatures make a better compatibility
@@ -488,5 +505,13 @@ namespace Dealer.Server.Hubs
                 //File.AppendAllText("c:\\tmp\\connectionids.txt", $"AddToGroupAsync: {Context.ConnectionId}, {req.UserAccountID}\n");
             }
         }
+        #endregion
+
+        #region ODR
+        private async Task CommandComplain(string tradeid, string input)
+        {
+
+        }
+        #endregion
     }
 }
