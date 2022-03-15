@@ -3,6 +3,7 @@
 
 @using Fluxor
 @using Fluxor.Blazor.Web.Components
+@using Lyra.Data.API.Identity
 @using Lyra.Data.API.WorkFlow
 @using Lyra.Data.Crypto
 @using Lyra.Data.Shared
@@ -36,6 +37,14 @@
                     </div>
                 }
 
+                @if(level != DisputeLevels.None)
+                {
+                    <a href="/dealer/complaint/@tradeid">
+                    <div class="disp">
+                        Current Dispute Level: @((int)level), @level
+                    </div>
+                    </a>
+                }
             </div>
             @foreach (var cainter in messages)
             {
@@ -146,6 +155,7 @@
     PinnedMessage lastpin;
     string pintitle;
     bool actable;
+    DisputeLevels level;
 
     ElementReference fullpage { get; set; }
     ElementReference msgsref { get; set; }
@@ -209,6 +219,7 @@
                     };
                     actable = a.Mode == PinnedMode.Action;
                     pinnedmsg = a.Text;
+                    level = a.Level;
 
                     InvokeAsync(() => StateHasChanged());
                 }

@@ -21,7 +21,8 @@ Signatures.Switch(true);
 
 builder.Services.AddBlazoredLocalStorage();
 var networkid = builder.Configuration["network"];
-builder.Services.AddTransient<ILyraAPI>(a => LyraRestClient.Create(networkid, Environment.OSVersion.ToString(), "Nebula", "1.0"/*, $"http://nebula.{networkid}.lyra.live:{Neo.Settings.Default.P2P.WebAPI}/api/Node/"*/));
+builder.Services.AddScoped<ILyraAPI>(a => LyraRestClient.Create(networkid, Environment.OSVersion.ToString(), "Nebula", "1.0"/*, $"http://nebula.{networkid}.lyra.live:{Neo.Settings.Default.P2P.WebAPI}/api/Node/"*/));
+builder.Services.AddScoped<DealerClient>(a => new DealerClient(networkid));
 
 var currentAssembly = typeof(Program).Assembly;
 var libAssembly = typeof(UserLibrary.Data.WalletView).Assembly;

@@ -450,6 +450,7 @@ namespace Dealer.Server.Hubs
 
         private async Task PinMessageAsync(IOtcTrade tradeblk, string accountId)
         {
+            var room = await _db.GetRoomByTradeAsync((tradeblk as TransactionBlock).AccountID);
             PinnedMessage pinned;
             if(accountId == tradeblk.OwnerAccountId)    // buyer
             {
@@ -470,6 +471,7 @@ namespace Dealer.Server.Hubs
                     Mode = next.Item1,
                     Text = next.Item2,
                     TradeId = (tradeblk as TransactionBlock).AccountID,
+                    Level = room.DisputeLevel,
                 };
             }
             else    // seller
@@ -491,6 +493,7 @@ namespace Dealer.Server.Hubs
                     Mode = next.Item1,
                     Text = next.Item2,
                     TradeId = (tradeblk as TransactionBlock).AccountID,
+                    Level = room.DisputeLevel,
                 };
             }
 
@@ -535,10 +538,11 @@ namespace Dealer.Server.Hubs
                 return;
             }
 
-            var dispute = new DisputeRaiseHistory
+            var dispute = new DisputeCase
             {
-                DisputeRaisedBy = msg.AccountId,
-                DisputeRaisedTime = DateTime.UtcNow,
+                Level = DisputeLevels.Peer,
+                RaisedBy = msg.AccountId,
+                RaisedTime = DateTime.UtcNow,
                 ClaimedLost = decimal.Parse(msg.Text.Split(' ')[1]),
             };
 
@@ -557,6 +561,9 @@ namespace Dealer.Server.Hubs
 
             var text = $"{from} issued a complaint about lost of {dispute.ClaimedLost} LYR. Please be noted. ";
             await SendResponseToRoomAsync(msg.TradeId, _dealerId, text);
+
+            foreach (var user in room.Members)
+                await PinMessageAsync(tradeblk, user.AccountId);
         }
         #endregion
     }

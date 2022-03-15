@@ -174,6 +174,30 @@ namespace Dealer.Server.Services
             return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidParameterFormat };
         }
 
+        [Route("GetTradeBrief")]
+        [HttpGet]
+        public async Task<SimpleJsonAPIResult> GetTradeBriefAsync(string tradeId, string accountId, string signature)
+        {
+            // validate signature
+            var lsb = await _client.GetLastServiceBlockAsync();
+            if (!Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature))
+                return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
+
+            var room = await _db.GetRoomByTradeAsync(tradeId);
+            if (room == null)
+                return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.NotFound };
+
+            // construct roles
+            var brief = new TradeBrief
+            {
+                TradeId = room.TradeId,
+                Members = room.Members.Select(a => a.AccountId).ToList(),
+                DisputeHistory = room.DisputeHistory,
+            };
+
+            return SimpleJsonAPIResult.Create(brief);
+        }
+/*
         [HttpGet]
         [Route("img")]
         public async Task<ActionResult> ViewAsync(string hash)
@@ -214,6 +238,6 @@ namespace Dealer.Server.Services
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-        }
+        }*/
     }
 }

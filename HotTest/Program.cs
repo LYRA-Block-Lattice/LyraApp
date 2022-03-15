@@ -21,6 +21,7 @@ Signatures.Switch(true);
 builder.Services.AddBlazoredLocalStorage();
 var networkid = builder.Configuration["network"];
 builder.Services.AddScoped<ILyraAPI>(a => LyraRestClient.Create(networkid, Environment.OSVersion.ToString(), "HotTest", "1.0"));
+builder.Services.AddScoped<DealerClient>(a => new DealerClient(networkid));
 
 var currentAssembly = typeof(Program).Assembly;
 var libAssembly = typeof(UserLibrary.Data.WalletView).Assembly;

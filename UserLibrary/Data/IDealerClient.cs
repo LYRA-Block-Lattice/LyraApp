@@ -1,5 +1,6 @@
 ﻿using Lyra.Core.API;
 using Lyra.Data.API;
+using Lyra.Data.API.Identity;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -181,6 +182,7 @@ namespace UserLibrary.Data
         public PinnedMode Mode { get; set; }
         public string TradeId { get; set; }
         public string Text { set; get; } = null!;
+        public DisputeLevels Level { get; set; }
     }
 
     /// <summary> SignalR Hub push interface (signature for Hub pushing notifications to Clients) </summary>

@@ -107,3 +107,9 @@
     align-items: center;
     padding: 3px;
 }
+
+.disp {
+    background-color: orange;
+    padding: 5px;
+    margin: 5px;
+}
