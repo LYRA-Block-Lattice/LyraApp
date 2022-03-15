@@ -524,9 +524,9 @@ namespace Dealer.Server.Hubs
             var room = await _db.GetRoomByTradeAsync(msg.TradeId);
             var delay = room.DisputeLevel switch
             {
-                //DisputeLevels.Peer => TimeSpan.FromDays(1),
-                //DisputeLevels.DAO => TimeSpan.FromDays(4),
-                //DisputeLevels.LyraCouncil => TimeSpan.FromDays(7),
+                DisputeLevels.Peer => TimeSpan.FromDays(1),
+                DisputeLevels.DAO => TimeSpan.FromDays(4),
+                DisputeLevels.LyraCouncil => TimeSpan.FromDays(7),
                 _ => TimeSpan.Zero,
             };
 
@@ -536,6 +536,17 @@ namespace Dealer.Server.Hubs
             {
                 await SendResponseToRoomAsync(msg.TradeId, _dealerId, "Inappropriate");
                 return;
+            }
+
+            if(room.DisputeLevel != DisputeLevels.None)
+            {
+                // delay
+                if(room.DisputeHistory.Last().RaisedTime + delay > DateTime.UtcNow)
+                {
+                    var str = string.Format("{0} Days {1} Hours {2} Minutes", delay.Days, delay.Hours, delay.Minutes);
+                    await SendResponseToRoomAsync(msg.TradeId, _dealerId, $"Can't raise dispute level in cooling down. Time left: {str}");
+                    return;
+                }
             }
 
             var dispute = new DisputeCase
