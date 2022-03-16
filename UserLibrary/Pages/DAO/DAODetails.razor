@@ -72,8 +72,9 @@ else
                 </a>
             }
         }
-        <br />
+        <hr />
         <div>
+            <h3>Votes</h3>
             @foreach(var vt in votings)
             {
                 <div>
@@ -81,7 +82,25 @@ else
                 </div>
             }
         </div>
-
+        <hr />
+        <div>
+            <h3>Opening Disputes</h3>
+            @foreach(var disp in disps)
+            {
+                <div>
+                    <a href="/dealer/complaint/@((disp as TransactionBlock).AccountID)">@((disp as TransactionBlock).AccountID)</a>
+                </div>
+            }
+        </div>
+        <div>
+            <h3>Closed Disputes</h3>
+            @foreach(var disp in dispcls)
+            {
+                <div>
+                    <a href="/dealer/complaint/@((disp as TransactionBlock).AccountID)">@((disp as TransactionBlock).AccountID)</a>
+                </div>
+            }
+        </div>
 
     </div>
 }
@@ -97,6 +116,8 @@ else
     public override string Title => "DAO Details";
 
     List<IVoting> votings = new List<IVoting>();
+    List<IOtcTrade> disps = new List<IOtcTrade>();
+    List<IOtcTrade> dispcls = new List<IOtcTrade>();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -107,6 +128,19 @@ else
             if (allvotret.Successful())
             {
                 votings = allvotret.GetBlocks().Cast<IVoting>().ToList();
+            }
+
+            // get all disputes
+            var alldispret = await lyraApi.FindOtcTradeByStatusAsync(DaoId, OTCTradeStatus.Dispute, 0, 10);
+            if(alldispret.Successful())
+            {
+                disps = alldispret.GetBlocks().Cast<IOtcTrade>().ToList();
+            }
+
+            var alldispret2 = await lyraApi.FindOtcTradeByStatusAsync(DaoId, OTCTradeStatus.DisputeClosed, 0, 10);
+            if(alldispret2.Successful())
+            {
+                dispcls = alldispret2.GetBlocks().Cast<IOtcTrade>().ToList();
             }
         }
         await base.OnAfterRenderAsync(firstRender);

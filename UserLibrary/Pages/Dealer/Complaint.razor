@@ -16,6 +16,10 @@
     {
         <div style="z-index: 5;" class="spinner"></div>
     }
+    else if(!walletState.Value.IsOpening)
+    {
+        <a href="/wallet"><MudButton Variant="Variant.Filled" Color="Color.Primary">Open Wallet to View Details</MudButton></a>
+    }
     else
     {
         <div>
@@ -75,8 +79,11 @@
     {
         if(firstRender)
         {
-            await GetTradeBrief();
-            await InvokeAsync(() => StateHasChanged());
+            if(walletState.Value.IsOpening)
+            {
+                await GetTradeBrief();
+                await InvokeAsync(() => StateHasChanged());
+            }
         }
 
         await base.OnAfterRenderAsync(firstRender);
