@@ -36,6 +36,10 @@
                 @foreach(var cmp in brief.DisputeHistory)
                 {
                     <div>
+                        <hr />
+                    </div>
+
+                    <div>
                         Level: @cmp.Level
                     </div>
                     <div>
@@ -47,6 +51,7 @@
                     <div>
                         Claimed Lost: @cmp.ClaimedLost LYR
                     </div>
+
                 }
             </div>
         }
@@ -58,9 +63,7 @@
     [Parameter]
     public string tradeid { get; set; }
 
-    [Inject]
-    public DealerClient dealer { get; set; }
-
+    [Inject] public DealerClient dealer { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
 
     [Inject]
@@ -72,20 +75,24 @@
     {
         if(firstRender)
         {
-            var lsbret = await lyraApi.GetLastServiceBlockAsync();
-            if(lsbret.Successful())
-            {
-                var lsb = lsbret.GetBlock() as ServiceBlock;
-                var wallet = walletState.Value.wallet;
-                var sign = Signatures.GetSignature(wallet.PrivateKey, lsb.Hash, wallet.AccountId);
-                var ret = await dealer.GetTradeBriefAsync(tradeid, wallet.AccountId, sign);
-
-                brief = ret.Deserialize<TradeBrief>();
-
-                await InvokeAsync(() => StateHasChanged());
-            }            
+            await GetTradeBrief();
+            await InvokeAsync(() => StateHasChanged());
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task GetTradeBrief()
+    {
+        var lsbret = await lyraApi.GetLastServiceBlockAsync();
+        if (lsbret.Successful())
+        {
+            var lsb = lsbret.GetBlock() as ServiceBlock;
+            var wallet = walletState.Value.wallet;
+            var sign = Signatures.GetSignature(wallet.PrivateKey, lsb.Hash, wallet.AccountId);
+            var ret = await dealer.GetTradeBriefAsync(tradeid, wallet.AccountId, sign);
+
+            brief = ret.Deserialize<TradeBrief>();            
+        }
     }
 }

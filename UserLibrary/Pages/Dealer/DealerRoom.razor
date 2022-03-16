@@ -145,6 +145,8 @@
     [Inject] IJSRuntime JsRuntime { get; set; }
     [Inject] private IDialogService DialogService { get; set; }
     [Inject] ConnectionMethodsWrapper Realconn { get; set; }
+    [Inject] public DealerClient dealer { get; set; }
+    [Inject] ILyraAPI lyraApi { get; set; }
 
     private List<RespContainer> messages = new List<RespContainer>();
 
@@ -164,6 +166,9 @@
     bool showemoji, showadd, showfullpage;
     string fpstyle;
 
+    // about complaint
+    TradeBrief brief;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (addmsg)
@@ -171,6 +176,13 @@
             await JsRuntime.InvokeVoidAsync("updateScroll", msgsref);
             addmsg = false;
         }
+
+        if(firstRender)
+        {
+            await GetTradeBrief();
+            await InvokeAsync(() => StateHasChanged());
+        }
+
         await base.OnAfterRenderAsync(firstRender);
     }
 
@@ -466,22 +478,66 @@
         fpstyle = $"display: none;";
     }
 
+    private async Task GetTradeBrief()
+    {
+        var lsbret = await lyraApi.GetLastServiceBlockAsync();
+        if (lsbret.Successful())
+        {
+            var lsb = lsbret.GetBlock() as ServiceBlock;
+            var wallet = walletState.Value.wallet;
+            var sign = Signatures.GetSignature(wallet.PrivateKey, lsb.Hash, wallet.AccountId);
+            var ret = await dealer.GetTradeBriefAsync(tradeid, wallet.AccountId, sign);
+
+            brief = ret.Deserialize<TradeBrief>();            
+        }
+    }
+
     private async Task Complaint()
     {
-        // ask for lost
-        var result = await DialogService.ShowMessageBox(
-                "Warning",
-                    @$"You will inform your trade peer that there is an potential dispute.",
-                    yesText: "Confirm!", cancelText: "Cancel");
-        if (result != null && result.Value)
+        Snackbar.Add($"Getting latest status...", Severity.Info);
+        
+        var tradeblk = (await walletState.Value.wallet.RPC.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+        brief = null;
+        await GetTradeBrief();
+        if(brief == null)
         {
-            var tradeblk = (await walletState.Value.wallet.RPC.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+            Snackbar.Add($"Unable to get latest status. Please retry later.", Severity.Warning);
+            return;
+        }
 
-            await Send($"/complaint {tradeblk.Trade.collateral}");
-        }
-        else
+        if(brief.DisputeLevel == DisputeLevels.None)
         {
-            
+            // ask for lost
+            var result = await DialogService.ShowMessageBox(
+                    "Warning",
+                        @$"You will inform your trade peer that there is an potential dispute.",
+                        yesText: "Confirm!", cancelText: "Cancel");
+            if (result != null && result.Value)
+            {
+                await Send($"/complaint {tradeblk.Trade.collateral}");
+            }
         }
+        else if(brief.DisputeLevel == DisputeLevels.Peer)
+        {
+            var result = await DialogService.ShowMessageBox(
+                    "Warning",
+                        @$"Trade will be suspended. DAO owner will be invited as mediator to help resolve the dispute.",
+                        yesText: "Confirm!", cancelText: "Cancel");
+            if (result != null && result.Value)
+            {
+                var crdptret = await walletState.Value.wallet.OTCTradeRaiseDisputeAsync(tradeid);
+                if(crdptret.Successful())
+                {
+                    await Send($"/complaint {tradeblk.Trade.collateral}");
+                }
+                else
+                {
+                    Snackbar.Add($"Unable to change trade: {crdptret.ResultCode}", Severity.Error);
+                    return;
+                }
+            }
+        }
+
+
     }
 }

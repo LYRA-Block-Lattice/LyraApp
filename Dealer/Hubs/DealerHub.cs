@@ -524,9 +524,9 @@ namespace Dealer.Server.Hubs
             var room = await _db.GetRoomByTradeAsync(msg.TradeId);
             var delay = room.DisputeLevel switch
             {
-                DisputeLevels.Peer => TimeSpan.FromDays(1),
-                DisputeLevels.DAO => TimeSpan.FromDays(4),
-                DisputeLevels.LyraCouncil => TimeSpan.FromDays(7),
+                //DisputeLevels.Peer => TimeSpan.FromDays(1),
+                //DisputeLevels.DAO => TimeSpan.FromDays(4),
+                //DisputeLevels.LyraCouncil => TimeSpan.FromDays(7),
                 _ => TimeSpan.Zero,
             };
 
@@ -551,7 +551,7 @@ namespace Dealer.Server.Hubs
 
             var dispute = new DisputeCase
             {
-                Level = DisputeLevels.Peer,
+                Level = (DisputeLevels)((int)room.DisputeLevel + 1),
                 RaisedBy = msg.AccountId,
                 RaisedTime = DateTime.UtcNow,
                 ClaimedLost = decimal.Parse(msg.Text.Split(' ')[1]),
