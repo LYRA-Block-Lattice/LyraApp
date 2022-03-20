@@ -9,7 +9,7 @@
 <div class="mag">
     <h3>Complaint</h3>
     <div>
-        for ID: @tradeid
+        For Trade ID: <CopyToClipboard Text=@tradeid />
     </div>
 
     @if(brief == null)
@@ -30,7 +30,7 @@
             @foreach(var mem in brief.Members)
             {
                 <div>
-                    Account ID: @mem
+                    Account ID: <CopyToClipboard Text=@mem />
                 </div>
             }
         </div>
@@ -98,8 +98,10 @@
             var wallet = walletState.Value.wallet;
             var sign = Signatures.GetSignature(wallet.PrivateKey, lsb.Hash, wallet.AccountId);
             var ret = await dealer.GetTradeBriefAsync(tradeid, wallet.AccountId, sign);
-
-            brief = ret.Deserialize<TradeBrief>();            
+            if(ret.Successful())
+            {
+                brief = ret.Deserialize<TradeBrief>();
+            }                        
         }
     }
 }

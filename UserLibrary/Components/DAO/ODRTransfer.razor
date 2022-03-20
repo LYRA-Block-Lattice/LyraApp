@@ -1,0 +1,111 @@
+﻿@namespace UserLibrary.Components.DAO
+@using Lyra.Data.API.ODR
+
+<table>
+    <tr>
+        <td>From: </td>
+        <td><RadzenDropDown TValue="string" @ref=@sel1
+            Data=@(entries) Change=@(async args => await OnChange(args, "from")) />
+        </td>
+    </tr>
+    <tr>
+        <td>Send: </td>
+        <td><RadzenNumeric TValue="decimal" @bind-Value=@Amount /> LYR
+        </td>
+    </tr>
+    <tr>
+        <td>To: </td>
+        <td><RadzenDropDown TValue="string"
+            Data=@(entries) @bind-Value=@To />
+        </td>
+    </tr>
+    <tr>
+        <td>Reason: </td>
+        <td><RadzenTextBox @bind-Value=@Desc Class="w-100" />
+        </td>
+    </tr>
+</table>
+
+@code {
+    string _from;
+    [Parameter] public string From
+    {
+        get
+        {
+            return _from;
+        }
+        set
+        {
+            _from = value;
+        }
+    }
+    [Parameter]
+    public EventCallback<string> FromChanged { get; set; }
+
+    string _desc;
+    [Parameter] public string Desc
+    {
+        get
+        {
+            return _desc;
+        }
+        set
+        {
+            _desc = value;
+            DescChanged.InvokeAsync(_desc);
+        }
+    }
+    [Parameter]
+    public EventCallback<string> DescChanged { get; set; }
+
+    string _to;
+    [Parameter] public string To
+    {
+        get
+        {
+            return _to;
+        }
+        set
+        {
+            _to = value;
+            ToChanged.InvokeAsync(_to);
+        }
+    }
+    [Parameter]
+    public EventCallback<string> ToChanged { get; set; }
+
+    decimal _amount;
+    [Parameter] public decimal Amount
+    {
+        get
+        {
+            return _amount;
+        }
+        set
+        {
+            _amount = value;
+            AmountChanged.InvokeAsync(_amount);
+        }
+    }
+    [Parameter]
+    public EventCallback<decimal> AmountChanged { get; set; }
+
+    List<string> entries = Enum.GetValues<Parties>().Select(a => a.ToString()).ToList();
+
+    RadzenDropDown<string> sel1;
+
+    async Task OnChange(object value, string name)
+    {
+        switch(name)
+        {
+            case "from":
+                _from = (string)value;
+                sel1.Value = _from;
+                FromChanged.InvokeAsync(_from);
+                break;
+
+        }
+
+        
+    }    
+}

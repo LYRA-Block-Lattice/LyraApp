@@ -5,6 +5,7 @@
 @using Lyra.Data.API.WorkFlow
 @using Nebula.Store.WebWalletUseCase
 @using Newtonsoft.Json
+@using UserLibrary.Components.DAO
 @inherits BasicPage
 
 <div class="mag">
@@ -14,7 +15,7 @@
     </div>
     <div>Vote Type</div>
     <div>
-            <RadzenDropDown AllowClear="true" TValue="string" Class="w-100" 
+            <RadzenDropDown TValue="string" Class="w-100" 
                             Data=@types ValueChanged=@changed />
     </div>
     <div>Valid Time Span</div>
@@ -57,13 +58,21 @@
     else if(curtype == SubjectType.OTCDispute)
     {
             <MudItem xs="12">
-                Dispute Trade ID: <br />
+                For Disputed Trade ID: <br />
                 <RadzenTextBox @bind-Value=@tradeId Class="w-100" />
             </MudItem>
             <MudItem xs="12">
-                Resolution: <br />
-                some transfer goes here
+                Resolution:
             </MudItem>
+            @for(var i = 0; i < 3; i++)
+            {
+                int j = i;
+                <MudItem xs="12">
+                <ODRTransfer @bind-From=@(froms[i]) @bind-To=@(tos[j]) @bind-Amount=@(amts[j]) @bind-Desc=@(descs[j])/>
+            </MudItem>
+            }
+
+
         }
         else
         {
@@ -77,7 +86,7 @@
         {
             var x = i;
             <div>
-            <span>@(i+1).&nbsp;</span><RadzenTextBox Value="@options[i]" /><RadzenButton Text="Remove" Click=@(a => DelOption(x)) />
+            <span>@(x+1).&nbsp;</span><RadzenTextBox @bind-Value="@(options[x])" /><RadzenButton Text="Remove" Click=@(a => DelOption(x)) />
             </div>
         }
     </div>
@@ -117,6 +126,13 @@
     // settings for dispute trade
     string tradeId;
     IOtcTrade curtrade;
+
+    string[] froms = new [] { Parties.Buyer.ToString(), 
+        Parties.Seller.ToString(), Parties.DAOTreasure.ToString() };
+    string[] tos = new [] { Parties.Buyer.ToString(), 
+        Parties.Seller.ToString(), Parties.DAOTreasure.ToString() };
+    decimal[] amts = new[] { 0m, 0m, 0m };
+    string[] descs = new[] { "", "", "" };
 
     void AddOption()
     {
@@ -176,24 +192,33 @@
         }
         else if(curtype == SubjectType.OTCDispute)
         {
+            TransMove[] moves = new TransMove[froms.Length];
+            for(var i = 0; i < froms.Length; i++)
+            {
+                var frm = (Parties)Enum.Parse(typeof(Parties), froms[i]);
+                var too = (Parties)Enum.Parse(typeof(Parties), tos[i]);
+                if(frm == Parties.None || too == Parties.None)
+                {
+                    continue;
+                }
+                moves[i] = new TransMove
+                    {
+                        from = frm,
+                        to = too,
+                        amount = amts[i],
+                        desc = descs[i]
+                    };
+            }
             var resolution = new ODRResolution
             {
                 RType = ResolutionType.OTCTrade,
                 creator = walletState.Value.wallet.AccountId,
                 tradeid = tradeId,
-                actions = new []
-                {
-                    new TransMove
-                    {
-                        to = curtrade.OwnerAccountId,
-                        amount = 100,
-                        desc = "compensate"
-                    }
-                }
+                actions = moves,
             };
             daoprosl = new VoteProposal
             {
-                pptype = ProposalType.DAOSettingChanges,
+                pptype = ProposalType.DisputeResolution,
                 data = JsonConvert.SerializeObject(resolution),
             };
         }

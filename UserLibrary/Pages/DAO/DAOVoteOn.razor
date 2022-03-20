@@ -63,7 +63,7 @@ else
                         @if(dao.OwnerAccountId == walletState.Value.wallet.AccountId)
                         {
                             <div>
-                                <RadzenButton Text="Execute Modification" Click=@Modify />
+                                <RadzenButton Text="Execute Modification" Click=@ExecuteVote />
                             </div>
                         }
                         else
@@ -164,18 +164,39 @@ else
         }
     }
 
-    async Task Modify()
+    async Task ExecuteVote()
     {
-        var ret = await walletState.Value.wallet.ChangeDAO((dao as TransactionBlock).AccountID, 
-            (vg as Lyra.Core.Blocks.TransactionBlock).AccountID, vg.Proposal.Deserialize() as DAOChange);
-
-        if (ret.Successful())
+        if(vg.Proposal.pptype == ProposalType.DAOSettingChanges)
         {
-            Snackbar.Add("DAO Changed.", Severity.Success);
+            var ret = await walletState.Value.wallet.ChangeDAO((dao as TransactionBlock).AccountID, 
+                (vg as Lyra.Core.Blocks.TransactionBlock).AccountID, vg.Proposal.Deserialize() as DAOChange);
+
+            if (ret.Successful())
+            {
+                Snackbar.Add("DAO Changed.", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add($"Failed to modify DAO, {ret.ResultCode}", Severity.Error);
+            }
+        }
+        else if(vg.Proposal.pptype == ProposalType.DisputeResolution)
+        {
+            var ret = await walletState.Value.wallet.ExecuteResolution(
+                (vg as Lyra.Core.Blocks.TransactionBlock).AccountID, vg.Proposal.Deserialize() as ODRResolution);
+
+            if (ret.Successful())
+            {
+                Snackbar.Add("Dispute resolution executed.", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add($"Failed to execute resolution: {ret.ResultCode}", Severity.Error);
+            }
         }
         else
         {
-            Snackbar.Add($"Failed to modify DAO, {ret.ResultCode}", Severity.Error);
+            Snackbar.Add("Not needed to executed.", Severity.Success);
         }
     }
 }
