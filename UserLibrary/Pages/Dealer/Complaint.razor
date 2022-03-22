@@ -2,6 +2,8 @@
 @using Fluxor
 @using Fluxor.Blazor.Web.Components
 @using Lyra.Data.API.Identity
+@using Lyra.Data.API.ODR
+@using Lyra.Data.API.WorkFlow
 @using Lyra.Data.Crypto
 @using Nebula.Store.WebWalletUseCase
 @inherits FluxorComponent
@@ -56,6 +58,23 @@
                         Claimed Lost: @cmp.ClaimedLost LYR
                     </div>
 
+                    @if(cmp.Level == DisputeLevels.DAO && votings != null)
+                    {
+                        foreach(var vote in votings)
+                        {
+                            <div>
+                                <div>
+                                    Vote: @vote.Subject.Title
+                                </div>
+                                @if(summaries.ContainsKey((vote as TransactionBlock).AccountID))
+                                {
+                                    <div>
+                                        Decided: @(summaries[(vote as TransactionBlock).AccountID].IsDecided)
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
                 }
             </div>
         }
@@ -74,6 +93,8 @@
     private IState<WebWalletState> walletState { get; set; }
 
     TradeBrief brief;
+    List<IVoting> votings;
+    Dictionary<string, VotingSummary> summaries;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -101,6 +122,22 @@
             if(ret.Successful())
             {
                 brief = ret.Deserialize<TradeBrief>();
+
+                if(brief.DisputeLevel == DisputeLevels.DAO)
+                {
+                    var votesret = await lyraApi.FindAllVoteForTradeAsync(tradeid);
+                    if(votesret.Successful())
+                    {
+                        votings = votesret.GetBlocks().Cast<IVoting>().ToList();
+                        summaries = new Dictionary<string, VotingSummary>();
+                        foreach(var vote in votings)
+                        {
+                            var voteid = (vote as TransactionBlock).AccountID;
+                            var retx = await lyraApi.GetVoteSummaryAsync(voteid);
+                            summaries.Add(voteid, retx.Deserialize<VotingSummary>());
+                        }                        
+                    }
+                }
             }                        
         }
     }
