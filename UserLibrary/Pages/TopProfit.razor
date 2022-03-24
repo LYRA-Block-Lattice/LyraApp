@@ -177,7 +177,7 @@
     protected override async Task OnInitializedAsync()
     {
         bexpurl = Configuration["network"] == "mainnet" ? "https://nebula.lyra.live" : "https://nebulatestnet.lyra.live";
-       
+
         Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Revenue Center" });
 
         try
@@ -219,7 +219,11 @@
         {
             pft = ret.GetBlock() as ProfitingGenesis;
 
-            stks = lyraApi.FindAllStakings(pftid, DateTime.UtcNow);
+            var stksret = await lyraApi.FindAllStakingsAsync(pftid, DateTime.UtcNow);
+            if(stksret.Successful())
+            {
+                stks = stksret.Deserialize<List<Staker>>();
+            }
             pftStats = await lyraApi.GetAccountStatsAsync(pftid, DateTime.MinValue, DateTime.MaxValue);
 
             var rwds = new Dictionary<string, decimal>();
