@@ -187,57 +187,68 @@ namespace Dealer.Server.Services
             if (room == null)
                 return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.NotFound };
 
+            var txmsgs = await _db.GetTxRecordsByTradeAsync(tradeId);
+            var peerHasMsg = txmsgs.Where(a =>
+                a.AccountId != accountId &&
+                a.AccountId != _config["DealerID"]
+                ).Any();
+
             // construct roles
             var brief = new TradeBrief
             {
                 TradeId = room.TradeId,
                 Members = room.Members.Select(a => a.AccountId).ToList(),
                 DisputeHistory = room.DisputeHistory,
+
+                // if no chat in 10 minutes after trade creation
+                // or if peer request cancel also
+                IsCancellable = !peerHasMsg && room.TimeStamp < DateTime.UtcNow.AddMinutes(-10)
             };
 
             return SimpleJsonAPIResult.Create(brief);
         }
-/*
-        [HttpGet]
-        [Route("img")]
-        public async Task<ActionResult> ViewAsync(string hash)
-        {
-            var image = await _db.GetImageDataByIdAsync(hash); //Pull image from the database.
-            if (image == null)
-                return NotFound();
-            return File(image.Data, image.Mime);
-        }
 
-        // GET: api/<TransactionController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        /*
+                [HttpGet]
+                [Route("img")]
+                public async Task<ActionResult> ViewAsync(string hash)
+                {
+                    var image = await _db.GetImageDataByIdAsync(hash); //Pull image from the database.
+                    if (image == null)
+                        return NotFound();
+                    return File(image.Data, image.Mime);
+                }
 
-        // GET api/<TransactionController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+                // GET: api/<TransactionController>
+                [HttpGet]
+                public IEnumerable<string> Get()
+                {
+                    return new string[] { "value1", "value2" };
+                }
 
-        // POST api/<TransactionController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+                // GET api/<TransactionController>/5
+                [HttpGet("{id}")]
+                public string Get(int id)
+                {
+                    return "value";
+                }
 
-        // PUT api/<TransactionController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+                // POST api/<TransactionController>
+                [HttpPost]
+                public void Post([FromBody] string value)
+                {
+                }
 
-        // DELETE api/<TransactionController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }*/
+                // PUT api/<TransactionController>/5
+                [HttpPut("{id}")]
+                public void Put(int id, [FromBody] string value)
+                {
+                }
+
+                // DELETE api/<TransactionController>/5
+                [HttpDelete("{id}")]
+                public void Delete(int id)
+                {
+                }*/
     }
 }

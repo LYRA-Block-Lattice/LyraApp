@@ -381,6 +381,7 @@ namespace Dealer.Server.Hubs
                             {
                                 TradeId = ((TransactionBlock)tradeblk).AccountID,
                                 Members = new[] { seller, buyer },
+                                TimeStamp = DateTime.UtcNow,
                             };
                             await _db.CreateRoomAsync(crroom);
                         }

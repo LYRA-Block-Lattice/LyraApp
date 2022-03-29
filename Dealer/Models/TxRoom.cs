@@ -21,6 +21,9 @@ namespace Lyra.Data.API.Identity
 
         public string TradeId { get; set; } = null!;
 
+        // UTC time of created
+        public DateTime TimeStamp { get; set; }
+
         // add full user document as a snapshot
         public LyraUser[] Members { get; set; }
 
