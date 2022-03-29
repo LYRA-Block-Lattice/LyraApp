@@ -279,6 +279,7 @@ namespace Dealer.Server.Hubs
                 OTCTradeStatus.FiatReceived => $"Contract to release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer",
                 OTCTradeStatus.CryptoReleased => "None",
                 OTCTradeStatus.Closed => "Trade closed. Nothing to do",
+                OTCTradeStatus.Canceled => "Trade canceled. Nothing to do",
                 OTCTradeStatus.Dispute => "Arbitration",
                 _ => throw new NotImplementedException(),
             };

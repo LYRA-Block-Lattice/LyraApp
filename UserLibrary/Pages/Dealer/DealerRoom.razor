@@ -507,7 +507,6 @@
             if(cclret.Successful())
             {
                 Snackbar.Add($"Trade was canceled.", Severity.Success);
-                await Send("/status"); // emulate a refresh
             }
             else
             {
