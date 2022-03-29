@@ -102,6 +102,7 @@
             <MudButton
                    Variant="Variant.Filled"
                    StartIcon="@Icons.Filled.Close"
+                   OnClick="CancelTrade"
                    >
                 Close Trade
             </MudButton>
@@ -487,8 +488,31 @@
             var wallet = walletState.Value.wallet;
             var sign = Signatures.GetSignature(wallet.PrivateKey, lsb.Hash, wallet.AccountId);
             var ret = await dealer.GetTradeBriefAsync(tradeid, wallet.AccountId, sign);
+            if(ret.Successful())
+                brief = ret.Deserialize<TradeBrief>();  
+        }
+    }
 
-            brief = ret.Deserialize<TradeBrief>();            
+    private async Task CancelTrade()
+    {
+        // ask if user really want to
+        var result = await DialogService.ShowMessageBox(
+        "Warning",
+            $"You can only request to cancel trade without reply after 10 minutes.",
+            yesText: "Confirm!", cancelText: "Cancel");
+
+        if (result != null && result.Value)
+        {
+            var cclret = await walletState.Value.wallet.CancelOTCTradeAsync(tradeid);
+            if(cclret.Successful())
+            {
+                Snackbar.Add($"Trade was canceled.", Severity.Success);
+                await Send("/status"); // emulate a refresh
+            }
+            else
+            {
+                Snackbar.Add($"Unable to cancel trade: {cclret.ResultCode}", Severity.Warning);
+            }
         }
     }
 

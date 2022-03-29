@@ -463,6 +463,7 @@ namespace Dealer.Server.Hubs
                     OTCTradeStatus.FiatReceived => (PinnedMode.Wait, $"Dealer release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer"),
                     OTCTradeStatus.CryptoReleased => (PinnedMode.Notify, "Trade completed successfully!"),
                     OTCTradeStatus.Closed => (PinnedMode.Notify, "Trade closed. Nothing to do"),
+                    OTCTradeStatus.Canceled => (PinnedMode.Notify, "Trade canceled. Nothing to do"),
                     OTCTradeStatus.Dispute => (PinnedMode.Wait, "Arbitration"),
                     _ => throw new NotImplementedException(),
                 };
@@ -485,6 +486,7 @@ namespace Dealer.Server.Hubs
                     OTCTradeStatus.FiatReceived => (PinnedMode.Wait, $"Dealer release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer"),
                     OTCTradeStatus.CryptoReleased => (PinnedMode.Notify, "Trade completed successfully!"),
                     OTCTradeStatus.Closed => (PinnedMode.Notify, "Trade closed. Nothing to do"),
+                    OTCTradeStatus.Canceled => (PinnedMode.Notify, "Trade canceled. Nothing to do"),
                     OTCTradeStatus.Dispute => (PinnedMode.Wait, "Arbitration"),
                     _ => throw new NotImplementedException(),
                 };
