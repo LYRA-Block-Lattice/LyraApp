@@ -192,6 +192,7 @@ namespace Dealer.Server.Services
                 a.AccountId != accountId &&
                 a.AccountId != _config["DealerID"]
                 ).Any();
+            var sellerHasMsg = txmsgs.Where(a => a.AccountId == room.Members[0].AccountId).Any();
 
             // construct roles
             var brief = new TradeBrief
@@ -202,7 +203,7 @@ namespace Dealer.Server.Services
 
                 // if no chat in 10 minutes after trade creation
                 // or if peer request cancel also
-                IsCancellable = !peerHasMsg && room.TimeStamp < DateTime.UtcNow.AddMinutes(-10)
+                IsCancellable = (!peerHasMsg || !sellerHasMsg) && room.TimeStamp < DateTime.UtcNow.AddMinutes(-10)
             };
 
             return SimpleJsonAPIResult.Create(brief);
