@@ -503,7 +503,8 @@
 
         if (result != null && result.Value)
         {
-            var cclret = await walletState.Value.wallet.CancelOTCTradeAsync(tradeid);
+            var tradeblk = (await walletState.Value.wallet.RPC.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
+            var cclret = await walletState.Value.wallet.CancelOTCTradeAsync(tradeblk.Trade.daoId, tradeblk.Trade.orderId, tradeid);
             if(cclret.Successful())
             {
                 Snackbar.Add($"Trade was canceled.", Severity.Success);

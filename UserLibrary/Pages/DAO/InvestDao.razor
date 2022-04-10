@@ -52,14 +52,21 @@
 
     async Task Invest()
     {
-        var invret = await walletState.Value.wallet.JoinDAOAsync(DaoId, amount);
-        if(invret.Successful())
+        try
         {
-            Snackbar.Add($"Success invested to {dao.Name}", Severity.Success);
+            var invret = await walletState.Value.wallet.JoinDAOAsync(DaoId, amount);
+            if(invret.Successful())
+            {
+                Snackbar.Add($"Success invested to {dao.Name}", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add($"Failed to invested to {dao.Name}, {invret.ResultCode}", Severity.Error);
+            }
         }
-        else
+        catch(Exception ex)
         {
-            Snackbar.Add($"Failed to invested to {dao.Name}, {invret.ResultCode}", Severity.Error);
+            Snackbar.Add($"Failed to invested to {dao.Name}, {ex.Message}", Severity.Error);
         }
     }
 

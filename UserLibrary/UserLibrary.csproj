@@ -18,7 +18,7 @@
     <PackageReference Include="BlazorZXingJs" Version="0.5.13" />
     <PackageReference Include="Converto" Version="2.1.0" />
     <PackageReference Include="Fluxor.Blazor.Web" Version="5.0.0" />
-    <PackageReference Include="Lyra.Data" Version="3.2.8.2" />
+    <PackageReference Include="Lyra.Data" Version="3.2.8.6" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.2" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
