@@ -78,7 +78,7 @@ namespace Dealer.Server.Services
 
             // Initiate a Timer
             _Timer = new System.Timers.Timer();
-            _Timer.Interval = 5000;
+            _Timer.Interval = 30000;
             _Timer.Elapsed += HandleTimer;
             _Timer.AutoReset = true;
             _Timer.Enabled = true;

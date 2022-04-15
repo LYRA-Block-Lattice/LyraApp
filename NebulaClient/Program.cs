@@ -47,7 +47,7 @@ builder.Services.AddTransient<NebulaConsts>();
 // Note the connection isnt yet started, this will be done as part of the App.razor component
 // to avoid blocking the application startup in case the connection cannot be established
 builder.Services.AddSingleton<HubConnection>(sp => {
-    var eventUrl = "https://192.168.3.91:7070/hub";
+    var eventUrl = "https://dealer.devnet.lyra.live:7070/hub";
     if (networkid == "testnet")
         eventUrl = "https://dealertestnet.lyra.live/hub";
     else if (networkid == "mainnet")
