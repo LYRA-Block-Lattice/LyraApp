@@ -386,10 +386,10 @@
         {
             mydaos = new List<IDao>();
         }
-    //    if (walletState.Value.wallet == null)
-    //        return;
-    //    var brkblksret = await walletState.Value.wallet.RPC.GetAllBrokerAccountsForOwnerAsync(walletState.Value.wallet.AccountId);
-    //    mydaos = brkblksret.GetBlocks().Where(a => a is DaoGenesisBlock).Cast<IDao>().ToList();
+        //    if (walletState.Value.wallet == null)
+        //        return;
+        //    var brkblksret = await walletState.Value.wallet.RPC.GetAllBrokerAccountsForOwnerAsync(walletState.Value.wallet.AccountId);
+        //    mydaos = brkblksret.GetBlocks().Where(a => a is DaoGenesisBlock).Cast<IDao>().ToList();
     }
 
     async Task Back(string buttonName)
@@ -405,29 +405,36 @@
 
     private async Task RefreshOrders()
     {
-        // get tradable orders
-        var tosret = await lyraApi.FindTradableOtcAsync();
-        if (tosret.Successful())
+        try
         {
-            tradableOrders = tosret.GetBlocks("orders").Cast<IOtcOrder>()
-                .Where(a => a.Order.amount > 0)
-                .OrderBy(a => a.Order.price)
-                .ToList();
-            daos = tosret.GetBlocks("daos").Cast<IDao>().ToList();
-        }
+            // get tradable orders
+            var tosret = await lyraApi.FindTradableOtcAsync();
+            if (tosret.Successful())
+            {
+                tradableOrders = tosret.GetBlocks("orders").Cast<IOtcOrder>()
+                    .Where(a => a.Order.amount > 0)
+                    .OrderBy(a => a.Order.price)
+                    .ToList();
+                daos = tosret.GetBlocks("daos").Cast<IDao>().ToList();
+            }
 
-        // get sellable tokens
-        var tokens = await lyraApi.GetTokenNamesAsync(null, null, "(null)");
+            // get sellable tokens
+            var tokens = await lyraApi.GetTokenNamesAsync(null, null, "(null)");
 
-        tickers = tokens.Entities
-            .Where(a => !a.StartsWith("unittest/"))
-            .Select(a => new Ticker
+            tickers = tokens.Entities
+                .Where(a => !a.StartsWith("unittest/"))
+                .Select(a => new Ticker
                 {
                     dbname = a,
                     Name = a.Replace("tether/", "$")
                 })
-            .OrderBy(a => a.Name)
-            .ToList();
-        //tickers.Insert(0, new Ticker { dbname = "LYR", Name = "LYR" });
+                .OrderBy(a => a.Name)
+                .ToList();
+            //tickers.Insert(0, new Ticker { dbname = "LYR", Name = "LYR" });
+        }
+        catch(Exception e)
+        {
+            Snackbar.Add($"Failed to refresh orders: {e}", Severity.Error);
+        }
     }
 }
