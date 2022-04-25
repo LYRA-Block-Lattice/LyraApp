@@ -138,7 +138,7 @@ namespace Nebula.Store.WebWalletUseCase
 				var rwds = new Dictionary<string, decimal>();
 				DateTime dtstart = DateTime.MinValue;
 
-				var list = new List<Block>();
+				var list = new List<TransactionBlock>();
 				foreach (var stk in allStks)
                 {
 					dtstart = stk.Start;
