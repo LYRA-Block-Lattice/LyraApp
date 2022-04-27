@@ -41,7 +41,6 @@
                 @if(walletState.Value.IsOpening)
             {
                 <RadzenButton IsBusy=@busy Click=@(args => OnClick("adddao")) Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
-
             }
             else
 
@@ -58,9 +57,6 @@
 
 
 @code {
-    [Parameter]
-    public string action { get; set; }
-
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
 
@@ -142,7 +138,6 @@
                 if (evt is ContractChangeEvent cce)
                 {
                     await GetMyDaos();
-                    await RefreshOrders();
                     await InvokeAsync(() => StateHasChanged());
                 }
             });
@@ -154,26 +149,11 @@
     {
         if (firstRender)
         {
-            if (walletState.Value.wallet == null)
-            {
-                Dispatcher.Dispatch(new WebWalletChangeTitleAction
-                    {
-                        title = "Lyra DAO Central",
-                        menunew = false,
-                    });
-            }
-            else
-            {
-                Dispatcher.Dispatch(new WebWalletChangeTitleAction
-                    {
-                        title = "Lyra DAO Central",
-                        menunew = action != "new"
-                    });
-            }
-
-            await GetMyDaos();
-            await RefreshOrders();
-            StateHasChanged();
+            Dispatcher.Dispatch(new WebWalletChangeTitleAction
+                {
+                    title = "Create new Lyra DAO",
+                    menunew = false,
+                });
         }
 
         await base.OnAfterRenderAsync(firstRender);
@@ -325,46 +305,5 @@
     async Task Back(string buttonName)
     {
         Navigation.NavigateTo("/dao");
-    }
-
-    async Task Back2(string buttonName)
-    {
-        showco = !showco;
-        Navigation.NavigateTo("/dao");
-    }
-
-    private async Task RefreshOrders()
-    {
-        // get tradable orders
-        var tosret = await lyraApi.FindTradableOtcAsync();
-        if (tosret.Successful())
-        {
-            tradableOrders = tosret.GetBlocks("orders").Cast<IOtcOrder>()
-                .Where(a => a.Order.amount > 0)
-                .OrderBy(a => a.Order.price)
-                .ToList();
-            daos = tosret.GetBlocks("daos").Cast<IDao>().ToList();
-        }
-
-        // get sellable tokens
-        // for api sign only
-        var pk = "n4uh7o2kAerPZQSNBRirzA3pSUBEuEhs6r7oRwpV6Dgbs3FvY";
-        var pub = "LBRzScs8NwMcr7U8i9a8sSWETseWf3TLge4CVJy6as24hSB4hwtZ5jKTbHJdoVZBJiNC2LpjN9MQB719Py9YxXo2xpLxnS";
-
-        var lsbret = await lyraApi.GetLastServiceBlockAsync();
-
-        var sign = Signatures.GetSignature(pk, (lsbret.GetBlock() as ServiceBlock).Hash, pub);
-        var tokens = await lyraApi.GetTokenNamesAsync(pub, sign, "(null)");
-
-        tickers = tokens.Entities
-            .Where(a => !a.StartsWith("unittest/"))
-            .Select(a => new Ticker
-                {
-                    dbname = a,
-                    Name = a.Replace("tether/", "$")
-                })
-            .OrderBy(a => a.Name)
-            .ToList();
-        //tickers.Insert(0, new Ticker { dbname = "LYR", Name = "LYR" });
     }
 }

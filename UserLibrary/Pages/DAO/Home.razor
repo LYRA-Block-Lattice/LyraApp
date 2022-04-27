@@ -13,6 +13,18 @@
 
     <MudGrid>
         <MudItem xs="12">
+            @if (walletState.Value.wallet == null)
+            {
+                <a href="/wallet"><MudButton Variant="Variant.Filled" Color="Color.Primary">Open Wallet to Create DAO</MudButton></a>
+            }
+            else
+            {
+                <a href="/dao/new">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary">New DAO</MudButton>
+                </a>
+            }
+        </MudItem>
+        <MudItem xs="12">
             <MudTextField @bind-Value="@keywords" Label="Search DAO" Variant="Variant.Text"></MudTextField>
         </MudItem>
             @if (alldaos != null)
