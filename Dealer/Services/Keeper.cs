@@ -1,4 +1,6 @@
 ﻿using CoinGecko.Clients;
+using CoinGecko.Entities.Response.ExchangeRates;
+using CoinGecko.Entities.Response.Simple;
 using CoinGecko.Interfaces;
 using Dealer.Server.Hubs;
 using Dealer.Server.Model;
@@ -20,6 +22,13 @@ namespace Dealer.Server.Services
     public class Keeper : BackgroundService
     {
         public ConcurrentDictionary<string, decimal> Prices { get; private set; }
+
+        // coingecko's results
+        Price _gmarket;
+        ExchangeRates _grates;
+
+        // usdt tethering account id
+        string _usdtpoolid;
 
         // Use a second template parameter when defining the hub context to get the strongly typed hub context
         private readonly IHubContext<DealerHub, IHubPushMethods> _dealerHub;
@@ -78,7 +87,7 @@ namespace Dealer.Server.Services
 
             // Initiate a Timer
             _Timer = new System.Timers.Timer();
-            _Timer.Interval = 30000;
+            _Timer.Interval = 60_000;
             _Timer.Elapsed += HandleTimer;
             _Timer.AutoReset = true;
             _Timer.Enabled = true;
@@ -113,6 +122,16 @@ namespace Dealer.Server.Services
                                 ChangeType = ContractChangeEventTypes.General,
                                 ContractId = (brkr as TransactionBlock).AccountID,
                             }));
+
+                            // update price from the LYR/$USDT pool
+                            if(brkr is PoolSwapOutBlock pool && pool.AccountID == _usdtpoolid)
+                            {
+                                var swapcal = new SwapCalculator("LYR", "tether/USDT", pool,
+                                        LyraGlobal.OFFICIALTICKERCODE, 1, 0);
+                                Prices.AddOrUpdate("LYR_INT", Math.Round(swapcal.MinimumReceived, 8), (key, old) => Math.Round(swapcal.MinimumReceived, 8));
+
+                                await NotifyMarketChangedAsync();
+                            }
                         }
                         
                         if(block is SendTransferBlock send)
@@ -192,10 +211,10 @@ namespace Dealer.Server.Services
                 // Execute required job
                 ICoinGeckoClient _client = CoinGeckoClient.Instance;
                 var coins = new[] { "lyra", "tron", "ethereum", "bitcoin", "tether" };
-                var prices = await _client.SimpleClient.GetSimplePrice(coins, new[] { "usd" });
+                _gmarket = await _client.SimpleClient.GetSimplePrice(coins, new[] { "usd","cny" });
                 foreach (var coin in coins)
                 {
-                    var pric = (decimal)prices[coin]["usd"];
+                    var pric = (decimal)_gmarket[coin]["usd"];
                     var symbol = coin switch
                     {
                         "tron" => "TRX",
@@ -208,31 +227,65 @@ namespace Dealer.Server.Services
                     Prices.AddOrUpdate(symbol, pric, (key, old) => pric);
                 }
 
-                // calculate lyra price based on lyr/USDT liquidate pool
-                // TODO: just once. remember we have block feeds.
-                var existspool = await _lyraApi.GetPoolAsync(LyraGlobal.OFFICIALTICKERCODE, "tether/usdt");
-                if (existspool != null && existspool.Successful() && existspool.PoolAccountId != null)
+                await Task.Delay(10_000);
+
+                _grates = await _client.ExchangeRatesClient.GetExchangeRates();
+                // calculate exchange rates
+                // per dollar
+                var interested = new[]
                 {
-                    var poollatest = existspool.GetBlock() as TransactionBlock;
-                    var swapcal = new SwapCalculator(existspool.Token0, existspool.Token1, poollatest,
-                            LyraGlobal.OFFICIALTICKERCODE, 1, 0);
-                    Prices.AddOrUpdate("LYR_INT", Math.Round(swapcal.MinimumReceived, 8), (key, old) => Math.Round(swapcal.MinimumReceived, 8));
-                }
-                else
+                    ""
+                };
+                if (_grates != null && _gmarket != null)
                 {
-                    Prices.AddOrUpdate("LYR_INT", (decimal)prices["lyra"]["usd"], (key, old) => (decimal)prices["lyra"]["usd"]);
+                    var btcprice = (decimal)_gmarket["bitcoin"]["usd"];
+                    foreach (var rate in _grates.Rates)
+                    {
+                        if (Prices.ContainsKey(rate.Key.ToUpper()))
+                            continue;
+
+                        var converted = Math.Round(btcprice / rate.Value.Value.Value, 8);
+                        Prices.AddOrUpdate(rate.Key, converted, (key, old) => converted);
+                    }
                 }
 
-                await _dealerHub.Clients.All.OnEvent(
-                    new NotifyContainer(new RespQuote
+                // calculate lyra price based on lyr/USDT liquidate pool
+                // just once. remember we have block feeds.
+                if (!Prices.ContainsKey("LYR_INT"))
+                {
+                    var existspool = await _lyraApi.GetPoolAsync(LyraGlobal.OFFICIALTICKERCODE, "tether/usdt");
+                    if (existspool != null && existspool.Successful() && existspool.PoolAccountId != null)
                     {
-                        Prices = Prices.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
-                    }));
+                        var poollatest = existspool.GetBlock() as TransactionBlock;
+                        
+                        _usdtpoolid = poollatest.AccountID;
+
+                        var swapcal = new SwapCalculator(existspool.Token0, existspool.Token1, poollatest,
+                                LyraGlobal.OFFICIALTICKERCODE, 1, 0);
+                        Prices.AddOrUpdate("LYR_INT", Math.Round(swapcal.MinimumReceived, 8), (key, old) => Math.Round(swapcal.MinimumReceived, 8));
+                    }
+                }
+
+                //else
+                //{
+                //    Prices.AddOrUpdate("LYR_INT", (decimal)prices["lyra"]["usd"], (key, old) => (decimal)prices["lyra"]["usd"]);
+                //}
+
+                await NotifyMarketChangedAsync();
             }
             catch (Exception ex)
             {
                 _logger.LogInformation($"in keeper get price: {ex}");
             }
+        }
+
+        private async Task NotifyMarketChangedAsync()
+        {
+            await _dealerHub.Clients.All.OnEvent(
+                new NotifyContainer(new RespQuote
+                {
+                    Prices = Prices.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+                }));
         }
 
         public override void Dispose()
