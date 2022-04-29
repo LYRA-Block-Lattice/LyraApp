@@ -1,5 +1,6 @@
 ﻿@page "/dealer/register"
 @using Fluxor
+@using Lyra.Data.Crypto
 @using Microsoft.Extensions.Configuration
 @using UserLibrary.Data
 @using Nebula.Store.WebWalletUseCase
@@ -90,6 +91,9 @@
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
 
+    [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] ILyraAPI lyraApi { get; set; }
+
     string username, firstname, middlename, lastname, email, mobilephone, avatar;
     bool busy, success;
 
@@ -99,20 +103,31 @@
 
         try
         {
+            var lsb = await lyraApi.GetLastServiceBlockAsync();
+            if(!lsb.Successful())
+            {
+                Snackbar.Add($"Failed to get network status: {lsb.ResultCode}. Please retry later.", Severity.Warning);
+                return;
+            }
             var client = new DealerClient(Configuration["network"]);
             var ret = await client.RegisterAsync(walletState.Value.wallet.AccountId,
-                username, firstname,middlename,lastname,email,mobilephone,avatar
-             );
+                username, firstname, middlename, lastname, email, mobilephone, avatar,
+                Signatures.GetSignature(walletState.Value.wallet.PrivateKey, (lsb.GetBlock().Hash), walletState.Value.wallet.AccountId)
+            );
             success = ret.Successful();
 
             if(!success)
             {
-            //
+                Snackbar.Add($"Failed to register: {ret.ResultCode}", Severity.Warning);
+            }
+            else
+            {
+                Snackbar.Add($"User {username} registered.", Severity.Success);
             }
         }
         catch(Exception ex)
         {
-            
+            Snackbar.Add($"Failed to register: {ex.Message}", Severity.Error);
         }
 
 

@@ -102,7 +102,8 @@ namespace Dealer.Server.Services
             };
 
             user.RegistedTime = DateTime.UtcNow;
-            if (_db.GetUserByAccountIdAsync(user.AccountId) == null)
+            var usrx = await _db.GetUserByAccountIdAsync(user.AccountId);
+            if (usrx == null)
                 await _db.CreateUserAsync(user);
             else
                 await _db.UpdateUserAsync(user);
