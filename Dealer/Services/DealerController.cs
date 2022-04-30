@@ -52,8 +52,8 @@ namespace Dealer.Server.Services
             return SimpleJsonAPIResult.Create(new UserStats
             {
                 UserName = user.UserName,
-                Total = 100,
-                Ratio = 98.1m
+                Total = 0,
+                Ratio = 0
             });
         }
 

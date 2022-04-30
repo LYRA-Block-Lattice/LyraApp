@@ -658,6 +658,20 @@
                     await walletState.Value.wallet.SyncAsync(null);
                 await OpenSwapUI();
 
+                // fetch latest price
+                try
+                {
+                    var dc = new DealerClient(_config["network"]);
+                    var prices = await dc.GetPricesAsync();
+                    lyrintprice = prices["LYR_INT"];
+                    lyrprice = prices["LYR"];
+                }
+                catch(Exception ex)
+                {
+                    Snackbar.Add($"Error get latest price: {ex.Message}", Severity.Warning);
+                }
+
+
                 Snackbar.Add($"Swap App is ready. ", Severity.Success);
             }
             catch (Exception ex)

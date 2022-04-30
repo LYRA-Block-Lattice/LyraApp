@@ -69,6 +69,8 @@ namespace Dealer.Server.Services
 
         private async Task InitAsync()
         {
+            await UpdatePriceAsync();
+
             //var url = LyraGlobal.SelectNode(_db.NetworkId).Replace("/api/", "/events");
             //var url = $"https://192.168.3.62:4504/events";
             var url = $"https://seed1.testnet.lyra.live:4504/events";
@@ -206,12 +208,17 @@ namespace Dealer.Server.Services
 
         async void HandleTimer(object source, ElapsedEventArgs e)
         {
+            await UpdatePriceAsync();
+        }
+
+        private async Task UpdatePriceAsync()
+        {
             try
             {
                 // Execute required job
                 ICoinGeckoClient _client = CoinGeckoClient.Instance;
                 var coins = new[] { "lyra", "tron", "ethereum", "bitcoin", "tether" };
-                _gmarket = await _client.SimpleClient.GetSimplePrice(coins, new[] { "usd","cny" });
+                _gmarket = await _client.SimpleClient.GetSimplePrice(coins, new[] { "usd", "cny" });
                 foreach (var coin in coins)
                 {
                     var pric = (decimal)_gmarket[coin]["usd"];
@@ -227,7 +234,8 @@ namespace Dealer.Server.Services
                     Prices.AddOrUpdate(symbol, pric, (key, old) => pric);
                 }
 
-                await Task.Delay(10_000);
+                if(_grates != null)
+                    await Task.Delay(10_000);
 
                 _grates = await _client.ExchangeRatesClient.GetExchangeRates();
                 // calculate exchange rates
@@ -257,7 +265,7 @@ namespace Dealer.Server.Services
                     if (existspool != null && existspool.Successful() && existspool.PoolAccountId != null)
                     {
                         var poollatest = existspool.GetBlock() as TransactionBlock;
-                        
+
                         _usdtpoolid = poollatest.AccountID;
 
                         var swapcal = new SwapCalculator(existspool.Token0, existspool.Token1, poollatest,
