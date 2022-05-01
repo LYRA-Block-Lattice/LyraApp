@@ -109,8 +109,10 @@
     string method;
     decimal pay, got;
     bool busy, success;
-    decimal marketprice;
+    decimal marketprice, marketpriceusd;
     decimal cltlyr, lyraprice;
+
+    Dictionary<string, decimal> MarketPrices;
 
     protected override async Task OnInitializedAsync()
     {
@@ -123,17 +125,43 @@
 
         SubscribeToAction<RespQuote>(async e =>
         {
-
-            if (otc.Order.crypto.EndsWith("ETH")) marketprice = e.Prices["ETH"];
-            if (otc.Order.crypto.EndsWith("BTC")) marketprice = e.Prices["BTC"];
-            if (otc.Order.crypto.EndsWith("USDT")) marketprice = e.Prices["USDT"];
-
-            lyraprice = e.Prices["LYR"];
-
+            MarketPrices = e.Prices;
+            PriceChanged();
             await InvokeAsync(StateHasChanged);
         });  
 
         await base.OnInitializedAsync();
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            //check if user has been registed on dealer server
+            var client = new DealerClient(Configuration["network"]);
+            var user = await client.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
+            if (!user.Successful())
+            {
+                // register user
+                Navigation.NavigateTo("/dealer/register");
+            }
+            else
+            {
+                // fetch init prices
+                MarketPrices = await client.GetPricesAsync();
+            }
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private void PriceChanged()
+    {
+        marketpriceusd = 0;
+        if (otc.Order.crypto.EndsWith("ETH")) marketpriceusd = MarketPrices["ETH"];
+        if (otc.Order.crypto.EndsWith("BTC")) marketpriceusd = MarketPrices["BTC"];
+        if (otc.Order.crypto.EndsWith("USDT")) marketpriceusd = MarketPrices["USDT"];
+
+        marketprice = Math.Round(marketpriceusd / MarketPrices[otc.Order.fiat.ToLower()], 2);
     }
 
     void calc()
