@@ -1,0 +1,128 @@
+﻿@using Fluxor
+@using Lyra.Data.API.WorkFlow
+@using Lyra.Data.Shared
+@using Microsoft.Extensions.Configuration
+@using Nebula.Store.WebWalletUseCase
+
+<div align="left">
+    @foreach(var order in orders)
+    {
+        <div class="container">
+            <div class="nw">
+                <div><a target="_blank" href="@(LyraGlobal.GetBlockViewUrl(Configuration["network"], order.AccountID))">@(order.AccountID.Shorten())</a></div>
+            </div>
+            <div class="nw">
+                <div>Sell @((order as IOtcOrder).Order.crypto) </div>
+            </div>
+            <div>
+                @order.TimeStamp
+                @*<MudButton Variant="Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>*@
+            </div>
+            <div>
+                @((order as IOtcOrder).OOStatus)
+            </div>
+            <div>
+                @if((order as IOtcOrder).OOStatus == OTCOrderStatus.Partial)
+                {
+                    <MudButton Variant="Variant.Filled" OnClick="@(() => DelistOrder(order))" Color="Color.Tertiary">Delist</MudButton>
+                }
+
+                @if((order as IOtcOrder).OOStatus == OTCOrderStatus.Open || (order as IOtcOrder).OOStatus == OTCOrderStatus.Partial || (order as IOtcOrder).OOStatus == OTCOrderStatus.Delist)
+                {
+                    <MudButton Variant="Variant.Filled" OnClick="@(() => CloseOrder(order))" Color="Color.Tertiary">Close</MudButton>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Inject]
+    IConfiguration Configuration { get; set; }
+
+    [Inject]
+    private IState<WebWalletState> walletState { get; set; }
+
+    [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] NavigationManager Navigation { get; set; }
+    [Inject] ILyraAPI lyraApi { get; set; }
+
+    List<TransactionBlock> orders = new List<TransactionBlock>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender && walletState.Value.wallet != null)
+        {
+            await Refresh();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    async Task Refresh()
+    {
+        // get all current trades
+        var ret = await walletState.Value.wallet.RPC.GetOtcOrdersByOwnerAsync(walletState.Value.wallet.AccountId);
+        if (ret.Successful())
+        {
+            orders = ret.GetBlocks()
+                .OrderByDescending(a => a.TimeStamp)
+                //.Take(3)
+                .Cast<TransactionBlock>().ToList();
+            StateHasChanged();
+        }
+        else
+        {
+            Snackbar.Add($"Error getting transactions: {ret.ResultCode}", Severity.Error);
+        }
+    }
+
+    private async Task DelistOrder(TransactionBlock Otc)
+    {
+        var daoret = await lyraApi.GetLastBlockAsync((Otc as IOtcOrder).Order.daoId);
+        if(daoret.Successful())
+        {
+            var Dao = daoret.GetBlock();
+
+            var closeret = await walletState.Value.wallet.DelistOTCOrderAsync((Dao as TransactionBlock).AccountID, (Otc as TransactionBlock).AccountID);
+            if(closeret.Successful())
+            {
+                Otc = null;
+                Snackbar.Add($"Order delisted.", Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                Snackbar.Add($"Error close order: {closeret.ResultCode}", Severity.Error);
+            }
+        }
+        else
+        {
+            Snackbar.Add($"Error get DAO: {daoret.ResultCode}", Severity.Error);
+        }
+    }
+
+    private async Task CloseOrder(TransactionBlock Otc)
+    {
+        var daoret = await lyraApi.GetLastBlockAsync((Otc as IOtcOrder).Order.daoId);
+        if(daoret.Successful())
+        {
+            var Dao = daoret.GetBlock();
+
+            var closeret = await walletState.Value.wallet.CloseOTCOrderAsync((Dao as TransactionBlock).AccountID, (Otc as TransactionBlock).AccountID);
+            if(closeret.Successful())
+            {
+                Otc = null;
+                Snackbar.Add($"Order closed.", Severity.Success);
+                await Refresh();
+            }
+            else
+            {
+                Snackbar.Add($"Error close order: {closeret.ResultCode}", Severity.Error);
+            }
+        }
+        else
+        {
+            Snackbar.Add($"Error get DAO: {daoret.ResultCode}", Severity.Error);
+        }
+    }
+}

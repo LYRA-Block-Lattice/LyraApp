@@ -57,8 +57,9 @@
                     <MudItem xs="12">
                         Token To Sell<br />
                         <RadzenDropDown AllowClear="false" TValue="Ticker" Class="w-100"
-                                    @bind-Value=@selcrypto Change="@fiatchanged"
-                                    Data=@tickers />
+                                    @bind-Value=@selcrypto Change="@productchanged"
+                                    Data=@tickers /> <br />
+                        Current Balance: @maxsell @selcrypto
                     </MudItem>
                     <MudItem xs="12">
                         Fiat currency<br />
@@ -135,6 +136,21 @@
                 }
             </MudGrid>
         </MudTabPanel>
+        <MudTabPanel Text="My Orders">
+            <MudGrid>
+                <MudItem xs="12">
+                        @if (walletState.Value.wallet == null)
+                        {
+                            <a href="/wallet">Open wallet to view orders.</a>
+                        }
+                        else
+                        {
+                            <UserLibrary.Components.OTC.OrdersList />
+                        }
+                    
+                </MudItem>
+            </MudGrid>
+        </MudTabPanel>
         <MudTabPanel Text="My Trades">
             <MudGrid>
                 <MudItem xs="12">
@@ -207,7 +223,7 @@
     Ticker selcrypto;
     string seldaoname, selfiat = "USD", selodrtyp = "Fixed price";
     string selfiatname = "US Dollar";
-    decimal selprice, selqty, cltlyr, paymin, paymax;
+    decimal maxsell, selprice, selqty, cltlyr, paymin, paymax;
     decimal selcryptoprice;
 
     decimal trxprice, lyrprice, btcprice, lyrintprice;
@@ -282,6 +298,12 @@
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task productchanged()
+    {
+        maxsell = walletState.Value.wallet.GetLastSyncBlock().Balances[selcrypto.dbname].ToBalanceDecimal();
+        await fiatchanged();
     }
 
     private async Task fiatchanged()
@@ -479,6 +501,8 @@
 
             tickers = tokens.Entities
                 .Where(a => !a.StartsWith("unittest/"))
+                // only display which user have
+                .Where(b => walletState.Value.wallet.GetLastSyncBlock().Balances.ContainsKey(b))
                 .Select(a => new Ticker
                 {
                     dbname = a,
@@ -486,7 +510,6 @@
                 })
                 .OrderBy(a => a.Name)
                 .ToList();
-            //tickers.Insert(0, new Ticker { dbname = "LYR", Name = "LYR" });
         }
         catch(Exception e)
         {

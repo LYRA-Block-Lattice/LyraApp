@@ -1,0 +1,25 @@
+﻿.nw {
+	display: flex;
+	flex-direction: row;
+	white-space: nowrap;
+	align-items: center;
+	gap: 10px;
+}
+
+.container {
+	display: flex;
+	gap: 20px;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	padding: 5px;
+}
+
+.price {
+	font-size: x-large;
+	color: green;
+}
+
+.dir {
+	font-weight: bold;
+}
