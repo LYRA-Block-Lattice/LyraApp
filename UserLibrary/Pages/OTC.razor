@@ -57,25 +57,25 @@
                     <MudItem xs="12">
                         Token To Sell<br />
                         <RadzenDropDown AllowClear="false" TValue="Ticker" Class="w-100"
-                                    @bind-Value=@selcrypto
+                                    @bind-Value=@selcrypto Change="@fiatchanged"
                                     Data=@tickers />
                     </MudItem>
                     <MudItem xs="12">
                         Fiat currency<br />
                         <RadzenDropDown AllowClear="false" TValue="string" Class="w-100"
-                                    @bind-Value=@selfiat
+                                    @bind-Value=@selfiat Change="@fiatchanged"
                                     Data=@fiats />
                     </MudItem>
                     <MudItem xs="12">
                         Order Type<br />
-                        <RadzenDropDown AllowClear="false" TValue="string" Class="w-100"
+                        <RadzenDropDown AllowClear="false" TValue="string" Class="w-100" Disabled
                                     @bind-Value=@selodrtyp
                                     Data=@odrtyps />
                     </MudItem>
                     <MudItem xs="12">
                         Sell price<br />
                         <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@selprice Change="@CalCollat" /><br />
-                        Market Price: @selcryptoprice USD
+                        Market Price: @selcryptoprice @selfiat
                     </MudItem>
                     <MudItem xs="12">
                         Quantity<br />
@@ -83,17 +83,18 @@
                     </MudItem>
                     <MudItem xs="12">
                         Min Payment<br />
-                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@paymin Change="@CalCollat" />
+                        <RadzenNumeric TValue="decimal" Class="w-80" @bind-Value=@paymin Change="@CalCollat" /> @selfiat
                     </MudItem>
                     <MudItem xs="12">
                         Max Payment<br />
-                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@paymax Change="@CalCollat" />
+                        <RadzenNumeric TValue="decimal" Class="w-80" @bind-Value=@paymax Change="@CalCollat" /> @selfiat
                     </MudItem>
                     <MudItem xs="12">
                         Collateral<br />
                         <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@cltlyr Change="@CalCollat" /> <br />
-                        Worth: @coltworth USD<br />
-                        Ratio: @coltrito
+                        Worth: @coltworth @selfiat<br />
+                        Ratio: @coltrito <br />
+                        Current Balance: @walletState.Value.wallet.BaseBalance LYR
                     </MudItem>
                     <MudItem xs="12">
                         Accepted Payment Methods<br />
@@ -102,7 +103,7 @@
                     </MudItem>
                     <MudItem xs="12">
                         <MudDivider />
-                        Total: @total USD
+                        Total: @total @selfiat
                     </MudItem>
                     <MudItem xs="12">
                         <RadzenButton IsBusy=@busy Click=@(async args => await CreateOrder("adddao")) Text="Add New Order" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
@@ -177,9 +178,9 @@
     bool showco, dir;
     string total;
     List<Ticker> tickers;
-    List<string> fiats = new List<string>
+    List<string> fiats = new List<string>       // refer to WFOtcOrderCreate.FIATS
     {
-        "USD", "EUR", "JPY", "CNY", "CHF"
+        "USD", "EUR", "GBP", "CHF", "AUD", "CAD", "JPY", "KRW", "CNY", "TWD", "VND", "UAH", "RUB"
     };
     List<string> odrtyps = new List<string>
     {
@@ -187,7 +188,7 @@
     };
     List<string> paymentMethods = new List<string>
     {
-        "Paypal", "Bank Transfer", "Alipay", "Wechat Pay"
+        "Paypal", "Bank Transfer", "Alipay", "Wechat Pay", "ATM Cash Deposit"
     };
 
     IEnumerable<string> paymths = new string[0];
@@ -201,6 +202,8 @@
     decimal coltworth;
     string coltrito;
 
+    Dictionary<string, decimal> MarketPrices;
+
     protected override Task OnInitializedAsync()
     {
         SubscribeToAction<RespQuote>(
@@ -212,12 +215,9 @@
                 lyrprice = e.Prices["LYR"];
                 lyrintprice = e.Prices["LYR_INT"];
 
-                if (selcrypto != null)
-                {
-                    if (selcrypto.Name.EndsWith("ETH")) selcryptoprice = e.Prices["ETH"];
-                    if (selcrypto.Name.EndsWith("BTC")) selcryptoprice = e.Prices["BTC"];
-                    if (selcrypto.Name.EndsWith("USDT")) selcryptoprice = e.Prices["USDT"];
-                }
+                MarketPrices = e.Prices;
+
+                PriceChanged();
             }
         );
 
@@ -272,10 +272,32 @@
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private void CalCollat(decimal d)
+    private void fiatchanged()
     {
-        total = $"{(selprice * selqty):N2}";
-        coltworth = cltlyr * lyrprice;
+        PriceChanged();
+        CalCollat(0);
+    }
+
+    private void PriceChanged()
+    {
+        decimal usdprice = 0;
+        if (selcrypto != null)
+        {            
+            if (selcrypto.Name.EndsWith("ETH")) usdprice = MarketPrices["ETH"];
+            if (selcrypto.Name.EndsWith("BTC")) usdprice = MarketPrices["BTC"];
+            if (selcrypto.Name.EndsWith("USDT")) usdprice = MarketPrices["USDT"];
+        }
+
+        selcryptoprice = Math.Round(usdprice / MarketPrices[selfiat.ToLower()], 2);
+    }
+
+    private void CalCollat(Decimal d)
+    {
+        total = $"{(selcryptoprice * selqty):N2}";
+        var coltworthusd = cltlyr * lyrprice;
+
+        coltworth = Math.Round(coltworthusd / MarketPrices[selfiat.ToLower()], 2);
+
         if (coltworth > 0 && selprice * selqty > 0)
             coltrito = $"{coltworth / (selprice * selqty):N2}";
         else
@@ -317,6 +339,8 @@
             }
             else
             {
+                // fetch init prices
+                MarketPrices = await client.GetPricesAsync();
                 showco = !showco;
             }
         }

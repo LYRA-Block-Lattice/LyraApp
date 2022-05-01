@@ -33,7 +33,7 @@
     </div>
     <div class="nw">
          Available: @Otc.Order.amount<br />
-         Limits: @Otc.Order.limitMin - @Otc.Order.limitMax USD
+         Limits: @Otc.Order.limitMin - @Otc.Order.limitMax @Otc.Order.fiat
     </div>
     <div class="nw">
         @foreach(var pm in Otc.Order.payBy ?? new string[0])
