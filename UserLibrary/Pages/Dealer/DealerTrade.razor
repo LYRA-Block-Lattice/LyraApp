@@ -54,7 +54,8 @@
             <MudNumericField @bind-Value="@cltlyr" DebounceInterval="500" OnDebounceIntervalElapsed="calc2" 
                 Label="In LYR" Variant="Variant.Outlined"  />
             <div> Equivalent @(Math.Round(lyraprice * cltlyr / MarketPrices[otc.Order.fiat.ToLower()], 2)) @otc.Order.fiat</div>
-            @*Ratio: @coltrito <br />*@
+            Ratio of collateral: @coltrito <br />
+            Minimum ratio required by DAO: @dao.BuyerPar % <br />
             Current Balance: @walletState.Value.wallet.BaseBalance LYR </div>
         <div style="height:45px;" />
         <div>
@@ -112,8 +113,11 @@
     bool busy, success;
     decimal marketprice, marketpriceusd;
     decimal cltlyr, lyraprice;
+    string coltrito;
 
     Dictionary<string, decimal> MarketPrices;
+
+    IDao dao;
 
     protected override async Task OnInitializedAsync()
     {
@@ -136,6 +140,9 @@
             {
                 otc = lstret.GetBlock() as IOtcOrder;
                 method = otc.Order.payBy.First();
+
+                var daoret = await walletState.Value.wallet.RPC.GetLastBlockAsync(otc.Order.daoId);
+                dao = daoret.GetBlock() as IDao;
             }
 
             //check if user has been registed on dealer server
@@ -170,14 +177,23 @@
         marketprice = Math.Round(marketpriceusd / MarketPrices[otc.Order.fiat.ToLower()], 2);
     }
 
+    private void CalCollat()
+    {
+        var valinfiat = lyraprice * cltlyr / MarketPrices[otc.Order.fiat.ToLower()];
+        var buytotal = pay;
+
+        coltrito = $"{(valinfiat / buytotal) * 100:N2} %";
+    }
+
     void calc()
     {
         got = Math.Round(pay / otc.Order.price, 8);
+        calc2();
     }
 
     void calc2()
     {
-        
+        CalCollat();
     }
 
     async Task OnDeal()

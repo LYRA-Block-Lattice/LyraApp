@@ -51,7 +51,7 @@
                     <MudItem xs="12">
                         In Orgnization:<br />
                         <RadzenDropDown AllowClear="false" TValue="String" Class="w-100"
-                                    @bind-Value=@seldaoname
+                                    @bind-Value=@seldaoname Change="@seldao"
                                     Data=@(mydaos.Select(a => (a as IBrokerAccount).Name)) />
                     </MudItem>
                     <MudItem xs="12">
@@ -65,6 +65,7 @@
                         <RadzenDropDown AllowClear="false" TValue="string" Class="w-100"
                                     @bind-Value=@selfiat Change="@fiatchanged"
                                     Data=@fiats />
+                        <div>@selfiatname</div>
                     </MudItem>
                     <MudItem xs="12">
                         Order Type<br />
@@ -94,6 +95,13 @@
                         <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@cltlyr Change="@CalCollat" /> <br />
                         Worth: @coltworth @selfiat<br />
                         Ratio: @coltrito <br />
+                        @if(dao != null)
+                        {
+                            <div>
+                                Minimum ratio required by DAO: @dao.SellerPar %
+                            </div>
+                        }
+                        
                         Current Balance: @walletState.Value.wallet.BaseBalance LYR
                     </MudItem>
                     <MudItem xs="12">
@@ -168,6 +176,9 @@
     List<IDao> alldaos = new List<IDao>();
     List<IDao> daos = new List<IDao>();
 
+    // user selected DAO
+    IDao dao;
+
     int activeIndex = 0;
 
     string name, desc;
@@ -180,7 +191,7 @@
     List<Ticker> tickers;
     List<string> fiats = new List<string>       // refer to WFOtcOrderCreate.FIATS
     {
-        "USD", "EUR", "GBP", "CHF", "AUD", "CAD", "JPY", "KRW", "CNY", "TWD", "VND", "UAH", "RUB"
+        "USD", "EUR", "GBP", "CHF", "AUD", "CAD", "JPY", "KRW", "CNY", "TWD", "IDR", "VND", "UAH", "RUB", "THB", "AED"
     };
     List<string> odrtyps = new List<string>
     {
@@ -195,6 +206,7 @@
 
     Ticker selcrypto;
     string seldaoname, selfiat = "USD", selodrtyp = "Fixed price";
+    string selfiatname = "US Dollar";
     decimal selprice, selqty, cltlyr, paymin, paymax;
     decimal selcryptoprice;
 
@@ -272,10 +284,21 @@
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private void fiatchanged()
+    private async Task fiatchanged()
     {
         PriceChanged();
         CalCollat(0);
+
+        try
+        {
+            var client = new DealerClient(Configuration["network"]);
+            var fiatinfo = await client.GetFiatAsync(selfiat);
+            selfiatname = fiatinfo.name;
+        }
+        catch(Exception)
+        {
+            selfiatname = "";
+        }
     }
 
     private void PriceChanged()
@@ -302,6 +325,15 @@
             coltrito = $"{coltworth / (selprice * selqty):N2}";
         else
             coltrito = "";
+    }
+
+    private async Task seldao()
+    {
+        var daoret = await walletState.Value.wallet.RPC.GetDaoByNameAsync(seldaoname);
+        if (daoret.Successful())
+        {
+            dao = daoret.GetBlock() as IDao;
+        }
     }
 
     private async Task ShowCreateTradeUI(IOtcOrder order)

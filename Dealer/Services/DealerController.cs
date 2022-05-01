@@ -41,6 +41,13 @@ namespace Dealer.Server.Services
             return Task.FromResult(SimpleJsonAPIResult.Create(_keeper.Prices));
         }
 
+        [Route("GetFiat")]
+        [HttpGet]
+        public Task<SimpleJsonAPIResult> GetFiatAsync(string symbol)
+        {
+            return Task.FromResult(SimpleJsonAPIResult.Create(_keeper.GetFiat(symbol)));
+        }
+
         [Route("GetUserByAccountId")]
         [HttpGet]
         public async Task<SimpleJsonAPIResult> GetUserByAccountIdAsync(string accountId)

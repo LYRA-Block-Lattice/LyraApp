@@ -22,7 +22,16 @@ namespace Dealer.Server.Services
     public class Keeper : BackgroundService
     {
         public ConcurrentDictionary<string, decimal> Prices { get; private set; }
+        public FiatInfo GetFiat(string symbol) {
+            if(_grates == null || symbol == null)
+                return null;
 
+            if (!_grates.Rates.ContainsKey(symbol.ToLower()))
+                return null;
+
+            var item = _grates.Rates[symbol.ToLower()];
+            return new FiatInfo { symbol = symbol, name = item.Name, unit = item.Unit };
+        }
         // coingecko's results
         Price _gmarket;
         ExchangeRates _grates;
