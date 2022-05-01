@@ -53,8 +53,9 @@
             <h3>Collateral</h3>
             <MudNumericField @bind-Value="@cltlyr" DebounceInterval="500" OnDebounceIntervalElapsed="calc2" 
                 Label="In LYR" Variant="Variant.Outlined"  />
-            <div> Equivalent US Dollar: $@(Math.Round(lyraprice * cltlyr, 2))</div>
-        </div>
+            <div> Equivalent @(Math.Round(lyraprice * cltlyr / MarketPrices[otc.Order.fiat.ToLower()], 2)) @otc.Order.fiat</div>
+            @*Ratio: @coltrito <br />*@
+            Current Balance: @walletState.Value.wallet.BaseBalance LYR </div>
         <div style="height:45px;" />
         <div>
             <h3>You will get</h3>
@@ -64,7 +65,7 @@
         <div>
             <h3>Your trade is guaranteed by max to</h3>
             <div class="getmnt">Seller Collateral: @otc.Order.collateral LYR</div>
-            <div> Equivalent US Dollar: $@(Math.Round(lyraprice * otc.Order.collateral, 2))</div>
+            <div> Equivalent @(Math.Round(lyraprice * otc.Order.collateral / MarketPrices[otc.Order.fiat.ToLower()], 2)) @otc.Order.fiat</div>
         </div>
         <div style="height:45px;" />
         <div>
@@ -116,13 +117,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var lstret = await walletState.Value.wallet.RPC.GetLastBlockAsync(accountId);
-        if(lstret.Successful())
-        {
-            otc = lstret.GetBlock() as IOtcOrder;
-            method = otc.Order.payBy.First();
-        }
-
         SubscribeToAction<RespQuote>(async e =>
         {
             MarketPrices = e.Prices;
@@ -137,6 +131,13 @@
     {
         if(firstRender)
         {
+            var lstret = await walletState.Value.wallet.RPC.GetLastBlockAsync(accountId);
+            if (lstret.Successful())
+            {
+                otc = lstret.GetBlock() as IOtcOrder;
+                method = otc.Order.payBy.First();
+            }
+
             //check if user has been registed on dealer server
             var client = new DealerClient(Configuration["network"]);
             var user = await client.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
@@ -149,7 +150,10 @@
             {
                 // fetch init prices
                 MarketPrices = await client.GetPricesAsync();
+                PriceChanged();
             }
+
+            StateHasChanged();
         }
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -160,6 +164,8 @@
         if (otc.Order.crypto.EndsWith("ETH")) marketpriceusd = MarketPrices["ETH"];
         if (otc.Order.crypto.EndsWith("BTC")) marketpriceusd = MarketPrices["BTC"];
         if (otc.Order.crypto.EndsWith("USDT")) marketpriceusd = MarketPrices["USDT"];
+
+        lyraprice = MarketPrices["LYR"];
 
         marketprice = Math.Round(marketpriceusd / MarketPrices[otc.Order.fiat.ToLower()], 2);
     }

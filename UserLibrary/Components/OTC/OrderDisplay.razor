@@ -82,23 +82,30 @@
     [Inject] ISnackbar Snackbar { get; set; }
 
     UserStats stats;
-    Dictionary<string, decimal> prices;
-    decimal marketprice;
+    decimal marketprice, marketpriceusd;
+
+    Dictionary<string, decimal> MarketPrices;
 
     protected override Task OnInitializedAsync()
     {
         SubscribeToAction<RespQuote>(async e =>
         {
-            prices = e.Prices;
-
-                    if (Otc.Order.crypto.EndsWith("ETH")) marketprice = e.Prices["ETH"];
-                    if (Otc.Order.crypto.EndsWith("BTC")) marketprice = e.Prices["BTC"];
-                    if (Otc.Order.crypto.EndsWith("USDT")) marketprice = e.Prices["USDT"];
-
+            MarketPrices = e.Prices;
+            PriceChanged();
             await InvokeAsync(StateHasChanged);
         });        
 
         return base.OnInitializedAsync();
+    }
+
+    private void PriceChanged()
+    {
+        marketpriceusd = 0;
+        if (Otc.Order.crypto.EndsWith("ETH")) marketpriceusd = MarketPrices["ETH"];
+        if (Otc.Order.crypto.EndsWith("BTC")) marketpriceusd = MarketPrices["BTC"];
+        if (Otc.Order.crypto.EndsWith("USDT")) marketpriceusd = MarketPrices["USDT"];
+
+        marketprice = Math.Round(marketpriceusd / MarketPrices[Otc.Order.fiat.ToLower()], 2);
     }
 
     private async Task ShowCreateTradeUI()
@@ -144,6 +151,12 @@
             if(user.Successful())
             {
                 stats = JsonConvert.DeserializeObject<UserStats>(user.JsonString);
+
+                // fetch init prices
+                MarketPrices = await client.GetPricesAsync();
+
+                PriceChanged();
+
                 StateHasChanged();
             }
         }
