@@ -18,8 +18,8 @@
 <div class="mag fh">
 
     <h1>Dealer Room</h1>
-    <p>for trade: @(tradeid.Shorten())</p>
-
+    <p>For Trade: <a target="_blank" href="@(LyraGlobal.GetBlockViewUrl(Configuration["network"], tradeid))">@(tradeid.Shorten())</a></p>
+    <p>I'm the @role</p>
     <div class="scr">
         <div class="chatw" @ref="msgsref">
             <div class="top mud-elevation-3">
@@ -169,6 +169,9 @@
 
     // about complaint
     TradeBrief brief;
+
+    // role, buyer or seller
+    string role;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -489,7 +492,13 @@
             var sign = Signatures.GetSignature(wallet.PrivateKey, lsb.Hash, wallet.AccountId);
             var ret = await dealer.GetTradeBriefAsync(tradeid, wallet.AccountId, sign);
             if(ret.Successful())
-                brief = ret.Deserialize<TradeBrief>();  
+            {
+                brief = ret.Deserialize<TradeBrief>();
+                if (wallet.AccountId == brief.Members.First())
+                    role = "Seller";
+                else
+                    role = "Buyer";
+            }             
         }
     }
 
