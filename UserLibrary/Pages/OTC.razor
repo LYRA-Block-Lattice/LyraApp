@@ -117,9 +117,9 @@
                     <MudItem xs="12">
                         <RadzenButton IsBusy=@busy Click=@(async args => await CreateOrder("adddao")) Text="Add New Order" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
                     </MudItem>
-                    <MudItem xs="12">
+@*                    <MudItem xs="12">
                         <RadzenButton Click=@(args => Back2("")) Text="Back" ButtonStyle="ButtonStyle.Light" />
-                    </MudItem>
+                    </MudItem>*@
                 }
                 else
                 {
@@ -502,7 +502,7 @@
             tickers = tokens.Entities
                 .Where(a => !a.StartsWith("unittest/"))
                 // only display which user have
-                .Where(b => walletState.Value.wallet.GetLastSyncBlock().Balances.ContainsKey(b))
+                //.Where(b => walletState.Value.wallet.GetLastSyncBlock().Balances.ContainsKey(b))
                 .Select(a => new Ticker
                 {
                     dbname = a,
@@ -510,6 +510,14 @@
                 })
                 .OrderBy(a => a.Name)
                 .ToList();
+
+            if(walletState.Value.wallet != null)
+            {
+                var having = walletState.Value.wallet.GetLastSyncBlock().Balances.Keys.ToList();
+                tickers = tickers
+                    .Where(b => having.Contains(b.dbname))
+                    .ToList();
+            }
         }
         catch(Exception e)
         {
