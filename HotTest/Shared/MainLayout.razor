@@ -1,4 +1,7 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+
 <PageTitle>Lyra App</PageTitle>
 
 <MudThemeProvider />
@@ -7,7 +10,14 @@
 
 <MudLayout>
     <MudAppBar Elevation="5" Dense>
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        @if(Navigation.Uri.EndsWith("/"))
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        }
+        else
+        {
+            <MudIconButton Icon="@Icons.Filled.ArrowBack" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => GoBack())" />
+        }
         <UserLibrary.Components.TopBarClient />
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen" Elevation="8">
@@ -27,5 +37,11 @@
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+    }
+
+    // go back in browser using Javascript on a Razor Page 
+    private async void GoBack()
+    {
+        await JSRuntime.InvokeVoidAsync("history.back");
     }
 }

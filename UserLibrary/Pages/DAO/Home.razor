@@ -318,11 +318,6 @@
         mydaos = brkblksret.GetBlocks().Where(a => a is DaoGenesisBlock).Cast<IDao>().ToList();
     }
 
-    async Task Back(string buttonName)
-    {
-        Navigation.NavigateTo("/dao");
-    }
-
     async Task Back2(string buttonName)
     {
         showco = !showco;
