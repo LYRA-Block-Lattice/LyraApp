@@ -314,7 +314,7 @@
         try
         {
             adding = true;
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
             Snackbar.Add($"Adding liquidate...");
 
             var result = await walletState.Value.wallet.AddLiquidateToPoolAsync(selectedTicker1.dbname, amount1, selectedTicker2.dbname, amount2);

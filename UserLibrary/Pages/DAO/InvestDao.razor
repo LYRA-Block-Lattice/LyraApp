@@ -15,8 +15,8 @@
     }
     else
     {
-        <div>
-            @dao.Name
+        <div>            
+            <a target="_blank" href="@(LyraGlobal.GetBlockViewUrl(Configuration["network"], (dao as TransactionBlock).AccountID))">@dao.Name</a>
         </div>
         <div>
             Stake Holders:
@@ -24,7 +24,7 @@
         @foreach(var sh in dao.Treasure.OrderByDescending(a => a.Value))
         {
             <div>
-                @sh.Key.Shorten() <b>@(Math.Round(sh.Value.ToRitoDecimal() * Total)) LYR</b> @(Math.Round(sh.Value.ToRitoDecimal() * 100, 4)) %
+                @sh.Key.Shorten() <b>@(sh.Value.ToBalanceDecimal()) LYR</b> @(Math.Round(sh.Value.ToBalanceDecimal() / Total * 100, 4)) %
             @if(sh.Key == walletState.Value.wallet.AccountId)
                 {
                     <MudIcon Title="Me" Icon="@Icons.Filled.Check" Class="mr-3 mb-n1"/>
@@ -85,5 +85,5 @@
         }
     }
 
-    decimal Total => (dao as TransactionBlock).Balances["LYR"].ToBalanceDecimal();
+    decimal Total => dao.Treasure.Values.Sum().ToBalanceDecimal();
 }

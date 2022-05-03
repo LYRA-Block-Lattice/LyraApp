@@ -157,7 +157,7 @@
 
                 PriceChanged();
 
-                StateHasChanged();
+                await InvokeAsync(() => StateHasChanged());
             }
         }
         await base.OnAfterRenderAsync(firstRender);

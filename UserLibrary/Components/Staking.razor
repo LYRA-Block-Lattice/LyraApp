@@ -417,7 +417,7 @@
             walletState.Value.stkBalances = dict;
             walletState.Value.stkRewards = rwds;
 
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
         else
         {

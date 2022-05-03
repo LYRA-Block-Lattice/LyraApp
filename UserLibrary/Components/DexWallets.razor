@@ -245,7 +245,7 @@ else
 
             crwalletprogress = 0;
             crwalletshow = true;
-            StateHasChanged();
+            await InvokeAsync(() => StateHasChanged());
             if (walletState.Value.wallet != null && walletState.Value.wallet.BaseBalance >= 11m)
             {
                 crwalletprogress = 10;
@@ -352,7 +352,7 @@ else
                     "Warning", 
                     $"Withdraw {args.amount} {symbol} to {args.address}", 
                     yesText:"Confirm Withdraw", cancelText:"Cancel");
-                StateHasChanged();
+                await InvokeAsync(() => StateHasChanged());
 
                 if(cfm.HasValue && cfm.Value)
                 {
@@ -390,7 +390,7 @@ else
             Snackbar.Add($"Withdraw request failed: {wdwret.ResultCode}", Severity.Warning);
         }
 
-        StateHasChanged();
+        await InvokeAsync(() => StateHasChanged());
     }
 
     private void HandleCancel3()
@@ -411,13 +411,13 @@ else
         {
             Console.WriteLine("Error DexWallet OnInitializedAsync " + e.ToString());
         }        
-        //StateHasChanged();
+        //await InvokeAsync(() => StateHasChanged());
     }
 
     private async Task RefreshAllWallets()
     {
         refreshing = true;
-        StateHasChanged();
+        await InvokeAsync(() => StateHasChanged());
 
         try
         {
@@ -492,7 +492,7 @@ else
     {
         _confirmLoading = true;
         transferVisible = false;
-        StateHasChanged();
+        await InvokeAsync(() => StateHasChanged());
 
         if (transferAmount <= 0)
             return;

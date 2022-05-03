@@ -34,7 +34,9 @@
 
                 if (evt is ContractChangeEvent cce)
                 {
-                    await GetDao();                    
+                    await GetDao();
+
+                    await InvokeAsync(() => StateHasChanged());
                 }
             });
 
@@ -52,12 +54,13 @@
                 });
 
             await GetDao();
+            await InvokeAsync(() => StateHasChanged());
         }
 
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    async Task GetDao()
+    protected async Task GetDao()
     {
         var alldaoret = await lyraApi.GetLastBlockAsync(DaoId);
         if (alldaoret.Successful())
