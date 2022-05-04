@@ -38,21 +38,19 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="3">
+                <td colspan="3" style="font-size: small">
                     Available @(Math.Round(Otc.Order.amount, 2)) @Otc.Order.crypto<br />
                     Limits @Otc.Order.limitMin - @Otc.Order.limitMax @Otc.Order.fiat
                 </td>
             </tr>
             <tr>
-                <td colspan="3">
+                <td colspan="2">
                     @foreach (var pm in Otc.Order.payBy ?? new string[0])
                     {
                         <span class="pm">@pm</span>
                     }
                 </td>
-            </tr>
-            <tr>
-                <td colspan="3">
+                <td>
                     @if (walletState.Value.wallet != null && Otc.OwnerAccountId == walletState.Value.wallet.AccountId)
                     {
                         if (Otc.OOStatus == OTCOrderStatus.Partial)

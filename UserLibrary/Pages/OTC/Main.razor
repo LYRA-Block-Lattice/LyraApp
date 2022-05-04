@@ -24,7 +24,7 @@
                 }
                 else
                 {
-                    <MudTabs>
+                    <MudTabs Rounded="true" AlwaysShowScrollButtons="true">
                         @foreach(var crypto in tradableCryptos)
                         {
                             <MudTabPanel Text=@(crypto.Replace("tether/", "$"))>
