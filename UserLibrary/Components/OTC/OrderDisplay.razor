@@ -7,59 +7,71 @@
 @using UserLibrary.Data
 @inherits FluxorComponent
 
-@if(Otc != null)
+@if (Otc != null)
 {
-<div class="container">
-    <div class="nw">
-        <MudAvatar Color="Color.Primary">@Dao.Name.First()</MudAvatar>
-        <div>
-            <div>@Dao.Name</div>
-            @if(stats != null)
-            {
-                <div class="b">@stats.UserName</div>
-                <div>@stats.Total | @stats.Ratio %</div>
-            }
-        </div>        
-    </div>
-    <div class="nw">
-        <div class="b">@Otc.Order.dir</div>
-        <div>@Otc.Order.crypto  </div>         
-    </div>
-    <div class="price">
-        <div>@Otc.Order.price @Otc.Order.fiat</div>
-        <div class="market">
-        Market: @marketprice @Otc.Order.fiat
-        </div>
-    </div>
-    <div class="nw">
-         Available: @Otc.Order.amount @Otc.Order.crypto<br />
-         Limits: @Otc.Order.limitMin - @Otc.Order.limitMax @Otc.Order.fiat
-    </div>
-    <div class="nw">
-        @foreach(var pm in Otc.Order.payBy ?? new string[0])
-            {
-                <div class="pm">@pm</div>
-            }
-        </div>
-    <div>
-        @if(walletState.Value.wallet != null && Otc.OwnerAccountId == walletState.Value.wallet.AccountId)
-        {
-            if(Otc.OOStatus == OTCOrderStatus.Partial)
-                {
-                    <MudButton Variant="Variant.Filled" OnClick="@DelistOrder" Color="Color.Tertiary">Delist</MudButton>
-                }
-                if(Otc.OOStatus == OTCOrderStatus.Open || Otc.OOStatus == OTCOrderStatus.Partial)
-                {
-                    <MudButton Variant="Variant.Filled" OnClick="@CloseOrder" Color="Color.Tertiary">Close</MudButton>
-                }
-                
-        }
-        else
-        {
-            <MudButton Variant="Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>
-        }        
-    </div>
-</div>
+        <table border="0">
+            <tr>
+                <td>
+                    <MudAvatar Color="Color.Primary">@Dao.Name.First()</MudAvatar>
+                </td>
+                <td>
+                        <div>
+                            <div>@Dao.Name</div>
+                            @if (stats != null)
+                            {
+                                <div class="b">@stats.UserName</div>
+                            }
+                        </div>
+                </td>
+                <td>
+                        <div>Trade(s) @(stats?.Total) | @(stats?.Ratio) %</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div class="price">
+                        <div>@Otc.Order.price @Otc.Order.fiat</div>
+                        <div class="market">
+                            Market: @marketprice @Otc.Order.fiat
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    Available @(Math.Round(Otc.Order.amount, 2)) @Otc.Order.crypto<br />
+                    Limits @Otc.Order.limitMin - @Otc.Order.limitMax @Otc.Order.fiat
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    @foreach (var pm in Otc.Order.payBy ?? new string[0])
+                    {
+                        <span class="pm">@pm</span>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    @if (walletState.Value.wallet != null && Otc.OwnerAccountId == walletState.Value.wallet.AccountId)
+                    {
+                        if (Otc.OOStatus == OTCOrderStatus.Partial)
+                        {
+                            <MudButton Variant="Variant.Filled" OnClick="@DelistOrder" Color="Color.Tertiary">Delist</MudButton>
+                        }
+                        if (Otc.OOStatus == OTCOrderStatus.Open || Otc.OOStatus == OTCOrderStatus.Partial)
+                        {
+                            <MudButton Variant="Variant.Filled" OnClick="@CloseOrder" Color="Color.Tertiary">Close</MudButton>
+                        }
+
+                    }
+                    else
+                    {
+                        <MudButton Variant="Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>
+                    }
+                </td>
+            </tr>
+        </table>
 }
 
 @code {
@@ -93,7 +105,7 @@
             MarketPrices = e.Prices;
             PriceChanged();
             await InvokeAsync(StateHasChanged);
-        });        
+        });
 
         return base.OnInitializedAsync();
     }
@@ -116,7 +128,7 @@
     private async Task DelistOrder()
     {
         var closeret = await walletState.Value.wallet.DelistOTCOrderAsync((Dao as TransactionBlock).AccountID, (Otc as TransactionBlock).AccountID);
-        if(closeret.Successful())
+        if (closeret.Successful())
         {
             Otc = null;
             Snackbar.Add($"Order delisted.", Severity.Success);
@@ -130,7 +142,7 @@
     private async Task CloseOrder()
     {
         var closeret = await walletState.Value.wallet.CloseOTCOrderAsync((Dao as TransactionBlock).AccountID, (Otc as TransactionBlock).AccountID);
-        if(closeret.Successful())
+        if (closeret.Successful())
         {
             Otc = null;
             Snackbar.Add($"Order closed.", Severity.Success);
@@ -143,12 +155,12 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender)
+        if (firstRender)
         {
             // get seller's name
             var client = new DealerClient(Configuration["network"]);
             var user = await client.GetUserByAccountIdAsync(Otc.OwnerAccountId);
-            if(user.Successful())
+            if (user.Successful())
             {
                 stats = JsonConvert.DeserializeObject<UserStats>(user.JsonString);
 

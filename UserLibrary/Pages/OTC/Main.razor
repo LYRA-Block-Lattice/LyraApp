@@ -11,9 +11,9 @@
 @inherits FluxorComponent
 
 <div class="mag cet">
-    <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6"
+    <MudTabs Elevation="2" Rounded="true" Style="width: 360px"
         @bind-ActivePanelIndex="activeIndex">
-        <MudTabPanel Text="OTC Market">
+        <MudTabPanel Text="Market">
 
             <MudGrid>
                 @if (tradableOrders == null)
@@ -24,17 +24,31 @@
                 }
                 else
                 {
-                    @foreach (var odr in tradableOrders)
-                    {
-                        var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoId);
-                        <MudItem xs="12">
-                            <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao OrderSelected=@ShowCreateTradeUI />
-                        </MudItem>
-                    }
+                    <MudTabs>
+                        @foreach(var crypto in tradableCryptos)
+                        {
+                            <MudTabPanel Text=@(crypto.Replace("tether/", "$"))>
+                                <MudGrid>
+                                 @foreach (var odr in tradableOrders
+                                    .Where(a => a.Order.crypto == crypto)
+                                    .OrderByDescending(a => a.Order.price)
+                                 )
+                                    {
+                                        var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoId);
+                                        <MudItem xs="12">
+                                            <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao OrderSelected=@ShowCreateTradeUI />
+                                        </MudItem>
+                                    }
+                                </MudGrid>
+                            </MudTabPanel>
+                        }
+                    </MudTabs>
+
+
                 }
             </MudGrid>
         </MudTabPanel>
-        <MudTabPanel Text="Create Order">
+        <MudTabPanel Text="Sell">
 
             <MudGrid>
                 @if (showco)
@@ -68,12 +82,12 @@
                                     Data=@fiats />
                         <div>@selfiatname</div>
                     </MudItem>
-                    <MudItem xs="12">
+@*                    <MudItem xs="12">
                         Order Type<br />
                         <RadzenDropDown AllowClear="false" TValue="string" Class="w-100" Disabled
                                     @bind-Value=@selodrtyp
                                     Data=@odrtyps />
-                    </MudItem>
+                    </MudItem>*@
                     <MudItem xs="12">
                         Sell price<br />
                         <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@selprice Change="@CalCollat" /><br />
@@ -95,7 +109,7 @@
                         Collateral<br />
                         <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@cltlyr Change="@CalCollat" /> <br />
                         Worth: @coltworth @selfiat<br />
-                        Ratio: @coltrito <br />
+                        Ratio: @(coltrito * 100) % <br />
                         @if(dao != null)
                         {
                             <div>
@@ -136,8 +150,10 @@
                 }
             </MudGrid>
         </MudTabPanel>
-        <MudTabPanel Text="My Orders">
-            <MudGrid>
+        <MudTabPanel Text="My">
+            <MudTabs Centered>
+                <MudTabPanel Text="Orders">
+                <MudGrid>
                 <MudItem xs="12">
                         @if (walletState.Value.wallet == null)
                         {
@@ -150,9 +166,9 @@
                     
                 </MudItem>
             </MudGrid>
-        </MudTabPanel>
-        <MudTabPanel Text="My Trades">
-            <MudGrid>
+                </MudTabPanel>
+                <MudTabPanel Text="Trades">
+                                <MudGrid>
                 <MudItem xs="12">
                         @if (walletState.Value.wallet == null)
                         {
@@ -165,6 +181,8 @@
                     
                 </MudItem>
             </MudGrid>
+                </MudTabPanel>
+            </MudTabs>
         </MudTabPanel>
     </MudTabs>
 
@@ -188,6 +206,7 @@
     [Inject] NavigationManager Navigation { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
 
+    List<string> tradableCryptos;
     List<IOtcOrder> tradableOrders;
     List<IDao> alldaos = new List<IDao>();
     List<IDao> daos = new List<IDao>();
@@ -228,7 +247,7 @@
 
     decimal trxprice, lyrprice, btcprice, lyrintprice;
     decimal coltworth;
-    string coltrito;
+    decimal coltrito;
 
     Dictionary<string, decimal> MarketPrices;
 
@@ -344,9 +363,11 @@
         coltworth = Math.Round(coltworthusd / MarketPrices[selfiat.ToLower()], 2);
 
         if (coltworth > 0 && selprice * selqty > 0)
-            coltrito = $"{coltworth / (selprice * selqty):N2}";
+            coltrito = Math.Round(coltworth / (selprice * selqty), 4);
         else
-            coltrito = "";
+            coltrito = 0;
+
+        StateHasChanged();
     }
 
     private async Task seldao()
@@ -493,6 +514,10 @@
                     .Where(a => a.Order.amount > 0)
                     .OrderBy(a => a.Order.price)
                     .ToList();
+                tradableCryptos = tradableOrders.Select(a => a.Order.crypto)
+                    .Distinct()
+                    .ToList();
+
                 daos = tosret.GetBlocks("daos").Cast<IDao>().ToList();
             }
 
