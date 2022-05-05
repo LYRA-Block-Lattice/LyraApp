@@ -11,15 +11,15 @@
     @foreach(var order in orders)
     {
         <div class="container">
-            <div class="nw">
-                <div><a target="_blank" href="@(LyraGlobal.GetBlockViewUrl(Configuration["network"], order.AccountID))">@(order.AccountID.Shorten())</a></div>
-            </div>
-            <div class="nw">
-                <div>Sell @((order as IOtcOrder).Order.crypto) </div>
-            </div>
             <div>
                 @order.TimeStamp
                 @*<MudButton Variant="Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>*@
+            </div>
+            <div class="nw">
+                <a target="_blank" href="@(LyraGlobal.GetBlockViewUrl(Configuration["network"], order.AccountID))">@(order.AccountID.Shorten())</a>
+            </div>
+            <div class="nw">
+                <div>Sell @((order as IOtcOrder).Order.crypto) </div>
             </div>
             <div>
                 @((order as IOtcOrder).OOStatus)

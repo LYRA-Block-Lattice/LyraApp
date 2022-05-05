@@ -14,7 +14,19 @@ else
 {
 <RadzenTemplateForm TItem="OrderConfig" Data=@cfg Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
             <MudGrid>
-                @if (showco)
+            @if (walletState.Value.wallet == null)
+            {
+                <MudItem xs="12">
+                    <a href="/wallet">Open wallet to create order</a>
+                </MudItem>
+            }
+            else if (!showco)
+            {
+                <MudItem xs="12">
+                    <a href="/dealer/register">Register on Lyra deal server</a>
+                </MudItem>
+            }
+            else
                 {
                     <MudItem xs="12">
                         <h2>Sell Crypto on P2P market</h2>
@@ -112,19 +124,6 @@ else
                         <RadzenButton Click=@(args => Back2("")) Text="Back" ButtonStyle="ButtonStyle.Light" />
                     </MudItem>*@
                 }
-                else
-                {
-                    <MudItem xs="12">
-                        @if (walletState.Value.wallet == null)
-                        {
-                            <a href="/wallet">Open wallet to create order</a>
-                        }
-                        else
-                        {
-                            <a href="/dealer/register">Register on Lyra deal server</a>
-                        }
-                    </MudItem>
-                }
             </MudGrid>
 </RadzenTemplateForm>
 }
@@ -213,14 +212,6 @@ else
         {
             try
             {
-                SubscribeToAction<MarketUpdated>(async e =>
-                {
-                    await productchanged();
-                    await InvokeAsync(StateHasChanged);
-                });
-
-                Dispatcher.Dispatch(new HotUpdateAction());
-
                 // get sellable tokens
                 var tokens = await lyraApi.GetTokenNamesAsync(null, null, "(null)");
 
@@ -271,6 +262,14 @@ else
                     maxsell = walletState.Value.wallet.GetLastSyncBlock().Balances[@cfg.crypto.dbname].ToBalanceDecimal();
                 else
                     maxsell = 0;
+
+                SubscribeToAction<MarketUpdated>(async e =>
+                {
+                    await productchanged();
+                    await InvokeAsync(StateHasChanged);
+                });
+
+                Dispatcher.Dispatch(new HotUpdateAction());
 
                 StateHasChanged();
             }

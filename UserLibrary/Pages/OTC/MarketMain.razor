@@ -10,53 +10,44 @@
 @using UserLibrary.Data
 @inherits FluxorComponent
 
-<div>
+
     <MudTabs Elevation="2" Rounded="true" Centered="true" Color="Color.Secondary"
         @bind-ActivePanelIndex="activeIndex">
         <MudTabPanel Text="Market">
-            <MudGrid>
                 @if (tradableOrders == null)
                 {
-                    <MudItem xs="12" Style="align-content: center;">
-                        <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
-                    </MudItem>
+                    <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
                 }
                 else
                 {
                     <MudTabs Rounded="true">
                         @foreach(var crypto in tradableCryptos)
-                        {
-                            <div class="pad mag">
+                        {                            
                             <MudTabPanel Text=@(crypto.Replace("tether/", "$"))>
-                                <MudGrid>
+                                <div class="cet mag">
                                  @foreach (var odr in tradableOrders
                                     .Where(a => a.Order.crypto == crypto)
                                     .OrderByDescending(a => a.Order.price)
                                  )
                                     {
                                         var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoId);
-                                        <MudItem xs="12">
                                             <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao OrderSelected=@ShowCreateTradeUI />
-                                        </MudItem>
                                     }
-                                </MudGrid>
+                                </div>
                             </MudTabPanel>
-                            </div>
+                            
                         }
                     </MudTabs>
                 }
-            </MudGrid>
         </MudTabPanel>
         <MudTabPanel Text="Sell">
-            <div class="pad mag">
+            <div class="cet mag">
                 <UserLibrary.Components.OTC.CreateNewOrder />
             </div>
         </MudTabPanel>
         <MudTabPanel Text="My">
             <MudTabs Centered>
                 <MudTabPanel Text="Orders">
-                <MudGrid>
-                <MudItem xs="12">
                         @if (walletState.Value.wallet == null)
                         {
                             <a href="/wallet">Open wallet to view orders.</a>
@@ -65,13 +56,8 @@
                         {
                             <UserLibrary.Components.OTC.OrdersList />
                         }
-                    
-                </MudItem>
-            </MudGrid>
                 </MudTabPanel>
                 <MudTabPanel Text="Trades">
-                                <MudGrid>
-                <MudItem xs="12">
                         @if (walletState.Value.wallet == null)
                         {
                             <a href="/wallet">Open wallet to view trades.</a>
@@ -80,15 +66,10 @@
                         {
                             <UserLibrary.Components.OTC.TransactionsList />
                         }
-                    
-                </MudItem>
-            </MudGrid>
                 </MudTabPanel>
             </MudTabs>
         </MudTabPanel>
     </MudTabs>
-
-</div>
 
 
 @code {

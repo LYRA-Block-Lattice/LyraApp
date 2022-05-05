@@ -14,15 +14,15 @@
         }
         <a href="/dealer/room/@trade.AccountID">
         <div class="container">
-            <div class="nw">
-                <div> @trade.AccountID.Shorten() </div>
-            </div>
-            <div class="nw">
-                <div>@dir @((trade as IOtcTrade).Trade.crypto) </div>
-            </div>
             <div>
                 @trade.TimeStamp
                 @*<MudButton Variant="Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>*@
+            </div>
+            <div class="nw">
+                <a target="_blank" href="@(LyraGlobal.GetBlockViewUrl(Configuration["network"], trade.AccountID))">@(trade.AccountID.Shorten())</a>
+            </div>
+            <div class="nw">
+                <div>@dir @((trade as IOtcTrade).Trade.crypto) </div>
             </div>
             <div>
                 @((trade as IOtcTrade).OTStatus)
