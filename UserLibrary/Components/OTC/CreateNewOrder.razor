@@ -267,7 +267,7 @@ else
                     mydaos = new List<IDao>();
                 }
 
-                if (walletState.Value.wallet.GetLastSyncBlock().Balances.ContainsKey("tether/USDT"))
+                if (walletState.Value.wallet?.GetLastSyncBlock().Balances.ContainsKey("tether/USDT") == true)
                     maxsell = walletState.Value.wallet.GetLastSyncBlock().Balances[@cfg.crypto.dbname].ToBalanceDecimal();
                 else
                     maxsell = 0;
@@ -286,7 +286,6 @@ else
     {
         if(hotData.Value == null || dao == null)
         {
-            Snackbar.Add($"No market data or DAO is not selected. Please check network.", Severity.Error);
             return;
         }
 
@@ -307,7 +306,6 @@ else
     {
         if(hotData.Value == null || dao == null)
         {
-            Snackbar.Add($"No market data or DAO is not selected. Please check network.", Severity.Error);
             return;
         }
 
@@ -338,8 +336,11 @@ else
 
     private async Task productchanged()
     {
-        maxsell = walletState.Value.wallet.GetLastSyncBlock().Balances[@cfg.crypto.dbname].ToBalanceDecimal();
-        await fiatchanged();
+        if(walletState.Value.wallet != null)
+        {
+            maxsell = walletState.Value.wallet.GetLastSyncBlock().Balances[@cfg.crypto.dbname].ToBalanceDecimal();
+            await fiatchanged();
+        }
     }
 
     private async Task fiatchanged()

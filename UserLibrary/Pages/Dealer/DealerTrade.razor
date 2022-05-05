@@ -183,6 +183,10 @@
 
     void calc()
     {
+        if(pay < otc.Order.limitMin || pay > otc.Order.limitMax)
+        {
+            return;
+        }
         got = Math.Round(pay / otc.Order.price, 8);
 
         // cltlyr should be
@@ -200,9 +204,9 @@
 
     async Task OnDeal()
     {
-        if(got > otc.Order.amount || got <= 0)
+        if(pay < otc.Order.limitMin || pay > otc.Order.limitMax)
         {
-            Snackbar.Add($"Amount not right. (between a and b)", Severity.Error);
+            Snackbar.Add($"Amount not right. (between {otc.Order.limitMin} and {otc.Order.limitMax})", Severity.Error);
             return;
         }
 

@@ -10,11 +10,10 @@
 @using UserLibrary.Data
 @inherits FluxorComponent
 
-<div class="mag cet">
-    <MudTabs Elevation="2" Rounded="true" Style="width: 360px"
+<div>
+    <MudTabs Elevation="2" Rounded="true" Centered="true" Color="Color.Secondary"
         @bind-ActivePanelIndex="activeIndex">
         <MudTabPanel Text="Market">
-
             <MudGrid>
                 @if (tradableOrders == null)
                 {
@@ -24,9 +23,10 @@
                 }
                 else
                 {
-                    <MudTabs Rounded="true" AlwaysShowScrollButtons="true">
+                    <MudTabs Rounded="true">
                         @foreach(var crypto in tradableCryptos)
                         {
+                            <div class="pad mag">
                             <MudTabPanel Text=@(crypto.Replace("tether/", "$"))>
                                 <MudGrid>
                                  @foreach (var odr in tradableOrders
@@ -41,17 +41,16 @@
                                     }
                                 </MudGrid>
                             </MudTabPanel>
+                            </div>
                         }
                     </MudTabs>
-
-
                 }
             </MudGrid>
         </MudTabPanel>
         <MudTabPanel Text="Sell">
-
-            <UserLibrary.Components.OTC.CreateNewOrder />
-
+            <div class="pad mag">
+                <UserLibrary.Components.OTC.CreateNewOrder />
+            </div>
         </MudTabPanel>
         <MudTabPanel Text="My">
             <MudTabs Centered>

@@ -79,8 +79,10 @@
     </div>
 
     <div class="inp ext">
-        <MudTextField T="string" @ref="@inputTxt" Variant="Variant.Outlined" Lines="1"
+        <MudTextField T="string" @ref="@inputTxt" Variant="Variant.Outlined" Lines="1" Class="inptxt"
                       OnKeyUp="@Enter" />
+        <MudFab Color="Color.Primary" StartIcon="@Icons.Filled.Send"
+                Size="Size.Small" OnClick="SendIt" />
         <MudFab Color="Color.Primary" StartIcon="@Icons.Filled.EmojiEmotions"
                 Size="Size.Small" OnClick="ToggleEmj" />
         <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add"
@@ -316,12 +318,17 @@
     {
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
+            await SendIt();
+        }
+    }
+
+    async Task SendIt()
+    {
             if(!string.IsNullOrWhiteSpace(inputTxt.Text))
             {
                 await Send(inputTxt.Text);
                 await inputTxt.Clear();
             }
-        }
     }
 
     private async Task Send(string txt)

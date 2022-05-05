@@ -8,7 +8,7 @@
 @using UserLibrary.Store.NotificationUseCase
 @inherits FluxorComponent
 
-@if (Otc != null)
+@if (Otc != null && hotData.Value.MarketPrices != null)
 {
         <table border="0">
             <tr>
@@ -106,14 +106,17 @@
 
     private void PriceChanged()
     {
-        marketpriceusd = 0;
-        var priceTag = Otc.Order.crypto.Replace("tether/", "").ToUpper();
-        if (hotData.Value.MarketPrices.ContainsKey(priceTag))
-        {            
-            marketpriceusd = hotData.Value.MarketPrices[priceTag];
-        }
+        if(hotData.Value.MarketPrices?.Count > 10)      // anti debug data empty
+        {
+            marketpriceusd = 0;
+            var priceTag = Otc.Order.crypto.Replace("tether/", "").ToUpper();
+            if (hotData.Value.MarketPrices.ContainsKey(priceTag))
+            {            
+                marketpriceusd = hotData.Value.MarketPrices[priceTag];
+            }
 
-        marketprice = Math.Round(marketpriceusd / hotData.Value.MarketPrices[Otc.Order.fiat.ToLower()], 2);
+            marketprice = Math.Round(marketpriceusd / hotData.Value.MarketPrices[Otc.Order.fiat.ToLower()], 2);
+        }
     }
 
     private async Task ShowCreateTradeUI()
@@ -132,10 +135,14 @@
             {
                 stats = JsonConvert.DeserializeObject<UserStats>(user.JsonString);
 
+                SubscribeToAction<ContractChangeEvent>(async cce =>
+                {
+                    PriceChanged();
+                    await InvokeAsync(() => StateHasChanged());
+                });
+
                 // fetch init prices
                 Dispatcher.Dispatch(new HotUpdateAction());
-
-                PriceChanged();
 
                 await InvokeAsync(() => StateHasChanged());
             }
