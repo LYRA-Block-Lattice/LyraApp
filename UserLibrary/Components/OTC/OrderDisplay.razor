@@ -54,14 +54,6 @@
                 <td>
                     @if (walletState.Value.wallet != null && Otc.OwnerAccountId == walletState.Value.wallet.AccountId)
                     {
-                        if (Otc.OOStatus == OTCOrderStatus.Partial)
-                        {
-                            <MudButton Variant="Variant.Filled" OnClick="@DelistOrder" Color="Color.Tertiary">Delist</MudButton>
-                        }
-                        if (Otc.OOStatus == OTCOrderStatus.Open || Otc.OOStatus == OTCOrderStatus.Partial)
-                        {
-                            <MudButton Variant="Variant.Filled" OnClick="@CloseOrder" Color="Color.Tertiary">Close</MudButton>
-                        }
 
                     }
                     else
@@ -127,34 +119,6 @@
     private async Task ShowCreateTradeUI()
     {
         await OrderSelected.InvokeAsync(Otc);
-    }
-
-    private async Task DelistOrder()
-    {
-        var closeret = await walletState.Value.wallet.DelistOTCOrderAsync((Dao as TransactionBlock).AccountID, (Otc as TransactionBlock).AccountID);
-        if (closeret.Successful())
-        {
-            Otc = null;
-            Snackbar.Add($"Order delisted.", Severity.Success);
-        }
-        else
-        {
-            Snackbar.Add($"Error close order: {closeret.ResultCode}", Severity.Error);
-        }
-    }
-
-    private async Task CloseOrder()
-    {
-        var closeret = await walletState.Value.wallet.CloseOTCOrderAsync((Dao as TransactionBlock).AccountID, (Otc as TransactionBlock).AccountID);
-        if (closeret.Successful())
-        {
-            Otc = null;
-            Snackbar.Add($"Order closed.", Severity.Success);
-        }
-        else
-        {
-            Snackbar.Add($"Error close order: {closeret.ResultCode}", Severity.Error);
-        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

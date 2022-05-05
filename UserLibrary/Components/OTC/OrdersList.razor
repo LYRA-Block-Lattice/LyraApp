@@ -1,8 +1,11 @@
 ﻿@using Fluxor
+@using Fluxor.Blazor.Web.Components
 @using Lyra.Data.API.WorkFlow
 @using Lyra.Data.Shared
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
+@using UserLibrary.Data
+@inherits FluxorComponent
 
 <div align="left">
     @foreach(var order in orders)
@@ -54,6 +57,12 @@
         if(firstRender && walletState.Value.wallet != null)
         {
             await Refresh();
+
+            SubscribeToAction<ContractChangeEvent>(async cce =>
+            {
+                await Refresh();
+                await InvokeAsync(() => StateHasChanged());
+            });
         }
         await base.OnAfterRenderAsync(firstRender);
     }
