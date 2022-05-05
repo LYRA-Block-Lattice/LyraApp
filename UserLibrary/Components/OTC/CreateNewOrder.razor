@@ -105,9 +105,9 @@ else
                         Total: @total @cfg.fiat
                     </MudItem>
                     <MudItem xs="12">
-                         <RadzenButton ButtonType="Radzen.ButtonType.Submit" Text="Submit" ></RadzenButton>
-                        <RadzenButton IsBusy=@busy Click=@(async args => await CreateOrder("adddao")) Text="Add New Order" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
-                    </MudItem>
+                         <RadzenButton IsBusy=@busy ButtonType="Radzen.ButtonType.Submit" Text="Add New Order" Icon="add_circle_outline"></RadzenButton>
+@*                        <RadzenButton IsBusy=@busy Click=@(async args => await CreateOrder("adddao")) Text="Add New Order" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
+*@                    </MudItem>
 @*                    <MudItem xs="12">
                         <RadzenButton Click=@(args => Back2("")) Text="Back" ButtonStyle="ButtonStyle.Light" />
                     </MudItem>*@
@@ -197,9 +197,9 @@ else
             paymths = new string[0]
         };
 
-    void OnSubmit(OrderConfig model)
+    Task OnSubmit(OrderConfig model)
     {
-
+        return CreateOrder("");
     }
 
     void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
@@ -365,7 +365,7 @@ else
         selCryptoMarketPrice = Math.Round(usdprice / hotData.Value.MarketPrices[cfg.fiat.ToLower()], 2);
     }
 
-    async Task CreateOrder(string daoname)
+    async Task CreateOrder(string dn)
     {
         busy = true;
         Snackbar.Add("Creating Order...", Severity.Info);
