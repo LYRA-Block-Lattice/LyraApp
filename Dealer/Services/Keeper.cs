@@ -60,6 +60,7 @@ namespace Dealer.Server.Services
             _lyraApi = LyraRestClient.Create(config["network"], Environment.OSVersion.ToString(), "Dealer", "1.0");
             _logger = logger;
             Prices = new ConcurrentDictionary<string, decimal>();
+            Prices.TryAdd("usd", 1m); // for dumb
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

@@ -163,9 +163,11 @@
     private void PriceChanged()
     {
         marketpriceusd = 0;
-        if (otc.Order.crypto.EndsWith("ETH")) marketpriceusd = hotData.Value.MarketPrices["ETH"];
-        if (otc.Order.crypto.EndsWith("BTC")) marketpriceusd = hotData.Value.MarketPrices["BTC"];
-        if (otc.Order.crypto.EndsWith("USDT")) marketpriceusd = hotData.Value.MarketPrices["USDT"];
+        var priceTag = otc.Order.crypto.Replace("tether/", "").ToUpper();
+        if (hotData.Value.MarketPrices.ContainsKey(priceTag))
+        {            
+            marketpriceusd = hotData.Value.MarketPrices[priceTag];
+        }
 
         lyraprice = hotData.Value.MarketPrices["LYR"];
 

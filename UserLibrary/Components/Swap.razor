@@ -236,7 +236,7 @@
     decimal minrecv;
     decimal lyraprice;
 
-    private decimal amount1 = 0.0m, amount2 = 0.0m;
+    private decimal amount1 = 1m, amount2 = 0.0m;
 
     async Task updateDig1(decimal digi1)
     {
@@ -327,7 +327,7 @@
         {
             decimal val1 = 0;
             if (selectedTicker1.dbname == "LYR")
-                val1 = lyrprice;
+                val1 = lyrintprice;
             else if (selectedTicker1.dbname == "tether/TRX")
                 val1 = trxprice;
             else if (selectedTicker1.dbname == "tether/USDT")
@@ -335,7 +335,7 @@
             else if (price > 0)
             {
                 // then ticker2 is LYR. price is x tik1 to 1 tik2
-                val1 = lyrprice / price;
+                val1 = lyrintprice / price;
             }
 
             if (amount1 == 0)
@@ -364,7 +364,7 @@
         {
             decimal val2 = 0;
             if (selectedTicker2.dbname == "LYR")
-                val2 = lyrprice;
+                val2 = lyrintprice;
             else if (selectedTicker2.dbname == "tether/TRX")
                 val2 = trxprice;
             else if (selectedTicker2.dbname == "tether/USDT")
@@ -372,7 +372,7 @@
             else if (price > 0)
             {
                 // then ticker1 is LYR. price is x tik1 to 1 tik2
-                val2 = lyrprice * price;
+                val2 = lyrintprice * price;
             }
 
             if (amount2 == 0)

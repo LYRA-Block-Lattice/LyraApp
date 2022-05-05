@@ -271,11 +271,10 @@
     private void PriceChanged()
     {
         decimal usdprice = 0;
-        if (selcrypto != null)
+        var priceTag = selcrypto.dbname.Replace("tether/", "").ToUpper();
+        if (selcrypto != null && hotData.Value.MarketPrices.ContainsKey(priceTag))
         {            
-            if (selcrypto.Name.EndsWith("ETH")) usdprice = hotData.Value.MarketPrices["ETH"];
-            if (selcrypto.Name.EndsWith("BTC")) usdprice = hotData.Value.MarketPrices["BTC"];
-            if (selcrypto.Name.EndsWith("USDT")) usdprice = hotData.Value.MarketPrices["USDT"];
+            usdprice = hotData.Value.MarketPrices[priceTag];
         }
 
         selcryptoprice = Math.Round(usdprice / hotData.Value.MarketPrices[selfiat.ToLower()], 2);
