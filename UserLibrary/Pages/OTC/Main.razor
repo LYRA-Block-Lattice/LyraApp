@@ -123,30 +123,10 @@
 
     protected override Task OnInitializedAsync()
     {
-        //SubscribeToAction<RespQuote>(
-        //    (e) =>
-        //    {
-        //    // price updated
-        //    btcprice = e.Prices["BTC"];
-        //        trxprice = e.Prices["TRX"];
-        //        lyrprice = e.Prices["LYR"];
-        //        lyrintprice = e.Prices["LYR_INT"];
-
-        //        MarketPrices = e.Prices;
-
-        //        PriceChanged();
-        //    }
-        //);
-
-        SubscribeToAction<NotifyContainer>(async evtc =>
+        SubscribeToAction<ContractChangeEvent>(async cce =>
             {
-                var evt = evtc.Get();
-
-                if (evt is ContractChangeEvent cce)
-                {
-                    await RefreshOrders();
-                    await InvokeAsync(() => StateHasChanged());
-                }
+                await RefreshOrders();
+                await InvokeAsync(() => StateHasChanged());
             });
 
         return base.OnInitializedAsync();
@@ -206,38 +186,6 @@
             Navigation.NavigateTo($"/dealer/trade/{(order as TransactionBlock).AccountID}");
         }
     }
-
-    //async Task ShowCreateOrderUI()
-    //{
-    //    if (walletState.Value.wallet != null)
-    //    {
-    //        //check if user has been registed on dealer server
-    //        var client = new DealerClient(Configuration["network"]);
-    //        var user = await client.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
-    //        if (!user.Successful())
-    //        {
-    //            // register user
-    //            Navigation.NavigateTo("/dealer/register");
-    //        }
-    //        else
-    //        {
-    //            // fetch init prices
-    //            MarketPrices = await client.GetPricesAsync();
-    //            showco = !showco;
-    //        }
-    //    }
-    //}
-
-    //async Task Back(string buttonName)
-    //{
-    //    Navigation.NavigateTo("/dao");
-    //}
-
-    //async Task Back2(string buttonName)
-    //{
-    //    showco = !showco;
-    //    Navigation.NavigateTo("/dao");
-    //}
 
     private async Task RefreshOrders()
     {

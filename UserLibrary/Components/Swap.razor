@@ -10,6 +10,7 @@
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
 @using UserLibrary.Data
+@using UserLibrary.Store.NotificationUseCase
 @inject IConfiguration _config
 @inject ILyraAPI lyraClient
 @implements IDisposable
@@ -196,6 +197,9 @@
 
 @code {
     [Inject]
+    IState<HotDataState> hotData { get; set; }  
+
+    [Inject]
     private IState<WebWalletState> walletState { get; set; }
 
     [Inject]
@@ -243,31 +247,6 @@
     {
         amount2 = digi2;
         await UpdatePool(false);
-    }
-
-    protected override void OnInitialized()
-    {
-        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Swap" });
-
-        SubscribeToAction<RespQuote>(
-            async (e) =>
-            {
-                try
-                {
-                    // price updated
-                    trxprice = e.Prices["TRX"];
-                    lyrprice = e.Prices["LYR"];
-                    lyrintprice = e.Prices["LYR_INT"];
-
-                    // update pool
-                    //_ = Task.Run(async () =>
-                    await UpdatePool(true);
-                }
-                catch{}
-            }
-        );
-
-        base.OnInitialized();
     }
 
     public void Dispose()
@@ -647,6 +626,32 @@
     bool init;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if(firstRender)
+        {
+            Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Swap" });
+
+            SubscribeToAction<MarketUpdated>(
+                async (e) =>
+                {
+                    try
+                    {
+                        // price updated
+                        trxprice = hotData.Value.MarketPrices["TRX"];
+                        lyrprice = hotData.Value.MarketPrices["LYR"];
+                        lyrintprice = hotData.Value.MarketPrices["LYR_INT"];
+
+                        // update pool
+                        //_ = Task.Run(async () =>
+                        await UpdatePool(true);
+                    }
+                    catch{}
+                }
+            );
+
+            // fetch init prices
+            Dispatcher.Dispatch(new HotUpdateAction());
+        }
+
         if (firstRender && !init)
         {
             init = true;
@@ -657,20 +662,6 @@
                 if (walletState.Value.wallet != null)
                     await walletState.Value.wallet.SyncAsync(null);
                 await OpenSwapUI();
-
-                // fetch latest price
-                try
-                {
-                    var dc = new DealerClient(_config["network"]);
-                    var prices = await dc.GetPricesAsync();
-                    lyrintprice = prices["LYR_INT"];
-                    lyrprice = prices["LYR"];
-                }
-                catch(Exception ex)
-                {
-                    Snackbar.Add($"Error get latest price: {ex.Message}", Severity.Warning);
-                }
-
 
                 Snackbar.Add($"Swap App is ready. ", Severity.Success);
             }

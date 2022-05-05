@@ -28,16 +28,10 @@
 
     protected override Task OnInitializedAsync()
     {
-        SubscribeToAction<NotifyContainer>(async evtc =>
+        SubscribeToAction<ContractChangeEvent>(async cce =>
             {
-                var evt = evtc.Get();
-
-                if (evt is ContractChangeEvent cce)
-                {
-                    await GetDao();
-
-                    await InvokeAsync(() => StateHasChanged());
-                }
+                await GetDao();
+                await InvokeAsync(() => StateHasChanged());
             });
 
         return base.OnInitializedAsync();

@@ -102,11 +102,9 @@ else
     {
         if(firstRender)
         {
-            SubscribeToAction<NotifyContainer>(async evtc =>
+            SubscribeToAction<ContractChangeEvent>(async cce =>
             {
-                var evt = evtc.Get();
-
-                if (evt is ContractChangeEvent cce && cce.ContractId == voteid)
+                if (cce.ContractId == voteid)
                 {
                     await Refresh();
                     await InvokeAsync(() => StateHasChanged());

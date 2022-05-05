@@ -4,6 +4,7 @@
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
 @using UserLibrary.Data
+@using UserLibrary.Store.NotificationUseCase
 @inherits FluxorComponent
 
             <MudGrid>
@@ -108,6 +109,9 @@
 
 @code {
     [Inject]
+    IState<HotDataState> hotData { get; set; }  
+
+    [Inject]
     private IState<WebWalletState> walletState { get; set; }
 
     [Inject]
@@ -138,8 +142,6 @@
         "Paypal", "Bank Transfer", "Alipay", "Wechat Pay", "ATM Cash Deposit"
     };
 
-    Dictionary<string, decimal> MarketPrices;
-
     IEnumerable<string> paymths = new string[0];
 
     // user selected DAO
@@ -161,7 +163,7 @@
         {
             try
             {
-                MarketPrices = await dealerApi.GetPricesAsync();
+                Dispatcher.Dispatch(new HotUpdateAction());
 
                 // get sellable tokens
                 var tokens = await lyraApi.GetTokenNamesAsync(null, null, "(null)");
@@ -185,7 +187,17 @@
                         .Where(b => having.Contains(b.dbname))
                         .ToList();
 
-                    showco = true;
+                    //check if user has been registed on dealer server
+                    var user = await dealerApi.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
+                    if (!user.Successful())
+                    {
+                        // register user
+                        Navigation.NavigateTo("/dealer/register");
+                    }
+                    else
+                    {
+                        showco = true;
+                    }
                 }
 
                 // daos
@@ -209,21 +221,12 @@
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    async Task GetMyDaos()
-    {
-
-        //    if (walletState.Value.wallet == null)
-        //        return;
-        //    var brkblksret = await walletState.Value.wallet.RPC.GetAllBrokerAccountsForOwnerAsync(walletState.Value.wallet.AccountId);
-        //    mydaos = brkblksret.GetBlocks().Where(a => a is DaoGenesisBlock).Cast<IDao>().ToList();
-    }
-
     private void CalCollat(Decimal d)
     {
         total = $"{(selcryptoprice * selqty):N2}";
         var coltworthusd = cltlyr * lyrprice;
 
-        coltworth = Math.Round(coltworthusd / MarketPrices[selfiat.ToLower()], 2);
+        coltworth = Math.Round(coltworthusd / hotData.Value.MarketPrices[selfiat.ToLower()], 2);
 
         if (coltworth > 0 && selprice * selqty > 0)
             coltrito = Math.Round(coltworth / (selprice * selqty), 4);
@@ -270,12 +273,12 @@
         decimal usdprice = 0;
         if (selcrypto != null)
         {            
-            if (selcrypto.Name.EndsWith("ETH")) usdprice = MarketPrices["ETH"];
-            if (selcrypto.Name.EndsWith("BTC")) usdprice = MarketPrices["BTC"];
-            if (selcrypto.Name.EndsWith("USDT")) usdprice = MarketPrices["USDT"];
+            if (selcrypto.Name.EndsWith("ETH")) usdprice = hotData.Value.MarketPrices["ETH"];
+            if (selcrypto.Name.EndsWith("BTC")) usdprice = hotData.Value.MarketPrices["BTC"];
+            if (selcrypto.Name.EndsWith("USDT")) usdprice = hotData.Value.MarketPrices["USDT"];
         }
 
-        selcryptoprice = Math.Round(usdprice / MarketPrices[selfiat.ToLower()], 2);
+        selcryptoprice = Math.Round(usdprice / hotData.Value.MarketPrices[selfiat.ToLower()], 2);
     }
 
     async Task CreateOrder(string daoname)

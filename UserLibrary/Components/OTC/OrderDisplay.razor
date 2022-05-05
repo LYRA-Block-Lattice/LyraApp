@@ -5,6 +5,7 @@
 @using Nebula.Store.WebWalletUseCase
 @using Newtonsoft.Json
 @using UserLibrary.Data
+@using UserLibrary.Store.NotificationUseCase
 @inherits FluxorComponent
 
 @if (Otc != null)
@@ -86,7 +87,13 @@
     IConfiguration Configuration { get; set; }
 
     [Inject]
+    IState<HotDataState> hotData { get; set; }  
+
+    [Inject]
     private IState<WebWalletState> walletState { get; set; }
+
+    [Inject]
+    private IDispatcher Dispatcher { get; set; }
 
     [Inject] NavigationManager Navigation { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
@@ -94,13 +101,10 @@
     UserStats stats;
     decimal marketprice, marketpriceusd;
 
-    Dictionary<string, decimal> MarketPrices;
-
     protected override Task OnInitializedAsync()
     {
-        SubscribeToAction<RespQuote>(async e =>
+        SubscribeToAction<MarketUpdated>(async e =>
         {
-            MarketPrices = e.Prices;
             PriceChanged();
             await InvokeAsync(StateHasChanged);
         });
@@ -111,11 +115,11 @@
     private void PriceChanged()
     {
         marketpriceusd = 0;
-        if (Otc.Order.crypto.EndsWith("ETH")) marketpriceusd = MarketPrices["ETH"];
-        if (Otc.Order.crypto.EndsWith("BTC")) marketpriceusd = MarketPrices["BTC"];
-        if (Otc.Order.crypto.EndsWith("USDT")) marketpriceusd = MarketPrices["USDT"];
+        if (Otc.Order.crypto.EndsWith("ETH")) marketpriceusd = hotData.Value.MarketPrices["ETH"];
+        if (Otc.Order.crypto.EndsWith("BTC")) marketpriceusd = hotData.Value.MarketPrices["BTC"];
+        if (Otc.Order.crypto.EndsWith("USDT")) marketpriceusd = hotData.Value.MarketPrices["USDT"];
 
-        marketprice = Math.Round(marketpriceusd / MarketPrices[Otc.Order.fiat.ToLower()], 2);
+        marketprice = Math.Round(marketpriceusd / hotData.Value.MarketPrices[Otc.Order.fiat.ToLower()], 2);
     }
 
     private async Task ShowCreateTradeUI()
@@ -163,7 +167,7 @@
                 stats = JsonConvert.DeserializeObject<UserStats>(user.JsonString);
 
                 // fetch init prices
-                MarketPrices = await client.GetPricesAsync();
+                Dispatcher.Dispatch(new HotUpdateAction());
 
                 PriceChanged();
 

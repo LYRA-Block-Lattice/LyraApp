@@ -7,6 +7,7 @@
 @using Microsoft.Extensions.Configuration
 @using Lyra.Data.API.WorkFlow
 @using UserLibrary.Data
+@using UserLibrary.Store.NotificationUseCase
 @inherits FluxorComponent
 
 <div class="mag cet">
@@ -104,39 +105,15 @@
     decimal selprice, selqty, cltlyr, paymin, paymax;
     decimal selcryptoprice;
 
-    decimal trxprice, lyrprice, btcprice, lyrintprice;
     decimal coltworth;
     string coltrito;
 
     protected override Task OnInitializedAsync()
     {
-        SubscribeToAction<RespQuote>(
-            (e) =>
+        SubscribeToAction<ContractChangeEvent>(async cce =>
             {
-                // price updated
-                btcprice = e.Prices["BTC"];
-                trxprice = e.Prices["TRX"];
-                lyrprice = e.Prices["LYR"];
-                lyrintprice = e.Prices["LYR_INT"];
-
-                if (selcrypto != null)
-                {
-                    if (selcrypto.Name.EndsWith("ETH")) selcryptoprice = e.Prices["ETH"];
-                    if (selcrypto.Name.EndsWith("BTC")) selcryptoprice = e.Prices["BTC"];
-                    if (selcrypto.Name.EndsWith("USDT")) selcryptoprice = e.Prices["USDT"];
-                }
-            }
-        );
-
-        SubscribeToAction<NotifyContainer>(async evtc =>
-            {
-                var evt = evtc.Get();
-
-                if (evt is ContractChangeEvent cce)
-                {
-                    await GetMyDaos();
-                    await InvokeAsync(() => StateHasChanged());
-                }
+                await GetMyDaos();
+                await InvokeAsync(() => StateHasChanged());
             });
 
         return base.OnInitializedAsync();
@@ -154,16 +131,6 @@
         }
 
         await base.OnAfterRenderAsync(firstRender);
-    }
-
-    private void CalCollat(decimal d)
-    {
-        total = $"{(selprice * selqty):N2}";
-        coltworth = cltlyr * lyrprice;
-        if (coltworth > 0 && selprice * selqty > 0)
-            coltrito = $"{coltworth / (selprice * selqty):N2}";
-        else
-            coltrito = "";
     }
 
     private async Task ShowCreateTradeUI(IOtcOrder order)

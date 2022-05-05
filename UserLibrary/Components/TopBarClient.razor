@@ -59,7 +59,6 @@
     private IDispatcher Dispatcher { get; set; }
 
     [Inject] ISnackbar Snackbar { get; set; }
-    [Inject] ConnectionMethodsWrapper Realconn { get; set; }
 
     MudMenu mnu;
 
@@ -91,66 +90,16 @@
                 WalletChanged(null, null);
             });
 
-        ConnectSignalR();
-        
-        Realconn.RegisterOnChat(a => Dispatcher.Dispatch(a));
-        Realconn.RegisterOnPinned(a => Dispatcher.Dispatch(a));
-        Realconn.RegisterOnEvent(a => Dispatcher.Dispatch(a));
-
-        await base.OnInitializedAsync();
-    }
-
-    private void ConnectSignalR()
-    {
         SubscribeToAction<RespContainer>(ax =>
+        {
+            if (Navigation.Uri.Contains("/dealer/room"))
+                return;
+
+            var obj = ax.Get();
+
+            if (obj is RespMessage a)
             {
-                if (Navigation.Uri.Contains("/dealer/room"))
-                    return;
-
-                var obj = ax.Get();
-
-                if (obj is RespMessage a)
-                {
-                    Snackbar.Add($"{a.UserName}: {a.Text}", Severity.Normal, config =>
-                    {
-                        config.Action = "Open Trade";
-                        config.ActionColor = Color.Primary;
-                        config.Onclick = snackbar =>
-                        {
-                            Help(a.TradeId);
-                            return Task.CompletedTask;
-                        };
-                    });
-                }
-                else
-                if (obj is RespFile fx)
-                {
-                    Snackbar.Add($"{fx.UserName} send you a file: {fx.FileName}", Severity.Normal, config =>
-                     {
-                         config.Action = "Open Trade";
-                         config.ActionColor = Color.Primary;
-                         config.Onclick = snackbar =>
-                         {
-                             Help(fx.TradeId);
-                             return Task.CompletedTask;
-                         };
-                     });
-                }
-            });
-        SubscribeToAction<PinnedMessage>(a =>
-            {
-                if (Navigation.Uri.Contains("/dealer/room"))
-                    return;
-
-                var title = a.Mode switch
-                {
-                    PinnedMode.Action => "Take Action: ",
-                    PinnedMode.Wait => "Await: ",
-                    PinnedMode.Notify => "",
-                    _ => "",
-                };
-
-                Snackbar.Add($"{title}{a.Text}", Severity.Normal, config =>
+                Snackbar.Add($"{a.UserName}: {a.Text}", Severity.Normal, config =>
                 {
                     config.Action = "Open Trade";
                     config.ActionColor = Color.Primary;
@@ -160,58 +109,84 @@
                         return Task.CompletedTask;
                     };
                 });
-            });
-
-        SubscribeToAction<NotifyContainer>(evtc =>
+            }
+            else
+            if (obj is RespFile fx)
             {
-                var evt = evtc.Get();
-
-                if (evt is AccountChangedEvent achgevt)
+                Snackbar.Add($"{fx.UserName} send you a file: {fx.FileName}", Severity.Normal, config =>
                 {
-                    if(achgevt.ChangeType == AccountChangeTypes.Receive)
+                    config.Action = "Open Trade";
+                    config.ActionColor = Color.Primary;
+                    config.Onclick = snackbar =>
                     {
-                        Dispatcher.Dispatch(new WebWalletGotSendToMeAction());
+                        Help(fx.TradeId);
+                        return Task.CompletedTask;
+                    };
+                });
+            }
+        });
+        SubscribeToAction<PinnedMessage>(a =>
+        {
+            if (Navigation.Uri.Contains("/dealer/room"))
+                return;
 
-                        if (Navigation.Uri.Contains("/wallet"))
-                        {
-                            Snackbar.Add($"Incoming transfer from: {achgevt.PeerAccountId.Shorten()}", Severity.Success);
-                        }
-                        else
-                        {
-                            Snackbar.Add($"Incoming transfer from: {achgevt.PeerAccountId.Shorten()}", Severity.Success, config =>
-                             {
-                                 config.Action = "Open Wallet";
-                                 config.ActionColor = Color.Primary;
-                                 config.Onclick = snackbar =>
-                             {
-                                 GoWallet();
-                                 return Task.CompletedTask;
-                             };
-                             });
-                        }
-                    }
-                    else
-                    if(achgevt.ChangeType == AccountChangeTypes.SendReceived)
-                    {
-                        Snackbar.Add($"Your send to: {achgevt.PeerAccountId.Shorten()} is received.", Severity.Success);
-                    }
-                    else
-                    if(achgevt.ChangeType == AccountChangeTypes.Contract)
-                    {
-                        Snackbar.Add($"Your contract {achgevt.PeerAccountId.Shorten()} is changed.", Severity.Success);
-                    }
+            var title = a.Mode switch
+            {
+                PinnedMode.Action => "Take Action: ",
+                PinnedMode.Wait => "Await: ",
+                PinnedMode.Notify => "",
+                _ => "",
+            };
+
+            Snackbar.Add($"{title}{a.Text}", Severity.Normal, config =>
+            {
+                config.Action = "Open Trade";
+                config.ActionColor = Color.Primary;
+                config.Onclick = snackbar =>
+                {
+                    Help(a.TradeId);
+                    return Task.CompletedTask;
+                };
+            });
+        });
+
+        SubscribeToAction<AccountChangedEvent>(achgevt =>
+        {
+            if (achgevt.ChangeType == AccountChangeTypes.Receive)
+            {
+                Dispatcher.Dispatch(new WebWalletGotSendToMeAction());
+
+                if (Navigation.Uri.Contains("/wallet"))
+                {
+                    Snackbar.Add($"Incoming transfer from: {achgevt.PeerAccountId.Shorten()}", Severity.Success);
                 }
                 else
-                if (evt is WorkflowEvent wfevt)
                 {
-                    Dispatcher.Dispatch(wfevt);
-                    //Snackbar.Add($"Workflow {wfevt.Name} State {wfevt.State} do {wfevt.Action} result {wfevt.Result}", Severity.Info);
-                }
-                else if (evt is RespQuote quote)
+                    Snackbar.Add($"Incoming transfer from: {achgevt.PeerAccountId.Shorten()}", Severity.Success, config =>
                 {
-                    Dispatcher.Dispatch(quote);
+                    config.Action = "Open Wallet";
+                    config.ActionColor = Color.Primary;
+                    config.Onclick = snackbar =>
+                    {
+                        GoWallet();
+                        return Task.CompletedTask;
+                    };
+                });
                 }
-            });
+            }
+            else
+        if (achgevt.ChangeType == AccountChangeTypes.SendReceived)
+            {
+                Snackbar.Add($"Your send to: {achgevt.PeerAccountId.Shorten()} is received.", Severity.Success);
+            }
+            else
+        if (achgevt.ChangeType == AccountChangeTypes.Contract)
+            {
+                Snackbar.Add($"Your contract {achgevt.PeerAccountId.Shorten()} is changed.", Severity.Success);
+            }
+        });
+
+        await base.OnInitializedAsync();
     }
 
     private void Help(string tradeid)
@@ -251,7 +226,7 @@
         {
             banner =
     @<div>Wallet is not opened.</div>
-                ;
+        ;
         }
 
 
