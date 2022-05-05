@@ -121,17 +121,6 @@
 
     Dictionary<string, decimal> MarketPrices;
 
-    protected override Task OnInitializedAsync()
-    {
-        SubscribeToAction<ContractChangeEvent>(async cce =>
-            {
-                await RefreshOrders();
-                await InvokeAsync(() => StateHasChanged());
-            });
-
-        return base.OnInitializedAsync();
-    }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (action == "new")
@@ -142,6 +131,12 @@
 
         if (firstRender)
         {
+            SubscribeToAction<ContractChangeEvent>(async cce =>
+            {
+                await RefreshOrders();
+                await InvokeAsync(() => StateHasChanged());
+            });
+
             if (walletState.Value.wallet == null)
             {
                 Dispatcher.Dispatch(new WebWalletChangeTitleAction

@@ -10,6 +10,7 @@
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
 @using UserLibrary.Data
+@using UserLibrary.Store.NotificationUseCase
 @inject IConfiguration Configuration
 @inject NavigationManager Navigation
 
@@ -59,6 +60,7 @@
     private IDispatcher Dispatcher { get; set; }
 
     [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] ConnectionMethodsWrapper wrapper { get; set; }
 
     MudMenu mnu;
 
@@ -67,7 +69,17 @@
     string net;
     bool shownew;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            await InitSignalR();
+            await AttachEvents();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    protected async Task AttachEvents()
     {
         net = Configuration["network"];
         if (net == "mainnet")
@@ -189,6 +201,48 @@
         await base.OnInitializedAsync();
     }
 
+    async Task InitSignalR()
+    {
+        if (!wrapper.IsStarted)
+        {
+            await wrapper.StartAsync();
+
+            wrapper.RegisterOnChat(a => Dispatcher.Dispatch(a));
+            wrapper.RegisterOnPinned(a => Dispatcher.Dispatch(a));
+            wrapper.RegisterOnEvent(a =>
+            {
+                var evt = a.Get();
+
+                if (evt is AccountChangedEvent achgevt)
+                {
+                    Dispatcher.Dispatch(achgevt);
+                }
+                else if (evt is ContractChangeEvent cchg)
+                {
+                    Dispatcher.Dispatch(cchg);
+                }
+                else if (evt is WorkflowEvent wfevt)
+                {
+                    Dispatcher.Dispatch(wfevt);
+                }
+                else if (evt is RespQuote quote)
+                {
+                    Dispatcher.Dispatch(new HotUpdateResultAction
+                        {
+                            LatestPrices = quote.Prices
+                        });
+                    Dispatcher.Dispatch(new MarketUpdated());
+                }
+                else
+                {
+                    // unknown?
+                }
+            });
+
+            Dispatcher.Dispatch(new HotUpdateAction());
+        }
+    }
+
     private void Help(string tradeid)
     {
         Navigation.NavigateTo($"/dealer/room/{tradeid}");
@@ -226,7 +280,7 @@
         {
             banner =
     @<div>Wallet is not opened.</div>
-        ;
+    ;
         }
 
 

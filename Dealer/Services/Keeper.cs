@@ -188,6 +188,7 @@ namespace Dealer.Server.Services
 
                     foreach(var act in notifyTarget)
                     {
+                        Console.WriteLine($"notify target is {act.Value.GetType().FullName}");
                         if(act.Value is AccountChangedEvent ace)
                             await _dealerHub.Clients.Group(act.Key).OnEvent(
                                 new NotifyContainer(ace));

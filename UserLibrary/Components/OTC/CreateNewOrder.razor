@@ -48,7 +48,7 @@
                     <MudItem xs="12">
                         Sell price<br />
                         <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@selprice Change="@CalCollat" /><br />
-                        Market Price: @selcryptoprice @selfiat
+                        Market Price: @selCryptoMarketPrice @selfiat
                     </MudItem>
                     <MudItem xs="12">
                         Quantity<br />
@@ -64,13 +64,13 @@
                     </MudItem>
                     <MudItem xs="12">
                         Collateral<br />
-                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@cltlyr Change="@CalCollat" /> <br />
+                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@cltlyr Change="@CalCollat2" /> <br />
                         Worth: @coltworth @selfiat<br />
                         Ratio: @(coltrito * 100) % <br />
                         @if(dao != null)
                         {
                             <div>
-                                Minimum ratio required by DAO: @dao.SellerPar %
+                                Minimum ratio required by DAO: @dao.BuyerPar %
                             </div>
                         }
                         
@@ -150,9 +150,8 @@
     string seldaoname, selfiat = "USD", selodrtyp = "Fixed price";
     string selfiatname = "US Dollar";
     decimal maxsell, selprice, selqty, cltlyr, paymin, paymax;
-    decimal selcryptoprice;
+    decimal selCryptoMarketPrice;
 
-    decimal trxprice, lyrprice, btcprice, lyrintprice;
     decimal coltworth;
     decimal coltrito;
     bool busy;
@@ -223,7 +222,33 @@
 
     private void CalCollat(Decimal d)
     {
-        total = $"{(selcryptoprice * selqty):N2}";
+        if(hotData.Value == null)
+        {
+            Snackbar.Add($"No market data. Please check network.", Severity.Error);
+        }
+
+        var lyrprice = hotData.Value.MarketPrices["LYR"];
+
+        var totalInUsd = selprice * selqty;
+
+        total = $"{totalInUsd:N2}";
+
+        // calculate the amount of cltlyr
+        cltlyr = Math.Round((totalInUsd / lyrprice) * (dao.BuyerPar / 100m) * 1.01m); // for a safty margin of 1%
+
+        CalCollat2(d);
+    }
+
+    private void CalCollat2(Decimal d)
+    {
+        if(hotData.Value == null)
+        {
+            Snackbar.Add($"No market data. Please check network.", Severity.Error);
+        }
+
+        var lyrprice = hotData.Value.MarketPrices["LYR"];
+
+        var totalInUsd = selprice * selqty;
         var coltworthusd = cltlyr * lyrprice;
 
         coltworth = Math.Round(coltworthusd / hotData.Value.MarketPrices[selfiat.ToLower()], 2);
@@ -277,7 +302,7 @@
             usdprice = hotData.Value.MarketPrices[priceTag];
         }
 
-        selcryptoprice = Math.Round(usdprice / hotData.Value.MarketPrices[selfiat.ToLower()], 2);
+        selCryptoMarketPrice = Math.Round(usdprice / hotData.Value.MarketPrices[selfiat.ToLower()], 2);
     }
 
     async Task CreateOrder(string daoname)
