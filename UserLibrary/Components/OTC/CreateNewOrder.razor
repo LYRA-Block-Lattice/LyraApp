@@ -88,7 +88,7 @@ else
                         @if(dao != null)
                         {
                             <div>
-                                Minimum ratio required by DAO: @dao.BuyerPar %
+                                Minimum ratio required by DAO: @dao.SellerPar %
                             </div>
                         }
                         
@@ -213,6 +213,12 @@ else
         {
             try
             {
+                SubscribeToAction<MarketUpdated>(async e =>
+                {
+                    await productchanged();
+                    await InvokeAsync(StateHasChanged);
+                });
+
                 Dispatcher.Dispatch(new HotUpdateAction());
 
                 // get sellable tokens
@@ -291,7 +297,7 @@ else
         total = $"{totalInFiat:N2}";
 
         // calculate the amount of cltlyr
-        mincollt = Math.Round(((totalInFiat * hotData.Value.MarketPrices[cfg.fiat.ToLower()]) / lyrprice) * (dao.BuyerPar / 100m), 4, MidpointRounding.ToPositiveInfinity);
+        mincollt = Math.Round(((totalInFiat * hotData.Value.MarketPrices[cfg.fiat.ToLower()]) / lyrprice) * (dao.SellerPar / 100m), 4, MidpointRounding.ToPositiveInfinity);
         cfg.collateral = Math.Round(mincollt * 1.01m); // for a safty margin of 1%
 
         CalCollat2(d);

@@ -54,7 +54,7 @@
             <h3>Collateral</h3>
             <MudNumericField @bind-Value="@cltlyr" DebounceInterval="500" OnDebounceIntervalElapsed="calc2" 
                 Label="In LYR" Variant="Variant.Outlined"  />
-            <div> Equivalent @(Math.Round(lyraprice * cltlyr / hotData.Value.MarketPrices[otc.Order.fiat.ToLower()], 2)) @otc.Order.fiat</div>
+            <div> Equivalent @(Math.Round((lyraprice * cltlyr) / hotData.Value.MarketPrices[otc.Order.fiat.ToLower()], 2)) @otc.Order.fiat</div>
             Ratio of collateral: @coltrito <br />
             Minimum ratio required by DAO: @dao.BuyerPar % <br />
             Current Balance: @walletState.Value.wallet.BaseBalance LYR </div>
@@ -107,6 +107,8 @@
 
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
+    [Inject]
+    private IDispatcher Dispatcher { get; set; }
 
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] NavigationManager Navigation { get; set; }
@@ -120,17 +122,6 @@
     string coltrito;
 
     IDao dao;
-
-    protected override async Task OnInitializedAsync()
-    {
-        SubscribeToAction<MarketUpdated>(async e =>
-        {
-            PriceChanged();
-            await InvokeAsync(StateHasChanged);
-        });  
-
-        await base.OnInitializedAsync();
-    }
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
@@ -155,6 +146,14 @@
                 Navigation.NavigateTo("/dealer/register");
             }
 
+            SubscribeToAction<MarketUpdated>(async e =>
+            {
+                PriceChanged();
+                await InvokeAsync(StateHasChanged);
+            });  
+
+            Dispatcher.Dispatch(new HotUpdateAction());
+
             StateHasChanged();
         }
         await base.OnAfterRenderAsync(firstRender);
@@ -176,7 +175,7 @@
 
     private void CalCollat()
     {
-        var valinfiat = lyraprice * cltlyr / hotData.Value.MarketPrices[otc.Order.fiat.ToLower()];
+        var valinfiat = (lyraprice * cltlyr) / hotData.Value.MarketPrices[otc.Order.fiat.ToLower()];
         var buytotal = pay;
 
         coltrito = $"{(valinfiat / buytotal) * 100:N2} %";
@@ -185,6 +184,12 @@
     void calc()
     {
         got = Math.Round(pay / otc.Order.price, 8);
+
+        // cltlyr should be
+        var totalInFiat = pay;
+        cltlyr = Math.Round(((totalInFiat * hotData.Value.MarketPrices[otc.Order.fiat.ToLower()]) / lyraprice) * (dao.BuyerPar / 100m), 4, MidpointRounding.ToPositiveInfinity);
+
+
         calc2();
     }
 
