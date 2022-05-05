@@ -18,6 +18,16 @@
         window.updateScroll = function (element) {
             element.scrollTop = element.scrollHeight;
         }
+        window.clipboardCopy = {
+            copyText: function (text) {
+                navigator.clipboard.writeText(text).then(function () {
+                    alert("Copied to clipboard!");
+                })
+                    .catch(function (error) {
+                        alert(error);
+                    });
+            }
+        };
     </script>
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />

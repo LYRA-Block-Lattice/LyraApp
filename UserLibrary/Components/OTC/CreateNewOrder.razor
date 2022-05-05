@@ -6,7 +6,13 @@
 @using UserLibrary.Data
 @using UserLibrary.Store.NotificationUseCase
 @inherits FluxorComponent
-
+@if(cfg == null)
+{
+    <div style="z-index: 5;" class="spinner"></div>
+}
+else
+{
+<RadzenTemplateForm TItem="OrderConfig" Data=@cfg Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
             <MudGrid>
                 @if (showco)
                 {
@@ -22,21 +28,32 @@
                     <MudItem xs="12">
                         In Orgnization:<br />
                         <RadzenDropDown AllowClear="false" TValue="String" Class="w-100"
-                                    @bind-Value=@seldaoname Change="@seldao"
-                                    Data=@(mydaos.Select(a => (a as IBrokerAccount).Name)) />
+                            Name="daoName"
+                                    @bind-Value=@cfg.daoName Change="@seldao"
+                                    Data=@(mydaos.Select(a => (a as IBrokerAccount).Name)) /> <br />
+                        <RadzenRequiredValidator Component="daoName" Text="Orgnization is required." Popup="false" Style="position: absolute"/>
                     </MudItem>
                     <MudItem xs="12">
                         Token To Sell<br />
                         <RadzenDropDown AllowClear="false" TValue="Ticker" Class="w-100"
-                                    @bind-Value=@selcrypto Change="@productchanged"
+                            Name="crypto"
+                                    @bind-Value=@cfg.crypto Change="@productchanged"
                                     Data=@tickers /> <br />
-                        Current Balance: @maxsell @selcrypto
+                        Current Balance: @maxsell @cfg.crypto.Name <br />
+                        <RadzenRequiredValidator Component="crypto" Text="Selling Crypto is required." Popup="false" Style="position: absolute"/>
+                    <MudItem xs="12">
+                        Quantity<br />
+                        <RadzenNumeric TValue="decimal" Class="w-100" Name="amount" @bind-Value=@cfg.amount Change="@CalCollat" /> <br />
+                        <RadzenNumericRangeValidator t Component="amount" Min="0.0001m" Max="@maxsell" Text="@($"Quantity should be between 0.0001 and {maxsell}")" Popup=false Style="position: absolute" />
+                    </MudItem>
                     </MudItem>
                     <MudItem xs="12">
                         Fiat currency<br />
                         <RadzenDropDown AllowClear="false" TValue="string" Class="w-100"
-                                    @bind-Value=@selfiat Change="@fiatchanged"
-                                    Data=@fiats />
+                            Name="fiat"
+                                    @bind-Value=@cfg.fiat Change="@fiatchanged"
+                                    Data=@fiats /> <br />
+                        <RadzenRequiredValidator Component="fiat" Text="Fiat is required." Popup="false" Style="position: absolute"/>
                         <div>@selfiatname</div>
                     </MudItem>
 @*                    <MudItem xs="12">
@@ -47,25 +64,26 @@
                     </MudItem>*@
                     <MudItem xs="12">
                         Sell price<br />
-                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@selprice Change="@CalCollat" /><br />
-                        Market Price: @selCryptoMarketPrice @selfiat
-                    </MudItem>
-                    <MudItem xs="12">
-                        Quantity<br />
-                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@selqty Change="@CalCollat" />
+                        <RadzenNumeric TValue="decimal" Class="w-100" Name="price" @bind-Value=@cfg.price Change="@CalCollat" /><br />
+                        <RadzenNumericRangeValidator Component="price" Min="0.0001m" Max="1000000000000m" Text="Price should be between 0.0001 and 1000000000000" Popup=false Style="position: absolute" />
+                        Market Price: @selCryptoMarketPrice @cfg.fiat <br />
+                        Total: @total @cfg.fiat
                     </MudItem>
                     <MudItem xs="12">
                         Min Payment<br />
-                        <RadzenNumeric TValue="decimal" Class="w-80" @bind-Value=@paymin Change="@CalCollat" /> @selfiat
+                        <RadzenNumeric TValue="decimal" Class="w-80" Name="limitMin" @bind-Value=@cfg.limitMin Change="@CalCollat" /> @cfg.fiat <br />
+                        <RadzenNumericRangeValidator Component="limitMin" Min="0.0001m" Max="@cfg.limitMax" Text="@($"Limit should be between 0.0001 and {cfg.price * cfg.amount}")" Popup=false Style="position: absolute" />
                     </MudItem>
                     <MudItem xs="12">
                         Max Payment<br />
-                        <RadzenNumeric TValue="decimal" Class="w-80" @bind-Value=@paymax Change="@CalCollat" /> @selfiat
+                        <RadzenNumeric TValue="decimal" Class="w-80" Name="limitMax" @bind-Value=@cfg.limitMax Change="@CalCollat" /> @cfg.fiat <br />
+                        <RadzenNumericRangeValidator Component="limitMax" Min="@cfg.limitMin" Max="@(cfg.price * cfg.amount)" Text="@($"Limit should be between 0.0001 and {cfg.price * cfg.amount}")" Popup=false Style="position: absolute" />
                     </MudItem>
                     <MudItem xs="12">
                         Collateral<br />
-                        <RadzenNumeric TValue="decimal" Class="w-100" @bind-Value=@cltlyr Change="@CalCollat2" /> <br />
-                        Worth: @coltworth @selfiat<br />
+                        <RadzenNumeric TValue="decimal" Class="w-100" Name="collateral" @bind-Value=@cfg.collateral Change="@CalCollat2" /> <br />
+                        <RadzenNumericRangeValidator Component="collateral" Min="@mincollt" Max="@(walletState.Value.wallet.BaseBalance)" Text="@($"Limit should be between 0.0001 and {cfg.price * cfg.amount}")" Popup=false Style="position: absolute" />
+                        Worth: @coltworth @cfg.fiat<br />
                         Ratio: @(coltrito * 100) % <br />
                         @if(dao != null)
                         {
@@ -78,14 +96,16 @@
                     </MudItem>
                     <MudItem xs="12">
                         Accepted Payment Methods<br />
-                        <RadzenCheckBoxList @bind-Value=@paymths TValue="string" Orientation="Radzen.Orientation.Vertical"
-                                        Data="@paymentMethods" />
+                        <RadzenCheckBoxList Name="paymths" @bind-Value=@cfg.paymths TValue="string" Orientation="Radzen.Orientation.Vertical"
+                                        Data="@paymentMethods" /> <br />
+                        <RadzenRequiredValidator Component="paymths" Text="Payment method is required." Popup="false" Style="position: absolute"/>
                     </MudItem>
                     <MudItem xs="12">
                         <MudDivider />
-                        Total: @total @selfiat
+                        Total: @total @cfg.fiat
                     </MudItem>
                     <MudItem xs="12">
+                         <RadzenButton ButtonType="Radzen.ButtonType.Submit" Text="Submit" ></RadzenButton>
                         <RadzenButton IsBusy=@busy Click=@(async args => await CreateOrder("adddao")) Text="Add New Order" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
                     </MudItem>
 @*                    <MudItem xs="12">
@@ -106,6 +126,8 @@
                     </MudItem>
                 }
             </MudGrid>
+</RadzenTemplateForm>
+}
 
 @code {
     [Inject]
@@ -142,19 +164,48 @@
         "Paypal", "Bank Transfer", "Alipay", "Wechat Pay", "ATM Cash Deposit"
     };
 
-    IEnumerable<string> paymths = new string[0];
-
     // user selected DAO
     IDao dao;
-    Ticker selcrypto;
-    string seldaoname, selfiat = "USD", selodrtyp = "Fixed price";
     string selfiatname = "US Dollar";
-    decimal maxsell, selprice, selqty, cltlyr, paymin, paymax;
-    decimal selCryptoMarketPrice;
+    decimal maxsell, mincollt;
+    decimal selCryptoMarketPrice = 1m;
 
     decimal coltworth;
     decimal coltrito;
     bool busy;
+
+    class OrderConfig
+    {
+        public string daoName { get; set; }
+        public Ticker crypto { get; set; }
+        public string fiat { get; set; }
+        public decimal price { get; set; }
+        public decimal amount { get; set; }
+        public decimal collateral { get; set; }
+        public decimal limitMin { get; set; }
+        public decimal limitMax { get; set; }
+        public IEnumerable<string> paymths { get; set; }
+    }
+
+    OrderConfig cfg = new OrderConfig
+        {
+            crypto = new Ticker{ dbname = "tether/USDT", Name = "$USDT"},
+            fiat = "USD",
+            price = 1,
+            amount = 1,
+            limitMin = 1,
+            paymths = new string[0]
+        };
+
+    void OnSubmit(OrderConfig model)
+    {
+
+    }
+
+    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
+    {
+
+    }
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
@@ -210,6 +261,11 @@
                     mydaos = new List<IDao>();
                 }
 
+                if (walletState.Value.wallet.GetLastSyncBlock().Balances.ContainsKey("tether/USDT"))
+                    maxsell = walletState.Value.wallet.GetLastSyncBlock().Balances[@cfg.crypto.dbname].ToBalanceDecimal();
+                else
+                    maxsell = 0;
+
                 StateHasChanged();
             }
             catch(Exception ex)
@@ -222,39 +278,43 @@
 
     private void CalCollat(Decimal d)
     {
-        if(hotData.Value == null)
+        if(hotData.Value == null || dao == null)
         {
-            Snackbar.Add($"No market data. Please check network.", Severity.Error);
+            Snackbar.Add($"No market data or DAO is not selected. Please check network.", Severity.Error);
+            return;
         }
 
         var lyrprice = hotData.Value.MarketPrices["LYR"];
 
-        var totalInUsd = selprice * selqty;
+        var totalInFiat = cfg.price * cfg.amount;
 
-        total = $"{totalInUsd:N2}";
+        total = $"{totalInFiat:N2}";
 
         // calculate the amount of cltlyr
-        cltlyr = Math.Round((totalInUsd / lyrprice) * (dao.BuyerPar / 100m) * 1.01m); // for a safty margin of 1%
+        mincollt = Math.Round(((totalInFiat * hotData.Value.MarketPrices[cfg.fiat.ToLower()]) / lyrprice) * (dao.BuyerPar / 100m), 4, MidpointRounding.ToPositiveInfinity);
+        cfg.collateral = Math.Round(mincollt * 1.01m); // for a safty margin of 1%
 
         CalCollat2(d);
     }
 
     private void CalCollat2(Decimal d)
     {
-        if(hotData.Value == null)
+        if(hotData.Value == null || dao == null)
         {
-            Snackbar.Add($"No market data. Please check network.", Severity.Error);
+            Snackbar.Add($"No market data or DAO is not selected. Please check network.", Severity.Error);
+            return;
         }
 
         var lyrprice = hotData.Value.MarketPrices["LYR"];
 
-        var totalInUsd = selprice * selqty;
-        var coltworthusd = cltlyr * lyrprice;
+        var totalInFiat = cfg.price * cfg.amount;
 
-        coltworth = Math.Round(coltworthusd / hotData.Value.MarketPrices[selfiat.ToLower()], 2);
+        var coltworthusd = cfg.collateral * lyrprice;
 
-        if (coltworth > 0 && selprice * selqty > 0)
-            coltrito = Math.Round(coltworth / (selprice * selqty), 4);
+        coltworth = Math.Round(coltworthusd / hotData.Value.MarketPrices[cfg.fiat.ToLower()], 2);
+
+        if (coltworth > 0 && cfg.price * cfg.amount > 0)
+            coltrito = Math.Round(coltworth / (cfg.price * cfg.amount), 4);
         else
             coltrito = 0;
 
@@ -263,7 +323,7 @@
 
     private async Task seldao()
     {
-        var daoret = await walletState.Value.wallet.RPC.GetDaoByNameAsync(seldaoname);
+        var daoret = await walletState.Value.wallet.RPC.GetDaoByNameAsync(cfg.daoName);
         if (daoret.Successful())
         {
             dao = daoret.GetBlock() as IDao;
@@ -272,7 +332,7 @@
 
     private async Task productchanged()
     {
-        maxsell = walletState.Value.wallet.GetLastSyncBlock().Balances[selcrypto.dbname].ToBalanceDecimal();
+        maxsell = walletState.Value.wallet.GetLastSyncBlock().Balances[@cfg.crypto.dbname].ToBalanceDecimal();
         await fiatchanged();
     }
 
@@ -284,7 +344,7 @@
         try
         {
             var client = new DealerClient(Configuration["network"]);
-            var fiatinfo = await client.GetFiatAsync(selfiat);
+            var fiatinfo = await client.GetFiatAsync(cfg.fiat);
             selfiatname = fiatinfo.name;
         }
         catch(Exception)
@@ -296,13 +356,13 @@
     private void PriceChanged()
     {
         decimal usdprice = 0;
-        var priceTag = selcrypto.dbname.Replace("tether/", "").ToUpper();
-        if (selcrypto != null && hotData.Value.MarketPrices.ContainsKey(priceTag))
+        var priceTag = @cfg.crypto.dbname.Replace("tether/", "").ToUpper();
+        if (@cfg.crypto != null && hotData.Value.MarketPrices.ContainsKey(priceTag))
         {            
             usdprice = hotData.Value.MarketPrices[priceTag];
         }
 
-        selCryptoMarketPrice = Math.Round(usdprice / hotData.Value.MarketPrices[selfiat.ToLower()], 2);
+        selCryptoMarketPrice = Math.Round(usdprice / hotData.Value.MarketPrices[cfg.fiat.ToLower()], 2);
     }
 
     async Task CreateOrder(string daoname)
@@ -313,14 +373,14 @@
 
         try
         {
-            var daoret3 = await walletState.Value.wallet.RPC.GetDaoByNameAsync(seldaoname);
+            var daoret3 = await walletState.Value.wallet.RPC.GetDaoByNameAsync(cfg.daoName);
             var daot = daoret3.GetBlock() as TransactionBlock;
 
             var dealer = new DealerClient(Configuration["network"]);
             var prices = await dealer.GetPricesAsync();
-            var tokenSymbol = selcrypto.dbname.Split('/')[1];
-            var neededLyr = Math.Round(prices[tokenSymbol] * selqty * ((daot as IDao).SellerPar / 100) / prices["LYR"] * 1.03m);
-            if (cltlyr < neededLyr)
+            var tokenSymbol = cfg.crypto.dbname.Split('/')[1];
+            var neededLyr = Math.Round(prices[tokenSymbol] * cfg.amount * ((daot as IDao).SellerPar / 100) / prices["LYR"] * 1.03m);
+            if (cfg.collateral < neededLyr)
             {
                 Snackbar.Add($"Not enough collateral. Need > {neededLyr} LYR", Severity.Warning);
                 busy = false;
@@ -332,16 +392,17 @@
                 {
                     daoId = daot.AccountID,
                     dir = TradeDirection.Sell,
-                    crypto = selcrypto.dbname,
-                    fiat = selfiat,
+                    crypto = cfg.crypto.dbname,
+                    fiat = cfg.fiat,
                     priceType = PriceType.Fixed,
-                    price = selprice,
-                    amount = selqty,
-                    collateral = cltlyr,
-                    limitMin = paymin,
-                    limitMax = paymax,
-                    payBy = paymths.ToArray(),
+                    price = cfg.price,
+                    amount = cfg.amount,
+                    collateral = cfg.collateral,
+                    limitMin = cfg.limitMin,
+                    limitMax = cfg.limitMax,
+                    payBy = cfg.paymths.ToArray(),
                 };
+
             var ret = await walletState.Value.wallet.CreateOTCOrderAsync(order);
             if (ret.Successful())
             {
