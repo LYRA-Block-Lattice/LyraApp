@@ -14,6 +14,7 @@ namespace Dealer.Server.Services
         private readonly IMongoCollection<LyraUser> _usersCollection;
         private readonly IMongoCollection<TxRecord> _txRecordsCollection;
         private readonly IMongoCollection<TxRoom> _txRoomsCollection;
+        private readonly IMongoCollection<TxComment> _txCommentsCollection;
         private readonly IMongoCollection<ImageData> _txImageDataCollection;
 
         private string _networkId;
@@ -50,6 +51,9 @@ namespace Dealer.Server.Services
 
             _txRecordsCollection = mongoDatabase.GetCollection<TxRecord>(
                 _networkId + "_txRecords");
+
+            _txCommentsCollection = mongoDatabase.GetCollection<TxComment>(
+                _networkId + "_txComments");
 
             _txRoomsCollection = mongoDatabase.GetCollection<TxRoom>(
                 _networkId + "_txRooms");
@@ -164,6 +168,12 @@ namespace Dealer.Server.Services
 
         public async Task RemoveImageDataAsync(string hash) =>
             await _txImageDataCollection.DeleteOneAsync(x => x.Hash == hash);
+        #endregion
+
+        #region Comment
+        public async Task CreateTxCommentAsync(TxComment newComment) =>
+            await _txCommentsCollection.InsertOneAsync(newComment);
+
         #endregion
     }
 }

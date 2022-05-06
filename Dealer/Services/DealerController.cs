@@ -1,8 +1,10 @@
-﻿using Dealer.Server.Hubs;
+﻿using Converto;
+using Dealer.Server.Hubs;
 using ImageMagick;
 using Lyra.Core.API;
 using Lyra.Data.API;
 using Lyra.Data.API.Identity;
+using Lyra.Data.API.WorkFlow;
 using Lyra.Data.Crypto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -191,9 +193,18 @@ namespace Dealer.Server.Services
             if (!Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature))
                 return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
 
+            var brief = await GetTradeBriefImplAsync(tradeId, accountId);
+            if(brief == null)
+                return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.NotFound };
+
+            return SimpleJsonAPIResult.Create(brief);
+        }
+
+        private async Task<TradeBrief> GetTradeBriefImplAsync(string tradeId, string accountId)
+        {
             var room = await _db.GetRoomByTradeAsync(tradeId);
             if (room == null)
-                return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.NotFound };
+                return null;
 
             var txmsgs = await _db.GetTxRecordsByTradeAsync(tradeId);
             var peerHasMsg = txmsgs.Where(a =>
@@ -213,8 +224,46 @@ namespace Dealer.Server.Services
                 // or if peer request cancel also
                 IsCancellable = (!peerHasMsg || !sellerHasMsg) && room.TimeStamp < DateTime.UtcNow.AddMinutes(-10)
             };
+            return brief;
+        }
 
-            return SimpleJsonAPIResult.Create(brief);
+        [HttpPost]
+        [Route("CommentTrade")]
+        public async Task<APIResult> CommentTrade([FromBody] CommentConfig cfg)
+        {
+
+            if(cfg != null && cfg.VerifySignature(cfg.AccountId))
+            {
+                // then authorize the comment
+                var trdblkret = await _client.GetLastBlockAsync(cfg.TradeId);
+                if(trdblkret.Successful())
+                {
+                    var tradeblk = trdblkret.As<IOtcTrade>();
+                    if(tradeblk != null)
+                    {
+                        var brief = await GetTradeBriefImplAsync(cfg.TradeId, cfg.AccountId);
+                        if(brief.Members.Contains(cfg.AccountId))
+                        {
+                            if(cfg.Rating > 0 && cfg.Rating < 6 && cfg.Confirm &&
+                                cfg.Content.Length > 4 && cfg.Title.Length > 4 &&
+                                cfg.Created < DateTime.UtcNow && cfg.Created.AddSeconds(20) > DateTime.UtcNow)
+                            {
+                                var comment = cfg.ConvertTo<TxComment>();
+
+                                await _db.CreateTxCommentAsync(comment);
+
+                                return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Success };
+                            }
+                            else
+                            {
+                                return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.ArgumentOutOfRange };
+                            }
+                        }
+                    }
+                }                
+            }
+
+            return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
         }
 
         /*

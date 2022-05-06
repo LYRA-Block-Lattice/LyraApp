@@ -12,7 +12,7 @@
         {
             dir = "Sell";
         }
-        <a href="/dealer/room/@trade.AccountID">
+        
         <div class="container">
             <div>
                 @trade.TimeStamp
@@ -27,7 +27,14 @@
             <div>
                 @((trade as IOtcTrade).OTStatus)
             </div>
-        </div></a>
+            <div>
+                <a href="/dealer/room/@trade.AccountID">Chat</a>
+                @if((trade as IOtcTrade).OTStatus == OTCTradeStatus.CryptoReleased)
+                {
+                    <MudButton Variant="Variant.Filled" OnClick="@(() => Comment(trade.AccountID))" Color="Color.Tertiary">Comment</MudButton>
+                }
+            </div>
+        </div>
     }
 </div>
 
@@ -63,5 +70,10 @@
             }
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    async Task Comment(string accountId)
+    {
+        Navigation.NavigateTo($"/dealer/comment/{accountId}");
     }
 }
