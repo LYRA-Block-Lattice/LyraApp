@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System.Drawing;
 using System.Security.Cryptography;
+using System.Text;
 using UserLibrary.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -229,38 +230,48 @@ namespace Dealer.Server.Services
 
         [HttpPost]
         [Route("CommentTrade")]
-        public async Task<APIResult> CommentTrade([FromBody] CommentConfig cfg)
+        public async Task<APIResult> CommentTradeAsync([FromBody] CommentConfig cfg)
         {
-
-            if(cfg != null && cfg.VerifySignature(cfg.AccountId))
+            if(cfg != null && cfg.VerifySignature(cfg.ByAccountId))
             {
-                // then authorize the comment
-                var trdblkret = await _client.GetLastBlockAsync(cfg.TradeId);
-                if(trdblkret.Successful())
+                // comment should allow only once.
+                var exists = await _db.FindTxCommentByAuthorAsync(cfg.TradeId, cfg.ByAccountId);
+                if(exists == null)
                 {
-                    var tradeblk = trdblkret.As<IOtcTrade>();
-                    if(tradeblk != null)
+                    // then authorize the comment
+                    // fill the index fields
+                    var tradeblk = (await _client.GetLastBlockAsync(cfg.TradeId)).As<IOtcTrade>();
+                    var orderblk = (await _client.GetLastBlockAsync(tradeblk.Trade.orderId)).As<IOtcOrder>();
+                    if (tradeblk != null && orderblk != null)
                     {
-                        var brief = await GetTradeBriefImplAsync(cfg.TradeId, cfg.AccountId);
-                        if(brief.Members.Contains(cfg.AccountId))
+                        var brief = await GetTradeBriefImplAsync(cfg.TradeId, cfg.ByAccountId);
+                        if (brief.Members.Contains(cfg.ByAccountId))
                         {
-                            if(cfg.Rating > 0 && cfg.Rating < 6 && cfg.Confirm &&
+                            // box/unbox to avoid string changed
+                            cfg.Content = Encoding.UTF8.GetString(Convert.FromBase64String(cfg.EncContent));
+                            cfg.Title = Encoding.UTF8.GetString(Convert.FromBase64String(cfg.EncTitle));
+
+                            if (cfg.Rating > 0 && cfg.Rating < 6 && cfg.Confirm &&
                                 cfg.Content.Length > 4 && cfg.Title.Length > 4 &&
+                                cfg.Content.Length < 8192 && cfg.Title.Length < 1024 &&
                                 cfg.Created < DateTime.UtcNow && cfg.Created.AddSeconds(20) > DateTime.UtcNow)
                             {
                                 var comment = cfg.ConvertTo<TxComment>();
+
+                                comment.DaoId = orderblk.Order.daoId;
+                                comment.OrderId = tradeblk.Trade.orderId;
+                                comment.SellerId = orderblk.OwnerAccountId;
+                                comment.BuyerId = tradeblk.OwnerAccountId;
 
                                 await _db.CreateTxCommentAsync(comment);
 
                                 return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Success };
                             }
-                            else
-                            {
-                                return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.ArgumentOutOfRange };
-                            }
+
+                            return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.ArgumentOutOfRange };
                         }
                     }
-                }                
+                }       
             }
 
             return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };

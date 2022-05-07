@@ -174,6 +174,13 @@ namespace Dealer.Server.Services
         public async Task CreateTxCommentAsync(TxComment newComment) =>
             await _txCommentsCollection.InsertOneAsync(newComment);
 
+        public async Task<TxComment> GetTxCommentByIdAsync(string id) =>
+            await _txCommentsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+
+        public async Task<TxComment?> FindTxCommentByAuthorAsync(string tradeId, string accountId) =>
+            await _txCommentsCollection.Find(a => a.TradeId == tradeId
+                    && a.ByAccountId == accountId).FirstOrDefaultAsync();
+
         #endregion
     }
 }

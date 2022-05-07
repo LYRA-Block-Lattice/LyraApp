@@ -13,7 +13,6 @@
 @using UserLibrary.Store.NotificationUseCase
 @inject IConfiguration _config
 @inject ILyraAPI lyraClient
-@implements IDisposable
 
 @if (busy)
 {
@@ -247,11 +246,6 @@
     {
         amount2 = digi2;
         await UpdatePool(false);
-    }
-
-    public void Dispose()
-    {
-
     }
 
     private void updateBtn1()
