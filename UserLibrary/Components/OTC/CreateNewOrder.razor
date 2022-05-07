@@ -416,7 +416,7 @@ else
             }
             else
             {
-                Snackbar.Add($"Order failed to create: {ret.ResultCode}", Severity.Error);
+                Snackbar.Add($"Order failed to create: {ret.ResultCode.Humanize()}", Severity.Error);
             }
         }
         catch (Exception e)

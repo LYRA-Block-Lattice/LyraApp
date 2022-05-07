@@ -387,7 +387,7 @@ else
         }
         else
         {
-            Snackbar.Add($"Withdraw request failed: {wdwret.ResultCode}", Severity.Warning);
+            Snackbar.Add($"Withdraw request failed: {wdwret.ResultCode.Humanize()}", Severity.Warning);
         }
 
         await InvokeAsync(() => StateHasChanged());

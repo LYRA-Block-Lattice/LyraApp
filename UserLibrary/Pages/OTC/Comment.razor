@@ -1,5 +1,6 @@
 ﻿@page "/dealer/comment/{tid}"
 @using Fluxor
+@using Humanizer
 @using Lyra.Data.Crypto
 @using Lyra.Data.Shared
 @using System.Text
@@ -12,22 +13,58 @@
         About trade @tid.Shorten()
     </div>
 
-    @if (true)
+    @if (comments != null)
     {
-
-
+        foreach(var comment in comments)
+        {
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Secondary">R</MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1">Istra Croatia</MudText>
+                        <MudText Typo="Typo.body2">Peninsula in Europe</MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        @*<MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />*@
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <hr style="height: 1px;" />
+                    <div style="display: flex;">             
+                        <div style="flex: 0 0 50%;">
+                            <MudRating SelectedValue=@comment.Rating ReadOnly Size="Size.Medium" />
+                        </div>
+                        <div style="flex: 1;">
+                            <MudText Style="align-self: end; float: right;">@comment.Created.Humanize()</MudText>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>@comment.Title</h3>
+                    </div>
+                    <MudText Typo="Typo.body2">@comment.Content</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Default" />
+                </MudCardActions>
+            </MudCard>
+        }
     }
 
-    <RadzenTemplateForm TItem="CommentConfig" Data=@cfg Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+    @if (comments != null && !comments.Any(a => a.ByAccountId == walletState.Value.wallet.AccountId))
+    {
+        <RadzenTemplateForm TItem="CommentConfig" Data=@cfg Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
 
-        <div class="spc">
-            <label class="ratile">Rate your recent experience</label>
-            <div class="d-flex flex-column">
-                <MudRating @bind-SelectedValue="cfg.Rating" Size="Size.Large" HoveredValueChanged="HandleHoveredValueChanged" />
-                @if (cfg.Rating == 0)
-                {
-                    <p style="color: red;">Rating is required.</p>
-                }
+            <div class="spc">
+                <label class="ratile">Rate your recent experience</label>
+                <div class="d-flex flex-column">
+                    <MudRating @bind-SelectedValue="cfg.Rating" Size="Size.Large" HoveredValueChanged="HandleHoveredValueChanged" />
+                    @if (cfg.Rating == 0)
+                    {
+                        <p style="color: red;">Rating is required.</p>
+                    }
                 <MudText Typo="Typo.subtitle2" Class="deep-purple-text mt-2">@LabelText</MudText>
 
 
@@ -38,7 +75,7 @@
             @*        <a href="#" target="_blank" class="">Read our Guidelines for Reviewers</a>
                 <p>How to write a useful review</p>*@
             <div class="">
-                <RadzenTextArea Name="comment" Placeholder="This is where you write your review. Explain what happened, and leave out offensive words. Keep your feedback honest, helpful, and constructive." @bind-Value="@cfg.Content" /> <br />
+                <RadzenTextArea Style="width: 420px; height: 128px" Name="comment" Placeholder="This is where you write your review. Explain what happened, and leave out offensive words. Keep your feedback honest, helpful, and constructive." @bind-Value="@cfg.Content" /> <br />
                 <RadzenRequiredValidator Component="comment" Text="Comment is required" Popup=false Style="position: absolute" />
             </div>
 
@@ -46,7 +83,7 @@
         <div class="spc">
             <label class="" for="review-title">Give your review a title</label>
             <div class="">
-                <RadzenTextBox Class="" Name="title" Placeholder="Write the title of your review here." @bind-Value="@cfg.Title" /> <br />
+                <RadzenTextBox Class="" Style="width: 420px; " Name="title" Placeholder="Write the title of your review here." @bind-Value="@cfg.Title" /> <br />
                 <RadzenRequiredValidator Component="title" Text="Title is required" Popup=false Style="position: absolute" />
             </div>
         </div>
@@ -59,10 +96,12 @@
             <RadzenRequiredValidator Component="confirm" Text="Confirmation is required" Popup=false Style="position: absolute" />
         </div>
         <div class="spc">
-            <RadzenButton ButtonType="Radzen.ButtonType.Submit" Text="Submit"></RadzenButton>
+            <RadzenButton ButtonType="Radzen.ButtonType.Submit" Text="Submit">
+            </RadzenButton>
         </div>
 
     </RadzenTemplateForm>
+    }
 </div>
 
 @code {
@@ -76,6 +115,8 @@
     [Parameter]
     public string tid { get; set; }
 
+    List<CommentConfig> comments;
+
     private void HandleHoveredValueChanged(int? val) => activeVal = val;
 
     private string LabelText => (activeVal ?? cfg.Rating) switch
@@ -87,6 +128,16 @@
         5 => "Awesome!",
         _ => "Rate your trade!"
     };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            comments = await dealer.GetCommentsForTradeAsync(tid);
+            StateHasChanged();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
 
     async Task OnSubmit(CommentConfig model)
     {
@@ -100,18 +151,22 @@
         cfg.Hash = null;    // reset it.
         cfg.Signature = null;
         cfg.Sign(walletState.Value.wallet.PrivateKey, walletState.Value.wallet.AccountId);
-        var result = await dealer.CommentTrade(cfg);
+        var result = await dealer.CommentTradeAsync(cfg);
         if (result.Successful())
         {
             Snackbar.Add($"Comment Posted.", Severity.Success);
+            comments = await dealer.GetCommentsForTradeAsync(tid);
+            StateHasChanged();
         }
         else
         {
-            Snackbar.Add($"Failed to comment: {result.ResultCode}", Severity.Warning);
+            Snackbar.Add($"Failed to comment: {result.ResultCode.Humanize()}", Severity.Warning);
         }
     }
 
     void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
     {
     }
+
+
 }

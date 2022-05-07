@@ -213,7 +213,7 @@
             }
             else
             {
-                Snackbar.Add($"Order failed to create: {ret.ResultCode}", Severity.Error);
+                Snackbar.Add($"Order failed to create: {ret.ResultCode.Humanize()}", Severity.Error);
             }
         }
         catch (Exception e)
@@ -254,7 +254,7 @@
             }
             else
             {
-                Snackbar.Add($"Failed to create orgnization: {dcret.ResultCode}", Severity.Error);
+                Snackbar.Add($"Failed to create orgnization: {dcret.ResultCode.Humanize()}", Severity.Error);
             }
         }
         catch (Exception ex)

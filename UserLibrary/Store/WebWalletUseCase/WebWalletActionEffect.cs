@@ -13,6 +13,7 @@ using System;
 using System.Linq;
 using Blazored.LocalStorage;
 using Lyra.Data.Blocks;
+using Humanizer;
 
 namespace Nebula.Store.WebWalletUseCase
 {
@@ -407,12 +408,12 @@ namespace Nebula.Store.WebWalletUseCase
 					}
 					else
 					{
-						swapResultMessage = $"Failed to swap token: {result.ResultCode}";
+						swapResultMessage = $"Failed to swap token: {result.ResultCode.Humanize()}";
 					}
 				}
 				else
 				{
-					swapResultMessage = $"Unable to get the liquidate pool: {pool.ResultCode}";
+					swapResultMessage = $"Unable to get the liquidate pool: {pool.ResultCode.Humanize()}";
 				}
 			}
 			catch(Exception ex)

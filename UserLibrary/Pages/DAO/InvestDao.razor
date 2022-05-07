@@ -63,7 +63,7 @@
             }
             else
             {
-                Snackbar.Add($"Failed to invested to {dao.Name}, {invret.ResultCode}", Severity.Error);
+                Snackbar.Add($"Failed to invested to {dao.Name}, {invret.ResultCode.Humanize()}", Severity.Error);
             }
         }
         catch(Exception ex)
@@ -81,7 +81,7 @@
         }
         else
         {
-            Snackbar.Add($"Failed to leave {dao.Name}, {invret.ResultCode}", Severity.Error);
+            Snackbar.Add($"Failed to leave {dao.Name}, {invret.ResultCode.Humanize()}", Severity.Error);
         }
     }
 

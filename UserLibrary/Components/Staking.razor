@@ -217,7 +217,7 @@
 			    }
 			    else
 			    {
-                    Snackbar.Add($"Failed adding staking. Error: {crpftret.ResultCode}", Severity.Error);
+                    Snackbar.Add($"Failed adding staking. Error: {crpftret.ResultCode.Humanize()}", Severity.Error);
 			    }
             }
         }
@@ -272,7 +272,7 @@
 			}
 			else
 			{
-                Snackbar.Add($"Failed to unstake. Error: {crpftret.ResultCode}", Severity.Error);
+                Snackbar.Add($"Failed to unstake. Error: {crpftret.ResultCode.Humanize()}", Severity.Error);
 			}
         }
         catch (Exception ex)
@@ -317,7 +317,7 @@
             }
             else
             {
-                Snackbar.Add($"Error: {crstkret.ResultCode}", Severity.Error);
+                Snackbar.Add($"Error: {crstkret.ResultCode.Humanize()}", Severity.Error);
             }
         }
         catch (Exception ex)
@@ -363,7 +363,7 @@
             }
             else
             {
-                Snackbar.Add($"Error: {crpftret.ResultCode}", Severity.Error);
+                Snackbar.Add($"Error: {crpftret.ResultCode.Humanize()}", Severity.Error);
             }
         }
         catch (Exception ex)
@@ -421,7 +421,7 @@
         }
         else
         {
-            Snackbar.Add($"Error: {result.ResultCode}", Severity.Error);
+            Snackbar.Add($"Error: {result.ResultCode.Humanize()}", Severity.Error);
         }
     }
 }

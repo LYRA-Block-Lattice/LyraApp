@@ -80,7 +80,7 @@
         }
         else
         {
-            Snackbar.Add($"Error getting transactions: {ret.ResultCode}", Severity.Error);
+            Snackbar.Add($"Error getting transactions: {ret.ResultCode.Humanize()}", Severity.Error);
         }
     }
 
@@ -100,12 +100,12 @@
             }
             else
             {
-                Snackbar.Add($"Error close order: {closeret.ResultCode}", Severity.Error);
+                Snackbar.Add($"Error close order: {closeret.ResultCode.Humanize()}", Severity.Error);
             }
         }
         else
         {
-            Snackbar.Add($"Error get DAO: {daoret.ResultCode}", Severity.Error);
+            Snackbar.Add($"Error get DAO: {daoret.ResultCode.Humanize()}", Severity.Error);
         }
     }
 
@@ -125,12 +125,12 @@
             }
             else
             {
-                Snackbar.Add($"Error close order: {closeret.ResultCode}", Severity.Error);
+                Snackbar.Add($"Error close order: {closeret.ResultCode.Humanize()}", Severity.Error);
             }
         }
         else
         {
-            Snackbar.Add($"Error get DAO: {daoret.ResultCode}", Severity.Error);
+            Snackbar.Add($"Error get DAO: {daoret.ResultCode.Humanize()}", Severity.Error);
         }
     }
 }

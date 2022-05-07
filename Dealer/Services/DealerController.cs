@@ -8,6 +8,7 @@ using Lyra.Data.API.WorkFlow;
 using Lyra.Data.Crypto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
@@ -276,6 +277,19 @@ namespace Dealer.Server.Services
 
             return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
         }
+
+        [HttpGet]
+        [Route("GetCommentsForTrade")]
+        public async Task<SimpleJsonAPIResult> GetCommentsForTradeAsync(string tradeId)
+        {
+            var cmnts = await _db.GetTxCommentsForTradeAsync(tradeId);
+            var cmtcfgs = cmnts.Select(a => a.ConvertTo<CommentConfig>()).ToList();
+            return new SimpleJsonAPIResult {
+                ResultCode = Lyra.Core.Blocks.APIResultCodes.Success,
+                JsonString = JsonConvert.SerializeObject(cmnts) 
+            };
+        }
+
 
         /*
                 [HttpGet]

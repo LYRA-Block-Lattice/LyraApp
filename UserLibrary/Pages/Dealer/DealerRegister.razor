@@ -118,7 +118,7 @@
 
             if(!success)
             {
-                Snackbar.Add($"Failed to register: {ret.ResultCode}", Severity.Warning);
+                Snackbar.Add($"Failed to register: {ret.ResultCode.Humanize()}", Severity.Warning);
             }
             else
             {

@@ -181,6 +181,10 @@ namespace Dealer.Server.Services
             await _txCommentsCollection.Find(a => a.TradeId == tradeId
                     && a.ByAccountId == accountId).FirstOrDefaultAsync();
 
+        public async Task<List<TxComment>> GetTxCommentsForTradeAsync(string tradeId) =>
+            await _txCommentsCollection.Find(a => a.TradeId == tradeId)
+                .ToListAsync();
+
         #endregion
     }
 }

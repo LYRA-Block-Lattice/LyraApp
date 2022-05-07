@@ -158,7 +158,7 @@ else
         }
         else
         {
-            Snackbar.Add($"Failed to vote, {voteRet.ResultCode}", Severity.Error);
+            Snackbar.Add($"Failed to vote, {voteRet.ResultCode.Humanize()}", Severity.Error);
         }
     }
 
@@ -175,7 +175,7 @@ else
             }
             else
             {
-                Snackbar.Add($"Failed to modify DAO, {ret.ResultCode}", Severity.Error);
+                Snackbar.Add($"Failed to modify DAO, {ret.ResultCode.Humanize()}", Severity.Error);
             }
         }
         else if(vg.Proposal.pptype == ProposalType.DisputeResolution)
@@ -189,7 +189,7 @@ else
             }
             else
             {
-                Snackbar.Add($"Failed to execute resolution: {ret.ResultCode}", Severity.Error);
+                Snackbar.Add($"Failed to execute resolution: {ret.ResultCode.Humanize()}", Severity.Error);
             }
         }
         else

@@ -146,7 +146,7 @@ else
         }
         else
         {
-            Snackbar.Add($"Failed to modify DAO, {ret.ResultCode}", Severity.Error);
+            Snackbar.Add($"Failed to modify DAO, {ret.ResultCode.Humanize()}", Severity.Error);
         }
     }
 }

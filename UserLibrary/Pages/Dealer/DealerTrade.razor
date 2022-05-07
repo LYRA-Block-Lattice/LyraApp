@@ -251,7 +251,7 @@
         }
         else
         {
-            Snackbar.Add($"Error create trade: {traderet.ResultCode}", Severity.Error);
+            Snackbar.Add($"Error create trade: {traderet.ResultCode.Humanize()}", Severity.Error);
         }
 
         busy = false;

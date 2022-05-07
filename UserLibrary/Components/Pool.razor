@@ -300,7 +300,7 @@
             }
             else
             {
-                Snackbar.Add($"Failed remove liquidate. {result.ResultCode}", Severity.Error);
+                Snackbar.Add($"Failed remove liquidate. {result.ResultCode.Humanize()}", Severity.Error);
             }
         }
         catch (Exception ex)
@@ -334,7 +334,7 @@
             }
             else
             {
-                Snackbar.Add($"Failed add liquidate. {result.ResultCode}", Severity.Error);
+                Snackbar.Add($"Failed add liquidate. {result.ResultCode.Humanize()}", Severity.Error);
             }
         }
         catch (Exception ex)
@@ -360,7 +360,7 @@
         }
         else
         {
-            Snackbar.Add($"Pool created failed. {poolCreateResult.ResultCode}", Severity.Error);
+            Snackbar.Add($"Pool created failed. {poolCreateResult.ResultCode.Humanize()}", Severity.Error);
         }
 
     }

@@ -422,7 +422,7 @@
             }
             else
             {
-                Snackbar.Add($" Pool refresh failed: {existspool.ResultCode}", Severity.Error);
+                Snackbar.Add($" Pool refresh failed: {existspool.ResultCode.Humanize()}", Severity.Error);
             }
 
             updateBtn1();
@@ -431,7 +431,7 @@
             swapping = false;
         }
         else
-            Snackbar.Add($"Error Swap Token: {result.ResultCode}", Severity.Error);
+            Snackbar.Add($"Error Swap Token: {result.ResultCode.Humanize()}", Severity.Error);
 
         swapping = false;
         busy = false;

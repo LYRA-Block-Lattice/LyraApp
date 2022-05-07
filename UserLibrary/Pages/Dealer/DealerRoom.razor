@@ -276,7 +276,7 @@
         }
         else
         {
-            Snackbar.Add($"Error join dealer room: {joinroom.ResultCode}", Severity.Error);
+            Snackbar.Add($"Error join dealer room: {joinroom.ResultCode.Humanize()}", Severity.Error);
         }
     }
 
@@ -378,7 +378,7 @@
                     }
                     else
                     {
-                        Snackbar.Add($"Failed. {payindret.ResultCode}", Severity.Error);
+                        Snackbar.Add($"Failed. {payindret.ResultCode.Humanize()}", Severity.Error);
                     }
                 }
             }
@@ -403,7 +403,7 @@
                     }
                     else
                     {
-                        Snackbar.Add($"Failed. {payindret.ResultCode}", Severity.Error);
+                        Snackbar.Add($"Failed. {payindret.ResultCode.Humanize()}", Severity.Error);
                     }
                 }
             }
@@ -467,7 +467,7 @@
                         }
                         else
                         {
-                            Snackbar.Add($"Failed to upload image: {ret.ResultCode}", Severity.Error);
+                            Snackbar.Add($"Failed to upload image: {ret.ResultCode.Humanize()}", Severity.Error);
                         }
                     }
                 }
@@ -527,7 +527,7 @@
             }
             else
             {
-                Snackbar.Add($"Unable to cancel trade: {cclret.ResultCode}", Severity.Warning);
+                Snackbar.Add($"Unable to cancel trade: {cclret.ResultCode.Humanize()}", Severity.Warning);
             }
         }
     }
@@ -572,7 +572,7 @@
                 }
                 else
                 {
-                    Snackbar.Add($"Unable to change trade: {crdptret.ResultCode}", Severity.Error);
+                    Snackbar.Add($"Unable to change trade: {crdptret.ResultCode.Humanize()}", Severity.Error);
                     return;
                 }
             }

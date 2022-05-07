@@ -66,7 +66,7 @@
             }
             else
             {
-                Snackbar.Add($"Error getting transactions: {ret.ResultCode}", Severity.Error);
+                Snackbar.Add($"Error getting transactions: {ret.ResultCode.Humanize()}", Severity.Error);
             }
         }
         await base.OnAfterRenderAsync(firstRender);
