@@ -6,6 +6,8 @@
 @using Lyra.Data.Shared
 @using System.Text
 @using Nebula.Store.WebWalletUseCase
+@inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
 
 <div class="mag">
     <h2>Comment</h2>
@@ -18,7 +20,7 @@
     {
         foreach(var comment in comments)
         {
-            <MudCard>
+            <MudCard Style="margin: 15px;">
                 <MudCardHeader>
                     <CardHeaderAvatar>
                         <MudAvatar Color="Color.Secondary">@users[comment.ByAccountId][0]</MudAvatar>
@@ -48,7 +50,7 @@
                 </MudCardContent>
                 <MudCardActions>
                     <MudIconButton Icon="@Icons.Material.Filled.Favorite" Color="Color.Default" />
-                    <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Default" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Share" Color="Color.Default" OnClick="@(e => CopyTextToClipboard(Navigation.Uri))" />
                 </MudCardActions>
             </MudCard>
         }
@@ -202,5 +204,9 @@
     {
     }
 
+    private async Task CopyTextToClipboard(string Text)
+    {
+        await JSRuntime.InvokeVoidAsync("clipboardCopy.copyText", Text);
+    }
 
 }
