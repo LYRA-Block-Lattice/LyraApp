@@ -188,44 +188,62 @@ namespace Dealer.Server.Services
 
         [Route("GetTradeBrief")]
         [HttpGet]
-        public async Task<SimpleJsonAPIResult> GetTradeBriefAsync(string tradeId, string accountId, string signature)
+        public async Task<SimpleJsonAPIResult> GetTradeBriefAsync(string tradeId, string? accountId, string? signature)
         {
             // validate signature
             var lsb = await _client.GetLastServiceBlockAsync();
-            if (!Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature))
-                return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
+            var showRealName = Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature);
 
-            var brief = await GetTradeBriefImplAsync(tradeId, accountId);
+            var brief = await GetTradeBriefImplAsync(tradeId, accountId, showRealName);
             if(brief == null)
                 return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.NotFound };
 
             return SimpleJsonAPIResult.Create(brief);
         }
 
-        private async Task<TradeBrief> GetTradeBriefImplAsync(string tradeId, string accountId)
+        private async Task<TradeBrief> GetTradeBriefImplAsync(string tradeId, string accountId, bool showRealName)
         {
             var room = await _db.GetRoomByTradeAsync(tradeId);
             if (room == null)
                 return null;
 
             var txmsgs = await _db.GetTxRecordsByTradeAsync(tradeId);
-            var peerHasMsg = txmsgs.Where(a =>
-                a.AccountId != accountId &&
-                a.AccountId != _config["DealerID"]
-                ).Any();
-            var sellerHasMsg = txmsgs.Where(a => a.AccountId == room.Members[0].AccountId).Any();
+            bool cancellable = false;
+
+            if(!string.IsNullOrEmpty(accountId))
+            {
+                var peerHasMsg = txmsgs.Where(a =>
+                    a.AccountId != accountId &&
+                    a.AccountId != _config["DealerID"]
+                    ).Any();
+                var sellerHasMsg = txmsgs.Where(a => a.AccountId == room.Members[0].AccountId).Any();
+                cancellable = (!peerHasMsg || !sellerHasMsg) && room.TimeStamp < DateTime.UtcNow.AddMinutes(-10);
+            }
 
             // construct roles
             var brief = new TradeBrief
             {
                 TradeId = room.TradeId,
                 Members = room.Members.Select(a => a.AccountId).ToList(),
+                Names = new List<string>(),
+                RegTimes = new List<DateTime>(),
                 DisputeHistory = room.DisputeHistory,
 
                 // if no chat in 10 minutes after trade creation
                 // or if peer request cancel also
-                IsCancellable = (!peerHasMsg || !sellerHasMsg) && room.TimeStamp < DateTime.UtcNow.AddMinutes(-10)
+                IsCancellable = cancellable
             };
+
+            foreach(var act in brief.Members)
+            {
+                var user = await _db.GetUserByAccountIdAsync(act);
+                if(showRealName)
+                    brief.Names.Add(user.GetFullName());
+                else
+                    brief.Names.Add("[REDACTED FOR PRIVACY]");
+                brief.RegTimes.Add(user.RegistedTime);
+            }
+
             return brief;
         }
 
@@ -245,7 +263,7 @@ namespace Dealer.Server.Services
                     var orderblk = (await _client.GetLastBlockAsync(tradeblk.Trade.orderId)).As<IOtcOrder>();
                     if (tradeblk != null && orderblk != null)
                     {
-                        var brief = await GetTradeBriefImplAsync(cfg.TradeId, cfg.ByAccountId);
+                        var brief = await GetTradeBriefImplAsync(cfg.TradeId, cfg.ByAccountId, true);
                         if (brief.Members.Contains(cfg.ByAccountId))
                         {
                             // box/unbox to avoid string changed

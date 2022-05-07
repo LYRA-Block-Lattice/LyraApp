@@ -1,6 +1,7 @@
 ﻿@page "/dealer/comment/{tid}"
 @using Fluxor
 @using Humanizer
+@using Lyra.Data.API.Identity
 @using Lyra.Data.Crypto
 @using Lyra.Data.Shared
 @using System.Text
@@ -20,11 +21,11 @@
             <MudCard>
                 <MudCardHeader>
                     <CardHeaderAvatar>
-                        <MudAvatar Color="Color.Secondary">R</MudAvatar>
+                        <MudAvatar Color="Color.Secondary">@users[comment.ByAccountId][0]</MudAvatar>
                     </CardHeaderAvatar>
                     <CardHeaderContent>
-                        <MudText Typo="Typo.body1">Istra Croatia</MudText>
-                        <MudText Typo="Typo.body2">Peninsula in Europe</MudText>
+                        <MudText Typo="Typo.body1">@users[comment.ByAccountId]</MudText>
+                        <MudText Typo="Typo.body2">Role: @roles[comment.ByAccountId], registered since @times[comment.ByAccountId].Humanize()</MudText>
                     </CardHeaderContent>
                     <CardHeaderActions>
                         @*<MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />*@
@@ -53,7 +54,8 @@
         }
     }
 
-    @if (comments != null && !comments.Any(a => a.ByAccountId == walletState.Value.wallet.AccountId))
+    @if (walletState.Value.wallet != null && brief != null && brief.Members.Contains(walletState.Value.wallet.AccountId) && 
+        comments != null && !comments.Any(a => a.ByAccountId == walletState.Value.wallet.AccountId))
     {
         <RadzenTemplateForm TItem="CommentConfig" Data=@cfg Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
 
@@ -110,6 +112,7 @@
 
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] public DealerClient dealer { get; set; }
+    [Inject] ILyraAPI lyraApi { get; set; }
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
     [Parameter]
@@ -129,12 +132,43 @@
         _ => "Rate your trade!"
     };
 
+    TradeBrief brief;
+    Dictionary<string, string> users;
+    Dictionary<string, DateTime> times;
+    Dictionary<string, string> roles;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            comments = await dealer.GetCommentsForTradeAsync(tid);
-            StateHasChanged();
+            var lsb = (await lyraApi.GetLastServiceBlockAsync()).As<ServiceBlock>();
+            if(lsb != null)
+            {
+                var wallet = walletState.Value.wallet;
+                string signature = "";
+                string actid = "";
+                if(wallet != null)
+                {
+                    actid = walletState.Value.wallet.AccountId;
+                    signature = Signatures.GetSignature(wallet.PrivateKey, lsb.Hash, wallet.AccountId);
+                }
+                brief = (await dealer.GetTradeBriefAsync(tid, actid, signature)).Deserialize<TradeBrief>();
+
+                users = new Dictionary<string, string>();
+                users.Add(brief.Members.First(), brief.Names.First());
+                users.Add(brief.Members.Skip(1).First(), brief.Names.Skip(1).First());
+
+                times = new Dictionary<string, DateTime>();
+                times.Add(brief.Members.First(), brief.RegTimes.First());
+                times.Add(brief.Members.Skip(1).First(), brief.RegTimes.Skip(1).First());
+
+                roles = new Dictionary<string, string>();
+                roles.Add(brief.Members.First(), "Seller");
+                roles.Add(brief.Members.Skip(1).First(), "Buyer");
+
+                comments = await dealer.GetCommentsForTradeAsync(tid);
+                StateHasChanged();
+            }
         }
         await base.OnAfterRenderAsync(firstRender);
     }

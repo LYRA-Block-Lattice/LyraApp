@@ -65,5 +65,11 @@ namespace Lyra.Data.API.Identity
         {
             return string.Empty;
         }
+
+        public string GetFullName()
+        {
+            var mn = string.IsNullOrWhiteSpace(MiddleName) ? "" : MiddleName + " ";
+            return $"{FirstName} {mn}{LastName}";
+        }
     }
 }
