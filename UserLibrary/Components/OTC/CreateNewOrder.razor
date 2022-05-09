@@ -337,7 +337,10 @@ else
     {
         if(walletState.Value.wallet != null)
         {
-            maxsell = walletState.Value.wallet.GetLastSyncBlock().Balances[@cfg.crypto.dbname].ToBalanceDecimal();
+            if (walletState.Value.wallet.GetLastSyncBlock().Balances.ContainsKey(@cfg.crypto.dbname))
+                maxsell = walletState.Value.wallet.GetLastSyncBlock().Balances[@cfg.crypto.dbname].ToBalanceDecimal();
+            else
+                maxsell = 0;
             await fiatchanged();
         }
     }
