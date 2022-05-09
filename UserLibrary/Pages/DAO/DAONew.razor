@@ -13,33 +13,41 @@
 <div class="mag cet">
 
     <MudGrid>
-            <MudItem xs="12">
-                <h1>Create Orgnization</h1>
-            </MudItem>
-            <MudItem xs="12">
-                <RadzenTextBox @bind-Value=@name Placeholder="Name" Class="w-100" />
-            </MudItem>
-            <MudItem xs="12">
-                <RadzenTextArea @bind-Value=@desc Placeholder="Orgnization description..." Class="w-100" />
-            </MudItem>
+        <MudItem xs="12">
+            <h1>Create Orgnization</h1>
+        </MudItem>
+        <MudItem xs="12">
+            <RadzenTextBox @bind-Value=@name Placeholder="Name" Class="w-100" />
+        </MudItem>
+        <MudItem xs="12">
+            <RadzenTextArea @bind-Value=@desc Placeholder="Orgnization description..." Class="w-100" />
+        </MudItem>
         <MudItem xs="12">
             Ratio to share to staking (0% - 100%):
-            <MudTextField Label="Ratio" @bind-Value="@pftShare" />
+            <RadzenNumeric @bind-Value="@pftShare" /> %
         </MudItem>
         <MudItem xs="12">
             Number of staking (0 - 100):
-            <MudTextField Label="Max number" @bind-Value="@pftSeats" />
+            <RadzenNumeric @bind-Value="@pftSeats" />
         </MudItem>
-            <MudItem xs="12">
-                Seller Collateral Percentage <br />
-                <RadzenNumeric TValue="int" @bind-Value=@sellerPar /> %
-            </MudItem>
-            <MudItem xs="12">
-                Buyer Collateral Percentage <br />
-                <RadzenNumeric TValue="int" @bind-Value=@buyerPar /> %
-            </MudItem>
-            <MudItem xs="12">
-                @if(walletState.Value.IsOpening)
+        <MudItem xs="12">
+            Seller Fee Ratio <br />
+            <RadzenNumeric TValue="decimal" @bind-Value=@sellerFee /> %
+        </MudItem>
+        <MudItem xs="12">
+            Buyer Fee Ratio <br />
+            <RadzenNumeric TValue="decimal" @bind-Value=@buyerFee /> %
+        </MudItem>
+        <MudItem xs="12">
+            Seller Collateral Percentage <br />
+            <RadzenNumeric TValue="int" @bind-Value=@sellerPar /> %
+        </MudItem>
+        <MudItem xs="12">
+            Buyer Collateral Percentage <br />
+            <RadzenNumeric TValue="int" @bind-Value=@buyerPar /> %
+        </MudItem>
+        <MudItem xs="12">
+            @if (walletState.Value.IsOpening)
             {
                 <RadzenButton IsBusy=@busy Click=@(args => OnClick("adddao")) Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
             }
@@ -74,6 +82,8 @@
 
     public string pftShare { get; set; }
     public string pftSeats { get; set; }
+
+    decimal sellerFee, buyerFee;
 
     string keywords;
 
@@ -246,7 +256,9 @@
 
         try
         {
-            var dcret = await walletState.Value.wallet.CreateDAOAsync(name, desc, decimal.Parse(pftShare) / 100m, int.Parse(pftSeats), sellerPar, buyerPar);
+            var dcret = await walletState.Value.wallet.CreateDAOAsync(name, desc, decimal.Parse(pftShare) / 100m, 
+                Math.Round(sellerFee / 100m, 8), Math.Round(buyerFee / 100m, 8), 
+                int.Parse(pftSeats), sellerPar, buyerPar);
             if (dcret.Successful())
             {
                 Snackbar.Add($"Orgnization {name} created successfully.", Severity.Success);

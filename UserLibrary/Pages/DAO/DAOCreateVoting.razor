@@ -15,12 +15,12 @@
     </div>
     <div>Vote Type</div>
     <div>
-            <RadzenDropDown TValue="string" Class="w-100" 
-                            Data=@types ValueChanged=@changed />
+        <RadzenDropDown TValue="string" Class="w-100"
+                        Data=@types ValueChanged=@changed />
     </div>
     <div>Valid Time Span</div>
     <div>
-        <RadzenNumeric TValue="int" @bind-Value=@days class="w-10" /> Days <RadzenNumeric TValue="int" @bind-Value=@hours /> Hours <RadzenNumeric TValue="int" @bind-Value=@minutes /> Minutes 
+        <RadzenNumeric TValue="int" @bind-Value=@days class="w-10" /> Days <RadzenNumeric TValue="int" @bind-Value=@hours /> Hours <RadzenNumeric TValue="int" @bind-Value=@minutes /> Minutes
     </div>
     <div>Title</div>
     <div>
@@ -31,21 +31,29 @@
         <RadzenTextArea @bind-Value=@desc Class="w-100" />
     </div>
 
-    <MudGrid>    
-    @if(curtype == SubjectType.DAOModify)
-    {
-        <MudItem xs="12">
-            DAO' new description:<br />
-            <RadzenTextArea @bind-Value=@daonewdesc Class="w-100" />
-        </MudItem>
-                <MudItem xs="12">
-            Ratio to share to staking (0% - 100%):<br />
-            <RadzenNumeric TValue="decimal" @bind-Value="@pftShare" Class="w-100" /> %
-        </MudItem>
-        <MudItem xs="12">
-            Number of staking (0 - 100): <br />
-            <RadzenNumeric TValue="int" @bind-Value="@pftSeats" Class="w-100" />
-        </MudItem>
+    <MudGrid>
+        @if (curtype == SubjectType.DAOModify)
+        {
+            <MudItem xs="12">
+                DAO' new description:<br />
+                <RadzenTextArea @bind-Value=@daonewdesc Class="w-100" />
+            </MudItem>
+            <MudItem xs="12">
+                Ratio to share to staking (0% - 100%):<br />
+                <RadzenNumeric TValue="decimal" @bind-Value="@pftShare" Class="w-100" /> %
+            </MudItem>
+            <MudItem xs="12">
+                Number of staking (0 - 100): <br />
+                <RadzenNumeric TValue="int" @bind-Value="@pftSeats" Class="w-100" />
+            </MudItem>
+            <MudItem xs="12">
+                Seller Fee Percentage <br />
+                <RadzenNumeric TValue="decimal" @bind-Value=@sellerFee Class="w-100" /> %
+            </MudItem>
+            <MudItem xs="12">
+                Buyer Fee Percentage <br />
+                <RadzenNumeric TValue="decimal" @bind-Value=@buyerFee Class="w-100" /> %
+            </MudItem>
             <MudItem xs="12">
                 Seller Collateral Percentage <br />
                 <RadzenNumeric TValue="int" @bind-Value=@sellerPar Class="w-100" /> %
@@ -54,9 +62,9 @@
                 Buyer Collateral Percentage <br />
                 <RadzenNumeric TValue="int" @bind-Value=@buyerPar Class="w-100" /> %
             </MudItem>
-    }
-    else if(curtype == SubjectType.OTCDispute)
-    {
+        }
+        else if (curtype == SubjectType.OTCDispute)
+        {
             <MudItem xs="12">
                 For Disputed Trade ID: <br />
                 <RadzenTextBox @bind-Value=@tradeId Class="w-100" />
@@ -64,15 +72,12 @@
             <MudItem xs="12">
                 Resolution:
             </MudItem>
-            @for(var i = 0; i < 3; i++)
+            @foreach(var cfg in cfgs)
             {
-                int j = i;
                 <MudItem xs="12">
-                <ODRTransfer @bind-From=@(froms[i]) @bind-To=@(tos[j]) @bind-Amount=@(amts[j]) @bind-Desc=@(descs[j])/>
-            </MudItem>
+                    <ODRTransfer @bind-From=@cfg.from @bind-To=@cfg.to @bind-Amount=@cfg.amount @bind-Desc=@cfg.desc />
+                </MudItem>
             }
-
-
         }
         else
         {
@@ -82,11 +87,11 @@
     <div>Options</div>
     <div>
         <RadzenButton Text="Add" Click=@AddOption />
-        @for(var i = 0; i < options.Count; i++)
+        @for (var i = 0; i < options.Count; i++)
         {
             var x = i;
             <div>
-            <span>@(x+1).&nbsp;</span><RadzenTextBox @bind-Value="@(options[x])" /><RadzenButton Text="Remove" Click=@(a => DelOption(x)) />
+                <span>@(x+1).&nbsp;</span><RadzenTextBox @bind-Value="@(options[x])" /><RadzenButton Text="Remove" Click=@(a => DelOption(x)) />
             </div>
         }
     </div>
@@ -110,8 +115,8 @@
 
     [Inject] ISnackbar Snackbar { get; set; }
 
-    List<string> options = new List<string>{ "Option 1", "Option 2"};
-    List<string> types = Enum.GetValues(typeof(SubjectType)).Cast<SubjectType>().Select(a => a.ToString()).ToList();
+    List<string> options = new List<string> { "Option 1", "Option 2" };
+    string[] types = new string[] { "Generic", "OTC Dispute Resolution", "DAO Settings Modification" };
 
     int seed;
     int days, hours, minutes;
@@ -120,19 +125,27 @@
 
     // settings for dao change
     string daonewdesc;
-    decimal pftShare;
+    decimal pftShare, sellerFee, buyerFee;
     int pftSeats, sellerPar, buyerPar;
 
     // settings for dispute trade
     string tradeId;
     IOtcTrade curtrade;
 
-    string[] froms = new [] { Parties.Buyer.ToString(), 
-        Parties.Seller.ToString(), Parties.DAOTreasure.ToString() };
-    string[] tos = new [] { Parties.Buyer.ToString(), 
-        Parties.Seller.ToString(), Parties.DAOTreasure.ToString() };
-    decimal[] amts = new[] { 0m, 0m, 0m };
-    string[] descs = new[] { "", "", "" };
+    class SendCfg
+    {
+        public string from { get; set; }
+        public string to { get; set; }
+        public decimal amount { get; set; }
+        public string desc { get; set; }
+    }
+
+    SendCfg[] cfgs = new []
+    {
+        new SendCfg { from = "Seller", to = "Seller" },
+        new SendCfg { from = "Buyer", to = "Buyer" },
+        new SendCfg { from = "DAOTreasure", to = "DAOTreasure" },
+    };
 
     void AddOption()
     {
@@ -148,11 +161,13 @@
         daonewdesc = dao.Description;
         pftShare = dao.ShareRito * 100;
         pftSeats = dao.Seats;
+        sellerFee = dao.SellerFeeRatio;
+        buyerFee = dao.BuyerFeeRatio;
         sellerPar = dao.SellerPar;
         buyerPar = dao.BuyerPar;
 
         return Task.CompletedTask;
-    }    
+    }
 
     async Task CreateVote()
     {
@@ -169,35 +184,37 @@
 
         VoteProposal daoprosl;
 
-        if(curtype == SubjectType.DAOModify)
+        if (curtype == SubjectType.DAOModify)
         {
             var change2 = new DAOChange
-            {
-                creator = walletState.Value.wallet.AccountId,
-                settings = new Dictionary<string, string>
+                {
+                    creator = walletState.Value.wallet.AccountId,
+                    settings = new Dictionary<string, string>
                 {
                     { "ShareRito", $"{pftShare / 100}" },
                     { "Seats", $"{pftSeats}" },
+                    { "SellerFeeRatio", $"{sellerFee}"},
+                    { "BuyerFeeRatio", $"{buyerFee}"},
                     { "SellerPar", $"{sellerPar}" },
                     { "BuyerPar", $"{buyerPar}" },
                     { "Description", daonewdesc },
                 }
-            };
+                };
 
             daoprosl = new VoteProposal
-            {
-                pptype = ProposalType.DAOSettingChanges,
-                data = JsonConvert.SerializeObject(change2),
-            };
+                {
+                    pptype = ProposalType.DAOSettingChanges,
+                    data = JsonConvert.SerializeObject(change2),
+                };
         }
-        else if(curtype == SubjectType.OTCDispute)
+        else if (curtype == SubjectType.OTCDispute)
         {
-            TransMove[] moves = new TransMove[froms.Length];
-            for(var i = 0; i < froms.Length; i++)
+            TransMove[] moves = new TransMove[cfgs.Length];
+            for (var i = 0; i < cfgs.Length; i++)
             {
-                var frm = (Parties)Enum.Parse(typeof(Parties), froms[i]);
-                var too = (Parties)Enum.Parse(typeof(Parties), tos[i]);
-                if(frm == Parties.None || too == Parties.None)
+                var frm = (Parties)Enum.Parse(typeof(Parties), cfgs[i].from);
+                var too = (Parties)Enum.Parse(typeof(Parties), cfgs[i].to);
+                if (frm == Parties.None || too == Parties.None)
                 {
                     continue;
                 }
@@ -205,22 +222,22 @@
                     {
                         from = frm,
                         to = too,
-                        amount = amts[i],
-                        desc = descs[i]
+                        amount = cfgs[i].amount,
+                        desc = cfgs[i].desc
                     };
             }
             var resolution = new ODRResolution
-            {
-                RType = ResolutionType.OTCTrade,
-                creator = walletState.Value.wallet.AccountId,
-                tradeid = tradeId,
-                actions = moves,
-            };
+                {
+                    RType = ResolutionType.OTCTrade,
+                    creator = walletState.Value.wallet.AccountId,
+                    tradeid = tradeId,
+                    actions = moves,
+                };
             daoprosl = new VoteProposal
-            {
-                pptype = ProposalType.DisputeResolution,
-                data = JsonConvert.SerializeObject(resolution),
-            };
+                {
+                    pptype = ProposalType.DisputeResolution,
+                    data = JsonConvert.SerializeObject(resolution),
+                };
         }
         else
         {
@@ -228,7 +245,7 @@
         }
 
         var voteCrtRet = await walletState.Value.wallet.CreateVoteSubject(subject, daoprosl);
-        if(voteCrtRet.Successful())
+        if (voteCrtRet.Successful())
         {
             Snackbar.Add($"Vote created.", Severity.Success);
         }
@@ -240,7 +257,13 @@
 
     Task changed(string o)
     {
-        Enum.TryParse(o, out curtype);
+        if (o == types[0])
+            curtype = SubjectType.None;
+        else if (o == types[1])
+            curtype = SubjectType.OTCDispute;
+        else if (o == types[2])
+            curtype = SubjectType.DAOModify;
+
         return Task.CompletedTask;
     }
 }

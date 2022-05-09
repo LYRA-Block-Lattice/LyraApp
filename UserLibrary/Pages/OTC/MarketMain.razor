@@ -170,7 +170,8 @@
             var tosret = await lyraApi.FindTradableOtcAsync();
             if (tosret.Successful())
             {
-                tradableOrders = tosret.GetBlocks("orders").Cast<IOtcOrder>()
+                var allblks = tosret.GetBlocks("orders");
+                tradableOrders = allblks.Cast<IOtcOrder>()
                     .Where(a => a.Order.amount > 0)
                     .OrderBy(a => a.Order.price)
                     .ToList();

@@ -32,6 +32,12 @@ else
             Seats: @dao.Treasure.Count / @dao.Seats
         </div>
         <div>
+            Seller Fee Ratio: @(dao.SellerFeeRatio*100m) %
+        </div>
+        <div>
+            Buyer Fee Ratio: @(dao.BuyerFeeRatio*100m) %
+        </div>
+        <div>
             Seller collateral Ratio: @dao.SellerPar %
         </div>
         <div>

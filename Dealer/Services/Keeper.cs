@@ -99,7 +99,10 @@ namespace Dealer.Server.Services
 
             // Initiate a Timer
             _Timer = new System.Timers.Timer();
-            _Timer.Interval = 60_000;
+            if(_db.NetworkId == "devnet")
+                _Timer.Interval = 1_800_000;    // just keep price stable to run unit test
+            else
+                _Timer.Interval = 60_000;
             _Timer.Elapsed += HandleTimer;
             _Timer.AutoReset = true;
             _Timer.Enabled = true;
