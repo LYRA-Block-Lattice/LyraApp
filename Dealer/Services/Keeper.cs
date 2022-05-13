@@ -4,6 +4,7 @@ using CoinGecko.Entities.Response.Simple;
 using CoinGecko.Interfaces;
 using Dealer.Server.Hubs;
 using Dealer.Server.Model;
+using Lyra.Core.Accounts;
 using Lyra.Core.API;
 using Lyra.Core.Blocks;
 using Lyra.Data.API;
@@ -41,6 +42,7 @@ namespace Dealer.Server.Services
 
         // Use a second template parameter when defining the hub context to get the strongly typed hub context
         private readonly IHubContext<DealerHub, IHubPushMethods> _dealerHub;
+        IConfiguration _config;
         ILyraAPI _lyraApi;
         DealerDb _db;
         Dealeamon _dealer;
@@ -54,6 +56,7 @@ namespace Dealer.Server.Services
             DealerDb db, Dealeamon dealer, ILogger<Keeper> logger)
         {
             Singleton = this;
+            _config = config;
             _dealerHub = dealerHub;
             _db = db;
             _dealer = dealer;
@@ -79,6 +82,7 @@ namespace Dealer.Server.Services
 
         private async Task InitAsync()
         {
+            await InitDealerServer();
             await UpdatePriceAsync();
 
             //var url = LyraGlobal.SelectNode(_db.NetworkId).Replace("/api/", "/events");
@@ -229,6 +233,17 @@ namespace Dealer.Server.Services
             }
         }
 
+        async Task InitDealerServer()
+        {
+            // start wallet
+            var walletStor2 = new AccountInMemoryStorage();
+            Wallet.Create(walletStor2, "xunit", "1234", _config["network"], _config["DealerKey"]);
+            var testWallet = Wallet.Open(walletStor2, "xunit", "1234", _lyraApi);
+            testWallet.NoConsole = true;
+            await testWallet.SyncAsync(null);
+
+        }
+
         async void HandleTimer(object source, ElapsedEventArgs e)
         {
             await UpdatePriceAsync();
@@ -322,9 +337,13 @@ namespace Dealer.Server.Services
         public override void Dispose()
         {
             // Clear up the timer
-            _Timer.Stop();
-            _Timer.Close();
-            _Timer.Dispose();
+            try
+            {
+                _Timer.Stop();
+                _Timer.Close();
+                _Timer.Dispose();
+            }
+            catch { }
             base.Dispose();
         }
     }
