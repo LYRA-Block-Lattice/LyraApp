@@ -12,7 +12,7 @@
 }
 else if(src == "key" || src == "newkey")
 {
-    <UserLibrary.Components.CreateWithPrivateKey OnFinished="@(() => {hasStore = true; Navigation.NavigateTo("/login");})" />
+    <UserLibrary.Components.CreateWithPrivateKey OnFinished="@(() => {hasStore = true; Navigation.NavigateTo("/login", false, true);})" />
 }
 else if(hasStore && src != "new")
 {
@@ -20,7 +20,7 @@ else if(hasStore && src != "new")
 }
 else
 {
-    <UserLibrary.Components.CreateWithPassword OnFinished="@(() => {hasStore = true; Navigation.NavigateTo("/login");})" />
+    <UserLibrary.Components.CreateWithPassword OnFinished="@(() => {hasStore = true; Navigation.NavigateTo("/login", false, true);})" />
 }
 
 @code{
@@ -46,7 +46,7 @@ else
 
         if(walletState.Value.wallet != null)
         {
-            Navigation.NavigateTo("wallet");
+            Navigation.NavigateTo("wallet", false, true);
         }       
     }
 

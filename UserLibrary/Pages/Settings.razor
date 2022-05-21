@@ -11,7 +11,7 @@
     @if (walletState.Value.wallet == null)
     {
         <div>
-        <a href="/wallet">
+        <a href="/login">
             <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
                 <MudIcon Icon="@Icons.Filled.LockOpen" />
                 Open Wallet
@@ -122,7 +122,7 @@
     private void CloseWallet(MouseEventArgs e)
     {
         Dispatcher.Dispatch(new WebWalletCloseAction());
-        Navigation.NavigateTo("/login");
+        Navigation.NavigateTo(Navigation.Uri, true, true);
     }
 
     private void SaveSettings(MouseEventArgs e)
