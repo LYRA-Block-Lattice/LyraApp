@@ -5,6 +5,7 @@ using Lyra.Core.API;
 using Lyra.Core.Blocks;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Bson.Serialization.Options;
 using Newtonsoft.Json;
 using UserLibrary.Data;
@@ -13,7 +14,7 @@ namespace Lyra.Data.API.Identity
 {
     public class TxRecord : SignableObject
     {
-        [BsonId]
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 

@@ -55,9 +55,16 @@
             <h3>Mobile Phone</h3>
             <MudTextField @bind-Value="@mobilephone" Label="" />
         </p>
+        <div style="height:45px;" />
         <p>
             <h3>Avatar</h3>
             <MudTextField @bind-Value="@avatar" Label="" />
+        </p>
+        <div style="height:45px;" />
+        <p>
+            <h3>Telegram ID</h3>
+            <MudTextField @bind-Value="@telegramId" Label="" />
+            Note: Please send a message to <a target="_blank" href="https://t.me/@dealerbot">https://t.me/@dealerbot</a> to activate.
         </p>
         <div style="height:45px;" />
 
@@ -93,9 +100,55 @@
 
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
+    [Inject] DealerClient dealerApi { get; set; }
 
-    string username, firstname, middlename, lastname, email, mobilephone, avatar;
+    string username, firstname, middlename, lastname, email, mobilephone, avatar, telegramId;
     bool busy, success;
+    string dealerbot;
+
+    // load user if any
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            var lsb = await lyraApi.GetLastServiceBlockAsync();
+            if (!lsb.Successful())
+            {
+                Snackbar.Add($"Failed to get network status: {lsb.ResultCode}. Please retry later.", Severity.Warning);
+                return;
+            }
+
+            var user = await dealerApi.GetUserDetailsByAccountIdAsync(walletState.Value.wallet.AccountId,
+                Signatures.GetSignature(walletState.Value.wallet.PrivateKey, (lsb.GetBlock().Hash), walletState.Value.wallet.AccountId));
+
+            if(user != null)
+            {
+                username = user.UserName;
+                firstname = user.FirstName;
+                middlename = user.MiddleName;
+                lastname = user.LastName;
+                email = user.Email;
+                mobilephone = user.MobilePhone;
+                avatar = user.AvatarId;
+                telegramId = user.TelegramID;
+                if (telegramId == null)
+                    telegramId = "@";
+                else if (!telegramId.StartsWith("@"))
+                    telegramId = "@" + telegramId;
+            }
+
+            if (Configuration["network"] == "devnet")
+                dealerbot = "Dealer_Devnet_Bot";
+            else if (Configuration["network"] == "testnet")
+                dealerbot = "Dealer_Testnet_Bot";
+            else 
+                dealerbot = "Lyra_Dealer_Bot";
+
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
 
     async Task OnRegister()
     {
@@ -109,9 +162,12 @@
                 Snackbar.Add($"Failed to get network status: {lsb.ResultCode}. Please retry later.", Severity.Warning);
                 return;
             }
-            var client = new DealerClient(Configuration["network"]);
-            var ret = await client.RegisterAsync(walletState.Value.wallet.AccountId,
-                username, firstname, middlename, lastname, email, mobilephone, avatar,
+
+            if(!telegramId.StartsWith("@"))
+                telegramId = "@" + telegramId;
+
+            var ret = await dealerApi.RegisterAsync(walletState.Value.wallet.AccountId,
+                username, firstname, middlename, lastname, email, mobilephone, avatar, telegramId,
                 Signatures.GetSignature(walletState.Value.wallet.PrivateKey, (lsb.GetBlock().Hash), walletState.Value.wallet.AccountId)
             );
             success = ret.Successful();

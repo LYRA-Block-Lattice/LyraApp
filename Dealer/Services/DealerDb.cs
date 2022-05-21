@@ -3,6 +3,8 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Lyra.Data.API.Identity;
 using MongoDB.Bson.Serialization;
+using Dealer.Server.Models;
+using MongoDB.Bson;
 
 namespace Dealer.Server.Services
 {
@@ -16,6 +18,8 @@ namespace Dealer.Server.Services
         private readonly IMongoCollection<TxRoom> _txRoomsCollection;
         private readonly IMongoCollection<TxComment> _txCommentsCollection;
         private readonly IMongoCollection<ImageData> _txImageDataCollection;
+
+        private readonly IMongoCollection<TGChat> _tgChatCollection;
 
         private string _networkId;
         public string NetworkId { get => _networkId; set => _networkId = value; }
@@ -60,6 +64,9 @@ namespace Dealer.Server.Services
 
             _txImageDataCollection = mongoDatabase.GetCollection<ImageData>(
                 _networkId + "_imageData");
+
+            _tgChatCollection = mongoDatabase.GetCollection<TGChat>(
+                _networkId + "_tgChat");
         }
 
         #region payments methods
@@ -185,6 +192,30 @@ namespace Dealer.Server.Services
             await _txCommentsCollection.Find(a => a.TradeId == tradeId)
                 .ToListAsync();
 
+        #endregion
+
+        #region Telegram Chat IDs
+        public async Task<List<TGChat>> GetTGChatAsync() =>
+            await _tgChatCollection.Find(_ => true).ToListAsync();
+
+        public async Task<TGChat?> GetTGChatByUserIDAsync(string userId) =>
+            await _tgChatCollection.Find(x => x.Username == userId).FirstOrDefaultAsync();
+        public async Task<TGChat?> GetTGChatByChatIdAsync(long chatId) =>
+            await _tgChatCollection.Find(x => x.ChatID == chatId).FirstOrDefaultAsync();
+
+        public async Task CreateTGChatAsync(TGChat chat) =>
+            await _tgChatCollection.InsertOneAsync(chat);
+
+        public async Task CreateOrUpdateTGChatAsync(TGChat chat) => await _tgChatCollection.ReplaceOneAsync(
+                            filter: new BsonDocument("ChatID", chat.ChatID),
+                            options: new ReplaceOptions { IsUpsert = true },
+                            replacement: chat);
+
+        public async Task UpdateTGChatAsync(long chatId, TGChat updatedChat) =>
+            await _tgChatCollection.ReplaceOneAsync(x => x.ChatID == chatId, updatedChat);
+
+        public async Task RemoveTGChatAsync(long chatId) =>
+            await _tgChatCollection.DeleteOneAsync(x => x.ChatID == chatId);
         #endregion
     }
 }

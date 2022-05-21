@@ -2,6 +2,7 @@
 using Lyra.Data.API.ODR;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Lyra.Data.API.Identity
     /// </summary>
     public class TxComment : CommentConfig
     {
-        [BsonId]
+        [BsonId(IdGenerator = typeof(ObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
@@ -29,7 +30,7 @@ namespace Lyra.Data.API.Identity
 
     public class TxCommentLike
     {
-        [BsonId]
+        [BsonId(IdGenerator = typeof(ObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
@@ -46,7 +47,7 @@ namespace Lyra.Data.API.Identity
 
     public class TxCommentReport
     {
-        [BsonId]
+        [BsonId(IdGenerator = typeof(ObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 

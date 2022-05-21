@@ -2,18 +2,16 @@
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
 
-namespace Dealer.Server.Model
+namespace Dealer.Server.Models
 {
-    public class PaymentPlatform
+    public class TGChat
     {
         [BsonId(IdGenerator = typeof(ObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
+        [BsonIgnoreIfDefault]
         public string? Id { get; set; }
 
-        [BsonElement("Name")]
-        public string Name { get; set; } = null!;
-
-        [BsonElement("Region")]
-        public string? Region { get; set; }
+        public long ChatID { get; set; }
+        public string Username { get; set; }
     }
 }

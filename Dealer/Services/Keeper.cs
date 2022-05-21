@@ -16,6 +16,11 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System.Collections.Concurrent;
 using System.Timers;
+using Telegram.Bot;
+using Telegram.Bot.Exceptions;
+using Telegram.Bot.Extensions.Polling;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 using UserLibrary.Data;
 
 namespace Dealer.Server.Services
@@ -48,6 +53,7 @@ namespace Dealer.Server.Services
         Dealeamon _dealer;
         LyraEventClient _eventClient;
         ILogger<Keeper> _logger;
+        TelegramBotClient _botClient;
 
         System.Timers.Timer _Timer;
 
@@ -82,7 +88,8 @@ namespace Dealer.Server.Services
 
         private async Task InitAsync()
         {
-            await InitDealerServer();
+            await InitDealerServerAsync();
+            await InitTelegramBotAsync();
             await UpdatePriceAsync();
 
             //var url = LyraGlobal.SelectNode(_db.NetworkId).Replace("/api/", "/events");
@@ -107,7 +114,7 @@ namespace Dealer.Server.Services
                 _Timer.Interval = 1_800_000;    // just keep price stable to run unit test
             else
                 _Timer.Interval = 60_000;
-            _Timer.Elapsed += HandleTimer;
+            _Timer.Elapsed += HandleTimerAsync;
             _Timer.AutoReset = true;
             _Timer.Enabled = true;
         }
@@ -233,7 +240,7 @@ namespace Dealer.Server.Services
             }
         }
 
-        async Task InitDealerServer()
+        async Task InitDealerServerAsync()
         {
             // start wallet
             var walletStor2 = new AccountInMemoryStorage();
@@ -241,10 +248,103 @@ namespace Dealer.Server.Services
             var testWallet = Wallet.Open(walletStor2, "xunit", "1234", _lyraApi);
             testWallet.NoConsole = true;
             await testWallet.SyncAsync(null);
-
         }
 
-        async void HandleTimer(object source, ElapsedEventArgs e)
+        async Task InitTelegramBotAsync()
+        {
+            _botClient = new TelegramBotClient(_config["TelegramBotToken"]);
+
+            // StartReceiving does not block the caller thread. Receiving is done on the ThreadPool.
+            var receiverOptions = new ReceiverOptions
+            {
+                AllowedUpdates = Array.Empty<UpdateType>() // receive all update types
+            };
+            _botClient.StartReceiving(
+                updateHandler: HandleUpdateAsync, 
+                errorHandler: HandlePollingErrorAsync,
+                receiverOptions: receiverOptions
+            );
+
+            var me = await _botClient.GetMeAsync();
+            Console.WriteLine($"Hello, World! I am user {me.Id} and my name is {me.FirstName}.");
+        }
+
+        async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+        {
+            try
+            {
+                // Only process Message updates: https://core.telegram.org/bots/api#message
+                if (update.Type != UpdateType.Message)
+                    return;
+                // Only process text messages
+                if (update.Message!.Type != MessageType.Text)
+                    return;
+
+                var chatId = update.Message.Chat.Id;
+                var messageText = update.Message.Text;
+
+                Console.WriteLine($"Received a '{messageText}' message in chat {chatId}.");
+
+                if (update.Message.Chat.Username != null)    // some user never create user id
+                    await _db.CreateOrUpdateTGChatAsync(new Models.TGChat
+                    {
+                        ChatID = chatId,
+                        Username = update.Message.Chat.Username
+                    });
+
+                // Echo received message text
+                Message sentMessage = await botClient.SendTextMessageAsync(
+                    chatId: chatId,
+                    text: "You said:\n" + messageText,
+                    cancellationToken: cancellationToken);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error in HandleUpdateAsync: {ex}");
+            }
+        }
+
+        Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+        {
+            var ErrorMessage = exception switch
+            {
+                ApiRequestException apiRequestException
+                    => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
+                _ => exception.ToString()
+            };
+
+            Console.WriteLine(ErrorMessage);
+            return Task.CompletedTask;
+        }
+
+        public async Task SendToTelegramAsync(string telegramID, RespContainer container)
+        {
+            if (telegramID == null || telegramID?.Trim() == "@")
+                return;
+
+            try
+            {
+                var tgchat = await _db.GetTGChatByUserIDAsync(telegramID.Substring(1)); // remove the leading '@'
+                var obj = container.Get();
+
+                if(obj is RespMessage msg)
+                {
+                    Message message = await _botClient.SendTextMessageAsync(
+                        chatId: new ChatId(tgchat.ChatID),
+                        text: $"{msg.Text}\n\nBy: {msg.UserName}\nAbout trade: {msg.TradeId}");
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error send message via Telegram: {ex}");
+            }
+        }
+
+        async void HandleTimerAsync(object source, ElapsedEventArgs e)
         {
             await UpdatePriceAsync();
         }
@@ -339,9 +439,12 @@ namespace Dealer.Server.Services
             // Clear up the timer
             try
             {
-                _Timer.Stop();
-                _Timer.Close();
-                _Timer.Dispose();
+                if(_Timer != null)
+                {
+                    _Timer.Stop();
+                    _Timer.Close();
+                    _Timer.Dispose();
+                }
             }
             catch { }
             base.Dispose();

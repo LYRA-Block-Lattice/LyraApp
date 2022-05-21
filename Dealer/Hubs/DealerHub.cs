@@ -19,6 +19,7 @@ namespace Dealer.Server.Hubs
     {
         private string _dealerId, _dealerKey;
 
+        Keeper _keeper;
         IConfiguration _config;
         ILyraAPI _lyraApi;
         DealerDb _db;
@@ -32,13 +33,14 @@ namespace Dealer.Server.Hubs
 
         Dictionary<string, Func<ChatMessage, Task>> BotCommands;
 
-        public DealerHub(DealerDb db, Dealeamon dealer, ILyraAPI lyraApi, IConfiguration Configuration, ILogger<DealerHub> logger)
+        public DealerHub(DealerDb db, Dealeamon dealer, Keeper keeper, ILyraAPI lyraApi, IConfiguration Configuration, ILogger<DealerHub> logger)
         {
             _config = Configuration;
             _lyraApi = lyraApi;
             _db = db;
             _dealer = dealer;
             _logger = logger;
+            _keeper = keeper;
             _messageBuffer = new BufferBlock<ChatMessage>();
             _fileBuffer = new BufferBlock<FileMessage>();
 
@@ -184,6 +186,13 @@ namespace Dealer.Server.Hubs
             {
                 var x = Clients.Group(mem.AccountId);
                 await Clients.Group(mem.AccountId).OnChat(container);
+
+                // send to telegram
+                var user = await _db.GetUserByAccountIdAsync(mem.AccountId);
+                if(user?.TelegramID != null)
+                {
+                    await _keeper.SendToTelegramAsync(user?.TelegramID, container);
+                }
             }
         }
 

@@ -88,7 +88,7 @@ namespace Dealer.Server.Services
         [Route("Register")]
         public async Task<APIResult> RegisterAsync(string accountId,
             string userName, string firstName, string? middleName, string lastName,
-            string email, string mibilePhone, string? avatarId, string signature)
+            string email, string mibilePhone, string? avatarId, string? telegramID, string signature)
         {
             // validate data
             if (userName.ToLower().Contains("dealer"))
@@ -109,6 +109,7 @@ namespace Dealer.Server.Services
                 MobilePhone = mibilePhone,
                 AvatarId = avatarId,
                 AccountId = accountId,
+                TelegramID = telegramID,
                 RegistedTime = DateTime.UtcNow,
             };
 
@@ -117,7 +118,10 @@ namespace Dealer.Server.Services
             if (usrx == null)
                 await _db.CreateUserAsync(user);
             else
+            {
+                user.Id = usrx.Id;
                 await _db.UpdateUserAsync(user);
+            }                
 
             return APIResult.Success;
         }

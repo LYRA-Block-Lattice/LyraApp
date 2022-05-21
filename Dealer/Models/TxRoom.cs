@@ -1,6 +1,7 @@
 ﻿using Lyra.Data.API.ODR;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace Lyra.Data.API.Identity
     /// </summary>
     public class TxRoom
     {
-        [BsonId]
+        [BsonId(IdGenerator = typeof(ObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
