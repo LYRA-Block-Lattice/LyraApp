@@ -16,7 +16,7 @@ namespace Lyra.Data.API.Identity
     /// </summary>
     public class TxRoom
     {
-        [BsonId(IdGenerator = typeof(ObjectIdGenerator))]
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 

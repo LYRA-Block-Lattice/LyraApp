@@ -17,7 +17,7 @@ namespace Lyra.Data.API.Identity
     /// </summary>
     public class TxComment : CommentConfig
     {
-        [BsonId(IdGenerator = typeof(ObjectIdGenerator))]
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
@@ -30,7 +30,7 @@ namespace Lyra.Data.API.Identity
 
     public class TxCommentLike
     {
-        [BsonId(IdGenerator = typeof(ObjectIdGenerator))]
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
@@ -47,7 +47,7 @@ namespace Lyra.Data.API.Identity
 
     public class TxCommentReport
     {
-        [BsonId(IdGenerator = typeof(ObjectIdGenerator))]
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 

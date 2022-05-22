@@ -6,7 +6,7 @@ namespace Dealer.Server.Models
 {
     public class TGChat
     {
-        [BsonId(IdGenerator = typeof(ObjectIdGenerator))]
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
         [BsonIgnoreIfDefault]
         public string? Id { get; set; }

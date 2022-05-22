@@ -6,7 +6,7 @@ namespace Dealer.Server.Model
 {
     public class PaymentPlatform
     {
-        [BsonId(IdGenerator = typeof(ObjectIdGenerator))]
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
