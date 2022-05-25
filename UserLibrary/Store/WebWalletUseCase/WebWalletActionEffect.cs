@@ -14,6 +14,7 @@ using System.Linq;
 using Blazored.LocalStorage;
 using Lyra.Data.Blocks;
 using Humanizer;
+using Lyra.Data.API.WorkFlow;
 
 namespace Nebula.Store.WebWalletUseCase
 {
@@ -238,7 +239,8 @@ namespace Nebula.Store.WebWalletUseCase
 				var wcjson = await _localStorage.GetItemAsync<string>(action.store);
 				var wc = new WalletContainer(wcjson);
 
-				var buff = wc.Get(action.name).Data;
+				var wltdat = wc.Get(action.name);
+				var buff = wltdat.Data;
 				var aib = new AccountInBuffer(buff, action.password);
 				var wallet = Wallet.Open(aib, action.name, action.password);
 
@@ -246,7 +248,22 @@ namespace Nebula.Store.WebWalletUseCase
 				wallet.SetClient(client);
 				var pending = await wallet.GetPendingRecvAsync();
 				dispatcher.Dispatch(new WebWalletResultAction(wallet, true, UIStage.Main, pending));
-				dispatcher.Dispatch(new DealerSwitchAction { DealerID = wc.Get(action.name).DealerID });
+
+				// get dealer info
+				string dlrid = null;
+				string dlrurl = null;
+				if(!string.IsNullOrEmpty(wltdat.DealerID))
+                {
+					var dlrblk = await wallet.RPC.GetLastBlockAsync(wltdat.DealerID);
+					if(dlrblk.Successful())
+                    {
+						var dlr = dlrblk.As<IDealer>();
+						dlrid = wltdat.DealerID;
+						dlrurl = dlr.Endpoint;
+                    }
+				}				
+
+				dispatcher.Dispatch(new DealerSwitchAction { DealerID = dlrid, UrlBase = dlrurl });
 			}
 			catch(Exception ex)
             {

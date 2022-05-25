@@ -62,6 +62,8 @@
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] ConnectionMethodsWrapper wrapper { get; set; }
     [Inject] ILyraAPI Client { get; set; }
+    [Inject] DealerClient dealerApi { get; set; }
+    [Inject] IConfiguration _config { get; set; }
 
     MudMenu mnu;
 
@@ -105,7 +107,16 @@
 
         SubscribeToAction<DealerSwitchAction>(async a =>
             {
-                await wrapper.SwitchDealerAsync(a.DealerID);
+                var eventUrl = "https://dealer.devnet.lyra.live:7070/";
+                if (_config["network"] == "testnet")
+                    eventUrl = "https://dealertestnet.lyra.live/";
+                else if (_config["network"] == "mainnet")
+                    eventUrl = "https://dealer.lyra.live/";
+
+                var baseurl = a.UrlBase ?? eventUrl;
+                var baseUri = new Uri(baseurl);
+                dealerApi.Switch(_config["network"], new Uri(baseUri, "/api/dealer/").ToString());
+                await wrapper.SwitchDealerAsync(new Uri(baseUri, "/hub"));
 
                 await InitSignalR();
                 

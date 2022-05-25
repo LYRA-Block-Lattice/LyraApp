@@ -46,7 +46,7 @@ namespace UserLibrary.Data
             _config = config;
         }
 
-        public async Task SwitchDealerAsync(string dealerUri)
+        public async Task SwitchDealerAsync(Uri dealerUri)
         {
             if(_started)
             {
@@ -56,14 +56,7 @@ namespace UserLibrary.Data
                 _connection = null;
             }
 
-            var eventUrl = "https://dealer.devnet.lyra.live:7070/hub";
-            if (_config["network"] == "testnet")
-                eventUrl = "https://dealertestnet.lyra.live/hub";
-            else if (_config["network"] == "mainnet")
-                eventUrl = "https://dealer.lyra.live/hub";
-
-            var uri = dealerUri ?? eventUrl;
-            _connection = ConnectionFactoryHelper.CreateConnection(new Uri(uri));
+            _connection = ConnectionFactoryHelper.CreateConnection(dealerUri);
             await StartAsync();
         }
 
