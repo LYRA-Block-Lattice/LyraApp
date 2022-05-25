@@ -33,6 +33,8 @@ namespace Dealer.Server.Hubs
 
         Dictionary<string, Func<ChatMessage, Task>> BotCommands;
 
+        public string DealerId => _dealerId;
+
         public DealerHub(DealerDb db, Dealeamon dealer, Keeper keeper, ILyraAPI lyraApi, IConfiguration Configuration, ILogger<DealerHub> logger)
         {
             _config = Configuration;
@@ -44,8 +46,8 @@ namespace Dealer.Server.Hubs
             _messageBuffer = new BufferBlock<ChatMessage>();
             _fileBuffer = new BufferBlock<FileMessage>();
 
-            _dealerId = Configuration["DealerID"];
             _dealerKey = Configuration["DealerKey"];
+            _dealerId = Signatures.GetAccountIdFromPrivateKey(_dealerKey);
 
             BotCommands = new Dictionary<string, Func<ChatMessage, Task>>
             {

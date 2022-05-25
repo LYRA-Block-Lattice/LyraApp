@@ -5,6 +5,7 @@ using Lyra.Data.API.Identity;
 using MongoDB.Bson.Serialization;
 using Dealer.Server.Models;
 using MongoDB.Bson;
+using Lyra.Data.Crypto;
 
 namespace Dealer.Server.Services
 {
@@ -29,7 +30,7 @@ namespace Dealer.Server.Services
         {
             _dbSettings = dbSettings;
             _networkId = Configuration["network"];
-            _dealerId = Configuration["DealerID"];
+            _dealerId = Signatures.GetAccountIdFromPrivateKey(Configuration["DealerKey"]);
             _dealerKey = Configuration["DealerKey"];
 
             BsonClassMap.RegisterClassMap<TxRecord>(cm =>

@@ -21,7 +21,8 @@ namespace UserLibrary.Data
         {
             "devnet" => new[]
                 {
-                "LDLrHpTVqzV1wMX4Bqrt1LJNiWymdeURUWV2paBUKAvisiUv6ojM1mig9YrAPNMwhxXy2X43gFxgEFTfuRDgkRTYmoRbvr"
+                "L9vh5kuijpaDiqYAaHoV6EejAL3qUXF15JrSR1LvHien3h4fHR3B9p65ubF9AgQnnMzUxdLbDTPtjwpbxB5SPPtSaF4wMr"
+                //"LDLRr2a1TUgV6ccaoP3tKh9LuarGq3Ksxi7RKWnXv6zmPoNqjXDK2MxL81xP99aVDtMDCvUVtAw7BLUXUnUKuqGk9aSYHP"
                 },
             _ => new string[] { },
         };            

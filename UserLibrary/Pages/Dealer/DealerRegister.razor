@@ -1,5 +1,7 @@
 ﻿@page "/dealer/register"
 @using Fluxor
+@using Lyra.Data.API.Identity
+@using Lyra.Data.API.WorkFlow
 @using Lyra.Data.Crypto
 @using Microsoft.Extensions.Configuration
 @using UserLibrary.Data
@@ -27,6 +29,20 @@
     </div>
     <div style="height:50px;" />
     <div>
+        <p>
+            <h3>Dealer To Trust and Use:</h3>
+            <RadzenDropDown AllowClear="false" TValue="string" Class="w-100" Multiple="false"
+                            Data=@(dealers.Select(c => c.Name))
+                            Change=@(args => OnDealerChange(args, "DropDown")) />
+            @if(dlr != null)
+            {
+                <div>Name: @dlr.Name</div>
+                <div>Time Registered: @dlr.TimeStamp</div>
+                <div>Description: @dlr.Description</div>
+            }
+            <br /><br /><br />
+        </p>
+        <p></p>
         <p>
             <h3>Lyra User Name</h3>
             <MudTextField @bind-Value="@username" Label="" />
@@ -107,6 +123,11 @@
     bool busy, success;
     string dealerbot;
 
+    List<IDealer> dealers = new List<IDealer>();
+    IDealer dlr;
+    LyraUser user;
+    string btnText = "Register to Dealer";
+
     // load user if any
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -121,7 +142,7 @@
                     return;
                 }
 
-                var user = await dealerApi.GetUserDetailsByAccountIdAsync(walletState.Value.wallet.AccountId,
+                user = await dealerApi.GetUserDetailsByAccountIdAsync(walletState.Value.wallet.AccountId,
                     Signatures.GetSignature(walletState.Value.wallet.PrivateKey, (lsb.GetBlock().Hash), walletState.Value.wallet.AccountId));
 
                 if(user != null)
@@ -138,10 +159,24 @@
                         telegramId = "@";
                     else if (!telegramId.StartsWith("@"))
                         telegramId = "@" + telegramId;
+
+                    btnText = "Update my profile";
                 }
+                else
+                    btnText = "Register to Dealer";
 
                 var brief = await dealerApi.GetBriefAsync();
                 dealerbot = brief.TelegramBotUsername;
+
+                // get dealers
+                foreach(var tdid in _consts.TrustedDealerIds)
+                {
+                    var dlret = await lyraApi.GetLastBlockAsync(tdid);
+                    if(dlret.Successful())
+                    {
+                        dealers.Add(dlret.As<IDealer>());
+                    }
+                }
             }
             catch(Exception ex)
             {
@@ -192,5 +227,10 @@
 
 
         busy = false;
+    }
+
+    void OnDealerChange(object value, string name)
+    {
+        dlr = dealers.First(a => a.Name == value as string);
     }
 }

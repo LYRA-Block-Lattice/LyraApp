@@ -59,6 +59,7 @@ namespace Dealer.Server.Services
 
         string _botUserName;
         public string BotUserName => _botUserName;
+        public bool SupportTelegram { get; private set; }
 
         System.Timers.Timer _Timer;
 
@@ -297,7 +298,16 @@ namespace Dealer.Server.Services
 
         async Task InitTelegramBotAsync()
         {
-            _botClient = new TelegramBotClient(_config["TelegramBotToken"]);
+            var tgToken = _config["TelegramBotToken"];
+            if(string.IsNullOrEmpty(tgToken))
+            {
+                SupportTelegram = false;
+                return;
+            }
+
+            SupportTelegram = true;
+
+            _botClient = new TelegramBotClient(tgToken);
 
             // StartReceiving does not block the caller thread. Receiving is done on the ThreadPool.
             var receiverOptions = new ReceiverOptions

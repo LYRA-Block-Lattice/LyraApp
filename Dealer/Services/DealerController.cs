@@ -44,7 +44,7 @@ namespace Dealer.Server.Services
         {
             var brief = new DealerBrief
             {
-                AccountId = _config["DealerID"],
+                AccountId = Signatures.GetAccountIdFromPrivateKey(_config["DealerKey"]),
                 TelegramBotUsername = _keeper.BotUserName
             };
             return Task.FromResult(SimpleJsonAPIResult.Create(brief));
@@ -230,7 +230,7 @@ namespace Dealer.Server.Services
             {
                 var peerHasMsg = txmsgs.Where(a =>
                     a.AccountId != accountId &&
-                    a.AccountId != _config["DealerID"]
+                    a.AccountId != Signatures.GetAccountIdFromPrivateKey(_config["DealerKey"])
                     ).Any();
                 var sellerHasMsg = txmsgs.Where(a => a.AccountId == room.Members[0].AccountId).Any();
                 cancellable = (!peerHasMsg || !sellerHasMsg) && room.TimeStamp < DateTime.UtcNow.AddMinutes(-10);
