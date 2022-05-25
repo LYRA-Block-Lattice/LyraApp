@@ -110,11 +110,6 @@
     public override string DaoId => daoid;
     public override string Title => "Create Vote";
 
-    [Inject]
-    private IState<WebWalletState> walletState { get; set; }
-
-    [Inject] ISnackbar Snackbar { get; set; }
-
     List<string> options = new List<string> { "Option 1", "Option 2" };
     string[] types = new string[] { "Generic", "OTC Dispute Resolution", "DAO Settings Modification" };
 

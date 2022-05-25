@@ -48,5 +48,7 @@ namespace Nebula.Store.WebWalletUseCase
 
 		public bool LastOperationIsSuccess { get; set; }
 		public string Message { get; set; }
+
+		public string DealerID { get; set; }
 	}
 }

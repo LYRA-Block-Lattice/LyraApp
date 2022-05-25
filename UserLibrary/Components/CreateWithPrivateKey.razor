@@ -182,7 +182,14 @@
             Wallet.Create(aib, walletName, txtValue1, Configuration["network"], prvKey);
             var data = aib.GetBuffer(txtValue1);
 
-            wc.AddOrUpdate(walletName, data, $"Restored: {DateTime.Now}", false);
+			var meta = new WalletContainer.WalletData
+			{
+				Name = walletName,
+				Data = data,
+				Backup = false,
+				Note = $"Restored: {DateTime.Now}"
+			};
+			wc.Add(meta);
 
             await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());
 

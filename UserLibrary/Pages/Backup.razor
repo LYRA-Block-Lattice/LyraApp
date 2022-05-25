@@ -135,7 +135,8 @@ else
             var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
             var wc = new WalletContainer(wcjson);
             var meta = wc.Get(walletState.Value.wallet.AccountName);
-            wc.AddOrUpdate(meta.Name, meta.Data, meta.Note, true);
+            meta.Backup = backuped;
+            wc.Update(meta);
             await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());
         }
 

@@ -65,7 +65,14 @@ else
                 var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
                 var wc = new WalletContainer(wcjson);
 
-                wc.AddOrUpdate("Default", await localStorage.GetItemAsync<byte[]>("nebdat"), $"Migrated: {DateTime.Now}", false);
+			    var meta = new WalletContainer.WalletData
+			    {
+				    Name = "Default",
+				    Data = await localStorage.GetItemAsync<byte[]>("nebdat"),
+				    Backup = false,
+				    Note = $"Migrated: {DateTime.Now}"
+			    };
+			    wc.Add(meta);
                 await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());
                 //await localStorage.RemoveItemAsync("nebdat");
             }

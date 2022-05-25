@@ -218,7 +218,14 @@ namespace Nebula.Store.WebWalletUseCase
 
 			var wcjson = await _localStorage.GetItemAsync<string>(action.store);
 			var wc = new WalletContainer(wcjson);
-			wc.AddOrUpdate(action.name, data, $"Created: {DateTime.Now}", false);
+			var meta = new WalletContainer.WalletData
+			{
+				Name = action.name,
+				Data = data,
+				Backup = false,
+				Note = $"Created: {DateTime.Now}"
+			};
+			wc.Add(meta);
 
             await _localStorage.SetItemAsync(action.store, wc.ToString());
         }
@@ -239,6 +246,7 @@ namespace Nebula.Store.WebWalletUseCase
 				wallet.SetClient(client);
 				var pending = await wallet.GetPendingRecvAsync();
 				dispatcher.Dispatch(new WebWalletResultAction(wallet, true, UIStage.Main, pending));
+				dispatcher.Dispatch(new DealerSwitchAction { DealerID = wc.Get(action.name).DealerID });
 			}
 			catch(Exception ex)
             {
@@ -247,8 +255,7 @@ namespace Nebula.Store.WebWalletUseCase
 				{
 					error = $"Unable to open wallet: {ex.Message}"
 				});
-			}
-
+			}			
 		}
 
 		[EffectMethod]
@@ -263,7 +270,15 @@ namespace Nebula.Store.WebWalletUseCase
 				Wallet.Create(aib, action.name, action.password, config["network"], action.privateKey);
 				var data = aib.GetBuffer(action.password);
 
-				wc.AddOrUpdate(action.name, data, $"Restored: {DateTime.Now}", false);
+				var meta = new WalletContainer.WalletData
+				{
+					Name = action.name,
+					Data = data,
+					Backup = false,
+					Note = $"Restored: {DateTime.Now}"
+				};
+				wc.Add(meta);
+
 				await _localStorage.SetItemAsync(action.store, wc.ToString());
 			}
 			catch(Exception ex)

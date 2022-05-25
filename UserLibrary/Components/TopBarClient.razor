@@ -61,6 +61,7 @@
 
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] ConnectionMethodsWrapper wrapper { get; set; }
+    [Inject] ILyraAPI Client { get; set; }
 
     MudMenu mnu;
 
@@ -97,14 +98,32 @@
                 shownew = x.menunew;
             }
         );
-        SubscribeToAction<WebWalletResultAction>(a =>
+        SubscribeToAction<WebWalletResultAction>(async a =>
             {
-                WalletChanged(null, a.wallet);
+                await WalletChanged(null, a.wallet);
             });
 
-        SubscribeToAction<WebWalletCloseAction>(a =>
+        SubscribeToAction<DealerSwitchAction>(async a =>
             {
-                WalletChanged(null, null);
+                await wrapper.SwitchDealerAsync(a.DealerID);
+
+                await InitSignalR();
+                
+                if(walletState.Value.IsOpening)
+                {
+                    var lsb = await Client.GetLastServiceBlockAsync();
+                    var wlt = walletState.Value.wallet;
+                    await wrapper.Join(new JoinRequest
+                            {
+                                UserAccountID = wlt.AccountId,
+                                Signature = Signatures.GetSignature(wlt.PrivateKey, lsb.GetBlock().Hash, wlt.AccountId),
+                            });
+                }
+            });
+
+        SubscribeToAction<WebWalletCloseAction>(async a =>
+            {
+                await WalletChanged(null, null);
             });
 
         SubscribeToAction<RespContainer>(ax =>
@@ -208,44 +227,39 @@
 
     async Task InitSignalR()
     {
-        if (!wrapper.IsStarted)
+        wrapper.RegisterOnChat(a => Dispatcher.Dispatch(a));
+        wrapper.RegisterOnPinned(a => Dispatcher.Dispatch(a));
+        wrapper.RegisterOnEvent(a =>
         {
-            await wrapper.StartAsync();
+            var evt = a.Get();
 
-            wrapper.RegisterOnChat(a => Dispatcher.Dispatch(a));
-            wrapper.RegisterOnPinned(a => Dispatcher.Dispatch(a));
-            wrapper.RegisterOnEvent(a =>
+            if (evt is AccountChangedEvent achgevt)
             {
-                var evt = a.Get();
-
-                if (evt is AccountChangedEvent achgevt)
-                {
-                    Dispatcher.Dispatch(achgevt);
-                }
-                else if (evt is ContractChangeEvent cchg)
-                {
-                    Dispatcher.Dispatch(cchg);
-                }
-                else if (evt is WorkflowEvent wfevt)
-                {
-                    Dispatcher.Dispatch(wfevt);
-                }
-                else if (evt is RespQuote quote)
-                {
-                    Dispatcher.Dispatch(new HotUpdateResultAction
+                Dispatcher.Dispatch(achgevt);
+            }
+            else if (evt is ContractChangeEvent cchg)
+            {
+                Dispatcher.Dispatch(cchg);
+            }
+            else if (evt is WorkflowEvent wfevt)
+            {
+                Dispatcher.Dispatch(wfevt);
+            }
+            else if (evt is RespQuote quote)
+            {
+                Dispatcher.Dispatch(new HotUpdateResultAction
                         {
                             LatestPrices = quote.Prices
                         });
-                    Dispatcher.Dispatch(new MarketUpdated());
-                }
-                else
-                {
+                Dispatcher.Dispatch(new MarketUpdated());
+            }
+            else
+            {
                     // unknown?
-                }
-            });
+            }
+        });
 
-            Dispatcher.Dispatch(new HotUpdateAction());
-        }
+        Dispatcher.Dispatch(new HotUpdateAction());
     }
 
     private void Help(string tradeid)
@@ -258,7 +272,7 @@
         Navigation.NavigateTo($"/wallet");
     }
 
-    private void WalletChanged(object sender, Wallet wallet)
+    private async Task WalletChanged(object sender, Wallet wallet)
     {
         decimal balance1 = 0;
         if (wallet != null)
@@ -288,8 +302,7 @@
     ;
         }
 
-
-        InvokeAsync(() => StateHasChanged());
+        await InvokeAsync(() => StateHasChanged());
     }
 
     private void gonew()

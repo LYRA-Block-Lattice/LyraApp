@@ -3,6 +3,7 @@
 @using Fluxor
 @using Nebula.Store.WebWalletUseCase
 @using UserLibrary.Data
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 <div style="padding:15px;">
     <h3>Multiple wallet manager</h3>
@@ -49,11 +50,12 @@
     MudSelect<string> sel;
     bool busy, canupdate;
     string[] walletNames = new string[]{};
-    string selName, selNote;
+    string selName, selNote, selDealer;
     byte[] selData;
     bool selBackup;
 
-    private async Task Update()
+    // wallet name and note
+    private async Task Update() 
     {
         var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
         var wc = new WalletContainer(wcjson);
@@ -64,7 +66,8 @@
             return;
         }
 
-        wc.AddOrUpdate(selName, selData, selName, false);
+        wc.Add(selName, selData, selNote, false, selDealer);
+
         await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());
 
         walletNames = wc.Names;
@@ -92,6 +95,7 @@
             selName = null;
             selData = null;
             selNote = null;
+            selDealer = null;
             selBackup = false;
             walletNames = wc.Names;
             sel.Reset();
@@ -112,6 +116,7 @@
             canupdate = false;
             selName = null;
             selData = null;
+            selDealer = null;
             selNote = null;
             selBackup = false;
         }
@@ -125,6 +130,7 @@
             selData = meta.Data;
             selNote = meta.Note;
             selBackup = meta.Backup;
+            selDealer = meta.DealerID;
         }
     }
 

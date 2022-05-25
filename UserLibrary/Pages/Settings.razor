@@ -122,6 +122,7 @@
     private void CloseWallet(MouseEventArgs e)
     {
         Dispatcher.Dispatch(new WebWalletCloseAction());
+        Dispatcher.Dispatch(new DealerSwitchAction());
         Navigation.NavigateTo(Navigation.Uri, true, true);
     }
 

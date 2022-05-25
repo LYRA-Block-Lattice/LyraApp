@@ -34,14 +34,37 @@ namespace UserLibrary.Data
 
     public class ConnectionMethodsWrapper : IHubInvokeMethods, IAsyncDisposable
     {
-        private readonly HubConnection _connection;
+        private HubConnection _connection;
+        IConfiguration _config;
 
         private static bool _started = false;
 
         public bool IsStarted => _started;
-        public ConnectionMethodsWrapper(HubConnection connection)
+        public ConnectionMethodsWrapper(HubConnection connection, IConfiguration config)
         {
             _connection = connection;
+            _config = config;
+        }
+
+        public async Task SwitchDealerAsync(string dealerUri)
+        {
+            if(_started)
+            {
+                await _connection.StopAsync();
+                await _connection.DisposeAsync();
+                _started = false;
+                _connection = null;
+            }
+
+            var eventUrl = "https://dealer.devnet.lyra.live:7070/hub";
+            if (_config["network"] == "testnet")
+                eventUrl = "https://dealertestnet.lyra.live/hub";
+            else if (_config["network"] == "mainnet")
+                eventUrl = "https://dealer.lyra.live/hub";
+
+            var uri = dealerUri ?? eventUrl;
+            _connection = ConnectionFactoryHelper.CreateConnection(new Uri(uri));
+            await StartAsync();
         }
 
         public async Task StartAsync()
