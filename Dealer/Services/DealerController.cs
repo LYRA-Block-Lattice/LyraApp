@@ -38,6 +38,18 @@ namespace Dealer.Server.Services
             _client = client;
         }
 
+        [Route("GetBrief")]
+        [HttpGet]
+        public Task<SimpleJsonAPIResult> GetBriefAsync()
+        {
+            var brief = new DealerBrief
+            {
+                AccountId = _config["DealerID"],
+                TelegramBotUsername = _keeper.BotUserName
+            };
+            return Task.FromResult(SimpleJsonAPIResult.Create(brief));
+        }
+
         [Route("GetPrices")]
         [HttpGet]
         public Task<SimpleJsonAPIResult> GetPricesAsync()

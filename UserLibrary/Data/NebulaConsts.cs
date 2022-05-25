@@ -16,5 +16,14 @@ namespace UserLibrary.Data
         }
         public string NebulaStorName => $"nebdat_{_config["network"]}";
         public string ContactStorName => $"nebcontacts_{_config["network"]}";
+
+        public string[] TrustedDealerIds => _config["network"] switch
+        {
+            "devnet" => new[]
+                {
+                "LDLrHpTVqzV1wMX4Bqrt1LJNiWymdeURUWV2paBUKAvisiUv6ojM1mig9YrAPNMwhxXy2X43gFxgEFTfuRDgkRTYmoRbvr"
+                },
+            _ => new string[] { },
+        };            
     }
 }

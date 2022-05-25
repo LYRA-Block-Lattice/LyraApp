@@ -4,10 +4,12 @@ using CoinGecko.Entities.Response.Simple;
 using CoinGecko.Interfaces;
 using Dealer.Server.Hubs;
 using Dealer.Server.Model;
+using Humanizer;
 using Lyra.Core.Accounts;
 using Lyra.Core.API;
 using Lyra.Core.Blocks;
 using Lyra.Data.API;
+using Lyra.Data.API.ABI;
 using Lyra.Data.API.WorkFlow;
 using Lyra.Data.Blocks;
 using Lyra.Data.Shared;
@@ -54,6 +56,9 @@ namespace Dealer.Server.Services
         LyraEventClient _eventClient;
         ILogger<Keeper> _logger;
         TelegramBotClient _botClient;
+
+        string _botUserName;
+        public string BotUserName => _botUserName;
 
         System.Timers.Timer _Timer;
 
@@ -248,6 +253,46 @@ namespace Dealer.Server.Services
             var testWallet = Wallet.Open(walletStor2, "xunit", "1234", _lyraApi);
             testWallet.NoConsole = true;
             await testWallet.SyncAsync(null);
+
+            // register if necessary
+            while(true)
+            {
+                var gdret = await testWallet.RPC.GetDealerByAccountIdAsync(testWallet.AccountId);
+                if (!gdret.Successful())
+                {
+                    var dealerAbi = new Wallet.LyraContractABI
+                    {
+                        svcReq = BrokerActions.BRK_DLR_CREATE,
+                        targetAccountId = PoolFactoryBlock.FactoryAccount,
+                        amounts = new Dictionary<string, decimal>
+                        {
+                            { LyraGlobal.OFFICIALTICKERCODE, 1 },
+                        },
+                        objArgument = new DealerCreateArgument
+                        {
+                            Name = _config["DealerName"],
+                            Description = _config["DealerDescription"],
+                            ServiceUrl = $"{_config["baseUrl"]}/",
+                            DealerAccountId = testWallet.AccountId,
+                            Mode = ClientMode.Permissionless
+                        }
+                    };
+
+                    // we temp disable the dealer creation.
+                    var ret = await testWallet.ServiceRequestAsync(dealerAbi);
+                    if (ret.Successful())
+                    {
+                        Console.WriteLine("Successfully created dealer.");
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Unable to create dealer: {ret.ResultCode.Humanize()}");
+                        await Task.Delay(30_000);
+                    }
+                }
+                return;
+            }
         }
 
         async Task InitTelegramBotAsync()
@@ -266,6 +311,7 @@ namespace Dealer.Server.Services
             );
 
             var me = await _botClient.GetMeAsync();
+            _botUserName = me.Username;
             Console.WriteLine($"Hello, World! I am user {me.Id} and my name is {me.FirstName}.");
         }
 
@@ -295,7 +341,7 @@ namespace Dealer.Server.Services
                 // Echo received message text
                 Message sentMessage = await botClient.SendTextMessageAsync(
                     chatId: chatId,
-                    text: "You said:\n" + messageText,
+                    text: "Please open Lyra APP to reply.\n\nYou said:\n" + messageText,
                     cancellationToken: cancellationToken);
             }
             catch(Exception ex)

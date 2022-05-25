@@ -28,7 +28,9 @@
                 @((trade as IOtcTrade).OTStatus)
             </div>
             <div>
-                <a href="/dealer/room/@trade.AccountID">Chat</a>
+                <a href="/dealer/room/@trade.AccountID">
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary">Chat</MudButton>
+                </a>
                 @if((trade as IOtcTrade).OTStatus == OTCTradeStatus.CryptoReleased)
                 {
                     <MudButton Variant="Variant.Filled" OnClick="@(() => Comment(trade.AccountID))" Color="Color.Tertiary">Comment</MudButton>

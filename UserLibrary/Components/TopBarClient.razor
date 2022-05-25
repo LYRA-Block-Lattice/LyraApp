@@ -66,8 +66,17 @@
 
     RenderFragment? banner;
     string title = "Lyra";
-    string net;
+    string net = "";
     bool shownew;
+
+    protected override void OnInitialized()
+    {
+        net = Configuration["network"];
+        if (net == "mainnet")
+            net = "";
+
+        base.OnInitialized();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -81,10 +90,6 @@
 
     protected async Task AttachEvents()
     {
-        net = Configuration["network"];
-        if (net == "mainnet")
-            net = "";
-
         SubscribeToAction<WebWalletChangeTitleAction>(
             x =>
             {
