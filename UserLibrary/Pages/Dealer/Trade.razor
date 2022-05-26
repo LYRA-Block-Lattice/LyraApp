@@ -231,6 +231,7 @@
         var trade = new OTCTrade
             {
                 daoId = otc.Order.daoId,
+                dealerId = otc.Order.dealerId,
                 orderId = (otc as TransactionBlock).AccountID,
                 orderOwnerId = otc.OwnerAccountId,
                 dir = otc.Order.dir == TradeDirection.Sell ? TradeDirection.Buy : TradeDirection.Sell,

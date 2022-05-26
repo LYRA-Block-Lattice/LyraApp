@@ -356,7 +356,7 @@ else
     {
         //check if user has been registed on dealer server
         var dealerid = mydealers.First(a => a.Name == cfg.dealerName).AccountId;
-        var user = await connMgr.GetDealer().GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
+        var user = await connMgr.GetDealer(dealerid).GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
         if (!user.Successful())
         {
             // register user

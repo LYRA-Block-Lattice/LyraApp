@@ -19,13 +19,15 @@ namespace UserLibrary.Data
         string _priceFeeder;
 
         IConfiguration _config;
+        NebulaConsts _consts;
 
         private static bool _started = false;
 
         public bool IsStarted => _started;
-        public DealerConnMgr(IConfiguration config)
+        public DealerConnMgr(IConfiguration config, NebulaConsts consts)
         {
             _config = config;
+            _consts = consts;
 
             _conns = new Dictionary<string, HubConnection>();
             _dealerClients = new Dictionary<string, DealerClient>();
@@ -84,16 +86,34 @@ namespace UserLibrary.Data
             }            
         }
 
+        /// <summary>
+        /// Get dealer for price update/feed
+        /// </summary>
+        /// <returns></returns>
         public DealerClient GetDealer()
         {
             return _dealerClients[_priceFeeder];
         }
+
+        /// <summary>
+        /// get dealer for privacy protection
+        /// </summary>
+        /// <param name="dealerId"></param>
+        /// <returns></returns>
         public DealerClient GetDealer(string dealerId)
         {
             if (string.IsNullOrEmpty(dealerId))
-                return GetDealer();
+                return GetDealer(_consts.TrustedDealerIds[0]);
 
             return _dealerClients[dealerId];
+        }
+
+        public async Task All(Func<DealerClient, Task> callback)
+        {
+            foreach(var dealer in _dealerClients.Values)
+            {
+                await callback(dealer);
+            }
         }
 
         private Task _connection_Reconnecting(Exception? arg)

@@ -104,7 +104,7 @@
                     await Task.Delay(300);
                     wfstage = -1;
 
-                    Navigation.NavigateTo($"/dealer/room/{gen.AccountID}");
+                    Navigation.NavigateTo($"/dealer/room/{gen.AccountID}", false, true);
                 }
 
                 await InvokeAsync(() => StateHasChanged());

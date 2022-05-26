@@ -197,18 +197,21 @@
         cfg.Signature = null;
         cfg.Sign(walletState.Value.wallet.PrivateKey, walletState.Value.wallet.AccountId);
 
-        var dealer = connMgr.GetDealer(trade.Trade.dealerId);
-        var result = await dealer.CommentTradeAsync(cfg);
-        if (result.Successful())
+        //send comment to all active dealer.
+        await connMgr.All(async dlr =>
         {
-            Snackbar.Add($"Comment Posted.", Severity.Success);
-            comments = await dealer.GetCommentsForTradeAsync(tid);
-            StateHasChanged();
-        }
-        else
-        {
-            Snackbar.Add($"Failed to comment: {result.ResultCode.Humanize()}", Severity.Warning);
-        }
+            var result = await dlr.CommentTradeAsync(cfg);
+            if (result.Successful())
+            {
+                Snackbar.Add($"Comment Posted.", Severity.Success);
+                comments = await dlr.GetCommentsForTradeAsync(tid);
+                StateHasChanged();
+            }
+            else
+            {
+                Snackbar.Add($"Failed to comment: {result.ResultCode.Humanize()}", Severity.Warning);
+            }
+        });
     }
 
     void OnInvalidSubmit(FormInvalidSubmitEventArgs args)

@@ -387,7 +387,7 @@ namespace Dealer.Server.Services
                 {
                     Message message = await _botClient.SendTextMessageAsync(
                         chatId: new ChatId(tgchat.ChatID),
-                        text: $"{msg.Text}\n\nBy: {msg.UserName}\nAbout trade: {msg.TradeId}");
+                        text: $"{msg.Text}\n\nBy: {msg.UserName}\nTrade: {msg.TradeId.Shorten()}");
                 }
                 else
                 {
