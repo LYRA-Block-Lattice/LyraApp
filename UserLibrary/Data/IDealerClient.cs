@@ -197,6 +197,7 @@ namespace UserLibrary.Data
     public interface IHubInvokeMethods
     {
         Task Join(JoinRequest req);
+        Task Leave(JoinRequest req);
         Task SendFile(FileMessage fm);
         Task<JoinRoomResponse> JoinRoom(JoinRoomRequest req);
         Task Chat(ChatMessage msg);

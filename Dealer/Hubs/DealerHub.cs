@@ -531,6 +531,19 @@ namespace Dealer.Server.Hubs
                 //File.AppendAllText("c:\\tmp\\connectionids.txt", $"AddToGroupAsync: {Context.ConnectionId}, {req.UserAccountID}\n");
             }
         }
+
+        public async Task Leave(JoinRequest req)
+        {
+            var lsb = await _lyraApi.GetLastServiceBlockAsync();
+
+            var ok = Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, req.UserAccountID, req.Signature);
+            if (ok)
+            {
+                if (_idgrps.ContainsKey(Context.ConnectionId))
+                    await Groups.RemoveFromGroupAsync(Context.ConnectionId, _idgrps[Context.ConnectionId]);
+                //File.AppendAllText("c:\\tmp\\connectionids.txt", $"AddToGroupAsync: {Context.ConnectionId}, {req.UserAccountID}\n");
+            }
+        }
         #endregion
 
         #region ODR

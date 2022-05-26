@@ -157,6 +157,14 @@ namespace UserLibrary.Data
             }
         }
 
+        public async Task Leave(JoinRequest req)
+        {
+            foreach (var conn in _conns.Values)
+            {
+                await conn.InvokeAsync(nameof(IHubInvokeMethods.Leave), req);
+            }
+        }
+
         public Task Chat(string dealerId, ChatMessage msg)
         {
             if (!_conns.ContainsKey(dealerId ?? _priceFeeder))
