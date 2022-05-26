@@ -1,13 +1,15 @@
 ﻿@page "/dealer/panel"
+@using Blazored.LocalStorage
 @using Fluxor
 @using Lyra.Data.API.WorkFlow
 @using Nebula.Store.WebWalletUseCase
+@using Newtonsoft.Json
 @using UserLibrary.Data
 
 <PageTitle>Dealer Panel</PageTitle>
 
 <div class="mag">
-    <MudRadioGroup @bind-SelectedOption="selName">   
+    <MudRadioGroup @bind-SelectedOption="selPriceFeedID">   
     <h1>Public Trusted Dealers</h1>    
     <table id="dealers">
         <thead>
@@ -29,7 +31,7 @@
                         <div style="font-size:small;">Since: @dlr.Time</div></a>
                     </td>
                     <td>
-                        <MudRadio Option="@(dlr.Name)" Color="Color.Primary"></MudRadio>
+                        <MudRadio Option="@(dlr.AccountId)" Color="Color.Primary"></MudRadio>
                     </td>
                     <td>
                         <MudCheckBox @bind-Checked="@(dlr.Messaging)" Color="Color.Primary"></MudCheckBox>
@@ -62,7 +64,7 @@
                         <div style="font-size:small;">Since: @dlr.Time</div></a>
                     </td>
                     <td>
-                        <MudRadio Option="@(dlr.Name)" Color="Color.Primary"></MudRadio>
+                        <MudRadio Option="@(dlr.AccountId)" Color="Color.Primary"></MudRadio>
                     </td>
                     <td>
                         <MudCheckBox @bind-Checked="@(dlr.Messaging)" Color="Color.Primary"></MudCheckBox>
@@ -76,7 +78,7 @@
     <div>
         <p>
             <MudTextField Label="Add private trusted Dealer ID" @bind-Value="@addDealerID" /> <br />
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddDealer">Add Dealer</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="AddDealer">Add Dealer</MudButton>
         </p>
     </div>
     </MudRadioGroup>
@@ -90,6 +92,7 @@
     [Inject] ILyraAPI lyraApi { get; set; }
     [Inject] DealerClient dealerApi { get; set; }
     [Inject] NebulaConsts _consts { get; set; }
+    [Inject] ILocalStorageService localStorage { get; set; }
 
     private class DealerDesc
     {
@@ -100,9 +103,11 @@
         public bool Messaging { get; set; }
     }
 
+    PreferenceContainer pc;
+
     List<DealerDesc> publicDealers = new List<DealerDesc>();
     List<DealerDesc> privateDealers = new List<DealerDesc>();
-    string selName { get; set; }
+    string selPriceFeedID;
 
     string addDealerID { get; set; }
 
@@ -116,6 +121,9 @@
     {
         if(firstRender)
         {
+            var storStr = await localStorage.GetItemAsync<string>(_consts.PrefStorName) ?? "{}";
+            pc = JsonConvert.DeserializeObject<PreferenceContainer>(storStr);
+
             // get dealers
             foreach (var tdid in _consts.TrustedDealerIds)
             {
@@ -135,24 +143,95 @@
                 }
             }
 
-            selName = publicDealers.First().Name;
-            publicDealers.First().Messaging = true;
+            // private trusted dealers
+            if(pc.PrivateTrustedDealerIDs != null)
+            {
+                foreach (var tdid in pc.PrivateTrustedDealerIDs)
+                {
+                    var dlret = await lyraApi.GetLastBlockAsync(tdid);
+                    if (dlret.Successful())
+                    {
+                        var d = dlret.As<IDealer>();
+                        privateDealers.Add(
+                            new DealerDesc
+                                {
+                                    AccountId = d.AccountID,
+                                    Name = d.Name,
+                                    Desc = d.Description,
+                                    Time = d.TimeStamp,
+                                }
+                        );
+                    }
+                }
+            }
+
+            selPriceFeedID = pc.PriceFeedingDealerID ?? publicDealers.First().AccountId;
+
+            if(pc.PublicTrustedDealerIDs == null && pc.PrivateTrustedDealerIDs == null)
+                publicDealers.First().Messaging = true;
+            else
+            {
+                if(pc.PublicTrustedDealerIDs != null)
+                    foreach(var ptd in pc.PublicTrustedDealerIDs)
+                    {
+                        var x = publicDealers.FirstOrDefault(a => a.AccountId == ptd);
+                        if (x != null)
+                            x.Messaging = true;
+                    }
+
+                if(pc.PrivateTrustedDealerIDs != null)
+                    foreach(var ptd in pc.PrivateTrustedDealerIDs)
+                    {
+                        var x = privateDealers.FirstOrDefault(a => a.AccountId == ptd);
+                        if (x != null)
+                            x.Messaging = true;
+                    }
+            }
 
             StateHasChanged();
         }
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private void Save(MouseEventArgs e)
+    private async Task Save(MouseEventArgs e)
     {
-        var s = publicDealers.Where(a => a.Messaging)
-            .Select(a => a.Name)    
-            .Aggregate((current, next) => current + ", " + next);
-        Snackbar.Add($"You choose price feed for {selName}, messaging for {s}", Severity.Info);
+        pc.PriceFeedingDealerID = selPriceFeedID;
+        pc.PublicTrustedDealerIDs = publicDealers.Where(a => a.Messaging).Select(a => a.AccountId).ToList();
+        pc.PrivateTrustedDealerIDs = privateDealers.Where(a => a.Messaging).Select(a => a.AccountId).ToList();
+        await localStorage.SetItemAsStringAsync(_consts.PrefStorName, JsonConvert.SerializeObject(pc));
+
+        Snackbar.Add($"Preference Saved.", Severity.Info);
     }
 
-    private void AddDealer(MouseEventArgs e)
+    private async Task AddDealer(MouseEventArgs e)
     {
-        Snackbar.Add($"Add private trusted dealer: {addDealerID}", Severity.Info);
+        if(string.IsNullOrWhiteSpace(addDealerID))
+        {
+            Snackbar.Add($"Please specify a dealer ID.", Severity.Warning);
+            return;
+        }
+
+        var dlret = await lyraApi.GetLastBlockAsync(addDealerID);
+        if (dlret.Successful())
+        {
+            var d = dlret.As<IDealer>();
+            privateDealers.Add(
+                new DealerDesc
+                    {
+                        AccountId = d.AccountID,
+                        Name = d.Name,
+                        Desc = d.Description,
+                        Time = d.TimeStamp,
+                    }
+            );
+
+            StateHasChanged();
+
+            Snackbar.Add($"Add private trusted dealer: {addDealerID}", Severity.Info);
+        }
+        else
+        {
+            Snackbar.Add($"Failed to private trusted dealer: {dlret.ResultCode.Humanize()}", Severity.Warning);
+        }
     }
 }

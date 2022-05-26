@@ -16,6 +16,7 @@ namespace UserLibrary.Data
         }
         public string NebulaStorName => $"nebdat_{_config["network"]}";
         public string ContactStorName => $"nebcontacts_{_config["network"]}";
+        public string PrefStorName => $"pref_{_config["network"]}";
 
         public string[] TrustedDealerIds => _config["network"] switch
         {
