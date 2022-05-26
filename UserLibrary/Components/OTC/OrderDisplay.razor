@@ -89,6 +89,7 @@
 
     [Inject] NavigationManager Navigation { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] DealerConnMgr connMgr { get; set; }
 
     UserStats stats;
     decimal marketprice, marketpriceusd;
@@ -129,7 +130,7 @@
         if (firstRender)
         {
             // get seller's name
-            var client = new DealerClient(Configuration["network"]);
+            var client = connMgr.GetDealer(Otc.Order.dealerId);
             var user = await client.GetUserByAccountIdAsync(Otc.OwnerAccountId);
             if (user.Successful())
             {

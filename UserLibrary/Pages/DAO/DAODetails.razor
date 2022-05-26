@@ -118,6 +118,8 @@ else
     [Parameter]
     public string daoid { get; set; }
 
+    [Inject] DealerConnMgr connMgr { get; set; }
+
     public override string DaoId => daoid;
     public override string Title => "DAO Details";
 
@@ -152,15 +154,15 @@ else
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    async Task ShowCreateVote(string name)
-    {
-        //check if user has been registed on dealer server
-        var client = new DealerClient(Configuration["network"]);
-        var user = await client.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
-        if (!user.Successful())
-        {
-            // register user
-            Navigation.NavigateTo("/dealer/register");
-        }
-    }
+    //async Task ShowCreateVote(string name)
+    //{
+    //    ////check if user has been registed on dealer server
+    //    //var client = connMgr.GetDealer();
+    //    //var user = await client.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
+    //    //if (!user.Successful())
+    //    //{
+    //    //    // register user
+    //    //    Navigation.NavigateTo("/dealer/register");
+    //    //}
+    //}
 }

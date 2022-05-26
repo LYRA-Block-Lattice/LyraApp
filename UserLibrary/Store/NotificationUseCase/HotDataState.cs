@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UserLibrary.Data;
 
 namespace UserLibrary.Store.NotificationUseCase
 {
@@ -45,19 +46,19 @@ namespace UserLibrary.Store.NotificationUseCase
     public class Effects
     {
         private readonly ILyraAPI client;
-        private readonly DealerClient dealer;
+        private readonly DealerConnMgr connmgr;
         private readonly IConfiguration config;
         private readonly ILogger<Effects> logger;
         private readonly ILocalStorageService _localStorage;
 
         public Effects(ILyraAPI lyraClient,
-            DealerClient dealerClient,
+            DealerConnMgr mgr,
             IConfiguration configuration,
             ILogger<Effects> logger,
             ILocalStorageService storage)
         {
             client = lyraClient;
-            dealer = dealerClient;
+            connmgr = mgr;
             config = configuration;
             this.logger = logger;
             _localStorage = storage;
@@ -68,7 +69,7 @@ namespace UserLibrary.Store.NotificationUseCase
         {
             try
             {
-                var lps = await dealer.GetPricesAsync();
+                var lps = await connmgr.GetDealer().GetPricesAsync();
                 dispatcher.Dispatch(new HotUpdateResultAction
                 {
                     LatestPrices = lps

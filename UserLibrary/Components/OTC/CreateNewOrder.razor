@@ -1,8 +1,10 @@
-﻿@using Fluxor
+﻿@using Blazored.LocalStorage
+@using Fluxor
 @using Fluxor.Blazor.Web.Components
 @using Lyra.Data.API.WorkFlow
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
+@using Newtonsoft.Json
 @using UserLibrary.Data
 @using UserLibrary.Store.NotificationUseCase
 @inherits FluxorComponent
@@ -36,6 +38,14 @@ else
                             <RadzenSelectBarItem Text="Sell" Value="false" />
                             </Items>
                             </RadzenSelectBar>*@
+                    </MudItem>
+                    <MudItem xs="12">
+                        Trusted Dealer Server:<br />
+                        <RadzenDropDown AllowClear="false" TValue="String" Class="w-100"
+                            Name="daoName"
+                                    @bind-Value=@cfg.dealerName Change="@seldealer"
+                                    Data=@(mydealers.Select(a => a.Name)) /> <br />
+                        <RadzenRequiredValidator Component="dealerName" Text="Trusted dealer is required." Popup="false" Style="position: absolute"/>
                     </MudItem>
                     <MudItem xs="12">
                         In Orgnization:<br />
@@ -144,9 +154,12 @@ else
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] NavigationManager Navigation { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
-    [Inject] DealerClient dealerApi { get; set; }
+    [Inject] DealerConnMgr connMgr { get; set; }
+    [Inject] NebulaConsts _consts { get; set; }
+    [Inject] ILocalStorageService localStorage { get; set; }
 
     List<IDao> mydaos;
+    List<DealerDesc> mydealers;
     bool showco, dir;
     string total;
     List<Ticker> tickers;
@@ -175,6 +188,7 @@ else
 
     class OrderConfig
     {
+        public string dealerName { get; set; }
         public string daoName { get; set; }
         public Ticker crypto { get; set; }
         public string fiat { get; set; }
@@ -235,7 +249,7 @@ else
                         .ToList();
 
                     //check if user has been registed on dealer server
-                    var user = await dealerApi.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
+                    var user = await connMgr.GetDealer(mydealers.First(a => a.Name == cfg.dealerName).AccountId).GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
                     if (!user.Successful())
                     {
                         // register user
@@ -256,6 +270,30 @@ else
                 else
                 {
                     mydaos = new List<IDao>();
+                }
+
+                // trusted dealers
+                var storStr = await localStorage.GetItemAsync<string>(_consts.PrefStorName) ?? "{}";
+                var pc = JsonConvert.DeserializeObject<PreferenceContainer>(storStr);
+
+                // get dealers
+                foreach (var tdid in pc.GetAllTrusted())
+                {
+                    var dlret = await lyraApi.GetLastBlockAsync(tdid);
+                    if (dlret.Successful())
+                    {
+                        var d = dlret.As<IDealer>();
+                        mydealers.Add(
+                            new DealerDesc
+                                {
+                                    AccountId = d.AccountID,
+                                    Name = d.Name,
+                                    Desc = d.Description,
+                                    Time = d.TimeStamp,
+                                    EndpointUri = new Uri(d.Endpoint),
+                                }
+                        );
+                    }
                 }
 
                 if (walletState.Value.wallet?.GetLastSyncBlock().Balances.ContainsKey("tether/USDT") == true)
@@ -324,6 +362,15 @@ else
         StateHasChanged();
     }
 
+    private async Task seldealer()
+    {
+        //var daoret = await walletState.Value.wallet.RPC.GetDaoByNameAsync(cfg.daoName);
+        //if (daoret.Successful())
+        //{
+        //    dao = daoret.GetBlock() as IDao;
+        //}
+    }
+
     private async Task seldao()
     {
         var daoret = await walletState.Value.wallet.RPC.GetDaoByNameAsync(cfg.daoName);
@@ -352,7 +399,7 @@ else
 
         try
         {
-            var client = new DealerClient(Configuration["network"]);
+            var client = connMgr.GetDealer();
             var fiatinfo = await client.GetFiatAsync(cfg.fiat);
             selfiatname = fiatinfo.name;
         }
@@ -385,7 +432,7 @@ else
             var daoret3 = await walletState.Value.wallet.RPC.GetDaoByNameAsync(cfg.daoName);
             var daot = daoret3.GetBlock() as TransactionBlock;
 
-            var dealer = new DealerClient(Configuration["network"]);
+            var dealer = new DealerClient(new Uri(mydealers.First(a => a.Name == cfg.dealerName).EndpointUri, "/api/dealer"));
             var prices = await dealer.GetPricesAsync();
             var tokenSymbol = cfg.crypto.dbname.Split('/')[1];
             var neededLyr = Math.Round(prices[tokenSymbol] * cfg.amount * ((daot as IDao).SellerPar / 100) / prices["LYR"] * 1.03m);

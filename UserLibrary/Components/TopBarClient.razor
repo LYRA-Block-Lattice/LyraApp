@@ -1,14 +1,17 @@
 ﻿@namespace UserLibrary.Components
 @inherits FluxorComponent
 
+@using Blazored.LocalStorage
 @using Fluxor
 @using Fluxor.Blazor.Web.Components
 @using Lyra.Core.API
 @using Lyra.Core.Accounts
+@using Lyra.Data.API.WorkFlow
 @using Lyra.Data.Crypto
 @using Lyra.Data.Shared
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
+@using Newtonsoft.Json
 @using UserLibrary.Data
 @using UserLibrary.Store.NotificationUseCase
 @inject IConfiguration Configuration
@@ -60,10 +63,11 @@
     private IDispatcher Dispatcher { get; set; }
 
     [Inject] ISnackbar Snackbar { get; set; }
-    [Inject] ConnectionMethodsWrapper wrapper { get; set; }
+    [Inject] DealerConnMgr wrapper { get; set; }
     [Inject] ILyraAPI Client { get; set; }
-    [Inject] DealerClient dealerApi { get; set; }
     [Inject] IConfiguration _config { get; set; }
+    [Inject] ILocalStorageService localStorage { get; set; }
+    [Inject] NebulaConsts _consts { get; set; }
 
     MudMenu mnu;
 
@@ -85,8 +89,9 @@
     {
         if(firstRender)
         {
-            await InitSignalR();
             await AttachEvents();
+
+            await InitSignalR();
         }
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -105,7 +110,7 @@
                 await WalletChanged(null, a.wallet);
             });
 
-        SubscribeToAction<DealerSwitchAction>(async a =>
+        SubscribeToAction<PreferenceContainer>(async pc =>
             {
                 var eventUrl = "https://dealer.devnet.lyra.live:7070/";
                 if (_config["network"] == "testnet")
@@ -113,13 +118,23 @@
                 else if (_config["network"] == "mainnet")
                     eventUrl = "https://dealer.lyra.live/";
 
-                var baseurl = a.UrlBase ?? eventUrl;
-                var baseUri = new Uri(baseurl);
-                dealerApi.Switch(_config["network"], new Uri(baseUri, "/api/dealer/").ToString());
-                await wrapper.SwitchDealerAsync(new Uri(baseUri, "/hub"));
+            //var baseurl = a.Messangers == null ? new[] { eventUrl } : a.Messangers.ToArray();
+
+                var mngrs = new Dictionary<string, Uri>();
+                foreach(var id in pc.GetAllTrusted())
+                {
+                    var dlret = await Client.GetLastBlockAsync(id);
+                    if (dlret.Successful())
+                    {
+                        var d = dlret.As<IDealer>();
+                        mngrs.Add(id, new Uri(d.Endpoint));
+                    }
+                }
+
+                await wrapper.SwitchDealerAsync(mngrs, pc.PriceFeedingDealerID);
 
                 await InitSignalR();
-                
+
                 if(walletState.Value.IsOpening)
                 {
                     var lsb = await Client.GetLastServiceBlockAsync();
@@ -266,11 +281,14 @@
             }
             else
             {
-                    // unknown?
+            // unknown?
             }
         });
 
-        Dispatcher.Dispatch(new HotUpdateAction());
+        var storStr = await localStorage.GetItemAsync<string>(_consts.PrefStorName) ?? "{}";
+        var pc = JsonConvert.DeserializeObject<PreferenceContainer>(storStr);
+        Dispatcher.Dispatch(pc);
+        //Dispatcher.Dispatch(new HotUpdateAction());
     }
 
     private void Help(string tradeid)

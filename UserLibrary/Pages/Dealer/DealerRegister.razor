@@ -132,8 +132,8 @@
     [Inject] IDispatcher Dispatcher { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
-    [Inject] DealerClient dealerApi { get; set; }
     [Inject] NebulaConsts _consts { get; set; }
+    [Inject] DealerConnMgr connMgr { get; set; }
 
     string username, firstname, middlename, lastname, email, mobilephone, avatar, telegramId;
     bool busy, success;
@@ -163,7 +163,9 @@
                     return;
                 }
 
-                user = await dealerApi.GetUserDetailsByAccountIdAsync(walletState.Value.wallet.AccountId,
+                var dealer = connMgr.GetDealer(dealerid);
+
+                user = await dealer.GetUserDetailsByAccountIdAsync(walletState.Value.wallet.AccountId,
                     Signatures.GetSignature(walletState.Value.wallet.PrivateKey, (lsb.GetBlock().Hash), walletState.Value.wallet.AccountId));
 
                 if (user != null)
@@ -186,7 +188,7 @@
                 else
                     btnText = "Register to Dealer";
 
-                var brief = await dealerApi.GetBriefAsync();
+                var brief = await dealer.GetBriefAsync();
                 dealerbot = brief.TelegramBotUsername;
 
                 // get dealers
@@ -223,7 +225,8 @@
             if (!telegramId.StartsWith("@"))
                 telegramId = "@" + telegramId;
 
-            var ret = await dealerApi.RegisterAsync(walletState.Value.wallet.AccountId,
+            var dealer = connMgr.GetDealer(dealerid);
+            var ret = await dealer.RegisterAsync(walletState.Value.wallet.AccountId,
                 username, firstname, middlename, lastname, email, mobilephone, avatar, telegramId,
                 Signatures.GetSignature(walletState.Value.wallet.PrivateKey, (lsb.GetBlock().Hash), walletState.Value.wallet.AccountId)
             );

@@ -339,7 +339,7 @@ namespace Dealer.Server.Hubs
         #endregion
 
         #region client API
-        public async Task Chat(ChatMessage msg)
+        public async Task Chat(string dealerId, ChatMessage msg)
         {
             // PortableSignatures make a better compatibility
             if (PortableSignatures.VerifyAccountSignature(msg.Text, msg.AccountId, msg.Signature))
@@ -353,7 +353,7 @@ namespace Dealer.Server.Hubs
             }
         }
 
-        public async Task SendFile(FileMessage file)
+        public async Task SendFile(string dealerId, FileMessage file)
         {
             // PortableSignatures make a better compatibility
             if (PortableSignatures.VerifyAccountSignature(file.FileHash, file.AccountId, file.Signature))
@@ -367,7 +367,7 @@ namespace Dealer.Server.Hubs
             }
         }
 
-        public async Task<JoinRoomResponse> JoinRoom(JoinRoomRequest req)
+        public async Task<JoinRoomResponse> JoinRoom(string dealerId, JoinRoomRequest req)
         {
             // verify the signature
             var ok = Signatures.VerifyAccountSignature(req.TradeID, req.UserAccountID, req.Signature);

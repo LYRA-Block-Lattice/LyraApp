@@ -25,12 +25,6 @@ namespace Nebula.Store.WebWalletUseCase
 		}
 	}
 
-	public class DealerSwitchAction
-    {
-		public string? DealerID { get; set; }
-		public string? UrlBase { get; set; }
-    }
-
 	public class StakingResultAction
     {
 		public List<TransactionBlock> brokers { get; set; }

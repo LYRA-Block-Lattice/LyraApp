@@ -112,6 +112,7 @@
 
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] NavigationManager Navigation { get; set; }
+    [Inject] DealerConnMgr connMgr { get; set; }
 
     IOtcOrder otc;
     string method;
@@ -138,7 +139,7 @@
             }
 
             //check if user has been registed on dealer server
-            var client = new DealerClient(Configuration["network"]);
+            var client = connMgr.GetDealer(otc.Order.dealerId);
             var user = await client.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
             if (!user.Successful())
             {
@@ -215,7 +216,7 @@
         var daoret3 = await walletState.Value.wallet.RPC.GetLastBlockAsync(otc.Order.daoId);
         var daot = daoret3.GetBlock() as TransactionBlock;
 
-        var dealer = new DealerClient(Configuration["network"]);
+        var dealer = connMgr.GetDealer();
         var prices = await dealer.GetPricesAsync();
         var tokenSymbol = otc.Order.crypto.Split('/')[1];
         var neededLyr = Math.Round(prices[tokenSymbol] * got * ((daot as IDao).BuyerPar / 100) / prices["LYR"] * 1.03m);

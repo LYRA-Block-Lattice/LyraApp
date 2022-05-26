@@ -147,9 +147,8 @@
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] IJSRuntime JsRuntime { get; set; }
     [Inject] private IDialogService DialogService { get; set; }
-    [Inject] ConnectionMethodsWrapper Realconn { get; set; }
-    [Inject] public DealerClient dealer { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
+    [Inject] DealerConnMgr connMgr { get; set; }
 
     private List<RespContainer> messages = new List<RespContainer>();
 
@@ -174,6 +173,8 @@
 
     // role, buyer or seller
     string role;
+
+    IOtcTrade trade;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -259,7 +260,7 @@
 
     private async Task JoinDealerRoom()
     {
-        joinroom = await Realconn.JoinRoom(new JoinRoomRequest
+        joinroom = await connMgr.JoinRoom(trade.Trade.dealerId, new JoinRoomRequest
             {
                 TradeID = tradeid,
                 UserAccountID = walletState.Value.wallet.AccountId,
@@ -324,19 +325,19 @@
 
     async Task SendIt()
     {
-            if(!string.IsNullOrWhiteSpace(inputTxt.Text))
-            {
-                await Send(inputTxt.Text);
-                await inputTxt.Clear();
-            }
+        if(!string.IsNullOrWhiteSpace(inputTxt.Text))
+        {
+            await Send(inputTxt.Text);
+            await inputTxt.Clear();
+        }
     }
 
     private async Task Send(string txt)
     {
         // PortableSignatures make a better compatibility
-        if(Realconn.IsConnected)
+        if(connMgr.IsConnected)
         {
-            await Realconn.Chat(new ChatMessage
+            await connMgr.Chat(trade.Trade.dealerId, new ChatMessage
                 {
                     TradeId = tradeid,
                     AccountId = walletState.Value.wallet.AccountId,
@@ -424,7 +425,7 @@
         //Snackbar.Add($"This file has the extension {entries.FirstOrDefault().Name.Split(".").Last()}", Severity.Info);
 
         //TODO upload the files to the server
-        var client = new DealerClient(Configuration["network"]);
+        var dealer = connMgr.GetDealer(trade.Trade.dealerId);
         var wallet = walletState.Value.wallet;
         foreach (var f in entries)
         {
@@ -453,11 +454,11 @@
                         }
                         signature = PortableSignatures.GetSignature(wallet.PrivateKey, hash);
 
-                        var ret = await client.UploadImageAsync(wallet.AccountId, signature, tradeid,
+                        var ret = await dealer.UploadImageAsync(wallet.AccountId, signature, tradeid,
                             f.Name, imageData, f.ContentType);
                         if (ret.Successful())
                         {
-                            await Realconn.SendFile(new FileMessage
+                            await connMgr.SendFile(trade.Trade.dealerId, new FileMessage
                             {
                                 AccountId = wallet.AccountId,
                                 Signature = Signatures.GetSignature(wallet.PrivateKey, ret.Hash, wallet.AccountId),
@@ -497,6 +498,11 @@
             var lsb = lsbret.GetBlock() as ServiceBlock;
             var wallet = walletState.Value.wallet;
             var sign = Signatures.GetSignature(wallet.PrivateKey, lsb.Hash, wallet.AccountId);
+
+            var tradeblk = await lyraApi.GetLastBlockAsync(tradeid);
+            trade = tradeblk.As<IOtcTrade>();
+            var dealer = connMgr.GetDealer(trade.Trade.dealerId);
+
             var ret = await dealer.GetTradeBriefAsync(tradeid, wallet.AccountId, sign);
             if(ret.Successful())
             {

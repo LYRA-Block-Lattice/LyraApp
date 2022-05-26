@@ -248,22 +248,6 @@ namespace Nebula.Store.WebWalletUseCase
 				wallet.SetClient(client);
 				var pending = await wallet.GetPendingRecvAsync();
 				dispatcher.Dispatch(new WebWalletResultAction(wallet, true, UIStage.Main, pending));
-
-				//// get dealer info
-				//string dlrid = null;
-				//string dlrurl = null;
-				//if(!string.IsNullOrEmpty(wltdat.DealerID))
-    //            {
-				//	var dlrblk = await wallet.RPC.GetLastBlockAsync(wltdat.DealerID);
-				//	if(dlrblk.Successful())
-    //                {
-				//		var dlr = dlrblk.As<IDealer>();
-				//		dlrid = wltdat.DealerID;
-				//		dlrurl = dlr.Endpoint;
-    //                }
-				//}				
-
-				//dispatcher.Dispatch(new DealerSwitchAction { DealerID = dlrid, UrlBase = dlrurl });
 			}
 			catch(Exception ex)
             {

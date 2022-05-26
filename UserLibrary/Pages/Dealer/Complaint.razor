@@ -6,6 +6,7 @@
 @using Lyra.Data.API.WorkFlow
 @using Lyra.Data.Crypto
 @using Nebula.Store.WebWalletUseCase
+@using UserLibrary.Data
 @inherits FluxorComponent
 
 <div class="mag">
@@ -86,11 +87,11 @@
     [Parameter]
     public string tradeid { get; set; }
 
-    [Inject] public DealerClient dealer { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
 
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
+    [Inject] DealerConnMgr connMgr { get; set; }
 
     TradeBrief brief;
     List<IVoting> votings;
@@ -118,6 +119,9 @@
             var lsb = lsbret.GetBlock() as ServiceBlock;
             var wallet = walletState.Value.wallet;
             var sign = Signatures.GetSignature(wallet.PrivateKey, lsb.Hash, wallet.AccountId);
+
+            var tradeblk = await lyraApi.GetLastBlockAsync(tradeid);
+            var dealer = connMgr.GetDealer(tradeblk.As<IOtcTrade>().Trade.dealerId);
             var ret = await dealer.GetTradeBriefAsync(tradeid, wallet.AccountId, sign);
             if(ret.Successful())
             {

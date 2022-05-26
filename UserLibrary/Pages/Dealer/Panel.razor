@@ -90,18 +90,8 @@
     [Inject] IDispatcher Dispatcher { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
-    [Inject] DealerClient dealerApi { get; set; }
     [Inject] NebulaConsts _consts { get; set; }
     [Inject] ILocalStorageService localStorage { get; set; }
-
-    private class DealerDesc
-    {
-        public string AccountId { get; set; }
-        public string Name { get; set; }
-        public string Desc { get; set; }
-        public DateTime Time { get; set; }
-        public bool Messaging { get; set; }
-    }
 
     PreferenceContainer pc;
 
@@ -201,6 +191,8 @@
         await localStorage.SetItemAsStringAsync(_consts.PrefStorName, JsonConvert.SerializeObject(pc));
 
         Snackbar.Add($"Preference Saved.", Severity.Info);
+
+        Dispatcher.Dispatch(pc);
     }
 
     private async Task AddDealer(MouseEventArgs e)

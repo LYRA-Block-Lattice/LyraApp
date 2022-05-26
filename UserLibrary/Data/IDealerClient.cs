@@ -197,8 +197,18 @@ namespace UserLibrary.Data
     public interface IHubInvokeMethods
     {
         Task Join(JoinRequest req);
-        Task SendFile(FileMessage fm);
-        Task<JoinRoomResponse> JoinRoom(JoinRoomRequest req);
-        Task Chat(ChatMessage msg);
+        Task SendFile(string dealerId, FileMessage fm);
+        Task<JoinRoomResponse> JoinRoom(string dealerId, JoinRoomRequest req);
+        Task Chat(string dealerId, ChatMessage msg);
+    }
+
+    public class DealerDesc
+    {
+        public string AccountId { get; set; }
+        public string Name { get; set; }
+        public string Desc { get; set; }
+        public DateTime Time { get; set; }
+        public bool Messaging { get; set; }
+        public Uri EndpointUri { get; set; }
     }
 }

@@ -2,10 +2,12 @@
 @using Fluxor
 @using Humanizer
 @using Lyra.Data.API.Identity
+@using Lyra.Data.API.WorkFlow
 @using Lyra.Data.Crypto
 @using Lyra.Data.Shared
 @using System.Text
 @using Nebula.Store.WebWalletUseCase
+@using UserLibrary.Data
 @inject IJSRuntime JSRuntime
 @inject NavigationManager Navigation
 
@@ -112,8 +114,8 @@
     private int? activeVal;
     CommentConfig cfg = new CommentConfig { };
 
+    [Inject] DealerConnMgr connMgr { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
-    [Inject] public DealerClient dealer { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
@@ -139,6 +141,8 @@
     Dictionary<string, DateTime> times;
     Dictionary<string, string> roles;
 
+    IOtcTrade trade;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -154,6 +158,11 @@
                     actid = walletState.Value.wallet.AccountId;
                     signature = Signatures.GetSignature(wallet.PrivateKey, lsb.Hash, wallet.AccountId);
                 }
+
+                var tradeblk = await lyraApi.GetLastBlockAsync(tid);
+                trade = tradeblk.As<IOtcTrade>();
+                var dealer = connMgr.GetDealer(trade.Trade.dealerId);
+
                 brief = (await dealer.GetTradeBriefAsync(tid, actid, signature)).Deserialize<TradeBrief>();
 
                 users = new Dictionary<string, string>();
@@ -187,6 +196,8 @@
         cfg.Hash = null;    // reset it.
         cfg.Signature = null;
         cfg.Sign(walletState.Value.wallet.PrivateKey, walletState.Value.wallet.AccountId);
+
+        var dealer = connMgr.GetDealer(trade.Trade.dealerId);
         var result = await dealer.CommentTradeAsync(cfg);
         if (result.Successful())
         {

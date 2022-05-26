@@ -21,7 +21,7 @@ Signatures.Switch(true);
 builder.Services.AddBlazoredLocalStorage();
 var networkid = builder.Configuration["network"];
 builder.Services.AddScoped<ILyraAPI>(a => LyraRestClient.Create(networkid, Environment.OSVersion.ToString(), "HotTest", "1.0"));
-builder.Services.AddScoped<DealerClient>(a => new DealerClient(networkid));
+//builder.Services.AddScoped<DealerClient>(a => new DealerClient(networkid));
 
 var currentAssembly = typeof(Program).Assembly;
 var libAssembly = typeof(UserLibrary.Data.WalletView).Assembly;
@@ -45,18 +45,19 @@ builder.Services.AddTransient<NebulaConsts>();
 // Register a preconfigure SignalR hub connection.
 // Note the connection isnt yet started, this will be done as part of the App.razor component
 // to avoid blocking the application startup in case the connection cannot be established
-builder.Services.AddSingleton<HubConnection>(sp => {
-    var eventUrl = "https://dealer.devnet.lyra.live:7070/hub";
-    if (networkid == "testnet")
-        eventUrl = "https://dealertestnet.lyra.live/hub";
-    else if (networkid == "mainnet")
-        eventUrl = "https://dealer.lyra.live/hub";
-    var hub = ConnectionFactoryHelper.CreateConnection(new Uri(eventUrl));
+// manage in app
+//builder.Services.AddSingleton<HubConnection>(sp => {
+//    var eventUrl = "https://dealer.devnet.lyra.live:7070/hub";
+//    if (networkid == "testnet")
+//        eventUrl = "https://dealertestnet.lyra.live/hub";
+//    else if (networkid == "mainnet")
+//        eventUrl = "https://dealer.lyra.live/hub";
+//    var hub = ConnectionFactoryHelper.CreateConnection(new Uri(eventUrl));
 
-    return hub;
-});
+//    return hub;
+//});
 
-builder.Services.AddSingleton<ConnectionMethodsWrapper>();
+builder.Services.AddSingleton<DealerConnMgr>();
 
 var app = builder.Build();
 
