@@ -7,12 +7,81 @@
 <PageTitle>Dealer Panel</PageTitle>
 
 <div class="mag">
-    @foreach(var dlr in dealers)
-    {
-        <div>Name: @dlr.Name</div>
-        <div>Time Registered: @dlr.TimeStamp</div>
-        <div>Description: @dlr.Description</div>
-    }
+    <MudRadioGroup @bind-SelectedOption="selName">   
+    <h1>Public Trusted Dealers</h1>    
+    <table id="dealers">
+        <thead>
+            <tr>
+                <td>Dealer</td>
+                <td>Trust for Price Feeding</td>
+                <td>Trust for Messanging</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var dlr in publicDealers)
+            {
+                <tr>
+                    <td>
+                        <a href="/dealer/register/@dlr.AccountId">
+                        <h3>@dlr.Name</h3><br />
+                        <div>@dlr.Desc</div>   
+                        <br />
+                        <div style="font-size:small;">Since: @dlr.Time</div></a>
+                    </td>
+                    <td>
+                        <MudRadio Option="@(dlr.Name)" Color="Color.Primary"></MudRadio>
+                    </td>
+                    <td>
+                        <MudCheckBox @bind-Checked="@(dlr.Messaging)" Color="Color.Primary"></MudCheckBox>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+
+    </table>
+    <br />
+    <h1>My Trusted Dealers</h1>
+        <table id="dealers">
+        <thead>
+            <tr>
+                <td>Dealer</td>
+                <td>Trust for Price Feeding</td>
+                <td>Trust for Messanging</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var dlr in privateDealers)
+            {
+                <tr>
+                    <td>
+                        <a href="/dealer/register/@dlr.AccountId">
+                        <h3>@dlr.Name</h3><br />
+                        <div>@dlr.Desc</div>   
+                        <br />
+                        <div style="font-size:small;">Since: @dlr.Time</div></a>
+                    </td>
+                    <td>
+                        <MudRadio Option="@(dlr.Name)" Color="Color.Primary"></MudRadio>
+                    </td>
+                    <td>
+                        <MudCheckBox @bind-Checked="@(dlr.Messaging)" Color="Color.Primary"></MudCheckBox>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+
+    <div>
+        <p>
+            <MudTextField Label="Add private trusted Dealer ID" @bind-Value="@addDealerID" /> <br />
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddDealer">Add Dealer</MudButton>
+        </p>
+    </div>
+    </MudRadioGroup>
+    <br />
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="Save">Save</MudButton>
 </div>
 
 @code {
@@ -22,7 +91,20 @@
     [Inject] DealerClient dealerApi { get; set; }
     [Inject] NebulaConsts _consts { get; set; }
 
-    List<IDealer> dealers = new List<IDealer>();
+    private class DealerDesc
+    {
+        public string AccountId { get; set; }
+        public string Name { get; set; }
+        public string Desc { get; set; }
+        public DateTime Time { get; set; }
+        public bool Messaging { get; set; }
+    }
+
+    List<DealerDesc> publicDealers = new List<DealerDesc>();
+    List<DealerDesc> privateDealers = new List<DealerDesc>();
+    string selName { get; set; }
+
+    string addDealerID { get; set; }
 
     protected override void OnInitialized()
     {
@@ -40,12 +122,37 @@
                 var dlret = await lyraApi.GetLastBlockAsync(tdid);
                 if (dlret.Successful())
                 {
-                    dealers.Add(dlret.As<IDealer>());
+                    var d = dlret.As<IDealer>();
+                    publicDealers.Add(
+                        new DealerDesc
+                            {
+                                AccountId = d.AccountID,
+                                Name = d.Name,
+                                Desc = d.Description,
+                                Time = d.TimeStamp,
+                            }
+                    );
                 }
             }
+
+            selName = publicDealers.First().Name;
+            publicDealers.First().Messaging = true;
 
             StateHasChanged();
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private void Save(MouseEventArgs e)
+    {
+        var s = publicDealers.Where(a => a.Messaging)
+            .Select(a => a.Name)    
+            .Aggregate((current, next) => current + ", " + next);
+        Snackbar.Add($"You choose price feed for {selName}, messaging for {s}", Severity.Info);
+    }
+
+    private void AddDealer(MouseEventArgs e)
+    {
+        Snackbar.Add($"Add private trusted dealer: {addDealerID}", Severity.Info);
     }
 }

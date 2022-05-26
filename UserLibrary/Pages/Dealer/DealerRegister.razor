@@ -1,4 +1,4 @@
-﻿@page "/dealer/register"
+﻿@page "/dealer/register/{dealerid}"
 @using Fluxor
 @using Lyra.Data.API.Identity
 @using Lyra.Data.API.WorkFlow
@@ -29,91 +29,107 @@
     </div>
     <div style="height:50px;" />
     <div>
-        <p>
-            <h3>Dealer To Trust and Use:</h3>
-            <RadzenDropDown AllowClear="false" TValue="IDealer" Class="w-100" Multiple="false"
-                            Data=@dealers TextProperty="Name" @bind-Value=dlr
-                            Change=@(args => OnDealerChange(args, "DropDown")) />
-            @if(dlr != null)
-            {
-                <div>Name: @dlr.Name</div>
-                <div>Time Registered: @dlr.TimeStamp</div>
-                <div>Description: @dlr.Description</div>
-            }
-            <br /><br /><br />
-        </p>
-        <p></p>
-        <p>
-            <h3>Lyra User Name</h3>
-            <MudTextField @bind-Value="@username" Label="" />
-        </p>
-        <div style="height:45px;" />
-        <p>
-            <h3>First Name</h3>
-            <MudTextField @bind-Value="@firstname" Label="" />
-        </p>
-        <div style="height:45px;" />
-        <p>
-            <h3>Middle Name</h3>
-            <MudTextField @bind-Value="@middlename" Label="" />
-        </p>
-        <p>
-            <h3>Last Name</h3>
-            <MudTextField @bind-Value="@lastname" Label="" />
-        </p>
-        <div style="height:45px;" />
-        <p>
-            <h3>Email</h3>
-            <MudTextField @bind-Value="@email" Label="" />
-        </p>
-        <div style="height:45px;" />
-        <p>
-            <h3>Mobile Phone</h3>
-            <MudTextField @bind-Value="@mobilephone" Label="" />
-        </p>
-        <div style="height:45px;" />
-        <p>
-            <h3>Avatar</h3>
-            <MudTextField @bind-Value="@avatar" Label="" />
-        </p>
-        <div style="height:45px;" />
-        <p>
-            <h3>Telegram ID</h3>
-            <MudTextField @bind-Value="@telegramId" Label="" />
-            Note: Please send a message to <a target="_blank" href="https://t.me/@dealerbot">https://t.me/@dealerbot</a> to activate.
-        </p>
-        <div style="height:45px;" />
-
-        <div style="height:45px;" />
-        <p>
-            @if (walletState.Value.wallet == null)
-            {
-                <a href="wallet"><MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary">Open wallet to create token</MudButton></a>
-            }
-            else
-            {
-                <RadzenButton style="width: 160px" IsBusy=@busy Click=@OnRegister Text="Register" />
-            }
-
-        </p>
-
-        @if (success)
+        @if (walletState.Value.wallet == null)
         {
-            <p>
-                <a href="dao">Back to DAO</a>
-            </p>
+            <div>
+                <a href="/login">
+                    <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
+                        <MudIcon Icon="@Icons.Filled.LockOpen" />
+                        Open Wallet
+                    </MudButton>
+                </a>
+            </div>
         }
+        else
+        {
+            <p>                
+                @if (dlr != null)
+                {
+                    <h3>@dlr.Name</h3>
+                    <div style="font-size:x-small;">@dlr.TimeStamp</div>
+                    <br />
+                    <div>@dlr.Description</div>                   
 
+                    <br />
+
+                    <br />
+                }
+            </p>
+            <p></p>
+            <p>
+                <h3>Lyra User Name</h3>
+                <MudTextField @bind-Value="@username" Label="" />
+            </p>
+            <div style="height:45px;" />
+            <p>
+                <h3>First Name</h3>
+                <MudTextField @bind-Value="@firstname" Label="" />
+            </p>
+            <div style="height:45px;" />
+            <p>
+                <h3>Middle Name</h3>
+                <MudTextField @bind-Value="@middlename" Label="" />
+            </p>
+            <p>
+                <h3>Last Name</h3>
+                <MudTextField @bind-Value="@lastname" Label="" />
+            </p>
+            <div style="height:45px;" />
+            <p>
+                <h3>Email</h3>
+                <MudTextField @bind-Value="@email" Label="" />
+            </p>
+            <div style="height:45px;" />
+            <p>
+                <h3>Mobile Phone</h3>
+                <MudTextField @bind-Value="@mobilephone" Label="" />
+            </p>
+            <div style="height:45px;" />
+            <p>
+                <h3>Avatar</h3>
+                <MudTextField @bind-Value="@avatar" Label="" />
+            </p>
+            <div style="height:45px;" />
+            <p>
+                <h3>Telegram ID</h3>
+                <MudTextField @bind-Value="@telegramId" Label="" />
+                Note: Please send a message to <a target="_blank" href="https://t.me/@dealerbot">https://t.me/@dealerbot</a> to activate.
+            </p>
+            <div style="height:45px;" />
+
+            <div style="height:45px;" />
+            <p>
+                @if (walletState.Value.wallet == null)
+                {
+                    <a href="wallet"><MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary">Open wallet to create token</MudButton></a>
+                }
+                else
+                {
+                    <RadzenButton style="width: 160px" IsBusy=@busy Click=@OnRegister Text="Register" />
+                }
+
+            </p>
+
+            @if (success)
+            {
+                <p>
+                    Success!
+                </p>
+            }
+        }
     </div>
 </div>
 
 @code {
+
+    [Parameter] public string dealerid { get; set; }
     [Inject]
     IConfiguration Configuration { get; set; }
 
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
 
+    [Inject] IDispatcher Dispatcher { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
     [Inject] DealerClient dealerApi { get; set; }
@@ -123,15 +139,20 @@
     bool busy, success;
     string dealerbot;
 
-    List<IDealer> dealers = new List<IDealer>();
     IDealer dlr;
     LyraUser user;
     string btnText = "Register to Dealer";
 
+    protected override void OnInitialized()
+    {
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Register to dealer" });
+        base.OnInitialized();
+    }
+
     // load user if any
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender)
+        if (firstRender && walletState.Value.IsOpening)
         {
             try
             {
@@ -145,7 +166,7 @@
                 user = await dealerApi.GetUserDetailsByAccountIdAsync(walletState.Value.wallet.AccountId,
                     Signatures.GetSignature(walletState.Value.wallet.PrivateKey, (lsb.GetBlock().Hash), walletState.Value.wallet.AccountId));
 
-                if(user != null)
+                if (user != null)
                 {
                     username = user.UserName;
                     firstname = user.FirstName;
@@ -169,18 +190,13 @@
                 dealerbot = brief.TelegramBotUsername;
 
                 // get dealers
-                foreach(var tdid in _consts.TrustedDealerIds)
+                var dlret = await lyraApi.GetLastBlockAsync(dealerid);
+                if (dlret.Successful())
                 {
-                    var dlret = await lyraApi.GetLastBlockAsync(tdid);
-                    if(dlret.Successful())
-                    {
-                        dealers.Add(dlret.As<IDealer>());
-                    }
+                    dlr = dlret.As<IDealer>();
                 }
-
-                dlr = dealers.First();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Snackbar.Add($"Failed to status: {ex.Message}. Please check network connect.", Severity.Warning);
             }
@@ -198,13 +214,13 @@
         try
         {
             var lsb = await lyraApi.GetLastServiceBlockAsync();
-            if(!lsb.Successful())
+            if (!lsb.Successful())
             {
                 Snackbar.Add($"Failed to get network status: {lsb.ResultCode}. Please retry later.", Severity.Warning);
                 return;
             }
 
-            if(!telegramId.StartsWith("@"))
+            if (!telegramId.StartsWith("@"))
                 telegramId = "@" + telegramId;
 
             var ret = await dealerApi.RegisterAsync(walletState.Value.wallet.AccountId,
@@ -213,7 +229,7 @@
             );
             success = ret.Successful();
 
-            if(!success)
+            if (!success)
             {
                 Snackbar.Add($"Failed to register: {ret.ResultCode.Humanize()}", Severity.Warning);
             }
@@ -222,17 +238,12 @@
                 Snackbar.Add($"User {username} registered.", Severity.Success);
             }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Snackbar.Add($"Failed to register: {ex.Message}", Severity.Error);
         }
 
 
         busy = false;
-    }
-
-    void OnDealerChange(object value, string name)
-    {
-        dlr = dealers.First(a => a.Name == value as string);
     }
 }
