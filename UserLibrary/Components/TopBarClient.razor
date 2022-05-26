@@ -121,7 +121,7 @@
             //var baseurl = a.Messangers == null ? new[] { eventUrl } : a.Messangers.ToArray();
 
                 var mngrs = new Dictionary<string, Uri>();
-                foreach(var id in pc.GetAllTrusted())
+                foreach(var id in pc.GetAllTrusted() ?? new List<string>() {_consts.TrustedDealerIds[0]})
                 {
                     var dlret = await Client.GetLastBlockAsync(id);
                     if (dlret.Successful())
@@ -131,9 +131,7 @@
                     }
                 }
 
-                await wrapper.SwitchDealerAsync(mngrs, pc.PriceFeedingDealerID);
-
-                await InitSignalR();
+                await wrapper.SwitchDealerAsync(mngrs, pc.PriceFeedingDealerID ?? _consts.TrustedDealerIds[0]);
 
                 if(walletState.Value.IsOpening)
                 {

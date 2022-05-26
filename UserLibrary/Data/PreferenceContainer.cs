@@ -12,6 +12,6 @@ namespace UserLibrary.Data
         public List<string> PublicTrustedDealerIDs { get; set; }
         public List<string> PrivateTrustedDealerIDs { get; set; }
 
-        public List<string> GetAllTrusted() => PublicTrustedDealerIDs.Concat(PrivateTrustedDealerIDs).ToList();
+        public List<string> GetAllTrusted() => PublicTrustedDealerIDs?.Concat(PrivateTrustedDealerIDs).ToList();
     }
 }
