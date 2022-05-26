@@ -1,0 +1,51 @@
+﻿@page "/dealer/panel"
+@using Fluxor
+@using Lyra.Data.API.WorkFlow
+@using Nebula.Store.WebWalletUseCase
+@using UserLibrary.Data
+
+<PageTitle>Dealer Panel</PageTitle>
+
+<div class="mag">
+    @foreach(var dlr in dealers)
+    {
+        <div>Name: @dlr.Name</div>
+        <div>Time Registered: @dlr.TimeStamp</div>
+        <div>Description: @dlr.Description</div>
+    }
+</div>
+
+@code {
+    [Inject] IDispatcher Dispatcher { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] ILyraAPI lyraApi { get; set; }
+    [Inject] DealerClient dealerApi { get; set; }
+    [Inject] NebulaConsts _consts { get; set; }
+
+    List<IDealer> dealers = new List<IDealer>();
+
+    protected override void OnInitialized()
+    {
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Dealer Panel" });
+        base.OnInitialized();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            // get dealers
+            foreach (var tdid in _consts.TrustedDealerIds)
+            {
+                var dlret = await lyraApi.GetLastBlockAsync(tdid);
+                if (dlret.Successful())
+                {
+                    dealers.Add(dlret.As<IDealer>());
+                }
+            }
+
+            StateHasChanged();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}

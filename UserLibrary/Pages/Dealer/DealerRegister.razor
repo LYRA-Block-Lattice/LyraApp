@@ -31,8 +31,8 @@
     <div>
         <p>
             <h3>Dealer To Trust and Use:</h3>
-            <RadzenDropDown AllowClear="false" TValue="string" Class="w-100" Multiple="false"
-                            Data=@(dealers.Select(c => c.Name))
+            <RadzenDropDown AllowClear="false" TValue="IDealer" Class="w-100" Multiple="false"
+                            Data=@dealers TextProperty="Name" @bind-Value=dlr
                             Change=@(args => OnDealerChange(args, "DropDown")) />
             @if(dlr != null)
             {
@@ -177,6 +177,8 @@
                         dealers.Add(dlret.As<IDealer>());
                     }
                 }
+
+                dlr = dealers.First();
             }
             catch(Exception ex)
             {

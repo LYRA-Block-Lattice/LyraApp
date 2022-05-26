@@ -73,10 +73,15 @@
             }
             &nbsp;<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="SaveSettings">Save</MudButton>
             &nbsp;<a href="/backup"><MudButton Variant="Variant.Filled" Color="Color.Primary">Backup Wallet</MudButton></a>
-            &nbsp;<a href="/dealer/register"><MudButton Variant="Variant.Filled" Color="Color.Primary">Register To Dealer</MudButton></a>
+            
             &nbsp;<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="CloseWallet">Close Wallet</MudButton>
         </div>
     }
+
+    <MudDivider Style="margin: 30px" />
+    <div style="font-size: xx-small">
+        <a href="/dealer/panel"><MudButton Variant="Variant.Filled" Color="Color.Primary">Dealer Panel</MudButton></a>
+    </div>
 
     <MudDivider Style="margin: 30px" />
     <div style="font-size: xx-small">
