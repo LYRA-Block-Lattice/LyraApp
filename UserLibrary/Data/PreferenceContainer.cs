@@ -8,10 +8,10 @@ namespace UserLibrary.Data
 {
     public class PreferenceContainer
     {
-        public string PriceFeedingDealerID { get; set; }
-        public List<string> PublicTrustedDealerIDs { get; set; }
-        public List<string> PrivateTrustedDealerIDs { get; set; }
+        public string? PriceFeedingDealerID { get; set; }
+        public List<string>? PublicTrustedDealerIDs { get; set; }
+        public List<string>? PrivateTrustedDealerIDs { get; set; }
 
-        public List<string> GetAllTrusted() => PublicTrustedDealerIDs?.Concat(PrivateTrustedDealerIDs).ToList();
+        public List<string>? GetAllTrusted() => PublicTrustedDealerIDs?.Concat(PrivateTrustedDealerIDs ?? new List<string>()).ToList();
     }
 }

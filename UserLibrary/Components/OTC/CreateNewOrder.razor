@@ -159,7 +159,7 @@ else
     [Inject] ILocalStorageService localStorage { get; set; }
 
     List<IDao> mydaos;
-    List<DealerDesc> mydealers;
+    List<DealerDesc> mydealers = new List<DealerDesc>();
     bool showco, dir;
     string total;
     List<Ticker> tickers;
@@ -226,6 +226,30 @@ else
         {
             try
             {
+                // trusted dealers
+                var storStr = await localStorage.GetItemAsync<string>(_consts.PrefStorName) ?? "{}";
+                var pc = JsonConvert.DeserializeObject<PreferenceContainer>(storStr);
+
+                // get dealers
+                foreach (var tdid in pc.GetAllTrusted() ?? new List<string>() { _consts.TrustedDealerIds[0] })
+                {
+                    var dlret = await lyraApi.GetLastBlockAsync(tdid);
+                    if (dlret.Successful())
+                    {
+                        var d = dlret.As<IDealer>();
+                        mydealers.Add(
+                            new DealerDesc
+                                {
+                                    AccountId = d.AccountID,
+                                    Name = d.Name,
+                                    Desc = d.Description,
+                                    Time = d.TimeStamp,
+                                    EndpointUri = new Uri(d.Endpoint),
+                                }
+                        );
+                    }
+                }
+
                 // get sellable tokens
                 var tokens = await lyraApi.GetTokenNamesAsync(null, null, "(null)");
 
@@ -248,17 +272,7 @@ else
                         .Where(b => having.Contains(b.dbname))
                         .ToList();
 
-                    //check if user has been registed on dealer server
-                    var user = await connMgr.GetDealer(mydealers.First(a => a.Name == cfg.dealerName).AccountId).GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
-                    if (!user.Successful())
-                    {
-                        // register user
-                        Navigation.NavigateTo("/dealer/register");
-                    }
-                    else
-                    {
-                        showco = true;
-                    }
+                    showco = true;
                 }
 
                 // daos
@@ -270,30 +284,6 @@ else
                 else
                 {
                     mydaos = new List<IDao>();
-                }
-
-                // trusted dealers
-                var storStr = await localStorage.GetItemAsync<string>(_consts.PrefStorName) ?? "{}";
-                var pc = JsonConvert.DeserializeObject<PreferenceContainer>(storStr);
-
-                // get dealers
-                foreach (var tdid in pc.GetAllTrusted())
-                {
-                    var dlret = await lyraApi.GetLastBlockAsync(tdid);
-                    if (dlret.Successful())
-                    {
-                        var d = dlret.As<IDealer>();
-                        mydealers.Add(
-                            new DealerDesc
-                                {
-                                    AccountId = d.AccountID,
-                                    Name = d.Name,
-                                    Desc = d.Description,
-                                    Time = d.TimeStamp,
-                                    EndpointUri = new Uri(d.Endpoint),
-                                }
-                        );
-                    }
                 }
 
                 if (walletState.Value.wallet?.GetLastSyncBlock().Balances.ContainsKey("tether/USDT") == true)
@@ -364,11 +354,13 @@ else
 
     private async Task seldealer()
     {
-        //var daoret = await walletState.Value.wallet.RPC.GetDaoByNameAsync(cfg.daoName);
-        //if (daoret.Successful())
-        //{
-        //    dao = daoret.GetBlock() as IDao;
-        //}
+        //check if user has been registed on dealer server
+        var user = await connMgr.GetDealer(mydealers.First(a => a.Name == cfg.dealerName).AccountId).GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
+        if (!user.Successful())
+        {
+            // register user
+            Navigation.NavigateTo("/dealer/register");
+        }
     }
 
     private async Task seldao()
