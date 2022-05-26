@@ -42,7 +42,7 @@ else
                     <MudItem xs="12">
                         Trusted Dealer Server:<br />
                         <RadzenDropDown AllowClear="false" TValue="String" Class="w-100"
-                            Name="daoName"
+                            Name="dealerName"
                                     @bind-Value=@cfg.dealerName Change="@seldealer"
                                     Data=@(mydealers.Select(a => a.Name)) /> <br />
                         <RadzenRequiredValidator Component="dealerName" Text="Trusted dealer is required." Popup="false" Style="position: absolute"/>
@@ -425,7 +425,7 @@ else
             var daoret3 = await walletState.Value.wallet.RPC.GetDaoByNameAsync(cfg.daoName);
             var daot = daoret3.GetBlock() as TransactionBlock;
 
-            var dealer = new DealerClient(new Uri(mydealers.First(a => a.Name == cfg.dealerName).EndpointUri, "/api/dealer"));
+            var dealer = new DealerClient(new Uri(mydealers.First(a => a.Name == cfg.dealerName).EndpointUri, "/api/dealer/"));
             var prices = await dealer.GetPricesAsync();
             var tokenSymbol = cfg.crypto.dbname.Split('/')[1];
             var neededLyr = Math.Round(prices[tokenSymbol] * cfg.amount * ((daot as IDao).SellerPar / 100) / prices["LYR"] * 1.03m);
@@ -440,6 +440,7 @@ else
             var order = new OTCOrder
                 {
                     daoId = daot.AccountID,
+                    dealerId = mydealers.First(a => a.Name == cfg.dealerName).AccountId,
                     dir = TradeDirection.Sell,
                     crypto = cfg.crypto.dbname,
                     fiat = cfg.fiat,
