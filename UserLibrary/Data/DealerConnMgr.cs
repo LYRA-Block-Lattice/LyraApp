@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace UserLibrary.Data
 {
-    public class DealerConnMgr : IHubInvokeMethods, IAsyncDisposable
+    public class DealerConnMgr : IAsyncDisposable
     {
         // dealerID -> hub's connectionID
         private Dictionary<string, HubConnection> _conns;
@@ -159,26 +159,26 @@ namespace UserLibrary.Data
 
         public Task Chat(string dealerId, ChatMessage msg)
         {
-            if (_conns.ContainsKey(dealerId))
+            if (!_conns.ContainsKey(dealerId ?? _priceFeeder))
                 throw new InvalidDataException("Dealer not exists in list.");
 
-            return _conns[dealerId].InvokeAsync(nameof(IHubInvokeMethods.Chat), msg);
+            return _conns[dealerId ?? _priceFeeder].InvokeAsync(nameof(IHubInvokeMethods.Chat), msg);
         }
 
         public Task SendFile(string dealerId, FileMessage msg)
         {
-            if (_conns.ContainsKey(dealerId))
+            if (!_conns.ContainsKey(dealerId ?? _priceFeeder))
                 throw new InvalidDataException("Dealer not exists in list.");
 
-            return _conns[dealerId].InvokeAsync(nameof(IHubInvokeMethods.SendFile), msg);
+            return _conns[dealerId ?? _priceFeeder].InvokeAsync(nameof(IHubInvokeMethods.SendFile), msg);
         }
 
         public Task<JoinRoomResponse> JoinRoom(string dealerId, JoinRoomRequest req)
         {
-            if (_conns.ContainsKey(dealerId))
+            if (!_conns.ContainsKey(dealerId ?? _priceFeeder))
                 throw new InvalidDataException("Dealer not exists in list.");
 
-            return _conns[dealerId].InvokeAsync<JoinRoomResponse>(nameof(IHubInvokeMethods.JoinRoom), req);
+            return _conns[dealerId ?? _priceFeeder].InvokeAsync<JoinRoomResponse>(nameof(IHubInvokeMethods.JoinRoom), req);
         }
     }
 

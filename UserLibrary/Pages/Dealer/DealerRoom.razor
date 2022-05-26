@@ -187,6 +187,7 @@
         if(firstRender)
         {
             await GetTradeBrief();
+            await JoinDealerRoom();
             await InvokeAsync(() => StateHasChanged());
         }
 
@@ -253,9 +254,7 @@
                         Snackbar.Add($"Trade changed. {a.Text}", Severity.Normal);
                     }
                 }
-            });
-
-        await JoinDealerRoom();
+            });        
     }
 
     private async Task JoinDealerRoom()

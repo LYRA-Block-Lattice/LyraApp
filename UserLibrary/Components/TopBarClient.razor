@@ -112,37 +112,7 @@
 
         SubscribeToAction<PreferenceContainer>(async pc =>
             {
-                var eventUrl = "https://dealer.devnet.lyra.live:7070/";
-                if (_config["network"] == "testnet")
-                    eventUrl = "https://dealertestnet.lyra.live/";
-                else if (_config["network"] == "mainnet")
-                    eventUrl = "https://dealer.lyra.live/";
-
-            //var baseurl = a.Messangers == null ? new[] { eventUrl } : a.Messangers.ToArray();
-
-                var mngrs = new Dictionary<string, Uri>();
-                foreach(var id in pc.GetAllTrusted() ?? new List<string>() {_consts.TrustedDealerIds[0]})
-                {
-                    var dlret = await Client.GetLastBlockAsync(id);
-                    if (dlret.Successful())
-                    {
-                        var d = dlret.As<IDealer>();
-                        mngrs.Add(id, new Uri(d.Endpoint));
-                    }
-                }
-
-                await wrapper.SwitchDealerAsync(mngrs, pc.PriceFeedingDealerID ?? _consts.TrustedDealerIds[0]);
-
-                if(walletState.Value.IsOpening)
-                {
-                    var lsb = await Client.GetLastServiceBlockAsync();
-                    var wlt = walletState.Value.wallet;
-                    await wrapper.Join(new JoinRequest
-                            {
-                                UserAccountID = wlt.AccountId,
-                                Signature = Signatures.GetSignature(wlt.PrivateKey, lsb.GetBlock().Hash, wlt.AccountId),
-                            });
-                }
+                await ResetConn(pc);
             });
 
         SubscribeToAction<WebWalletCloseAction>(async a =>
@@ -249,8 +219,48 @@
         await base.OnInitializedAsync();
     }
 
+    async Task ResetConn(PreferenceContainer pc)
+    {
+        var eventUrl = "https://dealer.devnet.lyra.live:7070/";
+        if (_config["network"] == "testnet")
+            eventUrl = "https://dealertestnet.lyra.live/";
+        else if (_config["network"] == "mainnet")
+            eventUrl = "https://dealer.lyra.live/";
+
+        //var baseurl = a.Messangers == null ? new[] { eventUrl } : a.Messangers.ToArray();
+
+        var mngrs = new Dictionary<string, Uri>();
+        foreach (var id in pc.GetAllTrusted() ?? new List<string>() { _consts.TrustedDealerIds[0] })
+        {
+            var dlret = await Client.GetLastBlockAsync(id);
+            if (dlret.Successful())
+            {
+                var d = dlret.As<IDealer>();
+                mngrs.Add(id, new Uri(d.Endpoint));
+            }
+        }
+
+        await wrapper.SwitchDealerAsync(mngrs, pc.PriceFeedingDealerID ?? _consts.TrustedDealerIds[0]);
+
+        if (walletState.Value.IsOpening)
+        {
+            var lsb = await Client.GetLastServiceBlockAsync();
+            var wlt = walletState.Value.wallet;
+            await wrapper.Join(new JoinRequest
+                    {
+                        UserAccountID = wlt.AccountId,
+                        Signature = Signatures.GetSignature(wlt.PrivateKey, lsb.GetBlock().Hash, wlt.AccountId),
+                    });
+        }
+    }
+
     async Task InitSignalR()
     {
+        var storStr = await localStorage.GetItemAsync<string>(_consts.PrefStorName) ?? "{}";
+        var pc = JsonConvert.DeserializeObject<PreferenceContainer>(storStr);
+
+        await ResetConn(pc);
+
         wrapper.RegisterOnChat(a => Dispatcher.Dispatch(a));
         wrapper.RegisterOnPinned(a => Dispatcher.Dispatch(a));
         wrapper.RegisterOnEvent(a =>
@@ -283,10 +293,7 @@
             }
         });
 
-        var storStr = await localStorage.GetItemAsync<string>(_consts.PrefStorName) ?? "{}";
-        var pc = JsonConvert.DeserializeObject<PreferenceContainer>(storStr);
-        Dispatcher.Dispatch(pc);
-        //Dispatcher.Dispatch(new HotUpdateAction());
+        Dispatcher.Dispatch(new HotUpdateAction());
     }
 
     private void Help(string tradeid)
