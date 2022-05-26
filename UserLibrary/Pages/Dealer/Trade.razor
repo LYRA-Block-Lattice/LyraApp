@@ -144,7 +144,7 @@
             if (!user.Successful())
             {
                 // register user
-                Navigation.NavigateTo("/dealer/register");
+                Navigation.NavigateTo($"/dealer/register/{otc.Order.dealerId}");
             }
 
             SubscribeToAction<MarketUpdated>(async e =>

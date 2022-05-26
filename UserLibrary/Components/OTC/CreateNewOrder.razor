@@ -355,11 +355,12 @@ else
     private async Task seldealer()
     {
         //check if user has been registed on dealer server
-        var user = await connMgr.GetDealer(mydealers.First(a => a.Name == cfg.dealerName).AccountId).GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
+        var dealerid = mydealers.First(a => a.Name == cfg.dealerName).AccountId;
+        var user = await connMgr.GetDealer().GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
         if (!user.Successful())
         {
             // register user
-            Navigation.NavigateTo("/dealer/register");
+            Navigation.NavigateTo($"/dealer/register/{dealerid}");
         }
     }
 

@@ -147,22 +147,6 @@
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    async Task ShowCreateVote(string name)
-    {
-        ////check if user has been registed on dealer server
-        //var client = new DealerClient(Configuration["network"]);
-        //var user = await client.GetUserByAccountIdAsync(walletState.Value.wallet.AccountId);
-        //if (!user.Successful())
-        //{
-        //    // register user
-        //    Navigation.NavigateTo("/dealer/register");
-        //}
-        //else
-        //{
-            seldaoname = name;
-        //}
-    }
-
     async Task GetMyDaos()
     {
         var alldaoret = await lyraApi.GetAllDaosAsync(0, 10);
