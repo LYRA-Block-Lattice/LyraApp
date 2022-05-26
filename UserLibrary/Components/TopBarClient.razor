@@ -336,6 +336,17 @@
     ;
         }
 
+        if (walletState.Value.IsOpening)
+        {
+            var lsb = await Client.GetLastServiceBlockAsync();
+            var wlt = walletState.Value.wallet;
+            await wrapper.Join(new JoinRequest
+                    {
+                        UserAccountID = wlt.AccountId,
+                        Signature = Signatures.GetSignature(wlt.PrivateKey, lsb.GetBlock().Hash, wlt.AccountId),
+                    });
+        }
+
         await InvokeAsync(() => StateHasChanged());
     }
 
