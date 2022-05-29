@@ -1,4 +1,5 @@
 ﻿using Lyra.Core.API;
+using Lyra.Core.Blocks;
 using Lyra.Data.API;
 using Lyra.Data.API.Identity;
 using Newtonsoft.Json;
@@ -30,13 +31,37 @@ namespace UserLibrary.Data
         public Dictionary<string, string> Roles { get; set; }
     }
 
-    public class ChatMessage
+    public class DealMessage : SignableObject
     {
+        public string PrevHash { get; set; } = null!;
+        public DateTime TimeStamp { get; set; }
         public string TradeId { get; set; } = null!;
-        public string AccountId { get; set; } = null!;  
+        public string AccountId { get; set; } = null!;
+
+        public DealMessage()
+        {
+            TimeStamp = DateTime.UtcNow;
+        }
+
+        public override string GetHashInput()
+        {
+            return $"{PrevHash}|{DateTimeToString(TimeStamp)}|{TradeId}|{AccountId}";
+        }
+
+        protected override string GetExtraData()
+        {
+            return "";
+        }
+    }
+
+    public class ChatMessage : DealMessage
+    {
         public string Text { get; set; } = null!;
-        public string Signature { get; set; } = null!;
-        public string? Hash { get; set; }
+
+        public override string GetHashInput()
+        {
+            return base.GetHashInput() + $"|{Text}";
+        }
     }
 
     public interface IChatResp
@@ -53,13 +78,14 @@ namespace UserLibrary.Data
         public string Hash { get; set; } = null!;   // the hash of tx chain
     }
 
-    public class FileMessage
+    public class FileMessage : DealMessage
     {
-        public string TradeId { get; set; } = null!;
-        public string AccountId { get; set; } = null!;
         public string FileHash { get; set; } = null!;
-        public string Signature { get; set; } = null!;
-        public string? Hash { get; set; }
+
+        public override string GetHashInput()
+        {
+            return base.GetHashInput() + $"|{FileHash}";
+        }
     }
 
     public class RespFile : IChatResp

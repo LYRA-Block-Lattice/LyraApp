@@ -251,14 +251,15 @@ namespace Dealer.Server.Services
             // start wallet
             var walletStor2 = new AccountInMemoryStorage();
             Wallet.Create(walletStor2, "xunit", "1234", _config["network"], _config["DealerKey"]);
-            var testWallet = Wallet.Open(walletStor2, "xunit", "1234", _lyraApi);
-            testWallet.NoConsole = true;
-            await testWallet.SyncAsync(null);
+            var dlrWallet = Wallet.Open(walletStor2, "xunit", "1234", _lyraApi);
+            _logger.LogInformation($"Dealer Wallet Account ID: {dlrWallet.AccountId}");
+            dlrWallet.NoConsole = true;
+            await dlrWallet.SyncAsync(null);
 
             // register if necessary
             while(true)
             {
-                var gdret = await testWallet.RPC.GetDealerByAccountIdAsync(testWallet.AccountId);
+                var gdret = await dlrWallet.RPC.GetDealerByAccountIdAsync(dlrWallet.AccountId);
                 if (!gdret.Successful())
                 {
                     var dealerAbi = new Wallet.LyraContractABI
@@ -274,13 +275,13 @@ namespace Dealer.Server.Services
                             Name = _config["DealerName"],
                             Description = _config["DealerDescription"],
                             ServiceUrl = $"{_config["baseUrl"]}/",
-                            DealerAccountId = testWallet.AccountId,
+                            DealerAccountId = dlrWallet.AccountId,
                             Mode = ClientMode.Permissionless
                         }
                     };
 
                     // we temp disable the dealer creation.
-                    var ret = await testWallet.ServiceRequestAsync(dealerAbi);
+                    var ret = await dlrWallet.ServiceRequestAsync(dealerAbi);
                     if (ret.Successful())
                     {
                         Console.WriteLine("Successfully created dealer.");

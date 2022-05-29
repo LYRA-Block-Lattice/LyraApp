@@ -17,7 +17,7 @@ namespace Dealer.Server.Hubs
     // client call this
     public class DealerHub : Hub<IHubPushMethods>, IHubInvokeMethods
     {
-        private string _dealerId, _dealerKey;
+        private string _dealerOwnerAccountId, _dealerKey;
 
         Keeper _keeper;
         IConfiguration _config;
@@ -33,8 +33,6 @@ namespace Dealer.Server.Hubs
 
         Dictionary<string, Func<ChatMessage, Task>> BotCommands;
 
-        public string DealerId => _dealerId;
-
         public DealerHub(DealerDb db, Dealeamon dealer, Keeper keeper, ILyraAPI lyraApi, IConfiguration Configuration, ILogger<DealerHub> logger)
         {
             _config = Configuration;
@@ -47,7 +45,7 @@ namespace Dealer.Server.Hubs
             _fileBuffer = new BufferBlock<FileMessage>();
 
             _dealerKey = Configuration["DealerKey"];
-            _dealerId = Signatures.GetAccountIdFromPrivateKey(_dealerKey);
+            _dealerOwnerAccountId = Signatures.GetAccountIdFromPrivateKey(_dealerKey);
 
             BotCommands = new Dictionary<string, Func<ChatMessage, Task>>
             {
@@ -133,7 +131,7 @@ namespace Dealer.Server.Hubs
             var latestmsg = await _db.AppendTxRecordAsync(txmsg);
 
             string userName;
-            if (speakerAccountId == _dealerId)
+            if (speakerAccountId == _dealerOwnerAccountId)
                 userName = "Dealer";
             else
             {
@@ -157,7 +155,7 @@ namespace Dealer.Server.Hubs
             var latestmsg = await _db.AppendTxRecordAsync(file);
 
             string userName;
-            if (file.AccountId == _dealerId)
+            if (file.AccountId == _dealerOwnerAccountId)
                 userName = "Dealer";
             else
             {
@@ -219,7 +217,7 @@ namespace Dealer.Server.Hubs
         {
             var text = @$"Supported commands: {string.Join(",", BotCommands.Keys.ToArray())}";
 
-            await SendResponseToRoomAsync(msg.TradeId, _dealerId, text);
+            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
         }
 
         #endregion
@@ -252,7 +250,7 @@ namespace Dealer.Server.Hubs
             }
 
             var text = $"Dealer can't confirm FiaT send. Please try again.";
-            await SendResponseToRoomAsync(msg.TradeId, _dealerId, text);
+            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
         }
 
         private async Task CommandFiatSent(ChatMessage msg)
@@ -276,7 +274,7 @@ namespace Dealer.Server.Hubs
             }
 
             var text = $"Dealer can't confirm FiAT send. Please try again.";
-            await SendResponseToRoomAsync(msg.TradeId, _dealerId, text);
+            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
         }
 
         private async Task CommandStatus(ChatMessage msg)
@@ -296,7 +294,7 @@ namespace Dealer.Server.Hubs
             };
             var text = $"Current status of trade: {tradeblk.OTStatus}. Next step: {next}";
 
-            await SendResponseToRoomAsync(msg.TradeId, _dealerId, text);
+            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
         }
 
         // print peer info
@@ -305,7 +303,7 @@ namespace Dealer.Server.Hubs
             var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IOtcTrade>();
             var text = $"Trade ID: {(tradeblk as TransactionBlock).AccountID}";
 
-            await SendResponseToRoomAsync(msg.TradeId, _dealerId, text);
+            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
         }
         #endregion
 
@@ -342,7 +340,7 @@ namespace Dealer.Server.Hubs
         public async Task Chat(ChatMessage msg)
         {
             // PortableSignatures make a better compatibility
-            if (PortableSignatures.VerifyAccountSignature(msg.Text, msg.AccountId, msg.Signature))
+            if (msg.VerifySignature(msg.AccountId))
             {
                 _messageBuffer.Post(msg);
                 await ConsumeAsync(_messageBuffer);
@@ -356,7 +354,7 @@ namespace Dealer.Server.Hubs
         public async Task SendFile(FileMessage file)
         {
             // PortableSignatures make a better compatibility
-            if (PortableSignatures.VerifyAccountSignature(file.FileHash, file.AccountId, file.Signature))
+            if (file.VerifySignature(file.AccountId))
             {
                 _fileBuffer.Post(file);
                 await ConsumeAsync(_fileBuffer);
@@ -414,7 +412,7 @@ namespace Dealer.Server.Hubs
                         {
                             { seller.AccountId, seller.UserName },
                             { buyer.AccountId, buyer.UserName },
-                            { _dealerId, "Dealer" },
+                            { _dealerOwnerAccountId, "Dealer" },
                         };
                         return new JoinRoomResponse
                         {                            
@@ -562,7 +560,7 @@ namespace Dealer.Server.Hubs
             if (tradeblk.OTStatus == OTCTradeStatus.Dispute ||
                 tradeblk.OTStatus == OTCTradeStatus.DisputeClosed)
             {
-                await SendResponseToRoomAsync(msg.TradeId, _dealerId, "Inappropriate");
+                await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, "Inappropriate");
                 return;
             }
 
@@ -572,7 +570,7 @@ namespace Dealer.Server.Hubs
                 if(room.DisputeHistory.Last().RaisedTime + delay > DateTime.UtcNow)
                 {
                     var str = string.Format("{0} Days {1} Hours {2} Minutes", delay.Days, delay.Hours, delay.Minutes);
-                    await SendResponseToRoomAsync(msg.TradeId, _dealerId, $"Can't raise dispute level in cooling down. Time left: {str}");
+                    await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, $"Can't raise dispute level in cooling down. Time left: {str}");
                     return;
                 }
             }
@@ -599,7 +597,7 @@ namespace Dealer.Server.Hubs
             }
 
             var text = $"{from} issued a complaint about lost of {dispute.ClaimedLost} LYR. Please be noted. ";
-            await SendResponseToRoomAsync(msg.TradeId, _dealerId, text);
+            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
 
             foreach (var user in room.Members)
                 await PinMessageAsync(tradeblk, user.AccountId);

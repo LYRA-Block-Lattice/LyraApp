@@ -336,14 +336,16 @@
         // PortableSignatures make a better compatibility
         if(connMgr.IsConnected)
         {
-            await connMgr.Chat(trade.Trade.dealerId, new ChatMessage
+            var lastHash = messages.Count > 0 ? messages.Last().Get().Hash : null;
+            var chatmsg = new ChatMessage
                 {
+                    PrevHash = lastHash,
                     TradeId = tradeid,
                     AccountId = walletState.Value.wallet.AccountId,
                     Text = txt,
-                    Signature = PortableSignatures.GetSignature(walletState.Value.wallet.PrivateKey,
-                                    txt, walletState.Value.wallet.AccountId),
-                });
+                };
+            chatmsg.Sign(walletState.Value.wallet.PrivateKey, walletState.Value.wallet.AccountId);
+            await connMgr.Chat(trade.Trade.dealerId, chatmsg);
         }
         else
         {

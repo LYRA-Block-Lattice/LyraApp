@@ -20,6 +20,10 @@ namespace UserLibrary.Data
 
         public string[] TrustedDealerIds => _config["network"] switch
         {
+            "testnet" => new[]
+            {
+                "L9YsTcVwnff8JgqynoVGnMP2ePfiKPrqiyDEAiVY842pQaC3uxwzK7jyck3JiHw7tBoMS3G4o3EHDESvUb2yodCHNYf9rT"
+            },
             "devnet" => new[]
                 {
                 "L9vh5kuijpaDiqYAaHoV6EejAL3qUXF15JrSR1LvHien3h4fHR3B9p65ubF9AgQnnMzUxdLbDTPtjwpbxB5SPPtSaF4wMr",
