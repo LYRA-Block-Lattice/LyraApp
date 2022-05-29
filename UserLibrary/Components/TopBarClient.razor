@@ -336,7 +336,7 @@
     ;
         }
 
-        if (walletState.Value.IsOpening)
+        if (wallet != null)
         {
             var lsb = await Client.GetLastServiceBlockAsync();
             var wlt = walletState.Value.wallet;
