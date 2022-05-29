@@ -390,6 +390,13 @@ namespace Dealer.Server.Services
                         chatId: new ChatId(tgchat.ChatID),
                         text: $"{msg.Text}\n\nBy: {msg.UserName}\nTrade: {msg.TradeId.Shorten()}");
                 }
+                else if(obj is RespFile file)
+                {
+                    // todo: send the miage to telegram
+                    Message message = await _botClient.SendTextMessageAsync(
+                        chatId: new ChatId(tgchat.ChatID),
+                        text: $"(An Image, Hash: {file.FileHash})\n\nBy: {file.UserName}\nTrade: {file.TradeId.Shorten()}");
+                }
                 else
                 {
                     throw new NotImplementedException();

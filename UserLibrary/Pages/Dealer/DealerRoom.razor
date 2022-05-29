@@ -459,13 +459,16 @@
                             f.Name, imageData, f.ContentType);
                         if (ret.Successful())
                         {
-                            await connMgr.SendFile(trade.Trade.dealerId, new FileMessage
-                            {
-                                AccountId = wallet.AccountId,
-                                Signature = Signatures.GetSignature(wallet.PrivateKey, ret.Hash, wallet.AccountId),
-                                TradeId = tradeid,
-                                FileHash = ret.Hash,
-                            });
+                            var lastHash = messages.Count > 0 ? messages.Last().Get().Hash : null;
+                            var filemsg = new FileMessage
+                                {
+                                    PrevHash = lastHash,
+                                    TradeId = tradeid,
+                                    AccountId = wallet.AccountId,
+                                    FileHash = ret.Hash,
+                                };
+                            filemsg.Sign(walletState.Value.wallet.PrivateKey, walletState.Value.wallet.AccountId);
+                            await connMgr.SendFile(trade.Trade.dealerId, filemsg);
                         }
                         else
                         {

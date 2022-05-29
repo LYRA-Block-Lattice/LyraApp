@@ -324,18 +324,17 @@ namespace Dealer.Server.Services
             };
         }
 
+        [HttpGet]
+        [Route("img")]
+        public async Task<ActionResult> ViewAsync(string hash)
+        {
+            var image = await _db.GetImageDataByIdAsync(hash); //Pull image from the database.
+            if (image == null)
+                return NotFound();
+            return File(image.Data, image.Mime);
+        }
 
         /*
-                [HttpGet]
-                [Route("img")]
-                public async Task<ActionResult> ViewAsync(string hash)
-                {
-                    var image = await _db.GetImageDataByIdAsync(hash); //Pull image from the database.
-                    if (image == null)
-                        return NotFound();
-                    return File(image.Data, image.Mime);
-                }
-
                 // GET: api/<TransactionController>
                 [HttpGet]
                 public IEnumerable<string> Get()
