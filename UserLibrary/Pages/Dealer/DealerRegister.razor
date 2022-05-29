@@ -222,7 +222,7 @@
                 return;
             }
 
-            if (!telegramId.StartsWith("@"))
+            if (telegramId != null && !telegramId.StartsWith("@"))
                 telegramId = "@" + telegramId;
 
             var dealer = connMgr.GetDealer(dealerid);
