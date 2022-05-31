@@ -87,11 +87,17 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender)
+        if (firstRender)
         {
-            await AttachEvents();
-
-            await InitSignalR();
+            try
+            {
+                await AttachEvents();
+                await InitSignalR();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Error init: {ex}", Severity.Warning);
+            }
         }
         await base.OnAfterRenderAsync(firstRender);
     }
@@ -104,7 +110,7 @@
                 title = x.title;
                 shownew = x.menunew;
             }
-        );
+            );
         SubscribeToAction<WebWalletResultAction>(async a =>
             {
                 await WalletChanged(null, a.wallet);
@@ -121,15 +127,54 @@
             });
 
         SubscribeToAction<RespContainer>(ax =>
-        {
-            if (Navigation.Uri.Contains("/dealer/room"))
-                return;
-
-            var obj = ax.Get();
-
-            if (obj is RespMessage a)
             {
-                Snackbar.Add($"{a.UserName}: {a.Text}", Severity.Normal, config =>
+                if (Navigation.Uri.Contains("/dealer/room"))
+                    return;
+
+                var obj = ax.Get();
+
+                if (obj is RespMessage a)
+                {
+                    Snackbar.Add($"{a.UserName}: {a.Text}", Severity.Normal, config =>
+                    {
+                        config.Action = "Open Trade";
+                        config.ActionColor = Color.Primary;
+                        config.Onclick = snackbar =>
+                        {
+                            Help(a.TradeId);
+                            return Task.CompletedTask;
+                        };
+                    });
+                }
+                else
+                if (obj is RespFile fx)
+                {
+                    Snackbar.Add($"{fx.UserName} send you a file: {fx.FileName}", Severity.Normal, config =>
+                    {
+                        config.Action = "Open Trade";
+                        config.ActionColor = Color.Primary;
+                        config.Onclick = snackbar =>
+                        {
+                            Help(fx.TradeId);
+                            return Task.CompletedTask;
+                        };
+                    });
+                }
+            });
+        SubscribeToAction<PinnedMessage>(a =>
+            {
+                if (Navigation.Uri.Contains("/dealer/room"))
+                    return;
+
+                var title = a.Mode switch
+                {
+                    PinnedMode.Action => "Take Action: ",
+                    PinnedMode.Wait => "Await: ",
+                    PinnedMode.Notify => "",
+                    _ => "",
+                };
+
+                Snackbar.Add($"{title}{a.Text}", Severity.Normal, config =>
                 {
                     config.Action = "Open Trade";
                     config.ActionColor = Color.Primary;
@@ -139,118 +184,84 @@
                         return Task.CompletedTask;
                     };
                 });
-            }
-            else
-            if (obj is RespFile fx)
-            {
-                Snackbar.Add($"{fx.UserName} send you a file: {fx.FileName}", Severity.Normal, config =>
-                {
-                    config.Action = "Open Trade";
-                    config.ActionColor = Color.Primary;
-                    config.Onclick = snackbar =>
-                    {
-                        Help(fx.TradeId);
-                        return Task.CompletedTask;
-                    };
-                });
-            }
-        });
-        SubscribeToAction<PinnedMessage>(a =>
-        {
-            if (Navigation.Uri.Contains("/dealer/room"))
-                return;
-
-            var title = a.Mode switch
-            {
-                PinnedMode.Action => "Take Action: ",
-                PinnedMode.Wait => "Await: ",
-                PinnedMode.Notify => "",
-                _ => "",
-            };
-
-            Snackbar.Add($"{title}{a.Text}", Severity.Normal, config =>
-            {
-                config.Action = "Open Trade";
-                config.ActionColor = Color.Primary;
-                config.Onclick = snackbar =>
-                {
-                    Help(a.TradeId);
-                    return Task.CompletedTask;
-                };
             });
-        });
 
         SubscribeToAction<AccountChangedEvent>(achgevt =>
-        {
-            if (achgevt.ChangeType == AccountChangeTypes.Receive)
             {
-                Dispatcher.Dispatch(new WebWalletGotSendToMeAction());
+                if (achgevt.ChangeType == AccountChangeTypes.Receive)
+                {
+                    Dispatcher.Dispatch(new WebWalletGotSendToMeAction());
 
-                if (Navigation.Uri.Contains("/wallet"))
-                {
-                    Snackbar.Add($"Incoming transfer from: {achgevt.PeerAccountId.Shorten()}", Severity.Success);
-                }
-                else
-                {
-                    Snackbar.Add($"Incoming transfer from: {achgevt.PeerAccountId.Shorten()}", Severity.Success, config =>
-                {
-                    config.Action = "Open Wallet";
-                    config.ActionColor = Color.Primary;
-                    config.Onclick = snackbar =>
+                    if (Navigation.Uri.Contains("/wallet"))
                     {
-                        GoWallet();
-                        return Task.CompletedTask;
-                    };
-                });
+                        Snackbar.Add($"Incoming transfer from: {achgevt.PeerAccountId.Shorten()}", Severity.Success);
+                    }
+                    else
+                    {
+                        Snackbar.Add($"Incoming transfer from: {achgevt.PeerAccountId.Shorten()}", Severity.Success, config =>
+                    {
+                        config.Action = "Open Wallet";
+                        config.ActionColor = Color.Primary;
+                        config.Onclick = snackbar =>
+                        {
+                            GoWallet();
+                            return Task.CompletedTask;
+                        };
+                    });
+                    }
                 }
-            }
-            else
-        if (achgevt.ChangeType == AccountChangeTypes.SendReceived)
-            {
-                Snackbar.Add($"Your send to: {achgevt.PeerAccountId.Shorten()} is received.", Severity.Success);
-            }
-            else
-        if (achgevt.ChangeType == AccountChangeTypes.Contract)
-            {
-                Snackbar.Add($"Your contract {achgevt.PeerAccountId.Shorten()} is changed.", Severity.Success);
-            }
-        });
+                else if (achgevt.ChangeType == AccountChangeTypes.SendReceived)
+                {
+                    Snackbar.Add($"Your send to: {achgevt.PeerAccountId.Shorten()} is received.", Severity.Success);
+                }
+                else if (achgevt.ChangeType == AccountChangeTypes.Contract)
+                {
+                    Snackbar.Add($"Your contract {achgevt.PeerAccountId.Shorten()} is changed.", Severity.Success);
+                }
+            });
 
         await base.OnInitializedAsync();
     }
 
     async Task ResetConn(PreferenceContainer pc)
     {
-        var eventUrl = "https://dealer.devnet.lyra.live:7070/";
-        if (_config["network"] == "testnet")
-            eventUrl = "https://dealertestnet.lyra.live/";
-        else if (_config["network"] == "mainnet")
-            eventUrl = "https://dealer.lyra.live/";
-
-        //var baseurl = a.Messangers == null ? new[] { eventUrl } : a.Messangers.ToArray();
-
-        var mngrs = new Dictionary<string, Uri>();
-        foreach (var id in pc.GetAllTrusted() ?? new List<string>() { _consts.TrustedDealerIds[0] })
+        try
         {
-            var dlret = await Client.GetLastBlockAsync(id);
-            if (dlret.Successful())
+            var eventUrl = "https://dealer.devnet.lyra.live:7070/";
+            if (_config["network"] == "testnet")
+                eventUrl = "https://dealertestnet.lyra.live/";
+            else if (_config["network"] == "mainnet")
+                eventUrl = "https://dealer.lyra.live/";
+
+            //var baseurl = a.Messangers == null ? new[] { eventUrl } : a.Messangers.ToArray();
+            PreferenceContainer pc2 = pc ?? new PreferenceContainer();
+            var mngrs = new Dictionary<string, Uri>();
+            foreach (var id in pc2.GetAllTrusted() ?? new List<string>() { _consts.TrustedDealerIds[0] })
             {
-                var d = dlret.As<IDealer>();
-                mngrs.Add(id, new Uri(d.Endpoint));
+                var dlret = await Client.GetLastBlockAsync(id);
+                if (dlret.Successful())
+                {
+                    var d = dlret.As<IDealer>();
+                    mngrs.Add(id, new Uri(d.Endpoint));
+                }
+            }
+
+            await wrapper.SwitchDealerAsync(mngrs, pc2.PriceFeedingDealerID ?? _consts.TrustedDealerIds[0]);
+
+            if (walletState.Value.IsOpening)
+            {
+                var lsb = await Client.GetLastServiceBlockAsync();
+                var wlt = walletState.Value.wallet;
+                await wrapper.Join(new JoinRequest
+                            {
+                                UserAccountID = wlt.AccountId,
+                                Signature = Signatures.GetSignature(wlt.PrivateKey, lsb.GetBlock().Hash, wlt.AccountId),
+                            });
             }
         }
-
-        await wrapper.SwitchDealerAsync(mngrs, pc.PriceFeedingDealerID ?? _consts.TrustedDealerIds[0]);
-
-        if (walletState.Value.IsOpening)
+        catch (Exception ex)
         {
-            var lsb = await Client.GetLastServiceBlockAsync();
-            var wlt = walletState.Value.wallet;
-            await wrapper.Join(new JoinRequest
-                    {
-                        UserAccountID = wlt.AccountId,
-                        Signature = Signatures.GetSignature(wlt.PrivateKey, lsb.GetBlock().Hash, wlt.AccountId),
-                    });
+            Snackbar.Add($"Exception reset connection: {ex}", Severity.Error);
         }
     }
 
@@ -264,34 +275,42 @@
         wrapper.RegisterOnChat(a => Dispatcher.Dispatch(a));
         wrapper.RegisterOnPinned(a => Dispatcher.Dispatch(a));
         wrapper.RegisterOnEvent(a =>
-        {
-            var evt = a.Get();
+            {
+                try
+                {
+                    var evt = a.Get();
 
-            if (evt is AccountChangedEvent achgevt)
-            {
-                Dispatcher.Dispatch(achgevt);
-            }
-            else if (evt is ContractChangeEvent cchg)
-            {
-                Dispatcher.Dispatch(cchg);
-            }
-            else if (evt is WorkflowEvent wfevt)
-            {
-                Dispatcher.Dispatch(wfevt);
-            }
-            else if (evt is RespQuote quote)
-            {
-                Dispatcher.Dispatch(new HotUpdateResultAction
-                        {
-                            LatestPrices = quote.Prices
-                        });
-                Dispatcher.Dispatch(new MarketUpdated());
-            }
-            else
-            {
-            // unknown?
-            }
-        });
+                    if (evt is AccountChangedEvent achgevt)
+                    {
+                        Dispatcher.Dispatch(achgevt);
+                    }
+                    else if (evt is ContractChangeEvent cchg)
+                    {
+                        Dispatcher.Dispatch(cchg);
+                    }
+                    else if (evt is WorkflowEvent wfevt)
+                    {
+                        Dispatcher.Dispatch(wfevt);
+                    }
+                    else if (evt is RespQuote quote)
+                    {
+                        Dispatcher.Dispatch(new HotUpdateResultAction
+                                    {
+                                        LatestPrices = quote.Prices
+                                    });
+                        Dispatcher.Dispatch(new MarketUpdated());
+                    }
+                    else
+                    {
+                        // unknown?
+                        Snackbar.Add($"Unknown Event: {evt}", Severity.Warning);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Snackbar.Add($"Exception in RegisterOnEvent: {ex}", Severity.Error);
+                }
+            });
 
         Dispatcher.Dispatch(new HotUpdateAction());
     }
@@ -308,46 +327,53 @@
 
     private async Task WalletChanged(object sender, Wallet wallet)
     {
-        decimal balance1 = 0;
-        if (wallet != null)
+        try
         {
-            var blk = wallet.GetLastSyncBlock();
-            if (blk != null)
+            decimal balance1 = 0;
+            if (wallet != null)
             {
-                if (blk.Balances.ContainsKey("LYR"))
-                    balance1 = blk.Balances["LYR"].ToBalanceDecimal();
+                var blk = wallet.GetLastSyncBlock();
+                if (blk != null)
+                {
+                    if (blk.Balances.ContainsKey("LYR"))
+                        balance1 = blk.Balances["LYR"].ToBalanceDecimal();
 
-                var bs = $"{balance1:N2}";
-                banner =
+                    var bs = $"{balance1:N2}";
+                    banner =
     @<div>Balance: <b>@bs</b> LYR</div>
-    ;
+            ;
+                }
+                else
+                {
+                    banner =
+    @<div>Wallet is empty.</div>
+            ;
+                }
             }
             else
             {
                 banner =
-    @<div>Wallet is empty.</div>
-    ;
-            }
-        }
-        else
-        {
-            banner =
     @<div>Wallet is not opened.</div>
     ;
-        }
+            }
 
-        if (wallet != null)
-        {
-            var lsb = await Client.GetLastServiceBlockAsync();
-            var wlt = walletState.Value.wallet;
-            await wrapper.Join(new JoinRequest
+            if (wallet != null)
+            {
+                var lsb = await Client.GetLastServiceBlockAsync();
+                var wlt = walletState.Value.wallet;
+                await wrapper.Join(new JoinRequest
                     {
                         UserAccountID = wlt.AccountId,
                         Signature = Signatures.GetSignature(wlt.PrivateKey, lsb.GetBlock().Hash, wlt.AccountId),
                     });
-        }
+            }
 
-        await InvokeAsync(() => StateHasChanged());
+            await InvokeAsync(() => StateHasChanged());
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Exception in WalletChanged: {ex}", Severity.Error);
+        }
     }
 
     private void gonew()
