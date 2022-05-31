@@ -12,6 +12,7 @@
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
 @using Newtonsoft.Json
+@using System.Globalization
 @using UserLibrary.Data
 @using UserLibrary.Store.NotificationUseCase
 @inject IConfiguration Configuration
@@ -76,13 +77,13 @@
     string net = "";
     bool shownew;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         net = Configuration["network"];
         if (net == "mainnet")
             net = "";
 
-        base.OnInitialized();
+        await base.OnInitializedAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -101,6 +102,25 @@
         }
         await base.OnAfterRenderAsync(firstRender);
     }
+
+    //async Task SetLanguage()
+    //{
+    //    var cultureFromLS = await localStorage.GetItemAsync<string>("culture");
+
+    //    CultureInfo culture;
+
+    //    if (cultureFromLS != null)
+    //    {
+    //        culture = new CultureInfo(cultureFromLS);
+    //    }
+    //    else
+    //    {
+    //        culture = new CultureInfo("en-US");
+    //    }
+
+    //    CultureInfo.DefaultThreadCurrentCulture = culture;
+    //    CultureInfo.DefaultThreadCurrentUICulture = culture; 
+    //}
 
     protected async Task AttachEvents()
     {
@@ -227,13 +247,6 @@
     {
         try
         {
-            var eventUrl = "https://dealer.devnet.lyra.live:7070/";
-            if (_config["network"] == "testnet")
-                eventUrl = "https://dealertestnet.lyra.live/";
-            else if (_config["network"] == "mainnet")
-                eventUrl = "https://dealer.lyra.live/";
-
-            //var baseurl = a.Messangers == null ? new[] { eventUrl } : a.Messangers.ToArray();
             PreferenceContainer pc2 = pc ?? new PreferenceContainer();
             var mngrs = new Dictionary<string, Uri>();
             foreach (var id in pc2.GetAllTrusted() ?? new List<string>() { _consts.TrustedDealerIds[0] })

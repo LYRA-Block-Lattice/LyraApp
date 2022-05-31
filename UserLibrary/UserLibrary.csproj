@@ -24,6 +24,7 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.8" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.5" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.5" />
     <PackageReference Include="MongoDB.Bson" Version="2.15.1" />
     <PackageReference Include="MudBlazor" Version="6.0.10" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -39,6 +40,15 @@
 
 	<ItemGroup>
 		<SupportedPlatform Include="browser" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Resources\Pages.Entry.zh.resx">
+	    <Generator></Generator>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Pages.Entry.resx">
+	    <Generator></Generator>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 </Project>

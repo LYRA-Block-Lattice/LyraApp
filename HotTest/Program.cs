@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
 using MudBlazor.Services;
+using System.Globalization;
 using UserLibrary.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
+builder.Services.AddLocalization(options =>
+{
+    options.ResourcesPath = "Resources";
+});
 
 Signatures.Switch(true);
 
@@ -74,6 +80,14 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+// must follow router immediately
+app.UseRequestLocalization(new RequestLocalizationOptions
+    {
+        ApplyCurrentCultureToResponseHeaders = true,
+    }
+    .AddSupportedCultures(new[] { "en-US", "zh-CN" })
+    .AddSupportedUICultures(new[] { "en-US", "zh-CN" })
+    );
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

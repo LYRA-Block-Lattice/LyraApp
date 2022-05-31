@@ -56,6 +56,8 @@
     [Inject]
     private IDispatcher Dispatcher { get; set; }
 
+    [Inject] IStringLocalizer<Entry> localizer { get; set; }
+
     private MudTheme Theme = new MudTheme();
 
     (string name, string link, string icon)[] Apps;
@@ -71,7 +73,7 @@
                 ("DAO", "/dao", @Icons.Filled.Groups),
                 ("Revenue", "/profit", Icons.Filled.CalendarViewMonth),
                 ("Mint", "/mint", Icons.Filled.GeneratingTokens),
-                ("Wallet", "/wallet", Icons.Filled.AccountBalanceWallet),
+                (localizer["wallet"], "/wallet", Icons.Filled.AccountBalanceWallet),
                 ("Contacts", "/contact", @Icons.Filled.Contacts),
                 ("Settings", "/settings", Icons.Filled.Settings),
             };

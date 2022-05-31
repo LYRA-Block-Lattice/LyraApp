@@ -85,6 +85,11 @@
 
     <MudDivider Style="margin: 30px" />
     <div style="font-size: xx-small">
+        <LanguageSelector />    
+    </div>
+
+    <MudDivider Style="margin: 30px" />
+    <div style="font-size: xx-small">
         Main Program Version: @(Assembly.GetEntryAssembly()?.GetName().Version)<br />
         User Library Version: @(typeof(UserLibrary.Data.WalletView).Assembly.GetName().Version)<br />
         Lyra Library Version: @(typeof(Lyra.Core.Blocks.Block).Assembly.GetName().Version)<br />

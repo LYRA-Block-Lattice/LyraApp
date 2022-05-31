@@ -1,0 +1,31 @@
+﻿@using  System.Globalization
+@inject ILocalStorageService localStorage
+@inject NavigationManager Nav
+<div>
+    <select @bind="Culture">
+        @foreach (var language in supportedLanguages)
+        {
+            <option value="@language">@language.DisplayName</option>
+        }
+    </select>
+</div>
+@code
+{
+    CultureInfo[] supportedLanguages = new[]
+    {
+        new CultureInfo("en-US"),
+        new CultureInfo("zh-CN"),
+    };
+    CultureInfo Culture
+    {
+        get => CultureInfo.CurrentCulture;
+        set
+        {
+            if (CultureInfo.CurrentCulture != value)
+            {
+                localStorage.SetItemAsync<string>("culture", value.Name);
+                Nav.NavigateTo(Nav.Uri, forceLoad: true);
+            }
+        }
+    }
+}
