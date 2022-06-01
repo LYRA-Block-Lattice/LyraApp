@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <Platforms>AnyCPU;x86</Platforms>
-    <Version>1.2.4.4</Version>
+    <Version>1.2.4.6</Version>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 

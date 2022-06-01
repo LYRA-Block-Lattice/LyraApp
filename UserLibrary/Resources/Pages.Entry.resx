@@ -117,6 +117,33 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="contacts" xml:space="preserve">
+    <value>Contacts</value>
+  </data>
+  <data name="dao" xml:space="preserve">
+    <value>DAO</value>
+  </data>
+  <data name="dex" xml:space="preserve">
+    <value>DEX</value>
+  </data>
+  <data name="mint" xml:space="preserve">
+    <value>Mint</value>
+  </data>
+  <data name="otc" xml:space="preserve">
+    <value>OTC Trade</value>
+  </data>
+  <data name="revenue" xml:space="preserve">
+    <value>Revenue</value>
+  </data>
+  <data name="settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="staking" xml:space="preserve">
+    <value>Staking</value>
+  </data>
+  <data name="swap" xml:space="preserve">
+    <value>Swap</value>
+  </data>
   <data name="wallet" xml:space="preserve">
     <value>Wallet</value>
   </data>
