@@ -173,6 +173,10 @@ namespace UserLibrary.Data
         {
             foreach(var conn in _conns.Values)
             {
+                if(conn.State != HubConnectionState.Connected)
+                {
+                    await conn.StartAsync();
+                }
                 await conn.InvokeAsync(nameof(IHubInvokeMethods.Join), req);
             }
         }
