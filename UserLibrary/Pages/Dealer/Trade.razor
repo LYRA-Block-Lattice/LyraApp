@@ -216,7 +216,12 @@
         var daoret3 = await walletState.Value.wallet.RPC.GetLastBlockAsync(otc.Order.daoId);
         var daot = daoret3.GetBlock() as TransactionBlock;
 
-        var dealer = connMgr.GetDealer();
+        var dealer = connMgr.GetPriceFeeder();
+        if(dealer == null)
+        {
+            Snackbar.Add($"No price feeder", Severity.Error);
+            return;
+        }
         var prices = await dealer.GetPricesAsync();
         var tokenSymbol = otc.Order.crypto.Split('/')[1];
         var neededLyr = Math.Round(prices[tokenSymbol] * got * ((daot as IDao).BuyerPar / 100) / prices["LYR"] * 1.03m);

@@ -392,7 +392,7 @@ else
 
         try
         {
-            var client = connMgr.GetDealer();
+            var client = connMgr.GetDealer(null);
             var fiatinfo = await client.GetFiatAsync(cfg.fiat);
             selfiatname = fiatinfo.name;
         }
@@ -425,7 +425,13 @@ else
             var daoret3 = await walletState.Value.wallet.RPC.GetDaoByNameAsync(cfg.daoName);
             var daot = daoret3.GetBlock() as TransactionBlock;
 
-            var dealer = new DealerClient(new Uri(mydealers.First(a => a.Name == cfg.dealerName).EndpointUri, "/api/dealer/"));
+            var dealer = connMgr.GetPriceFeeder();
+            if(dealer == null)
+            {
+                Snackbar.Add($"No price feeder", Severity.Error);
+                return;
+            }
+
             var prices = await dealer.GetPricesAsync();
             var tokenSymbol = cfg.crypto.dbname.Split('/')[1];
             var neededLyr = Math.Round(prices[tokenSymbol] * cfg.amount * ((daot as IDao).SellerPar / 100) / prices["LYR"] * 1.03m);

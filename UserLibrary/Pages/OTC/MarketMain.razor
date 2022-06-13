@@ -172,7 +172,9 @@
             if (tosret.Successful())
             {
                 var allblks = tosret.GetBlocks("orders");
-                tradableOrders = allblks.Cast<IOtcOrder>()
+                var odrs = allblks.Cast<IOtcOrder>();
+                //if(odrs == null || !odrs.Any())
+                tradableOrders = odrs
                     .Where(a => a.Order.amount > 0)
                     .OrderBy(a => a.Order.price)
                     .ToList();

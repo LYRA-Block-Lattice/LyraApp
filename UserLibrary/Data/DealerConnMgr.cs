@@ -84,15 +84,19 @@ namespace UserLibrary.Data
                 }
                 catch { }
             }            
+            _started = _dealerClients.Count > 0;
         }
 
         /// <summary>
         /// Get dealer for price update/feed
         /// </summary>
         /// <returns></returns>
-        public DealerClient GetDealer()
+        public DealerClient? GetPriceFeeder()
         {
-            return _dealerClients[_priceFeeder];
+            if(_dealerClients.ContainsKey(_priceFeeder))
+                return _dealerClients[_priceFeeder];
+
+            return null;
         }
 
         /// <summary>
@@ -100,12 +104,14 @@ namespace UserLibrary.Data
         /// </summary>
         /// <param name="dealerId"></param>
         /// <returns></returns>
-        public DealerClient GetDealer(string dealerId)
+        public DealerClient? GetDealer(string? dealerId)
         {
-            if (string.IsNullOrEmpty(dealerId))
-                return GetDealer(_consts.TrustedDealerIds[0]);
+            var id = string.IsNullOrEmpty(dealerId) ? _consts.TrustedDealerIds[0] : dealerId;
 
-            return _dealerClients[dealerId];
+            if(_dealerClients.ContainsKey(id))
+                return _dealerClients[id];
+
+            return null;
         }
 
         public async Task All(Func<DealerClient, Task> callback)

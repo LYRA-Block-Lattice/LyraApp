@@ -69,12 +69,16 @@ namespace UserLibrary.Store.NotificationUseCase
         {
             try
             {
-                var lps = await connmgr.GetDealer().GetPricesAsync();
-                dispatcher.Dispatch(new HotUpdateResultAction
+                var feeder = connmgr.GetPriceFeeder();
+                if (connmgr.IsConnected && feeder != null)
                 {
-                    LatestPrices = lps
-                });
-                dispatcher.Dispatch(new MarketUpdated());
+                    var lps = await feeder.GetPricesAsync();
+                    dispatcher.Dispatch(new HotUpdateResultAction
+                    {
+                        LatestPrices = lps
+                    });
+                    dispatcher.Dispatch(new MarketUpdated());
+                }
             }
             catch (Exception ex)
             {
