@@ -8,7 +8,7 @@
 @using UserLibrary.Store.NotificationUseCase
 @inherits FluxorComponent
 
-@if (Otc != null && hotData.Value.MarketPrices != null)
+@if (dealerTrusted && Otc != null && hotData.Value.MarketPrices != null)
 {
         <table border="0">
             <tr>
@@ -93,6 +93,7 @@
 
     UserStats stats;
     decimal marketprice, marketpriceusd;
+    bool dealerTrusted = false;
 
     protected override Task OnInitializedAsync()
     {
@@ -131,6 +132,10 @@
         {
             // get seller's name
             var client = connMgr.GetDealer(Otc.Order.dealerId);
+            if (client == null)
+                return;
+
+            dealerTrusted = true;
             var user = await client.GetUserByAccountIdAsync(Otc.OwnerAccountId);
             if (user.Successful())
             {
