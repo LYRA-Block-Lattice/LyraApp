@@ -69,7 +69,7 @@
                     @if (loading)
                     {
                         <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                        <MudText Class="ms-2">Processing</MudText>
+                            <MudText Class="ms-2">Processing</MudText>               
                     }
                     else
                     {
@@ -95,16 +95,16 @@
 
 @code {
     [Inject]
-    private IState<WebWalletState> walletState { get; set; }
+    private IState<WebWalletState> walletState { get; set; } = null!;
 
     [Inject]
-    private IDispatcher Dispatcher { get; set; }
+    private IDispatcher Dispatcher { get; set; } = null!;
 
-    string name, domain, desc, owner, address;
+    string? name, domain, desc, owner, address;
     Int64 supply, precision;
-    MudButton btn;
+    MudButton btn = null!;
     bool loading;
-    string errmsg;
+    string? errmsg;
     bool success;
 
     protected async override Task OnInitializedAsync()
@@ -124,12 +124,8 @@
             );
             if (ret.Successful())
             {
-                btn.Disabled = true;
-                btn.ChildContent =
-    @<Div>Success!</Div>
-    ;
+                loading = true;
                 success = true;
-                errmsg = null;
             }
             else
             {

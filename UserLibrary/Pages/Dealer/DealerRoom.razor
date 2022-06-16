@@ -371,7 +371,7 @@
 
                 if (result != null && result.Value)
                 {
-                    var payindret = await walletState.Value.wallet.OTCTradeBuyerPaymentSentAsync(tradeid);
+                    var payindret = await walletState.Value.wallet.OTCTradeFiatPaymentSentAsync(tradeid);
                     if (payindret.Successful())
                     {
                         await Send("/fiatsent");
@@ -396,7 +396,7 @@
 
                 if (result != null && result.Value)
                 {
-                    var payindret = await walletState.Value.wallet.OTCTradeSellerGotPaymentAsync(tradeid);
+                    var payindret = await walletState.Value.wallet.OTCTradeFiatPaymentConfirmAsync(tradeid);
                     if (payindret.Successful())
                     {
                         await Send("/fiatreceived");
