@@ -12,7 +12,7 @@
 {
     <div style="z-index: 5;" class="spinner"></div>
 }
-else
+else if(order == null)
 {
 <RadzenTemplateForm TItem="OrderConfig" Data=@cfg Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
             <MudGrid>
@@ -31,13 +31,13 @@ else
             else
                 {
                     <MudItem xs="12">
-                        <h2>Sell Crypto on P2P market</h2>
-                        @*                                <RadzenSelectBar @bind-Value=@dir TValue="bool">
+                        <h2>Order Type:</h2>
+                        <RadzenSelectBar @bind-Value=@dir TValue="bool" Change="@dirchgd">
                             <Items>
-                            <RadzenSelectBarItem Text="Buy" Value="true" />
-                            <RadzenSelectBarItem Text="Sell" Value="false" />
+                                <RadzenSelectBarItem Text="Buy" Value="true" />
+                                <RadzenSelectBarItem Text="Sell" Value="false" />
                             </Items>
-                            </RadzenSelectBar>*@
+                        </RadzenSelectBar>
                     </MudItem>
                     <MudItem xs="12">
                         Trusted Dealer Server:<br />
@@ -56,7 +56,7 @@ else
                         <RadzenRequiredValidator Component="daoName" Text="Orgnization is required." Popup="false" Style="position: absolute"/>
                     </MudItem>
                     <MudItem xs="12">
-                        Token To Sell<br />
+                        Token To @action<br />
                         <RadzenDropDown AllowClear="false" TValue="Ticker" Class="w-100"
                             Name="crypto"
                                     @bind-Value=@cfg.crypto Change="@productchanged"
@@ -85,7 +85,7 @@ else
                                     Data=@odrtyps />
                     </MudItem>*@
                     <MudItem xs="12">
-                        Sell price<br />
+                        @action price<br />
                         <RadzenNumeric TValue="decimal" Class="w-100" Name="price" @bind-Value=@cfg.price Change="@CalCollat" /><br />
                         <RadzenNumericRangeValidator Component="price" Min="0.0001m" Max="1000000000000m" Text="Price should be between 0.0001 and 1000000000000" Popup=false Style="position: absolute" />
                         Market Price: @selCryptoMarketPrice @cfg.fiat <br />
@@ -135,7 +135,50 @@ else
                     </MudItem>*@
                 }
             </MudGrid>
-</RadzenTemplateForm>
+    </RadzenTemplateForm>
+}
+else
+{
+    <div>
+        <h3>You will place an order</h3>
+
+        <div class="info">
+            <div>
+                @if(order.dir == TradeDirection.Buy)
+                {
+                    <span>Buy&nbsp;</span>
+                }
+                else
+                {
+                    <span>Sell&nbsp;</span>
+                }                
+                <span>@order.amount</span>
+                <span>@order.crypto</span>
+            </div>
+
+            <div>
+                On Price
+                <span>@order.price</span>
+                <span>@order.fiat</span>
+            </div>
+
+            <div>Payment range from @order.limitMin @order.fiat to @order.limitMax @order.fiat</div>            
+
+            <div>
+                <span>Total @order.collateral</span> LYR will be used as collateral.
+            </div>
+            
+        </div>
+
+        <div>
+            <RadzenButton Text="Confirm Create New Order" Click="@SubmitOrder"></RadzenButton>
+        </div>   
+        
+        <div>
+            <RadzenButton Text="Go back" Click="@goback"></RadzenButton>
+        </div> 
+    </div>
+
 }
 
 @code {
@@ -163,6 +206,7 @@ else
     bool showco, dir;
     string total;
     List<Ticker> tickers;
+    string action => dir ? "Buy" : "Sell";
     List<string> fiats = new List<string>       // refer to WFOtcOrderCreate.FIATS
     {
         "USD", "EUR", "GBP", "CHF", "AUD", "CAD", "JPY", "KRW", "CNY", "TWD", "IDR", "VND", "UAH", "RUB", "THB", "AED"
@@ -185,6 +229,8 @@ else
     decimal coltworth;
     decimal coltrito;
     bool busy;
+
+    OTCOrder order;
 
     class OrderConfig
     {
@@ -218,6 +264,11 @@ else
     void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
     {
 
+    }
+
+    void dirchgd()
+    {
+        StateHasChanged();
     }
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
@@ -416,10 +467,6 @@ else
 
     async Task CreateOrder(string dn)
     {
-        busy = true;
-        Snackbar.Add("Creating Order...", Severity.Info);
-        StateHasChanged();
-
         try
         {
             var daoret3 = await walletState.Value.wallet.RPC.GetDaoByNameAsync(cfg.daoName);
@@ -443,11 +490,11 @@ else
                 return;
             }
 
-            var order = new OTCOrder
+            order = new OTCOrder
                 {
                     daoId = daot.AccountID,
                     dealerId = mydealers.First(a => a.Name == cfg.dealerName).AccountId,
-                    dir = TradeDirection.Sell,
+                    dir = dir ? TradeDirection.Buy : TradeDirection.Sell,
                     crypto = cfg.crypto.dbname,
                     fiat = cfg.fiat,
                     fiatPrice = prices[cfg.fiat.ToLower()],
@@ -460,16 +507,6 @@ else
                     limitMax = cfg.limitMax,
                     payBy = cfg.paymths.ToArray(),
                 };
-
-            var ret = await walletState.Value.wallet.CreateOTCOrderAsync(order);
-            if (ret.Successful())
-            {
-                Snackbar.Add("Order created.", Severity.Success);
-            }
-            else
-            {
-                Snackbar.Add($"Order failed to create: {ret.ResultCode.Humanize()}", Severity.Error);
-            }
         }
         catch (Exception e)
         {
@@ -477,6 +514,30 @@ else
         }
 
         busy = false;
+        StateHasChanged();
+    }
+
+    async Task SubmitOrder()
+    {
+        Snackbar.Add("Creating Order...", Severity.Info);
+
+        var ret = await walletState.Value.wallet.CreateOTCOrderAsync(order);
+        if (ret.Successful())
+        {
+            Snackbar.Add("Order created.", Severity.Success);
+
+            order = null;
+        }
+        else
+        {
+            Snackbar.Add($"Order failed to create: {ret.ResultCode.Humanize()}", Severity.Error);
+        }
+        StateHasChanged();
+    }
+
+    void goback()
+    {
+        order = null;
         StateHasChanged();
     }
 }

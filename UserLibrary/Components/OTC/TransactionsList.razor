@@ -8,11 +8,15 @@
     @foreach(var trade in trades)
     {
         var dir = "Buy";
-        if((trade as IOtcTrade).Trade.orderOwnerId == walletState.Value.wallet.AccountId)
-        {
+        if (trade.Trade.dir == TradeDirection.Buy && trade.OwnerAccountId == walletState.Value.wallet.AccountId)
+            dir = "Buy";
+        if (trade.Trade.dir == TradeDirection.Buy && trade.Trade.orderOwnerId == walletState.Value.wallet.AccountId)
             dir = "Sell";
-        }
-        
+        if (trade.Trade.dir == TradeDirection.Sell && trade.OwnerAccountId == walletState.Value.wallet.AccountId)
+            dir = "Sell";
+        if (trade.Trade.dir == TradeDirection.Sell && trade.Trade.orderOwnerId == walletState.Value.wallet.AccountId)
+            dir = "Buy";
+       
         <div class="container">
             <div>
                 @trade.TimeStamp
@@ -50,7 +54,7 @@
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] NavigationManager Navigation { get; set; }
 
-    List<TransactionBlock> trades = new List<TransactionBlock>();
+    List<IOtcTrade> trades = new List<IOtcTrade>();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -63,7 +67,7 @@
                 trades = ret.GetBlocks()
                     .OrderByDescending(a => a.TimeStamp)
                     //.Take(3)
-                    .Cast<TransactionBlock>().ToList();
+                    .Cast<IOtcTrade>().ToList();
                 StateHasChanged();
             }
             else

@@ -463,7 +463,10 @@ namespace Dealer.Server.Hubs
         {
             var room = await _db.GetRoomByTradeAsync((tradeblk as TransactionBlock).AccountID);
             PinnedMessage pinned;
-            if(accountId == tradeblk.OwnerAccountId)    // buyer
+
+            if((tradeblk.Trade.dir == TradeDirection.Buy && accountId == tradeblk.OwnerAccountId) ||
+                ((tradeblk.Trade.dir == TradeDirection.Sell && accountId == tradeblk.Trade.orderOwnerId)))
+            // buyer
             {
                 var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.pay:N2}";
                 var next = tradeblk.OTStatus switch

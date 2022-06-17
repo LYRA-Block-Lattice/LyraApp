@@ -23,10 +23,10 @@
                 <h1 style="align-self: flex-end; font-size:40px;">@(otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell") @otc.Order.crypto</h1>
                 <MudDivider />
                 <div class="market">
-                Buying Price: @otc.Order.price @otc.Order.fiat
+                At price: @otc.Order.price @otc.Order.fiat
                 </div>
                 <div class="market">
-                Market Price: @marketprice @otc.Order.fiat
+                Market price: @marketprice @otc.Order.fiat
                 </div>
             </div>
         </div>
@@ -36,9 +36,9 @@
 
 
         <div>
-            <h3>You will pay</h3>
+            <h3>You will @(otc.Order.dir == TradeDirection.Sell ? "Pay" : "Sell")</h3>
             <div class="ipt">
-                <MudNumericField @bind-Value="@pay" DebounceInterval="500" OnDebounceIntervalElapsed="calc"  Label="@("Fiat " + otc.Order.fiat)" Variant="Variant.Outlined"  />
+                <MudNumericField @bind-Value="@pay" DebounceInterval="500" OnDebounceIntervalElapsed="calc" Label="@($"Fiat {otc.Order.fiat} worth of {otc.Order.crypto}")" Variant="Variant.Outlined"  />
                 Limitation: @otc.Order.limitMin @otc.Order.fiat - @otc.Order.limitMax @otc.Order.fiat
             </div>
         </div>
@@ -60,7 +60,7 @@
             Current Balance: @walletState.Value.wallet.BaseBalance LYR </div>
         <div style="height:45px;" />
         <div>
-            <h3>You will get</h3>
+            <h3>@(otc.Order.dir == TradeDirection.Sell ? "You" : "The buyer") will get</h3>
             <div class="getmnt">@got @otc.Order.crypto</div>
         </div>
         <div style="height:45px;" />
