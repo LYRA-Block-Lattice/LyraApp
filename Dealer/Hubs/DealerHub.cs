@@ -379,8 +379,8 @@ namespace Dealer.Server.Hubs
                     || tradeblk?.Trade.orderOwnerId == req.UserAccountID)
                 {
                     // in database, one dealer room per trade.
-                    var seller = await _db.GetUserByAccountIdAsync(tradeblk.Trade.orderOwnerId);
-                    var buyer = await _db.GetUserByAccountIdAsync(tradeblk.OwnerAccountId);
+                    var seller = await _db.GetUserByAccountIdAsync(tradeblk.Trade.dir == TradeDirection.Buy ? tradeblk.Trade.orderOwnerId : tradeblk.OwnerAccountId);
+                    var buyer = await _db.GetUserByAccountIdAsync(tradeblk.Trade.dir == TradeDirection.Sell ? tradeblk.Trade.orderOwnerId : tradeblk.OwnerAccountId);
 
                     var room = await _db.GetRoomByTradeAsync(req.TradeID);
                     if (room == null)
@@ -390,6 +390,7 @@ namespace Dealer.Server.Hubs
                             var crroom = new TxRoom
                             {
                                 TradeId = ((TransactionBlock)tradeblk).AccountID,
+                                Dir = tradeblk.Trade.dir,
                                 Members = new[] { seller, buyer },
                                 TimeStamp = DateTime.UtcNow,
                             };

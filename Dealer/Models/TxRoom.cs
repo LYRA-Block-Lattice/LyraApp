@@ -1,4 +1,5 @@
 ﻿using Lyra.Data.API.ODR;
+using Lyra.Data.API.WorkFlow;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
@@ -21,6 +22,7 @@ namespace Lyra.Data.API.Identity
         public string? Id { get; set; }
 
         public string TradeId { get; set; } = null!;
+        public TradeDirection Dir { get; set; }
 
         // UTC time of created
         public DateTime TimeStamp { get; set; }

@@ -236,18 +236,12 @@ namespace Dealer.Server.Services
                 cancellable = (!peerHasMsg || !sellerHasMsg) && room.TimeStamp < DateTime.UtcNow.AddMinutes(-10);
             }
 
-            var traderet = await _client.GetLastBlockAsync(tradeId);
-            if (!traderet.Successful())
-                return null;
-
-            var trade = traderet.GetBlock() as IOtcTrade;
-
             // construct roles
             var brief = new TradeBrief
             {
                 TradeId = room.TradeId,
-                Direction = trade.Trade.dir,
-                Members = new List<string>(),
+                Direction = room.Dir,
+                Members = room.Members.Select(a => a.AccountId).ToList(),
                 Names = new List<string>(),
                 RegTimes = new List<DateTime>(),
                 DisputeHistory = room.DisputeHistory,
@@ -256,17 +250,6 @@ namespace Dealer.Server.Services
                 // or if peer request cancel also
                 IsCancellable = cancellable
             };
-
-            if(trade.Trade.dir == TradeDirection.Buy)
-            {
-                brief.Members.Add(trade.Trade.orderOwnerId);
-                brief.Members.Add(trade.OwnerAccountId);
-            }
-            else
-            {
-                brief.Members.Add(trade.OwnerAccountId);
-                brief.Members.Add(trade.Trade.orderOwnerId);
-            }
 
             foreach(var act in brief.Members)
             {
