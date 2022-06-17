@@ -186,8 +186,8 @@
 
         if(firstRender)
         {
-            await GetTradeBrief();
             await JoinDealerRoom();
+            await GetTradeBrief();
             await InvokeAsync(() => StateHasChanged());
         }
 
@@ -259,6 +259,11 @@
 
     private async Task JoinDealerRoom()
     {
+        Snackbar.Add($"Joining dealer room...", Severity.Normal);
+
+        var tradeblk = await lyraApi.GetLastBlockAsync(tradeid);
+        trade = tradeblk.As<IOtcTrade>();
+
         joinroom = await connMgr.JoinRoom(trade.Trade.dealerId, new JoinRoomRequest
             {
                 TradeID = tradeid,
@@ -512,12 +517,28 @@
             if(ret.Successful())
             {
                 brief = ret.Deserialize<TradeBrief>();
-                if (wallet.AccountId == brief.Members.First())
-                    role = "Seller";
+                if(brief != null)
+                {
+                    if (wallet.AccountId == brief.Members.First())
+                        role = "Seller";
+                    else
+                        role = "Buyer";
+                }
                 else
-                    role = "Buyer";
+                {
+                    Snackbar.Add($"Unable to get trade brief", Severity.Warning);
+                }
             }             
+            else
+            {
+                Snackbar.Add($"Unable to get trade: {ret.ResultCode.Humanize()}", Severity.Warning);
+            }
         }
+        else
+        {
+            Snackbar.Add($"Unable to connect Lyra network: {lsbret.ResultCode.Humanize()}", Severity.Warning);
+        }
+        StateHasChanged();
     }
 
     private async Task CancelTrade()
