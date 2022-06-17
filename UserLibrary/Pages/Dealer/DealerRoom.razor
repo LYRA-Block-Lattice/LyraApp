@@ -361,7 +361,7 @@
             var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.price * tradeblk.Trade.amount:N2}";
 
             if (tradeblk.OTStatus == OTCTradeStatus.Open &&
-                tradeblk.OwnerAccountId == walletState.Value.wallet.AccountId)
+                brief.Members.Skip(1).First() == walletState.Value.wallet.AccountId)        // buyer is 2nd member
             {
                 // ask if your have paied
                 var result = await DialogService.ShowMessageBox(
@@ -386,7 +386,7 @@
             }
 
             if (tradeblk.OTStatus == OTCTradeStatus.FiatSent &&
-                tradeblk.Trade.orderOwnerId == walletState.Value.wallet.AccountId)
+                brief.Members.First()  == walletState.Value.wallet.AccountId)
             {
                 // ask if your have paied
                 var result = await DialogService.ShowMessageBox(
@@ -409,6 +409,7 @@
                     }
                 }
             }
+            // TODO: after finished trading, action is comment
         }
         catch(Exception ex)
         {
