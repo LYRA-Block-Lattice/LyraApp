@@ -23,6 +23,9 @@ else
             @dao.Description
         </div>
         <div>
+            <a target="_blank" href="@(LyraGlobal.GetBlockViewUrl(Configuration["network"], (dao as TransactionBlock).AccountID))">View Block</a>
+        </div>
+        <div>
             Owner: @dao.OwnerAccountId.Shorten()
         </div>
         <div>
@@ -43,6 +46,21 @@ else
         <div>
             Buyer collateral Ratio: @dao.BuyerPar %
         </div>
+        <div>
+            Balance:
+            @foreach(var x in (dao as TransactionBlock).Balances)
+            {
+                <div>@x.Key : @x.Value.ToBalanceDecimal()</div>
+            }
+        </div>
+        <div>
+            Staking:
+            @foreach(var x in dao.Treasure)
+            {
+                <div>@x.Key : @x.Value LYR</div>
+            }
+        </div>
+
 
         @if (walletState.Value.wallet == null)
         {
