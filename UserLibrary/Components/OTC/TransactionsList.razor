@@ -5,43 +5,43 @@
 @using Nebula.Store.WebWalletUseCase
 
 <div align="left">
-    @foreach(var trade in trades)
-    {
-        var dir = "Buy";
-        if (trade.Trade.dir == TradeDirection.Buy && trade.OwnerAccountId == walletState.Value.wallet.AccountId)
-            dir = "Buy";
-        if (trade.Trade.dir == TradeDirection.Buy && trade.Trade.orderOwnerId == walletState.Value.wallet.AccountId)
-            dir = "Sell";
-        if (trade.Trade.dir == TradeDirection.Sell && trade.OwnerAccountId == walletState.Value.wallet.AccountId)
-            dir = "Sell";
-        if (trade.Trade.dir == TradeDirection.Sell && trade.Trade.orderOwnerId == walletState.Value.wallet.AccountId)
-            dir = "Buy";
-       
-        <div class="container">
-            <div>
-                @trade.TimeStamp
-                @*<MudButton Variant="Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>*@
-            </div>
-            <div class="nw">
-                <a target="_blank" href="@(LyraGlobal.GetBlockViewUrl(Configuration["network"], trade.AccountID))">@(trade.AccountID.Shorten())</a>
-            </div>
-            <div class="nw">
-                <div>@dir @((trade as IOtcTrade).Trade.crypto) </div>
-            </div>
-            <div>
-                @((trade as IOtcTrade).OTStatus)
-            </div>
-            <div>
-                <a href="/dealer/room/@trade.AccountID">
-                    <MudButton Variant="Variant.Filled" Color="Color.Secondary">Chat</MudButton>
-                </a>
-                @if((trade as IOtcTrade).OTStatus == OTCTradeStatus.CryptoReleased)
-                {
-                    <MudButton Variant="Variant.Filled" OnClick="@(() => Comment(trade.AccountID))" Color="Color.Tertiary">Comment</MudButton>
-                }
-            </div>
-        </div>
-    }
+    <RadzenDataGrid TItem="IOtcTrade" Data="trades"
+        AllowColumnResize="true" AllowSorting="true" PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"    
+    >
+        <Columns>
+            <RadzenDataGridColumn TItem="IOtcTrade" Property="TimeStamp" Title="Time Stamp"  Width="180px"/>
+            <RadzenDataGridColumn TItem="IOtcTrade" Title="Dir" Width="60px">
+                <Template Context="trade">
+                    <a target="_blank" href="@(LyraGlobal.GetBlockViewUrl(Configuration["network"], trade.AccountID))">
+                        @GetTradeDir(trade)
+                    </a>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="IOtcTrade" Title="Crypto"  Width="90px">
+                <Template Context="trade">                    
+                        @(trade.Trade.crypto.Replace("tether/", "$"))
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="IOtcTrade" Property="Trade.amount" Title="Amount"  Width="70px" />
+            <RadzenDataGridColumn TItem="IOtcTrade" Property="Trade.price" Title="Price"  Width="70px"/>
+            <RadzenDataGridColumn TItem="IOtcTrade" Property="Trade.fiat" Title="Fiat"  Width="60px"/>
+            <RadzenDataGridColumn TItem="IOtcTrade" Property="OTStatus" Title="Status" Width="100px"/>
+            <RadzenDataGridColumn TItem="IOtcTrade" Title="Actions">
+                <Template Context="trade">
+                    <div>
+                        <a href="/dealer/room/@trade.AccountID">
+                            <MudButton Variant="Variant.Filled" Color="Color.Secondary">Chat</MudButton>
+                        </a>
+                        @if((trade as IOtcTrade).OTStatus == OTCTradeStatus.CryptoReleased)
+                        {
+                            <MudButton Variant="Variant.Filled" OnClick="@(() => Comment(trade.AccountID))" Color="Color.Tertiary">Comment</MudButton>
+                        }
+                    </div>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+
 </div>
 
 @code {
@@ -76,6 +76,20 @@
             }
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    string GetTradeDir(IOtcTrade trade)
+    {
+        var dir = "Buy";
+        if (trade.Trade.dir == TradeDirection.Buy && trade.OwnerAccountId == walletState.Value.wallet.AccountId)
+            dir = "Buy";
+        if (trade.Trade.dir == TradeDirection.Buy && trade.Trade.orderOwnerId == walletState.Value.wallet.AccountId)
+            dir = "Sell";
+        if (trade.Trade.dir == TradeDirection.Sell && trade.OwnerAccountId == walletState.Value.wallet.AccountId)
+            dir = "Sell";
+        if (trade.Trade.dir == TradeDirection.Sell && trade.Trade.orderOwnerId == walletState.Value.wallet.AccountId)
+            dir = "Buy";
+        return dir;
     }
 
     async Task Comment(string accountId)

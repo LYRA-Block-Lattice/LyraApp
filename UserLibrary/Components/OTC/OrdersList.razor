@@ -7,36 +7,46 @@
 @using UserLibrary.Data
 @inherits FluxorComponent
 
-<div align="left">
-    @foreach(var order in orders)
-    {
-        <div class="container">
-            <div>
-                @order.TimeStamp
-                @*<MudButton Variant="Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>*@
-            </div>
-            <div class="nw">
-                <a target="_blank" href="@(LyraGlobal.GetBlockViewUrl(Configuration["network"], order.AccountID))">@(order.AccountID.Shorten())</a>
-            </div>
-            <div class="nw">
-                <div>Sell @((order as IOtcOrder).Order.crypto) </div>
-            </div>
-            <div>
-                @((order as IOtcOrder).OOStatus)
-            </div>
-            <div>
-                @if((order as IOtcOrder).OOStatus == OTCOrderStatus.Partial)
-                {
-                    <MudButton Variant="Variant.Filled" OnClick="@(() => DelistOrder(order))" Color="Color.Tertiary">Delist</MudButton>
-                }
+<div style="font-size: smaller;">
+    <RadzenDataGrid TItem="IOtcOrder" Data="orders"
+        AllowColumnResize="true" AllowSorting="true"
+        PageSize="10" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Center" ShowPagingSummary="true" Style="font-size: xx-small;"
+    >
+        <Columns>
+            <RadzenDataGridColumn TItem="IOtcOrder" Property="TimeStamp" Title="Time Stamp"  Width="180px"/>
+            <RadzenDataGridColumn TItem="IOtcOrder" Title="Dir" Width="60px">
+                <Template Context="order">
+                    <a target="_blank" href="@(LyraGlobal.GetBlockViewUrl(Configuration["network"], order.AccountID))">
+                        @(order.Order.dir == TradeDirection.Sell ? "Sell" : "Buy")
+                    </a>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="IOtcOrder" Title="Crypto"  Width="100px">
+                <Template Context="order">                    
+                        @(order.Order.crypto.Replace("tether/", "$"))
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="IOtcOrder" Property="Order.amount" Title="Amount"  Width="50px"/>
+            <RadzenDataGridColumn TItem="IOtcOrder" Property="Order.price" Title="Price"  Width="70px"/>
+            <RadzenDataGridColumn TItem="IOtcOrder" Property="Order.fiat" Title="Fiat" Width="60px"/>
+            <RadzenDataGridColumn TItem="IOtcOrder" Property="OOStatus" Title="Status" Width="80px" />
+            <RadzenDataGridColumn TItem="IOtcOrder" Title="Actions">
+                <Template Context="order">
+                    <div>
+                        @if((order as IOtcOrder).OOStatus == OTCOrderStatus.Partial)
+                        {
+                            <MudButton Variant="Variant.Filled" OnClick="@(() => DelistOrder(order))" Color="Color.Tertiary">Delist</MudButton>
+                        }
 
-                @if((order as IOtcOrder).OOStatus == OTCOrderStatus.Open || (order as IOtcOrder).OOStatus == OTCOrderStatus.Partial || (order as IOtcOrder).OOStatus == OTCOrderStatus.Delist)
-                {
-                    <MudButton Variant="Variant.Filled" OnClick="@(() => CloseOrder(order))" Color="Color.Tertiary">Close</MudButton>
-                }
-            </div>
-        </div>
-    }
+                        @if((order as IOtcOrder).OOStatus == OTCOrderStatus.Open || (order as IOtcOrder).OOStatus == OTCOrderStatus.Partial || (order as IOtcOrder).OOStatus == OTCOrderStatus.Delist)
+                        {
+                            <MudButton Variant="Variant.Filled" OnClick="@(() => CloseOrder(order))" Color="Color.Tertiary">Close</MudButton>
+                        }
+                    </div>
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
 </div>
 
 @code {
@@ -50,7 +60,7 @@
     [Inject] NavigationManager Navigation { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
 
-    List<TransactionBlock> orders = new List<TransactionBlock>();
+    List<IOtcOrder> orders = new List<IOtcOrder>();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -75,7 +85,7 @@
         {
             orders = ret.GetBlocks()
                 .OrderByDescending(a => a.TimeStamp)
-                .Cast<TransactionBlock>().ToList();
+                .Cast<IOtcOrder>().ToList();
             StateHasChanged();
         }
         else
@@ -84,9 +94,9 @@
         }
     }
 
-    private async Task DelistOrder(TransactionBlock Otc)
+    private async Task DelistOrder(IOtcOrder Otc)
     {
-        var daoret = await lyraApi.GetLastBlockAsync((Otc as IOtcOrder).Order.daoId);
+        var daoret = await lyraApi.GetLastBlockAsync(Otc.Order.daoId);
         if(daoret.Successful())
         {
             var Dao = daoret.GetBlock();
@@ -109,7 +119,7 @@
         }
     }
 
-    private async Task CloseOrder(TransactionBlock Otc)
+    private async Task CloseOrder(IOtcOrder Otc)
     {
         var daoret = await lyraApi.GetLastBlockAsync((Otc as IOtcOrder).Order.daoId);
         if(daoret.Successful())
