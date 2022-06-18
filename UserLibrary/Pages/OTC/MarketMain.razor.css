@@ -1,6 +1,7 @@
 ﻿.cet {
 	display: inline-flex;
 	content-justify: center;
+	flex-direction: column;
 }
 
 .pad {

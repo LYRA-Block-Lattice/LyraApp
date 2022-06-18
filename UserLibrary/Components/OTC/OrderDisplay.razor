@@ -10,13 +10,13 @@
 
 @if (dealerTrusted && Otc != null && hotData.Value.MarketPrices != null)
 {
-        <table border="0">
+        <table border="0" width="100%">
             <tr>
-                <td>
+                <td width="4%">
                     <MudAvatar Color="Color.Primary">@Dao.Name.First()</MudAvatar>
                 </td>
-                <td>
-                        <div>
+                <td align="left">
+                        <div style="margin: 5px;">
                             <div>@Dao.Name</div>
                             @if (stats != null)
                             {
@@ -24,24 +24,20 @@
                             }
                         </div>
                 </td>
-                <td nowrap>
+                <td nowrap align="right">
                         <div>Trade(s) @(stats?.Total) | @(stats?.Ratio) %</div>
                 </td>
             </tr>
             <tr>
-                <td colspan="3">
-                    <div class="price">
-                        <div>@Otc.Order.price @Otc.Order.fiat</div>
-                        <div class="market">
-                            Market: @marketprice @Otc.Order.fiat
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3" style="font-size: small">
+                <td colspan="2" style="font-size: small">
                     Available @(Math.Round(Otc.Order.amount, 2)) @Otc.Order.crypto<br />
                     Limits @Otc.Order.limitMin - @Otc.Order.limitMax @Otc.Order.fiat
+                </td>
+                <td align="right" class="price">
+                    <div>@Otc.Order.price @Otc.Order.fiat</div>
+                    <div class="market">
+                        Market: @marketprice @Otc.Order.fiat
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -51,7 +47,7 @@
                         <span class="pm">@pm</span>
                     }
                 </td>
-                <td>
+                <td align="right">
                     @if (walletState.Value.wallet != null && Otc.OwnerAccountId == walletState.Value.wallet.AccountId)
                     {
 

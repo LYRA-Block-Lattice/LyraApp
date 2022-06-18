@@ -233,7 +233,7 @@ namespace Dealer.Server.Services
                     a.AccountId != Signatures.GetAccountIdFromPrivateKey(_config["DealerKey"])
                     ).Any();
                 var sellerHasMsg = txmsgs.Where(a => a.AccountId == room.Members[0].AccountId).Any();
-                cancellable = (!peerHasMsg || !sellerHasMsg) && room.TimeStamp < DateTime.UtcNow.AddMinutes(-10);
+                cancellable = (!peerHasMsg && !sellerHasMsg) || ((!peerHasMsg || !sellerHasMsg) && room.TimeStamp < DateTime.UtcNow.AddMinutes(-10));
             }
 
             // construct roles
