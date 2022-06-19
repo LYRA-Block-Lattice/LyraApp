@@ -91,7 +91,8 @@ namespace Dealer.Server.Services
                 {
                     var ts = tstat.First();
                     stat.Total = ts.TotalTrades;
-                    stat.Ratio = Math.Round((decimal)ts.FinishedCount / ts.TotalTrades, 4);
+                    if(ts.TotalTrades > 0)
+                        stat.Ratio = Math.Round((decimal)ts.FinishedCount / ts.TotalTrades, 4);
                 }
             }
 

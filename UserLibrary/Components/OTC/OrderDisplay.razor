@@ -136,21 +136,29 @@
                 return;
 
             dealerTrusted = true;
-            var user = await client.GetUserByAccountIdAsync(Otc.OwnerAccountId);
-            if (user.Successful())
-            {
-                stats = JsonConvert.DeserializeObject<UserStats>(user.JsonString);
 
-                SubscribeToAction<ContractChangeEvent>(async cce =>
+            SubscribeToAction<ContractChangeEvent>(async cce =>
                 {
                     PriceChanged();
                     await InvokeAsync(() => StateHasChanged());
                 });
 
-                // fetch init prices
-                Dispatcher.Dispatch(new HotUpdateAction());
+            // fetch init prices
+            Dispatcher.Dispatch(new HotUpdateAction());
 
-                await InvokeAsync(() => StateHasChanged());
+            try
+            {
+                var user = await client.GetUserByAccountIdAsync(Otc.OwnerAccountId);
+                if (user.Successful())
+                {
+                    stats = JsonConvert.DeserializeObject<UserStats>(user.JsonString);
+
+                    await InvokeAsync(() => StateHasChanged());
+                }
+            }
+            catch(Exception ex)
+            {
+                
             }
         }
         await base.OnAfterRenderAsync(firstRender);
