@@ -25,11 +25,15 @@
                         </div>
                 </td>
                 <td nowrap align="right">
-                        <div>Trade(s) @(stats?.Total) | @(stats?.Ratio) %</div>
+                            @if (stats != null)
+                            {
+                                <div>Trade(s) @(stats.Total) | @(Math.Round(stats.Ratio * 100, 2)) %</div>
+                            }
+                        
                 </td>
             </tr>
             <tr>
-                <td colspan="2" style="font-size: small">
+                <td colspan="2" style="font-size: small" align="left">
                     Available @(Math.Round(Otc.Order.amount, 2)) @Otc.Order.crypto<br />
                     Limits @Otc.Order.limitMin - @Otc.Order.limitMax @Otc.Order.fiat
                 </td>
@@ -41,7 +45,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2">
+                <td colspan="2" align="left">
                     @foreach (var pm in Otc.Order.payBy ?? new string[0])
                     {
                         <span class="pm">@pm</span>

@@ -9,6 +9,7 @@ namespace UserLibrary.Data
 {
     public class UserStats
     {
+        public string AccountId { get; set; } = null!;
         public string UserName { get; set; } = null!;
         public int Total { get; set; }
         public decimal Ratio { get; set; }

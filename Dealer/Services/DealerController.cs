@@ -72,12 +72,30 @@ namespace Dealer.Server.Services
             if (user == null)
                 return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.NotFound };
 
-            return SimpleJsonAPIResult.Create(new UserStats
+            var ret = await _client.GetOtcTradeStatsForUsersAsync(
+                new TradeStatsReq { AccountIDs = new List<string> { accountId } }
+                );
+
+            var stat = new UserStats
             {
+                AccountId = accountId,
                 UserName = user.UserName,
                 Total = 0,
                 Ratio = 0
-            });
+            };
+
+            if(ret.Successful())
+            {
+                var tstat = ret.Deserialize<List<TradeStats>>();
+                if(tstat.Count == 1)
+                {
+                    var ts = tstat.First();
+                    stat.Total = ts.TotalTrades;
+                    stat.Ratio = Math.Round((decimal)ts.FinishedCount / ts.TotalTrades, 4);
+                }
+            }
+
+            return SimpleJsonAPIResult.Create(stat);
         }
 
         [Route("GetUserDetailsByAccountId")]

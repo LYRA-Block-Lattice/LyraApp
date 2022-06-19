@@ -20,24 +20,40 @@
                 }
                 else
                 {
-                    <MudTabs Rounded="true">
+                    <div style="width:100%; text-align:center;">
+                        <div>
+                            <RadzenSelectBar @bind-Value=@dir TValue="TradeDirection" Change="@dirchgd">
+                            <Items>
+                                <RadzenSelectBarItem Text="Buy" Value="TradeDirection.Buy" />
+                                <RadzenSelectBarItem Text="Sell" Value="TradeDirection.Sell" />
+                            </Items>
+                        </RadzenSelectBar>
+
+                        </div>
+                        <div>
+                    <MudTabs Rounded="true" Centered="true">
+
                         @foreach(var crypto in tradableCryptos)
                         {                            
                             <MudTabPanel Text=@(crypto.Replace("tether/", "$"))>
                                 <div class="cet mag">
                                  @foreach (var odr in tradableOrders
-                                    .Where(a => a.Order.crypto == crypto)
+                                    .Where(a => a.Order.crypto == crypto && a.Order.dir != dir)
                                     .OrderByDescending(a => a.Order.price)
                                  )
                                     {
                                         var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoId);
-                                            <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao OrderSelected=@ShowCreateTradeUI />
+                                        var stat = tradeStats.First(a => a.AccountId == odr.OwnerAccountId);
+                                        <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao OrderSelected=@ShowCreateTradeUI />
                                     }
                                 </div>
                             </MudTabPanel>
                             
                         }
                     </MudTabs>
+                    </div>
+                    </div>
+
                 }
         </MudTabPanel>
         <MudTabPanel Text="New">
@@ -90,8 +106,11 @@
     [Inject] ILyraAPI lyraApi { get; set; }
     [Inject] DealerConnMgr connMgr { get; set; }
 
+    TradeDirection dir;
+
     List<string> tradableCryptos;
     List<IOtcOrder> tradableOrders;
+    List<TradeStats> tradeStats;
     List<IDao> alldaos = new List<IDao>();
     List<IDao> daos = new List<IDao>();
 
@@ -122,7 +141,7 @@
             {
                 Dispatcher.Dispatch(new WebWalletChangeTitleAction
                     {
-                        title = "Lyra P2P Trade Market",
+                        title = "Lyra P2P OTC Trade",
                         menunew = false,
                     });
             }
@@ -130,7 +149,7 @@
             {
                 Dispatcher.Dispatch(new WebWalletChangeTitleAction
                     {
-                        title = "Lyra P2P Trade Market",
+                        title = "Lyra P2P OTC Trade",
                         menunew = action != "new"
                     });
             }
@@ -140,6 +159,11 @@
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    void dirchgd()
+    {
+        StateHasChanged();
     }
 
     private async Task ShowCreateTradeUI(IOtcOrder order)
@@ -183,6 +207,16 @@
                     .ToList();
 
                 daos = tosret.GetBlocks("daos").Cast<IDao>().ToList();
+            }
+
+            var req = new TradeStatsReq
+                {
+                    AccountIDs = tradableOrders.Select(a => a.OwnerAccountId).ToList()
+                };
+            var statsret = await lyraApi.GetOtcTradeStatsForUsersAsync(req);
+            if(statsret.Successful())
+            {
+                tradeStats = statsret.Deserialize<List<TradeStats>>();
             }
         }
         catch(Exception e)

@@ -124,7 +124,7 @@ else if(order == null)
                     </MudItem>
                     <MudItem xs="12">
                         <MudDivider />
-                        Total: @total @cfg.fiat
+                        Total worth: @total @cfg.fiat
                     </MudItem>
                     <MudItem xs="12">
                          <RadzenButton IsBusy=@busy ButtonType="Radzen.ButtonType.Submit" Text="Add New Order" Icon="add_circle_outline"></RadzenButton>
@@ -162,7 +162,15 @@ else
                 <span>@order.fiat</span>
             </div>
 
-            <div>Payment range from @order.limitMin @order.fiat to @order.limitMax @order.fiat</div>            
+            <div>Payment range from @order.limitMin @order.fiat to @order.limitMax @order.fiat</div>    
+            
+            <div>
+                Accept payment from:&nbsp;
+                @foreach(var pm in order.payBy)
+                {
+                    <div>@pm &nbsp;</div>
+                }
+            </div>
 
             <div>
                 <span>Total @order.collateral</span> LYR will be used as collateral.
