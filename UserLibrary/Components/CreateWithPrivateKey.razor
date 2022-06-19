@@ -128,8 +128,6 @@
 
     private string txtValue1 { get; set; }
     private string txtValue2 { get; set; }
-    private bool visible = false;
-    bool hasStore;
 
     protected async override Task OnInitializedAsync()
     {
@@ -137,12 +135,10 @@
 
         if (await localStorage.ContainKeyAsync(storeName))
         {
-            hasStore = true;
             act = "Open existing wallet";
         }        
         else
         {
-            hasStore = false;
             act = "Create new";
         }
 

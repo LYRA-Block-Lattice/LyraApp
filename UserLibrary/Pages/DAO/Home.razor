@@ -137,7 +137,7 @@
             Dispatcher.Dispatch(new WebWalletChangeTitleAction
                 {
                     title = "Lyra DAO Central",
-                    menunew = true,
+                    menus = new Dictionary<string, string> { { "New", "/dao/new" } }
                 });
 
             await GetMyDaos();

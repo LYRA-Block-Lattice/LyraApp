@@ -1,0 +1,20 @@
+﻿@page "/otc/myorders"
+@using Fluxor
+@using Nebula.Store.WebWalletUseCase
+
+<div class="mag cet">
+    @if (walletState.Value.wallet == null)
+    {
+        <a href="/wallet">Open wallet to view orders.</a>
+    }
+    else
+    {
+        <h3>All my OTC orders</h3>
+        <UserLibrary.Components.OTC.OrdersList />
+    }
+</div>
+
+@code {
+    [Inject]
+    private IState<WebWalletState> walletState { get; set; }
+}

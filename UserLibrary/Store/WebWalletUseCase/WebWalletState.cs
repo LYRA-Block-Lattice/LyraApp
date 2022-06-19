@@ -15,7 +15,6 @@ namespace Nebula.Store.WebWalletUseCase
 		public int PendingRecvCount { get; set; }
 		public bool IsBackuped { get; set; } = true;
 		public string Title { get; set; }
-		public bool MenuNew { get; set; }
 		private const string faucetKey = "freeLyraToken";
 		// for faucet
 		public int? freeTokenTimes { get; set; }

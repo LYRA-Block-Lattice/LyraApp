@@ -45,10 +45,14 @@
                             </div>
                         </a>
                     </MudMenuItem>
-                    @if (shownew)
+                    @if(menus != null)
                     {
                         <MudDivider />
-                        <MudMenuItem OnClick="@gonew">New</MudMenuItem>
+
+                        @foreach(var kvp in menus)
+                        {
+                            <MudMenuItem OnClick="@(a => gonew(kvp.Value))">@kvp.Key</MudMenuItem>
+                        }
                     }
                 </ChildContent>
             </MudMenu>
@@ -75,7 +79,8 @@
     RenderFragment? banner;
     string title = "Lyra";
     string net = "";
-    bool shownew;
+
+    Dictionary<string, string> menus;
 
     protected override async Task OnInitializedAsync()
     {
@@ -83,13 +88,15 @@
         if (net == "mainnet")
             net = "";
 
+        Navigation.LocationChanged += (o, e) => menus = null;
+
         await base.OnInitializedAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-        {
+        {            
             try
             {
                 await AttachEvents();
@@ -128,7 +135,11 @@
             x =>
             {
                 title = x.title;
-                shownew = x.menunew;
+                if(x.menus != null)
+                {
+                    menus = x.menus;
+                }  
+                InvokeAsync(() => StateHasChanged());
             }
             );
         SubscribeToAction<WebWalletResultAction>(async a =>
@@ -366,7 +377,7 @@
             else
             {
                 banner =
-    @<div>Wallet is not opened.</div>
+        @<div>Wallet is not opened.</div>
     ;
             }
 
@@ -389,8 +400,8 @@
         }
     }
 
-    private void gonew()
+    private void gonew(string url)
     {
-        Navigation.NavigateTo(Navigation.Uri + "/new");
+        Navigation.NavigateTo(url);
     }
 }

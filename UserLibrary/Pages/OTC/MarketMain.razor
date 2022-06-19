@@ -1,5 +1,4 @@
 ﻿@page "/otc"
-@page "/otc/{action}"
 
 @using Fluxor
 @using Fluxor.Blazor.Web.Components
@@ -10,10 +9,7 @@
 @using UserLibrary.Data
 @inherits FluxorComponent
 
-
-    <MudTabs Elevation="2" Rounded="true" Centered="true" Color="Color.Secondary"
-        @bind-ActivePanelIndex="activeIndex">
-        <MudTabPanel Text="Market">
+<div class="mag cet">
                 @if (tradableOrders == null)
                 {
                     <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
@@ -55,43 +51,10 @@
                     </div>
 
                 }
-        </MudTabPanel>
-        <MudTabPanel Text="New">
-            <div class="cet mag">
-                <UserLibrary.Components.OTC.CreateNewOrder />
-            </div>
-        </MudTabPanel>
-        <MudTabPanel Text="My">
-            <MudTabs Centered>
-                <MudTabPanel Text="Orders">
-                        @if (walletState.Value.wallet == null)
-                        {
-                            <a href="/wallet">Open wallet to view orders.</a>
-                        }
-                        else
-                        {
-                            <UserLibrary.Components.OTC.OrdersList />
-                        }
-                </MudTabPanel>
-                <MudTabPanel Text="Trades">
-                        @if (walletState.Value.wallet == null)
-                        {
-                            <a href="/wallet">Open wallet to view trades.</a>
-                        }
-                        else
-                        {
-                            <UserLibrary.Components.OTC.TransactionsList />
-                        }
-                </MudTabPanel>
-            </MudTabs>
-        </MudTabPanel>
-    </MudTabs>
+</div>
 
 
 @code {
-    [Parameter]
-    public string action { get; set; }
-
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
 
@@ -123,12 +86,6 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (action == "new")
-        {
-            activeIndex = 1;
-            StateHasChanged();
-        }
-
         if (firstRender)
         {
             SubscribeToAction<ContractChangeEvent>(async cce =>
@@ -142,7 +99,9 @@
                 Dispatcher.Dispatch(new WebWalletChangeTitleAction
                     {
                         title = "Lyra P2P OTC Trade",
-                        menunew = false,
+                        menus = new Dictionary<string, string> { 
+                            { "Open wallet to trade", "/wallet" },
+                        }
                     });
             }
             else
@@ -150,7 +109,11 @@
                 Dispatcher.Dispatch(new WebWalletChangeTitleAction
                     {
                         title = "Lyra P2P OTC Trade",
-                        menunew = action != "new"
+                        menus = new Dictionary<string, string> { 
+                            { "Create New Order", "/otc/new" },
+                            { "My Orders", "/otc/myorders" },
+                            { "My Trades", "/otc/mytrades" },
+                        }
                     });
             }
 

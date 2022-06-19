@@ -1,0 +1,22 @@
+﻿@page "/otc/mytrades"
+
+@using Fluxor
+@using Nebula.Store.WebWalletUseCase
+
+<div class="mag cet">
+    @if (walletState.Value.wallet == null)
+    {
+        <a href="/wallet">Open wallet to view trades.</a>
+    }
+    else
+    {
+        <h3>All my OTC trades</h3>
+        <UserLibrary.Components.OTC.TransactionsList />
+    }
+</div>
+
+@code {
+    [Inject]
+    private IState<WebWalletState> walletState { get; set; }
+}
+

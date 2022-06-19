@@ -202,7 +202,7 @@ namespace Nebula.Store.WebWalletUseCase
     public class WebWalletChangeTitleAction
     { 
         public string title { get; set; }
-        public bool menunew { get; set; }
+        public Dictionary<string, string> menus { get; set; }
     }
 
     public class WebWalletGotSendToMeAction
