@@ -22,12 +22,6 @@ else if(order == null)
                     <a href="/wallet">Open wallet to create order</a>
                 </MudItem>
             }
-            else if (!showco)
-            {
-                <MudItem xs="12">
-                    <div style="z-index: 5;" class="spinner"></div>
-                </MudItem>
-            }
             else
                 {
                     <MudItem xs="12">
@@ -104,6 +98,7 @@ else if(order == null)
                     <MudItem xs="12">
                         Collateral<br />
                         <RadzenNumeric TValue="decimal" Class="w-100" Name="collateral" @bind-Value=@cfg.collateral Change="@CalCollat2" /> <br />
+                        <br />
                         <RadzenNumericRangeValidator Component="collateral" Min="@mincollt" Max="@(walletState.Value.wallet.BaseBalance)" Text="@($"Limit should be between 0.0001 and {cfg.price * cfg.amount}")" Popup=false Style="position: absolute" />
                         Worth: @coltworth @cfg.fiat<br />
                         Ratio: @(coltrito * 100) % <br />
@@ -209,9 +204,9 @@ else
     [Inject] NebulaConsts _consts { get; set; }
     [Inject] ILocalStorageService localStorage { get; set; }
 
-    List<IDao> mydaos;
+    List<IDao> mydaos = new List<IDao>();
     List<DealerDesc> mydealers = new List<DealerDesc>();
-    bool showco, dir;
+    bool dir;
     string total;
     List<Ticker> tickers;
     string action => dir ? "Buy" : "Sell";
@@ -324,31 +319,12 @@ else
                     .OrderBy(a => a.Name)
                     .ToList();
 
-                if(walletState.Value.wallet != null)
-                {
-                    var having = walletState.Value.wallet.GetLastSyncBlock().Balances.Keys.ToList();
-                    tickers = tickers
-                        .Where(b => having.Contains(b.dbname))
-                        .ToList();
-
-                    showco = true;
-                }
-
                 // daos
                 var alldaoret = await lyraApi.GetAllDaosAsync(0, 10);
                 if (alldaoret.Successful())
                 {
                     mydaos = alldaoret.GetBlocks().Cast<IDao>().ToList();
                 }
-                else
-                {
-                    mydaos = new List<IDao>();
-                }
-
-                if (walletState.Value.wallet?.GetLastSyncBlock().Balances.ContainsKey("tether/USDT") == true)
-                    maxsell = walletState.Value.wallet.GetLastSyncBlock().Balances[@cfg.crypto.dbname].ToBalanceDecimal();
-                else
-                    maxsell = 0;
 
                 SubscribeToAction<MarketUpdated>(async e =>
                 {
@@ -362,7 +338,7 @@ else
             }
             catch(Exception ex)
             {
-                Snackbar.Add($"Failed to initialize: {ex.Message}", Severity.Error);
+                Snackbar.Add($"Failed to initialize: {ex}", Severity.Error);
             }
         }
         await base.OnAfterRenderAsync(firstRender);
@@ -434,7 +410,7 @@ else
 
     private async Task productchanged()
     {
-        if(walletState.Value.wallet != null)
+        if(walletState.Value.wallet != null && walletState.Value.wallet.GetLastSyncBlock() != null)
         {
             if (walletState.Value.wallet.GetLastSyncBlock().Balances.ContainsKey(@cfg.crypto.dbname))
                 maxsell = walletState.Value.wallet.GetLastSyncBlock().Balances[@cfg.crypto.dbname].ToBalanceDecimal();

@@ -78,8 +78,14 @@
                 (localizer["settings"], "/settings", Icons.Filled.Settings),
             };
 
-        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra" });
-
         base.OnInitialized();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if(firstRender)
+            Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra" });
+
+        base.OnAfterRender(firstRender);
     }
 }

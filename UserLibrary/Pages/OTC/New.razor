@@ -1,9 +1,15 @@
 ﻿@page "/otc/new"
 
+@inherits PageWithContextMenu
+
 <div class="cet mag">
     <UserLibrary.Components.OTC.CreateNewOrder />
 </div>
 
 @code {
-
+    protected override void OnInitialized()
+    {
+        _title = "Create New OTC Order";
+        base.OnInitialized();
+    }
 }

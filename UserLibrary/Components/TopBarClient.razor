@@ -79,6 +79,7 @@
     RenderFragment? banner;
     string title = "Lyra";
     string net = "";
+    //string cururl;
 
     Dictionary<string, string> menus;
 
@@ -87,8 +88,6 @@
         net = Configuration["network"];
         if (net == "mainnet")
             net = "";
-
-        Navigation.LocationChanged += (o, e) => menus = null;
 
         await base.OnInitializedAsync();
     }
@@ -132,14 +131,11 @@
     protected async Task AttachEvents()
     {
         SubscribeToAction<WebWalletChangeTitleAction>(
-            x =>
+            async x =>
             {
                 title = x.title;
-                if(x.menus != null)
-                {
-                    menus = x.menus;
-                }  
-                InvokeAsync(() => StateHasChanged());
+                menus = x.menus;
+                await InvokeAsync(() => StateHasChanged());
             }
             );
         SubscribeToAction<WebWalletResultAction>(async a =>

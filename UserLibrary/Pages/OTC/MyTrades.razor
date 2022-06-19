@@ -3,6 +3,8 @@
 @using Fluxor
 @using Nebula.Store.WebWalletUseCase
 
+@inherits PageWithContextMenu
+
 <div class="mag cet">
     @if (walletState.Value.wallet == null)
     {
@@ -18,5 +20,11 @@
 @code {
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _title = "My OTC Trades";
+        base.OnInitialized();
+    }
 }
 

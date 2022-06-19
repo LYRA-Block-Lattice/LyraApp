@@ -7,50 +7,48 @@
 @using Microsoft.Extensions.Configuration
 @using Lyra.Data.API.WorkFlow
 @using UserLibrary.Data
-@inherits FluxorComponent
+@inherits PageWithContextMenu
 
 <div class="mag cet">
-                @if (tradableOrders == null)
-                {
-                    <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
-                }
-                else
-                {
-                    <div style="width:100%; text-align:center;">
-                        <div>
-                            <RadzenSelectBar @bind-Value=@dir TValue="TradeDirection" Change="@dirchgd">
-                            <Items>
-                                <RadzenSelectBarItem Text="Buy" Value="TradeDirection.Buy" />
-                                <RadzenSelectBarItem Text="Sell" Value="TradeDirection.Sell" />
-                            </Items>
-                        </RadzenSelectBar>
+    @if (tradableOrders == null)
+    {
+        <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
+    }
+    else
+    {
+        <div style="width:100%; text-align:center;">
+            <div>
+                <RadzenSelectBar @bind-Value=@dir TValue="TradeDirection" Change="@dirchgd">
+                    <Items>
+                        <RadzenSelectBarItem Text="Buy" Value="TradeDirection.Buy" />
+                        <RadzenSelectBarItem Text="Sell" Value="TradeDirection.Sell" />
+                    </Items>
+                </RadzenSelectBar>
+            </div>
+            <div>
+                <MudTabs Rounded="true" Centered="true">
 
-                        </div>
-                        <div>
-                    <MudTabs Rounded="true" Centered="true">
+                    @foreach (var crypto in tradableCryptos)
+                    {
+                        <MudTabPanel Text=@(crypto.Replace("tether/", "$"))>
+                            <div class="cet mag">
+                                @foreach (var odr in tradableOrders
+                               .Where(a => a.Order.crypto == crypto && a.Order.dir != dir)
+                               .OrderByDescending(a => a.Order.price)
+                               )
+                                {
+                                    var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoId);
+                                    <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao OrderSelected=@ShowCreateTradeUI />
+                                }
+                            </div>
+                        </MudTabPanel>
 
-                        @foreach(var crypto in tradableCryptos)
-                        {                            
-                            <MudTabPanel Text=@(crypto.Replace("tether/", "$"))>
-                                <div class="cet mag">
-                                 @foreach (var odr in tradableOrders
-                                    .Where(a => a.Order.crypto == crypto && a.Order.dir != dir)
-                                    .OrderByDescending(a => a.Order.price)
-                                 )
-                                    {
-                                        var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoId);
-                                        var stat = tradeStats.First(a => a.AccountId == odr.OwnerAccountId);
-                                        <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao OrderSelected=@ShowCreateTradeUI />
-                                    }
-                                </div>
-                            </MudTabPanel>
-                            
-                        }
-                    </MudTabs>
-                    </div>
-                    </div>
+                    }
+                </MudTabs>
+            </div>
+        </div>
 
-                }
+    }
 </div>
 
 
@@ -73,55 +71,57 @@
 
     List<string> tradableCryptos;
     List<IOtcOrder> tradableOrders;
-    List<TradeStats> tradeStats;
     List<IDao> alldaos = new List<IDao>();
     List<IDao> daos = new List<IDao>();
 
     int activeIndex = 0;
 
     string name, desc;
-    int sellerPar, buyerPar;    
+    int sellerPar, buyerPar;
 
     Dictionary<string, decimal> MarketPrices;
+
+    protected override void OnInitialized()
+    {
+        _title = "Lyra P2P OTC Trade";
+        base.OnInitialized();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-        {
+        {            
             SubscribeToAction<ContractChangeEvent>(async cce =>
             {
                 await RefreshOrders();
                 await InvokeAsync(() => StateHasChanged());
             });
 
-            if (walletState.Value.wallet == null)
-            {
-                Dispatcher.Dispatch(new WebWalletChangeTitleAction
-                    {
-                        title = "Lyra P2P OTC Trade",
-                        menus = new Dictionary<string, string> { 
-                            { "Open wallet to trade", "/wallet" },
-                        }
-                    });
-            }
-            else
-            {
-                Dispatcher.Dispatch(new WebWalletChangeTitleAction
-                    {
-                        title = "Lyra P2P OTC Trade",
-                        menus = new Dictionary<string, string> { 
-                            { "Create New Order", "/otc/new" },
-                            { "My Orders", "/otc/myorders" },
-                            { "My Trades", "/otc/mytrades" },
-                        }
-                    });
-            }
+
 
             await RefreshOrders();
             StateHasChanged();
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    protected override Dictionary<string, string> CreateContextMenu()
+    {
+        if (walletState.Value.wallet == null)
+        {
+            return new Dictionary<string, string> {
+                            { "Open wallet to trade", "/wallet" },
+                        };
+        }
+        else
+        {
+            return  new Dictionary<string, string> {
+                            { "Create New Order", "/otc/new" },
+                            { "My Orders", "/otc/myorders" },
+                            { "My Trades", "/otc/mytrades" },
+                        };
+        }
     }
 
     void dirchgd()
@@ -171,18 +171,8 @@
 
                 daos = tosret.GetBlocks("daos").Cast<IDao>().ToList();
             }
-
-            var req = new TradeStatsReq
-                {
-                    AccountIDs = tradableOrders.Select(a => a.OwnerAccountId).ToList()
-                };
-            var statsret = await lyraApi.GetOtcTradeStatsForUsersAsync(req);
-            if(statsret.Successful())
-            {
-                tradeStats = statsret.Deserialize<List<TradeStats>>();
-            }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Snackbar.Add($"Failed to refresh orders: {e}", Severity.Error);
         }
