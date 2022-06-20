@@ -3,14 +3,16 @@
 @using Fluxor
 @using Fluxor.Blazor.Web.Components
 @using Lyra.Data.Crypto
+@using Lyra.Data.Shared
 @using Nebula.Store.WebWalletUseCase
 @using Microsoft.Extensions.Configuration
 @using Lyra.Data.API.WorkFlow
+@using System.Text
 @using UserLibrary.Data
 @inherits PageWithContextMenu
 
 <div class="mag cet">
-    @if (tradableOrders == null)
+    @if (orders == null)
     {
         <MudProgressCircular Color="Color.Primary" Style="height:70px;width:70px;" Indeterminate="true" />
     }
@@ -20,29 +22,26 @@
             <div>
                 <RadzenSelectBar @bind-Value=@dir TValue="TradeDirection" Change="@dirchgd">
                     <Items>
-                        <RadzenSelectBarItem Text="Buy" Value="TradeDirection.Buy" />
-                        <RadzenSelectBarItem Text="Sell" Value="TradeDirection.Sell" />
+                        <RadzenSelectBarItem Text="Sell" Value="TradeDirection.Buy" />
+                        <RadzenSelectBarItem Text="Buy" Value="TradeDirection.Sell" />
                     </Items>
                 </RadzenSelectBar>
             </div>
             <div>
-                <MudTabs Rounded="true" Centered="true">
-
+                <MudTabs @bind-ActivePanelIndex="activeIndex" @ref="tabs" Rounded="true" Centered="true">
                     @foreach (var crypto in tradableCryptos)
                     {
                         <MudTabPanel Text=@(crypto.Replace("tether/", "$"))>
                             <div class="cet mag">
-                                @foreach (var odr in tradableOrders
-                               .Where(a => a.Order.crypto == crypto && a.Order.dir != dir)
-                               .OrderByDescending(a => a.Order.price)
-                               )
+                                @foreach (var odr in orders[dir][crypto])
                                 {
+                                    @*Snackbar.Add($"display order {odr.AccountID.Shorten()}");*@
                                     var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoId);
-                                    <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao OrderSelected=@ShowCreateTradeUI />
+                                    var stat = userStats[odr.AccountID];
+                                    <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao Stats="@stat" OrderSelected=@ShowCreateTradeUI />
                                 }
                             </div>
                         </MudTabPanel>
-
                     }
                 </MudTabs>
             </div>
@@ -67,12 +66,16 @@
     [Inject] ILyraAPI lyraApi { get; set; }
     [Inject] DealerConnMgr connMgr { get; set; }
 
-    TradeDirection dir;
+    TradeDirection dir = TradeDirection.Sell;
+    MudTabs tabs;
 
     List<string> tradableCryptos;
-    List<IOtcOrder> tradableOrders;
+
+    Dictionary<TradeDirection, Dictionary<string, List<IOtcOrder>>> orders;
+
     List<IDao> alldaos = new List<IDao>();
     List<IDao> daos = new List<IDao>();
+    Dictionary<string, UserStats?> userStats = new Dictionary<string, UserStats?>();
 
     int activeIndex = 0;
 
@@ -161,7 +164,7 @@
                 var allblks = tosret.GetBlocks("orders");
                 var odrs = allblks.Cast<IOtcOrder>();
                 //if(odrs == null || !odrs.Any())
-                tradableOrders = odrs
+                var tradableOrders = odrs
                     .Where(a => a.Order.amount > 0)
                     .OrderBy(a => a.Order.price)
                     .ToList();
@@ -169,6 +172,30 @@
                     .Distinct()
                     .ToList();
 
+                var sb = new StringBuilder();
+
+                orders = new Dictionary<TradeDirection, Dictionary<string, List<IOtcOrder>>>();
+                foreach(var dir in new [] { TradeDirection.Sell, TradeDirection.Buy })
+                {
+                    var drdlist = new Dictionary<string, List<IOtcOrder>>();
+                    foreach(var tcrypto in tradableCryptos)
+                    {
+                        var olist = tradableOrders.Where(a => a.Order.dir == dir && a.Order.crypto == tcrypto).ToList();
+                        drdlist.Add(tcrypto, olist);
+
+                        foreach(var o in olist)
+                        {
+                            sb.AppendLine($"{dir} {tcrypto} {o.AccountID}");
+
+                            var us = await GetUserStats(o);
+                            userStats.Add(o.AccountID, us);
+                        }
+
+                    }
+                    orders.Add(dir, drdlist);
+                }
+
+                var dbg = sb.ToString();
                 daos = tosret.GetBlocks("daos").Cast<IDao>().ToList();
             }
         }
@@ -176,5 +203,28 @@
         {
             Snackbar.Add($"Failed to refresh orders: {e}", Severity.Error);
         }
+    }
+
+    private async Task<UserStats?> GetUserStats(IOtcOrder order)
+    {
+        var client = connMgr.GetDealer(order.Order.dealerId);
+        if (client == null)
+            return null;
+
+        // get users
+        try
+        {
+            var user = await client.GetUserByAccountIdAsync(order.OwnerAccountId);
+            if (user.Successful())
+            {
+                return user.Deserialize<UserStats>();
+            }
+        }
+        catch (Exception ex)
+        {
+            
+        }
+
+        return null;
     }
 }

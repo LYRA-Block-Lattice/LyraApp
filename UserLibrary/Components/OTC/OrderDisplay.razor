@@ -1,6 +1,7 @@
 ﻿@using Fluxor
 @using Fluxor.Blazor.Web.Components
 @using Lyra.Data.API.WorkFlow
+@using Lyra.Data.Shared
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
 @using Newtonsoft.Json
@@ -18,24 +19,26 @@
                 <td align="left">
                         <div style="margin: 5px;">
                             <div>@Dao.Name</div>
-                            @if (stats != null)
+                            @if (Stats != null)
                             {
-                                <div class="b">@stats.UserName</div>
+                                <div class="b">@Stats.UserName</div>
                             }
                         </div>
                 </td>
                 <td nowrap align="right">
-                            @if (stats != null)
+                            @if (Stats != null)
                             {
-                                <div>Trade(s) @(stats.Total) | @(Math.Round(stats.Ratio * 100, 2)) %</div>
+                                <div>Trade(s) @(Stats.Total) | @(Math.Round(Stats.Ratio * 100, 2)) %</div>
                             }
                         
                 </td>
             </tr>
             <tr>
                 <td colspan="2" style="font-size: small" align="left">
+                    <a target="_blank" href="@(LyraGlobal.GetBlockViewUrl(Configuration["network"], Otc.AccountID))">
                     Available @(Math.Round(Otc.Order.amount, 2)) @Otc.Order.crypto<br />
                     Limits @Otc.Order.limitMin - @Otc.Order.limitMax @Otc.Order.fiat
+                    </a>
                 </td>
                 <td align="right" class="price">
                     <div>@Otc.Order.price @Otc.Order.fiat</div>
@@ -73,6 +76,9 @@
     public IDao Dao { get; set; }
 
     [Parameter]
+    public UserStats Stats { get; set; }
+
+    [Parameter]
     public EventCallback<IOtcOrder> OrderSelected { get; set; }
 
     [Inject]
@@ -90,8 +96,7 @@
     [Inject] NavigationManager Navigation { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] DealerConnMgr connMgr { get; set; }
-
-    UserStats stats;
+        
     decimal marketprice, marketpriceusd;
     bool dealerTrusted = false;
 
@@ -145,21 +150,6 @@
 
             // fetch init prices
             Dispatcher.Dispatch(new HotUpdateAction());
-
-            try
-            {
-                var user = await client.GetUserByAccountIdAsync(Otc.OwnerAccountId);
-                if (user.Successful())
-                {
-                    stats = JsonConvert.DeserializeObject<UserStats>(user.JsonString);
-
-                    await InvokeAsync(() => StateHasChanged());
-                }
-            }
-            catch(Exception ex)
-            {
-                
-            }
         }
         await base.OnAfterRenderAsync(firstRender);
     }

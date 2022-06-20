@@ -57,7 +57,7 @@ else
             Staking:
             @foreach(var x in dao.Treasure)
             {
-                <div>@x.Key : @x.Value LYR</div>
+                <div>@x.Key.Shorten() : @x.Value.ToBalanceDecimal() LYR</div>
             }
         </div>
 
