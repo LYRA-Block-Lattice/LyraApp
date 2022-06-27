@@ -54,6 +54,7 @@ namespace Dealer.Server.Hubs
                 { "fiatsent", CommandFiatSent },
                 { "fiatreceived", CommandFiatReceived },
                 { "info", CommandInfo },
+                { "cancel", CommandCancel },
 
                 // ODR
                 { "complaint", CommandComplain }
@@ -273,7 +274,7 @@ namespace Dealer.Server.Hubs
                 return;
             }
 
-            var text = $"Dealer can't confirm FiAT send. Please try again.";
+            var text = $"Dealer can't confirm FIAT send. Please try again.";
             await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
         }
 
@@ -303,6 +304,31 @@ namespace Dealer.Server.Hubs
             var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IOtcTrade>();
             var text = $"Trade ID: {(tradeblk as TransactionBlock).AccountID}";
 
+            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
+        }
+
+        // cancel trade
+        private async Task CommandCancel(ChatMessage msg)
+        {
+            for (var i = 0; i < 50; i++)
+            {
+                var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IOtcTrade>();
+                if (tradeblk.OTStatus != OTCTradeStatus.Canceled)
+                {
+                    await Task.Delay(100);
+                    continue;
+                }
+
+                await CommandStatus(msg);
+
+                var room = await _db.GetRoomByTradeAsync(msg.TradeId);
+                foreach (var user in room.Members)
+                    await PinMessageAsync(tradeblk, user.AccountId);
+
+                return;
+            }
+
+            var text = $"Dealer can't confirm FIAT send. Please try again.";
             await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
         }
         #endregion

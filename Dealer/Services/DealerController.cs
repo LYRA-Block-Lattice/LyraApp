@@ -245,6 +245,9 @@ namespace Dealer.Server.Services
             var txmsgs = await _db.GetTxRecordsByTradeAsync(tradeId);
             bool cancellable = false;
 
+            // cancellable
+            // 1, if both side has no chat message
+            // 2, or negociated callation is agreed
             if(!string.IsNullOrEmpty(accountId))
             {
                 var peerHasMsg = txmsgs.Where(a =>

@@ -11,7 +11,7 @@
 		<PackageReference Include="BlazorZXingJs" Version="0.5.13" />
 		<PackageReference Include="Converto" Version="2.1.0" />
 		<PackageReference Include="Fluxor.Blazor.Web" Version="5.4.0" />
-		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.8" />
+		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
 		<PackageReference Include="MongoDB.Bson" Version="2.15.1" />
 		<PackageReference Include="MongoDB.Driver" Version="2.15.1" />

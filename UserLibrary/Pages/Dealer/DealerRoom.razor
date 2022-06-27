@@ -543,18 +543,33 @@
 
     private async Task CancelTrade()
     {
-        // ask if user really want to
-        var result = await DialogService.ShowMessageBox(
-        "Warning",
-            $"You can only request to cancel trade without reply after 10 minutes.",
-            yesText: "Confirm!", cancelText: "Cancel");
+        // first refresh the trade
+        await GetTradeBrief();
 
-        if (result != null && result.Value)
+        if(!brief.IsCancellable)
+        {
+            // ask if user really want to
+            var result = await DialogService.ShowMessageBox(
+            "Warning",
+                $"Trade can't be canceled directly. Would you like a negotiated cancellation with counterparty?",
+                yesText: "Confirm!", cancelText: "Cancel");
+
+            if(result != null && result.Value)
+            {
+                // init a negotiated cancellation
+                Snackbar.Add($"Will negotiate a cacellation with counterparty.");
+            }            
+            
+            Snackbar.Add($"Nothing to do.");
+            return;
+        }
+        else
         {
             var tradeblk = (await walletState.Value.wallet.RPC.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
             var cclret = await walletState.Value.wallet.CancelOTCTradeAsync(tradeblk.Trade.daoId, tradeblk.Trade.orderId, tradeid);
             if(cclret.Successful())
             {
+                await Send("/cancel");
                 Snackbar.Add($"Trade was canceled.", Severity.Success);
             }
             else
