@@ -6,6 +6,7 @@ using MongoDB.Bson.Serialization;
 using Dealer.Server.Models;
 using MongoDB.Bson;
 using Lyra.Data.Crypto;
+using Lyra.Data.API.WorkFlow;
 
 namespace Dealer.Server.Services
 {
@@ -151,6 +152,26 @@ namespace Dealer.Server.Services
 
         public async Task CreateRoomAsync(TxRoom newUser) =>
             await _txRoomsCollection.InsertOneAsync(newUser);
+
+        public async Task<TxRoom?> CreateRoomAsync(IOtcTrade trade)
+        {
+            var seller = await GetUserByAccountIdAsync(trade.Trade.dir == TradeDirection.Buy ? trade.Trade.orderOwnerId : trade.OwnerAccountId);
+            var buyer = await GetUserByAccountIdAsync(trade.Trade.dir == TradeDirection.Sell ? trade.Trade.orderOwnerId : trade.OwnerAccountId);
+
+            if (seller != null && buyer != null)
+            {
+                var crroom = new TxRoom
+                {
+                    TradeId = trade.AccountID,
+                    Dir = trade.Trade.dir,
+                    Members = new[] { seller, buyer },
+                    TimeStamp = DateTime.UtcNow,
+                };
+                await CreateRoomAsync(crroom);
+                return await GetRoomByTradeAsync(trade.AccountID);
+            }
+            return null;
+        }
 
         public async Task UpdateRoomAsync(string id, TxRoom updatedUser) =>
             await _txRoomsCollection.ReplaceOneAsync(x => x.Id == id, updatedUser);

@@ -2,6 +2,7 @@
 using Dealer.Server.Hubs;
 using ImageMagick;
 using Lyra.Core.API;
+using Lyra.Core.Blocks;
 using Lyra.Data.API;
 using Lyra.Data.API.Identity;
 using Lyra.Data.API.WorkFlow;
@@ -364,6 +365,65 @@ namespace Dealer.Server.Services
             if (image == null)
                 return NotFound();
             return File(image.Data, image.Mime);
+        }
+
+        [HttpGet]
+        [Route("Complain")]
+        public async Task<APIResult> ComplainAsync(string tradeId, decimal claimedLost, string accountId, string signature)
+        {
+            // validate input
+            var lsb = await _client.GetLastServiceBlockAsync();
+            if (!Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature))
+                return new APIResult { ResultCode = APIResultCodes.Unauthorized };
+
+            var tradeblk = (await _client.GetLastBlockAsync(tradeId)).As<IOtcTrade>();
+            if(tradeblk == null)
+                return new APIResult { ResultCode = APIResultCodes.BlockNotFound };
+
+            if (tradeblk.OTStatus == OTCTradeStatus.Dispute ||
+                tradeblk.OTStatus == OTCTradeStatus.DisputeClosed)
+            {
+                return new APIResult
+                {
+                    ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidOperation,
+                    ResultMessage = "Inappropriate",
+                };
+            }
+
+            // get or create room
+            var room = await _db.GetRoomByTradeAsync(tradeId);
+            if(room == null)
+            {
+                room = await _db.CreateRoomAsync(tradeblk);
+            }
+
+            var dispute = new DisputeCase
+            {
+                Level = (DisputeLevels)((int)room.DisputeLevel + 1),
+                RaisedBy = accountId,
+                RaisedTime = DateTime.UtcNow,
+                ClaimedLost = claimedLost,
+            };
+
+            room.Claim(dispute);
+            await _db.UpdateRoomAsync(room.Id, room);
+
+            string from;
+            if (accountId == tradeblk.OwnerAccountId)    // buyer
+            {
+                from = "Buyer";
+            }
+            else  // seller
+            {
+                from = "Seller";
+            }
+
+            var text = $"{from} issued a complaint about lost of {dispute.ClaimedLost} LYR. Please be noted. ";
+            return new APIResult
+            {
+                ResultCode = Lyra.Core.Blocks.APIResultCodes.Success,
+                ResultMessage = text
+            };
         }
 
         /*

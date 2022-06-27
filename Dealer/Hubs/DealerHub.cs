@@ -405,28 +405,18 @@ namespace Dealer.Server.Hubs
                     || tradeblk?.Trade.orderOwnerId == req.UserAccountID)
                 {
                     // in database, one dealer room per trade.
-                    var seller = await _db.GetUserByAccountIdAsync(tradeblk.Trade.dir == TradeDirection.Buy ? tradeblk.Trade.orderOwnerId : tradeblk.OwnerAccountId);
-                    var buyer = await _db.GetUserByAccountIdAsync(tradeblk.Trade.dir == TradeDirection.Sell ? tradeblk.Trade.orderOwnerId : tradeblk.OwnerAccountId);
-
                     var room = await _db.GetRoomByTradeAsync(req.TradeID);
                     if (room == null)
                     {
-                        if (seller != null && buyer != null)
-                        {
-                            var crroom = new TxRoom
-                            {
-                                TradeId = ((TransactionBlock)tradeblk).AccountID,
-                                Dir = tradeblk.Trade.dir,
-                                Members = new[] { seller, buyer },
-                                TimeStamp = DateTime.UtcNow,
-                            };
-                            await _db.CreateRoomAsync(crroom);
-                        }
+                        room = await _db.CreateRoomAsync(tradeblk);
                     }
-                    room = await _db.GetRoomByTradeAsync(req.TradeID);
 
                     if (room != null)
                     {
+                        // room members[0] is seller
+                        var seller = room.Members.First();
+                        var buyer = room.Members.Skip(1).First();
+
                         // join the group
                         await Groups.AddToGroupAsync(Context.ConnectionId, req.TradeID);
                         await Groups.AddToGroupAsync(Context.ConnectionId, req.UserAccountID);
@@ -437,7 +427,7 @@ namespace Dealer.Server.Hubs
                         var txmsgs = await _db.GetTxRecordsByTradeAsync(req.TradeID);
                         var dict = new Dictionary<string, string>()
                         {
-                            { seller.AccountId, seller.UserName },
+                            { room.Members.First().AccountId, seller.UserName },
                             { buyer.AccountId, buyer.UserName },
                             { _dealerOwnerAccountId, "Dealer" },
                         };
