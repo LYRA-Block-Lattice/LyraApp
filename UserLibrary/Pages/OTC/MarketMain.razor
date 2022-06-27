@@ -188,7 +188,8 @@
                             sb.AppendLine($"{dir} {tcrypto} {o.AccountID}");
 
                             var us = await GetUserStats(o);
-                            userStats.Add(o.AccountID, us);
+                            if(!userStats.ContainsKey(o.AccountID))
+                                userStats.Add(o.AccountID, us);
                         }
 
                     }

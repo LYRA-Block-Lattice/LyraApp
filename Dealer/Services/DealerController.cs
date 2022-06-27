@@ -238,9 +238,12 @@ namespace Dealer.Server.Services
 
         private async Task<TradeBrief> GetTradeBriefImplAsync(string tradeId, string accountId, bool showRealName)
         {
-            var room = await _db.GetRoomByTradeAsync(tradeId);
-            if (room == null)
+            var trade = (await _client.GetLastBlockAsync(tradeId)).As<IOtcTrade>();
+            if (trade == null)
                 return null;
+
+            // trade with api only may not has a room
+            var room = await _db.GetRoomByTradeAsync(tradeId);
 
             var txmsgs = await _db.GetTxRecordsByTradeAsync(tradeId);
             bool cancellable = false;
@@ -248,7 +251,11 @@ namespace Dealer.Server.Services
             // cancellable
             // 1, if both side has no chat message
             // 2, or negociated callation is agreed
-            if(!string.IsNullOrEmpty(accountId))
+            if(room == null)
+            {
+                cancellable = true;
+            }
+            else if(!string.IsNullOrEmpty(accountId))
             {
                 var peerHasMsg = txmsgs.Where(a =>
                     a.AccountId != accountId &&
@@ -259,14 +266,16 @@ namespace Dealer.Server.Services
             }
 
             // construct roles
+            var seller = trade.Trade.dir == TradeDirection.Buy ? trade.Trade.orderOwnerId : trade.OwnerAccountId;
+            var buyer = trade.Trade.dir == TradeDirection.Sell ? trade.Trade.orderOwnerId : trade.OwnerAccountId;
             var brief = new TradeBrief
             {
-                TradeId = room.TradeId,
-                Direction = room.Dir,
-                Members = room.Members.Select(a => a.AccountId).ToList(),
+                TradeId = tradeId,
+                Direction = trade.Trade.dir,
+                Members = new[] { seller, buyer }.ToList(),
                 Names = new List<string>(),
                 RegTimes = new List<DateTime>(),
-                DisputeHistory = room.DisputeHistory,
+                DisputeHistory = room?.DisputeHistory,
 
                 // if no chat in 10 minutes after trade creation
                 // or if peer request cancel also

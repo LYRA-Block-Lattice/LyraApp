@@ -1,8 +1,10 @@
 ﻿@using Fluxor
+@using Fluxor.Blazor.Web.Components
 @using Lyra.Data.API.WorkFlow
 @using Lyra.Data.Shared
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
+@inherits FluxorComponent
 
 <div align="left">
     <RadzenDataGrid TItem="IOtcTrade" Data="trades"
@@ -60,22 +62,33 @@
     {
         if(firstRender && walletState.Value.wallet != null)
         {
-            // get all current trades 
-            var ret = await walletState.Value.wallet.RPC.FindOtcTradeAsync(walletState.Value.wallet.AccountId, false, 0, 10);
-            if(ret.Successful())
+            await Refresh();
+
+            SubscribeToAction<ContractChangeEvent>(async cce =>
             {
-                trades = ret.GetBlocks()
-                    .OrderByDescending(a => a.TimeStamp)
-                    //.Take(3)
-                    .Cast<IOtcTrade>().ToList();
-                StateHasChanged();
-            }
-            else
-            {
-                Snackbar.Add($"Error getting transactions: {ret.ResultCode.Humanize()}", Severity.Error);
-            }
+                await Refresh();
+                await InvokeAsync(() => StateHasChanged());
+            });
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    async Task Refresh()
+    {
+        // get all current trades
+        var ret = await walletState.Value.wallet.RPC.FindOtcTradeAsync(walletState.Value.wallet.AccountId, false, 0, 10);
+        if (ret.Successful())
+        {
+            trades = ret.GetBlocks()
+                .OrderByDescending(a => a.TimeStamp)
+                //.Take(3)
+                .Cast<IOtcTrade>().ToList();
+            StateHasChanged();
+        }
+        else
+        {
+            Snackbar.Add($"Error getting transactions: {ret.ResultCode.Humanize()}", Severity.Error);
+        }
     }
 
     string GetTradeDir(IOtcTrade trade)
