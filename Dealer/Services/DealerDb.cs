@@ -7,6 +7,7 @@ using Dealer.Server.Models;
 using MongoDB.Bson;
 using Lyra.Data.Crypto;
 using Lyra.Data.API.WorkFlow;
+using Lyra.Data.API.ODR;
 
 namespace Dealer.Server.Services
 {
@@ -22,6 +23,9 @@ namespace Dealer.Server.Services
         private readonly IMongoCollection<ImageData> _txImageDataCollection;
 
         private readonly IMongoCollection<TGChat> _tgChatCollection;
+
+        // ODR
+        private readonly IMongoCollection<ODRNegotiationRound> _odrRoundCollection;
 
         private string _networkId;
         public string NetworkId { get => _networkId; set => _networkId = value; }
@@ -166,6 +170,7 @@ namespace Dealer.Server.Services
                     Dir = trade.Trade.dir,
                     Members = new[] { seller, buyer },
                     TimeStamp = DateTime.UtcNow,
+                    DisputeLevel = DisputeLevels.None,
                 };
                 await CreateRoomAsync(crroom);
                 return await GetRoomByTradeAsync(trade.AccountID);
@@ -239,5 +244,35 @@ namespace Dealer.Server.Services
         public async Task RemoveTGChatAsync(long chatId) =>
             await _tgChatCollection.DeleteOneAsync(x => x.ChatID == chatId);
         #endregion
+
+        //#region ODR Negociation Rounds
+        //public async Task<List<ODRNegotiationRound>> GetODRNegotiationRoundAsync() =>
+        //    await _odrRoundCollection.Find(_ => true).ToListAsync();
+
+        //public async Task<ODRNegotiationRound?> GetPendingODRNegotiationRoundByTradeIDAsync(string tradeid) =>
+        //    await _odrRoundCollection.Find(x => x.TradeId == tradeid 
+        //            && x.State != ODRNegotiationStatus.Executed
+        //            && x.State != ODRNegotiationStatus.Failed
+        //        ).FirstOrDefaultAsync();
+
+        //public async Task<ODRNegotiationRound?> GetODRNegotiationRoundByTradeIDAsync(string tradeid) =>
+        //    await _odrRoundCollection.Find(x => x.TradeId == tradeid).FirstOrDefaultAsync();
+        ////public async Task<ODRNegotiationRound?> GetODRNegotiationRoundByCreatorIdAsync(string creatorId) =>
+        ////    await _odrRoundCollection.Find(x => x.resoluteBy == creatorId).FirstOrDefaultAsync();
+
+        //public async Task CreateODRNegotiationRoundAsync(ODRNegotiationRound round) =>
+        //    await _odrRoundCollection.InsertOneAsync(round);
+
+        ////public async Task CreateOrUpdateODRNegotiationRoundAsync(ODRNegotiationRound round) => await _odrRoundCollection.ReplaceOneAsync(
+        ////                    filter: new BsonDocument("Id", round.Id),
+        ////                    options: new ReplaceOptions { IsUpsert = true },
+        ////                    replacement: round);
+
+        //public async Task UpdateODRNegotiationRoundAsync(ODRNegotiationRound updatedRound) =>
+        //    await _odrRoundCollection.ReplaceOneAsync(x => x.Id == updatedRound.Id, updatedRound);
+
+        //public async Task RemoveODRNegotiationRoundAsync(string roundId) =>
+        //    await _odrRoundCollection.DeleteOneAsync(x => x.Id == roundId);
+        //#endregion
     }
 }

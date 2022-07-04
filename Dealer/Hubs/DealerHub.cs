@@ -597,13 +597,15 @@ namespace Dealer.Server.Hubs
 
             var dispute = new DisputeCase
             {
+                Id = room.DisputeHistory?.Count + 1 ?? 1,
                 Level = (DisputeLevels)((int)room.DisputeLevel + 1),
                 RaisedBy = msg.AccountId,
                 RaisedTime = DateTime.UtcNow,
                 ClaimedLost = decimal.Parse(msg.Text.Split(' ')[1]),
             };
 
-            room.Claim(dispute);
+            room.DisputeLevel = dispute.Level;
+            room.AddComplain(dispute);
             await _db.UpdateRoomAsync(room.Id, room);
                         
             string from;

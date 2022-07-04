@@ -1,10 +1,12 @@
 ﻿using Converto;
 using Dealer.Server.Hubs;
+using Dealer.Server.Models;
 using ImageMagick;
 using Lyra.Core.API;
 using Lyra.Core.Blocks;
 using Lyra.Data.API;
 using Lyra.Data.API.Identity;
+using Lyra.Data.API.ODR;
 using Lyra.Data.API.WorkFlow;
 using Lyra.Data.Crypto;
 using Microsoft.AspNetCore.Mvc;
@@ -263,7 +265,7 @@ namespace Dealer.Server.Services
                     a.AccountId != Signatures.GetAccountIdFromPrivateKey(_config["DealerKey"])
                     ).Any();
                 var sellerHasMsg = txmsgs.Where(a => a.AccountId == room.Members[0].AccountId).Any();
-                cancellable = (!peerHasMsg && !sellerHasMsg) || ((!peerHasMsg || !sellerHasMsg) && room.TimeStamp < DateTime.UtcNow.AddMinutes(-10));
+                cancellable = !peerHasMsg && !sellerHasMsg && room.DisputeLevel == DisputeLevels.None;
             }
 
             // construct roles
@@ -276,11 +278,13 @@ namespace Dealer.Server.Services
                 Members = new[] { seller, buyer }.ToList(),
                 Names = new List<string>(),
                 RegTimes = new List<DateTime>(),
+                DisputeLevel = room?.DisputeLevel ?? DisputeLevels.None,
                 DisputeHistory = room?.DisputeHistory,
+                ResolutionHistory = room?.ResolutionHistory,                
 
                 // if no chat in 10 minutes after trade creation
                 // or if peer request cancel also
-                IsCancellable = cancellable
+                IsCancellable = cancellable,
             };
 
             foreach(var act in brief.Members)
@@ -399,13 +403,15 @@ namespace Dealer.Server.Services
 
             var dispute = new DisputeCase
             {
+                Id = room.DisputeHistory?.Count + 1 ?? 1,
                 Level = (DisputeLevels)((int)room.DisputeLevel + 1),
                 RaisedBy = accountId,
                 RaisedTime = DateTime.UtcNow,
                 ClaimedLost = claimedLost,
             };
 
-            room.Claim(dispute);
+            room.DisputeLevel = dispute.Level;
+            room.AddComplain(dispute);
             await _db.UpdateRoomAsync(room.Id, room);
 
             string from;
@@ -426,6 +432,112 @@ namespace Dealer.Server.Services
             };
         }
 
+        [HttpGet]
+        [Route("SubmitResolution")]
+        public async Task<APIResult> SubmitResolutionAsync(string resolutionJson, string accountId, string signature)
+        {
+            // validate input
+            var lsb = await _client.GetLastServiceBlockAsync();
+            if (!Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature))
+                return new APIResult { ResultCode = APIResultCodes.Unauthorized };
+
+            var resolution = JsonConvert.DeserializeObject<ODRResolution>(resolutionJson);
+            if (resolution == null)
+                return new APIResult { ResultCode = APIResultCodes.InvalidArgument };
+
+            // verify the trade
+            var trade = (await _client.GetLastBlockAsync(resolution.TradeId)).As<IOtcTrade>();
+            if (trade == null)
+                return new APIResult { ResultCode = APIResultCodes.NotFound };
+
+            // get dealer room
+            var room = await _db.GetRoomByTradeAsync(resolution.TradeId);
+            if (room == null)
+            {
+                return new APIResult
+                {
+                    ResultCode = APIResultCodes.InvalidOperation,
+                    ResultMessage = "Inappropriate",
+                };
+            }
+
+            // check pending resolution
+            if(room.Rounds != null && room.Rounds.Any(a => a.TradeId == trade.AccountID && !a.Finished))
+                return new APIResult { ResultCode = APIResultCodes.ResolutionPending };
+
+            resolution.Id = room.ResolutionHistory?.Count + 1 ?? 1;
+            room.AddResolution(resolution);
+
+            var prnew = new ODRNegotiationRound
+            {
+                Id = room.Rounds?.Count + 1 ?? 1,
+                Timestamp = DateTime.UtcNow,
+                LastUpdateTime = DateTime.UtcNow,
+
+                TradeId = trade.AccountID,
+                CaseId = resolution.CaseId,
+                ResolutionId = resolution.Id,
+
+                State = ODRNegotiationStatus.NewlyCreated,
+            };
+
+            room.AddNegotiationRound(prnew);
+            await _db.UpdateRoomAsync(room!.Id!, room);
+
+            return APIResult.Success;
+        }
+
+        [HttpGet]
+        [Route("AnswerToResolution")]
+        public async Task<APIResult> AnswerToResolutionAsync(string tradeId, int resolutionId, bool accepted, string accountId, string signature)
+        {
+            // validate input
+            var lsb = await _client.GetLastServiceBlockAsync();
+            if (!Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature))
+                return new APIResult { ResultCode = APIResultCodes.Unauthorized };
+
+            // get dealer room
+            var room = await _db.GetRoomByTradeAsync(tradeId);
+            if (room == null)
+            {
+                return new APIResult
+                {
+                    ResultCode = APIResultCodes.InvalidOperation,
+                    ResultMessage = "Inappropriate",
+                };
+            }
+
+            if(!room.ResolutionHistory?.Any(a => a.Id == resolutionId) ?? false)
+                return new APIResult { ResultCode = APIResultCodes.NotFound };
+
+            var resolution = room.ResolutionHistory!.FirstOrDefault(a => a.Id == resolutionId);
+
+            // verify the trade
+            var trade = (await _client.GetLastBlockAsync(resolution.TradeId)).As<IOtcTrade>();
+            if (trade == null)
+                return new APIResult { ResultCode = APIResultCodes.NotFound };
+
+            // check pending resolution
+            if (room.Rounds == null || !room.Rounds.Any(a => a.ResolutionId == resolutionId && !a.Finished))
+                return new APIResult { ResultCode = APIResultCodes.NotFound };
+
+            var round = room.Rounds.FirstOrDefault(a => a.ResolutionId == resolutionId && !a.Finished);
+            round.State = ODRNegotiationStatus.AcceptanceConfirmed;
+            round.AcceptanceBy = accountId;
+            round.AcceptanceResult = accepted;
+            round.AcceptanceSignature = signature;
+            round.Finished = true;
+
+            // execute or 
+            if(accepted)
+            {
+                room.DisputeLevel = room.PrevLevel;
+            }
+
+            await _db.UpdateRoomAsync(room.Id, room);
+
+            return APIResult.Success;
+        }
         /*
                 // GET: api/<TransactionController>
                 [HttpGet]

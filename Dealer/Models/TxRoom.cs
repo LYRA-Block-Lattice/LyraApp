@@ -1,4 +1,5 @@
-﻿using Lyra.Data.API.ODR;
+﻿using Dealer.Server.Models;
+using Lyra.Data.API.ODR;
 using Lyra.Data.API.WorkFlow;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -30,18 +31,37 @@ namespace Lyra.Data.API.Identity
         // add full user document as a snapshot
         public LyraUser[] Members { get; set; }
 
-        [JsonIgnore]
-        [BsonIgnore]
-        public DisputeLevels DisputeLevel => DisputeHistory == null ? DisputeLevels.None : (DisputeLevels)DisputeHistory.Count;
+        public DisputeLevels DisputeLevel {get; set; }
 
         public List<DisputeCase>? DisputeHistory { get; set; }
+        public List<ODRResolution>? ResolutionHistory { get; set; }
+        public List<ODRNegotiationRound>? Rounds { get; set; }
 
-        public void Claim(DisputeCase hist)
+        public DisputeLevels NextLevel => (DisputeLevels)((int)DisputeLevel + 1);
+        public DisputeLevels PrevLevel => (DisputeLevels)((int)DisputeLevel - 1);
+
+        public void AddComplain(DisputeCase disp)
         {
             if(DisputeHistory == null)
                 DisputeHistory = new List<DisputeCase>();
 
-            DisputeHistory.Add(hist);
+            DisputeHistory.Add(disp);
+        }
+
+        public void AddResolution(ODRResolution resolution)
+        {
+            if (ResolutionHistory == null)
+                ResolutionHistory = new List<ODRResolution>();
+
+            ResolutionHistory.Add(resolution);
+        }
+
+        public void AddNegotiationRound(ODRNegotiationRound round)
+        {
+            if (Rounds == null)
+                Rounds = new List<ODRNegotiationRound>();
+
+            Rounds.Add(round);
         }
     }
 }
