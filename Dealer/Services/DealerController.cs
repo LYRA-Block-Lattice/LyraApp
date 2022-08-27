@@ -268,6 +268,12 @@ namespace Dealer.Server.Services
                 cancellable = !peerHasMsg && !sellerHasMsg && room.DisputeLevel == DisputeLevels.None;
             }
 
+            var disputeLevel = room?.DisputeLevel ?? DisputeLevels.None;
+            if (trade.OTStatus == OTCTradeStatus.Dispute || trade.OTStatus == OTCTradeStatus.DisputeClosed)
+            {
+                disputeLevel = DisputeLevels.DAO;
+            }                
+
             // construct roles
             var seller = trade.Trade.dir == TradeDirection.Buy ? trade.Trade.orderOwnerId : trade.OwnerAccountId;
             var buyer = trade.Trade.dir == TradeDirection.Sell ? trade.Trade.orderOwnerId : trade.OwnerAccountId;
@@ -278,7 +284,7 @@ namespace Dealer.Server.Services
                 Members = new[] { seller, buyer }.ToList(),
                 Names = new List<string>(),
                 RegTimes = new List<DateTime>(),
-                DisputeLevel = room?.DisputeLevel ?? DisputeLevels.None,
+                DisputeLevel = disputeLevel,
                 DisputeHistory = room?.DisputeHistory,
                 ResolutionHistory = room?.ResolutionHistory,                
 
@@ -429,6 +435,50 @@ namespace Dealer.Server.Services
             {
                 ResultCode = Lyra.Core.Blocks.APIResultCodes.Success,
                 ResultMessage = text
+            };
+        }
+
+        // user create a dispute block and notify dealer about it.
+        // dealer raise the dispute level of trading room and notify clients by signalR.
+        [HttpGet]
+        [Route("DisputeCreated")]
+        public async Task<APIResult> DisputeCreated(string tradeId, string accountId, string signature)
+        {
+            // validate input
+            var lsb = await _client.GetLastServiceBlockAsync();
+            if (!Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature))
+                return new APIResult { ResultCode = APIResultCodes.Unauthorized };
+
+            var tradeblk = (await _client.GetLastBlockAsync(tradeId)).As<IOtcTrade>();
+            if (tradeblk == null)
+                return new APIResult { ResultCode = APIResultCodes.BlockNotFound };
+
+            if (tradeblk.OTStatus != OTCTradeStatus.Dispute)
+            {
+                return new APIResult
+                {
+                    ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidOperation,
+                    ResultMessage = "Inappropriate",
+                };
+            }
+
+            // get or create room
+            var room = await _db.GetRoomByTradeAsync(tradeId);
+            if (room != null && room.DisputeLevel == DisputeLevels.Peer)
+            {
+                room.DisputeLevel = DisputeLevels.DAO;
+                await _db.UpdateRoomAsync(room.Id, room);
+
+                return new APIResult
+                {
+                    ResultCode = Lyra.Core.Blocks.APIResultCodes.Success
+                };
+            }
+
+            return new APIResult
+            {
+                ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidOperation,
+                ResultMessage = "Inappropriate",
             };
         }
 

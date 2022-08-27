@@ -488,13 +488,14 @@ namespace Dealer.Server.Hubs
                 var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.pay:N2}";
                 var next = tradeblk.OTStatus switch
                 {
-                    OTCTradeStatus.Open => (PinnedMode.Action, $"Pay {fiat} to seller"),
-                    OTCTradeStatus.FiatSent => (PinnedMode.Wait, $"Seller confirm receive of payment {fiat}"),
-                    OTCTradeStatus.FiatReceived => (PinnedMode.Wait, $"Dealer release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer"),
+                    OTCTradeStatus.Open => (PinnedMode.Action, $"Pay {fiat} to seller."),
+                    OTCTradeStatus.FiatSent => (PinnedMode.Wait, $"Seller confirm receive of payment {fiat}."),
+                    OTCTradeStatus.FiatReceived => (PinnedMode.Wait, $"Dealer release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer."),
                     OTCTradeStatus.CryptoReleased => (PinnedMode.Notify, "Trade completed successfully!"),
-                    OTCTradeStatus.Closed => (PinnedMode.Notify, "Trade closed. Nothing to do"),
-                    OTCTradeStatus.Canceled => (PinnedMode.Notify, "Trade canceled. Nothing to do"),
+                    OTCTradeStatus.Closed => (PinnedMode.Notify, "Trade closed. Nothing to do."),
+                    OTCTradeStatus.Canceled => (PinnedMode.Notify, "Trade canceled. Nothing to do."),
                     OTCTradeStatus.Dispute => (PinnedMode.Wait, "Arbitration"),
+                    OTCTradeStatus.DisputeClosed => (PinnedMode.Notify, "Dispute resolved and trade closed. Nothing to do."),
                     _ => throw new NotImplementedException(),
                 };
 
@@ -511,13 +512,14 @@ namespace Dealer.Server.Hubs
                 var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.price * tradeblk.Trade.amount:N2}";
                 var next = tradeblk.OTStatus switch
                 {
-                    OTCTradeStatus.Open => (PinnedMode.Wait, $"Buyer pay {fiat} to me"),
-                    OTCTradeStatus.FiatSent => (PinnedMode.Action, $"Confirm receive of payment {fiat}"),
-                    OTCTradeStatus.FiatReceived => (PinnedMode.Wait, $"Dealer release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer"),
+                    OTCTradeStatus.Open => (PinnedMode.Wait, $"Buyer pay {fiat} to me."),
+                    OTCTradeStatus.FiatSent => (PinnedMode.Action, $"Confirm receive of payment {fiat}."),
+                    OTCTradeStatus.FiatReceived => (PinnedMode.Wait, $"Dealer release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer."),
                     OTCTradeStatus.CryptoReleased => (PinnedMode.Notify, "Trade completed successfully!"),
-                    OTCTradeStatus.Closed => (PinnedMode.Notify, "Trade closed. Nothing to do"),
-                    OTCTradeStatus.Canceled => (PinnedMode.Notify, "Trade canceled. Nothing to do"),
+                    OTCTradeStatus.Closed => (PinnedMode.Notify, "Trade closed. Nothing to do."),
+                    OTCTradeStatus.Canceled => (PinnedMode.Notify, "Trade canceled. Nothing to do."),
                     OTCTradeStatus.Dispute => (PinnedMode.Wait, "Arbitration"),
+                    OTCTradeStatus.DisputeClosed => (PinnedMode.Notify, "Dispute resolved and trade closed. Nothing to do."),
                     _ => throw new NotImplementedException(),
                 };
 

@@ -13,12 +13,12 @@
 		<PackageReference Include="Fluxor.Blazor.Web" Version="5.4.0" />
 		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-		<PackageReference Include="MongoDB.Bson" Version="2.15.1" />
-		<PackageReference Include="MongoDB.Driver" Version="2.15.1" />
-		<PackageReference Include="MudBlazor" Version="6.0.10" />
+		<PackageReference Include="MongoDB.Bson" Version="2.17.1" />
+		<PackageReference Include="MongoDB.Driver" Version="2.17.1" />
+		<PackageReference Include="MudBlazor" Version="6.0.14" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
-		<PackageReference Include="Radzen.Blazor" Version="3.18.12" />
+		<PackageReference Include="Radzen.Blazor" Version="3.20.4" />
 	</ItemGroup>
 
 	<ItemGroup>

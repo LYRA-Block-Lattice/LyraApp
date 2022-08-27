@@ -37,7 +37,7 @@
                                 {
                                     @*Snackbar.Add($"display order {odr.AccountID.Shorten()}");*@
                                     var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoId);
-                                    var stat = userStats[odr.AccountID];
+                                    var stat = userStats[odr.OwnerAccountId];
                                     <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao Stats="@stat" OrderSelected=@ShowCreateTradeUI />
                                 }
                             </div>
@@ -99,8 +99,6 @@
                 await RefreshOrders();
                 await InvokeAsync(() => StateHasChanged());
             });
-
-
 
             await RefreshOrders();
             StateHasChanged();
@@ -186,10 +184,13 @@
                         foreach(var o in olist)
                         {
                             sb.AppendLine($"{dir} {tcrypto} {o.AccountID}");
-
-                            var us = await GetUserStats(o);
-                            if(!userStats.ContainsKey(o.AccountID))
-                                userStats.Add(o.AccountID, us);
+                            
+                            if(!userStats.ContainsKey(o.OwnerAccountId))
+                            {
+                                sb.AppendLine($"GetUserStats {o.OwnerAccountId}");
+                                var us = await GetUserStats(o);
+                                userStats.Add(o.OwnerAccountId, us);
+                            }                                
                         }
 
                     }

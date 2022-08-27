@@ -14,18 +14,17 @@
     <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
     <PackageReference Include="BlazorZXingJs" Version="0.5.13" />
     <PackageReference Include="Converto" Version="2.1.0" />
-    <PackageReference Include="Fluxor.Blazor.Web" Version="5.4.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.6" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.8" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.6" />
-    <PackageReference Include="MongoDB.Bson" Version="2.15.1" />
-    <PackageReference Include="MongoDB.Driver" Version="2.15.1" />
-    <PackageReference Include="MudBlazor" Version="6.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.8" />
+    <PackageReference Include="MongoDB.Bson" Version="2.17.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.17.1" />
+    <PackageReference Include="MudBlazor" Version="6.0.14" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
-    <PackageReference Include="Radzen.Blazor" Version="3.18.12" />
+    <PackageReference Include="Radzen.Blazor" Version="3.20.4" />
   </ItemGroup>
 
   <ItemGroup>

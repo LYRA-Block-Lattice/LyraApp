@@ -192,16 +192,19 @@ namespace Dealer.Server.Services
                             {
                                 var sendblkret = await _lyraApi.GetBlockAsync(recv.SourceHash);
                                 var sendblk = sendblkret.GetBlock() as SendTransferBlock;
-                                notifyTarget.Add(new KeyValuePair<string, object>(sendblk.AccountID, new AccountChangedEvent
+                                if(sendblk != null) // block may be missing!
                                 {
-                                    ChangeType = AccountChangeTypes.SendReceived,
-                                    PeerAccountId = sendblk.DestinationAccountId,
-                                }));
-                                notifyTarget.Add(new KeyValuePair<string, object>(recv.AccountID, new AccountChangedEvent
-                                {
-                                    ChangeType = AccountChangeTypes.Receive,
-                                    PeerAccountId = sendblk.AccountID,
-                                }));
+                                    notifyTarget.Add(new KeyValuePair<string, object>(sendblk.AccountID, new AccountChangedEvent
+                                    {
+                                        ChangeType = AccountChangeTypes.SendReceived,
+                                        PeerAccountId = sendblk.DestinationAccountId,
+                                    }));
+                                    notifyTarget.Add(new KeyValuePair<string, object>(recv.AccountID, new AccountChangedEvent
+                                    {
+                                        ChangeType = AccountChangeTypes.Receive,
+                                        PeerAccountId = sendblk.AccountID,
+                                    }));
+                                }
                             }                            
                         }
                     }
