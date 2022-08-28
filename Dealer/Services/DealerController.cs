@@ -442,7 +442,7 @@ namespace Dealer.Server.Services
         // dealer raise the dispute level of trading room and notify clients by signalR.
         [HttpGet]
         [Route("DisputeCreated")]
-        public async Task<APIResult> DisputeCreated(string tradeId, string accountId, string signature)
+        public async Task<APIResult> DisputeCreatedAsync(string tradeId, string accountId, string signature)
         {
             // validate input
             var lsb = await _client.GetLastServiceBlockAsync();
@@ -467,6 +467,50 @@ namespace Dealer.Server.Services
             if (room != null && room.DisputeLevel == DisputeLevels.Peer)
             {
                 room.DisputeLevel = DisputeLevels.DAO;
+                await _db.UpdateRoomAsync(room.Id, room);
+
+                return new APIResult
+                {
+                    ResultCode = Lyra.Core.Blocks.APIResultCodes.Success
+                };
+            }
+
+            return new APIResult
+            {
+                ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidOperation,
+                ResultMessage = "Inappropriate",
+            };
+        }
+
+        // user not accept the decision of DAO and raise the dispute to Lyra council.
+        // dealer raise the dispute level of trading room and notify clients by signalR.
+        [HttpGet]
+        [Route("RaiseToCouncil")]
+        public async Task<APIResult> RaiseToCouncilAsync(string tradeId, string accountId, string signature)
+        {
+            // validate input
+            var lsb = await _client.GetLastServiceBlockAsync();
+            if (!Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature))
+                return new APIResult { ResultCode = APIResultCodes.Unauthorized };
+
+            var tradeblk = (await _client.GetLastBlockAsync(tradeId)).As<IOtcTrade>();
+            if (tradeblk == null)
+                return new APIResult { ResultCode = APIResultCodes.BlockNotFound };
+
+            if (tradeblk.OTStatus != OTCTradeStatus.Dispute)
+            {
+                return new APIResult
+                {
+                    ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidOperation,
+                    ResultMessage = "Inappropriate",
+                };
+            }
+
+            // get or create room
+            var room = await _db.GetRoomByTradeAsync(tradeId);
+            if (room != null && room.DisputeLevel == DisputeLevels.DAO)
+            {
+                room.DisputeLevel = DisputeLevels.LyraCouncil;
                 await _db.UpdateRoomAsync(room.Id, room);
 
                 return new APIResult
