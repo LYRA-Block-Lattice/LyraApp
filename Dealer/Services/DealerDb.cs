@@ -24,9 +24,6 @@ namespace Dealer.Server.Services
 
         private readonly IMongoCollection<TGChat> _tgChatCollection;
 
-        // ODR
-        private readonly IMongoCollection<ODRNegotiationRound> _odrRoundCollection;
-
         private string _networkId;
         public string NetworkId { get => _networkId; set => _networkId = value; }
 

@@ -56,6 +56,7 @@ namespace Dealer.Server.Services
         LyraEventClient _eventClient;
         ILogger<Keeper> _logger;
         TelegramBotClient _botClient;
+        public Wallet DealerWallet { get; private set; }
 
         string _botUserName;
         public string BotUserName => _botUserName;
@@ -254,49 +255,57 @@ namespace Dealer.Server.Services
             // start wallet
             var walletStor2 = new AccountInMemoryStorage();
             Wallet.Create(walletStor2, "xunit", "1234", _config["network"], _config["DealerKey"]);
-            var dlrWallet = Wallet.Open(walletStor2, "xunit", "1234", _lyraApi);
-            _logger.LogInformation($"Dealer Wallet Account ID: {dlrWallet.AccountId}");
-            dlrWallet.NoConsole = true;
-            await dlrWallet.SyncAsync(null);
+            DealerWallet = Wallet.Open(walletStor2, "xunit", "1234", _lyraApi);
+            _logger.LogInformation($"Dealer Wallet Account ID: {DealerWallet.AccountId}");
+            DealerWallet.NoConsole = true;
+            await DealerWallet.SyncAsync(null);
 
             // register if necessary
             while(true)
             {
-                var gdret = await dlrWallet.RPC.GetDealerByAccountIdAsync(dlrWallet.AccountId);
-                if (!gdret.Successful())
+                try
                 {
-                    var dealerAbi = new Wallet.LyraContractABI
+                    var gdret = await DealerWallet.RPC.GetDealerByAccountIdAsync(DealerWallet.AccountId);
+                    if (!gdret.Successful())
                     {
-                        svcReq = BrokerActions.BRK_DLR_CREATE,
-                        targetAccountId = PoolFactoryBlock.FactoryAccount,
-                        amounts = new Dictionary<string, decimal>
+                        var dealerAbi = new Wallet.LyraContractABI
+                        {
+                            svcReq = BrokerActions.BRK_DLR_CREATE,
+                            targetAccountId = PoolFactoryBlock.FactoryAccount,
+                            amounts = new Dictionary<string, decimal>
                         {
                             { LyraGlobal.OFFICIALTICKERCODE, 1 },
                         },
-                        objArgument = new DealerCreateArgument
-                        {
-                            Name = _config["DealerName"],
-                            Description = _config["DealerDescription"],
-                            ServiceUrl = $"{_config["baseUrl"]}/",
-                            DealerAccountId = dlrWallet.AccountId,
-                            Mode = ClientMode.Permissionless
-                        }
-                    };
+                            objArgument = new DealerCreateArgument
+                            {
+                                Name = _config["DealerName"],
+                                Description = _config["DealerDescription"],
+                                ServiceUrl = $"{_config["baseUrl"]}/",
+                                DealerAccountId = DealerWallet.AccountId,
+                                Mode = ClientMode.Permissionless
+                            }
+                        };
 
-                    // we temp disable the dealer creation.
-                    var ret = await dlrWallet.ServiceRequestAsync(dealerAbi);
-                    if (ret.Successful())
-                    {
-                        Console.WriteLine("Successfully created dealer.");
-                        return;
+                        // we temp disable the dealer creation.
+                        var ret = await DealerWallet.ServiceRequestAsync(dealerAbi);
+                        if (ret.Successful())
+                        {
+                            Console.WriteLine("Successfully created dealer.");
+                            return;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Unable to create dealer: {ret.ResultCode.Humanize()}");
+                            await Task.Delay(30_000);
+                        }
                     }
-                    else
-                    {
-                        Console.WriteLine($"Unable to create dealer: {ret.ResultCode.Humanize()}");
-                        await Task.Delay(30_000);
-                    }
+                    return;
                 }
-                return;
+                catch(Exception ex)
+                {
+                    Console.WriteLine($"Unable to Init: {ex}");
+                    await Task.Delay(30_000);
+                }
             }
         }
 

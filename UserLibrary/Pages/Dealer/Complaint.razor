@@ -47,10 +47,10 @@
                     </div>
 
                     <div>
-                        Level: @cmp.Level
+                        Level: @cmp.Complaint.level
                     </div>
                     <div>
-                        Raised By: @cmp.RaisedBy
+                        Raised By: @cmp.Complaint.ownerId
                     </div>
                     <div>
                         Raised Time: @cmp.RaisedTime
@@ -59,7 +59,7 @@
                         Claimed Lost: @cmp.ClaimedLost LYR
                     </div>
 
-                    @if(cmp.Level == DisputeLevels.DAO && votings != null)
+                    @if (cmp.Complaint.level == DisputeLevels.DAO && votings != null)
                     {
                         foreach(var vote in votings)
                         {

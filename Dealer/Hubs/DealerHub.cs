@@ -57,7 +57,7 @@ namespace Dealer.Server.Hubs
                 { "cancel", CommandCancel },
 
                 // ODR
-                { "complaint", CommandComplain }
+                //{ "complaint", CommandComplain }
             };
         }
 
@@ -567,65 +567,65 @@ namespace Dealer.Server.Hubs
         #endregion
 
         #region ODR
-        private async Task CommandComplain(ChatMessage msg)
-        {
-            var room = await _db.GetRoomByTradeAsync(msg.TradeId);
-            var delay = room.DisputeLevel switch
-            {
-                //DisputeLevels.Peer => TimeSpan.FromDays(1),
-                //DisputeLevels.DAO => TimeSpan.FromDays(4),
-                //DisputeLevels.LyraCouncil => TimeSpan.FromDays(7),
-                _ => TimeSpan.Zero,
-            };
+        //private async Task CommandComplain(ChatMessage msg)
+        //{
+        //    var room = await _db.GetRoomByTradeAsync(msg.TradeId);
+        //    var delay = room.DisputeLevel switch
+        //    {
+        //        //DisputeLevels.Peer => TimeSpan.FromDays(1),
+        //        //DisputeLevels.DAO => TimeSpan.FromDays(4),
+        //        //DisputeLevels.LyraCouncil => TimeSpan.FromDays(7),
+        //        _ => TimeSpan.Zero,
+        //    };
 
-            var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IOtcTrade>();
-            if (tradeblk.OTStatus == OTCTradeStatus.Dispute ||
-                tradeblk.OTStatus == OTCTradeStatus.DisputeClosed)
-            {
-                await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, "Inappropriate");
-                return;
-            }
+        //    var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IOtcTrade>();
+        //    if (tradeblk.OTStatus == OTCTradeStatus.Dispute ||
+        //        tradeblk.OTStatus == OTCTradeStatus.DisputeClosed)
+        //    {
+        //        await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, "Inappropriate");
+        //        return;
+        //    }
 
-            if(room.DisputeLevel != DisputeLevels.None)
-            {
-                // delay
-                if(room.DisputeHistory.Last().RaisedTime + delay > DateTime.UtcNow)
-                {
-                    var str = string.Format("{0} Days {1} Hours {2} Minutes", delay.Days, delay.Hours, delay.Minutes);
-                    await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, $"Can't raise dispute level in cooling down. Time left: {str}");
-                    return;
-                }
-            }
+        //    if(room.DisputeLevel != DisputeLevels.None)
+        //    {
+        //        // delay
+        //        if(room.DisputeHistory.Last().RaisedTime + delay > DateTime.UtcNow)
+        //        {
+        //            var str = string.Format("{0} Days {1} Hours {2} Minutes", delay.Days, delay.Hours, delay.Minutes);
+        //            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, $"Can't raise dispute level in cooling down. Time left: {str}");
+        //            return;
+        //        }
+        //    }
 
-            var dispute = new DisputeCase
-            {
-                Id = room.DisputeHistory?.Count + 1 ?? 1,
-                Level = (DisputeLevels)((int)room.DisputeLevel + 1),
-                RaisedBy = msg.AccountId,
-                RaisedTime = DateTime.UtcNow,
-                ClaimedLost = decimal.Parse(msg.Text.Split(' ')[1]),
-            };
+        //    var dispute = new DisputeCase
+        //    {
+        //        Id = room.DisputeHistory?.Count + 1 ?? 1,
+        //        Level = (DisputeLevels)((int)room.DisputeLevel + 1),
+        //        RaisedBy = msg.AccountId,
+        //        RaisedTime = DateTime.UtcNow,
+        //        ClaimedLost = decimal.Parse(msg.Text.Split(' ')[1]),
+        //    };
 
-            room.DisputeLevel = dispute.Level;
-            room.AddComplain(dispute);
-            await _db.UpdateRoomAsync(room.Id, room);
+        //    room.DisputeLevel = dispute.Level;
+        //    room.AddComplain(dispute);
+        //    await _db.UpdateRoomAsync(room.Id, room);
                         
-            string from;
-            if (msg.AccountId == tradeblk.OwnerAccountId)    // buyer
-            {
-                from = "Buyer";
-            }
-            else  // seller
-            {
-                from = "Seller";
-            }
+        //    string from;
+        //    if (msg.AccountId == tradeblk.OwnerAccountId)    // buyer
+        //    {
+        //        from = "Buyer";
+        //    }
+        //    else  // seller
+        //    {
+        //        from = "Seller";
+        //    }
 
-            var text = $"{from} issued a complaint about lost of {dispute.ClaimedLost} LYR. Please be noted. ";
-            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
+        //    var text = $"{from} issued a complaint about lost of {dispute.ClaimedLost} LYR. Please be noted. ";
+        //    await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
 
-            foreach (var user in room.Members)
-                await PinMessageAsync(tradeblk, user.AccountId);
-        }
+        //    foreach (var user in room.Members)
+        //        await PinMessageAsync(tradeblk, user.AccountId);
+        //}
         #endregion
     }
 }

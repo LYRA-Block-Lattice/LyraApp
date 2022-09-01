@@ -31,11 +31,12 @@ namespace Lyra.Data.API.Identity
         // add full user document as a snapshot
         public LyraUser[] Members { get; set; }
 
+        public bool IsCancelable { get; set; }
+
         public DisputeLevels DisputeLevel {get; set; }
 
-        public List<DisputeCase>? DisputeHistory { get; set; }
+        public List<DisputeCase?> DisputeHistory { get; set; } = null!;
         public List<ODRResolution>? ResolutionHistory { get; set; }
-        public List<ODRNegotiationRound>? Rounds { get; set; }
 
         public DisputeLevels NextLevel => (DisputeLevels)((int)DisputeLevel + 1);
         public DisputeLevels PrevLevel => (DisputeLevels)((int)DisputeLevel - 1);
@@ -43,25 +44,25 @@ namespace Lyra.Data.API.Identity
         public void AddComplain(DisputeCase disp)
         {
             if(DisputeHistory == null)
-                DisputeHistory = new List<DisputeCase>();
+                DisputeHistory = new List<DisputeCase?>();
 
             DisputeHistory.Add(disp);
         }
 
-        public void AddResolution(ODRResolution resolution)
-        {
-            if (ResolutionHistory == null)
-                ResolutionHistory = new List<ODRResolution>();
+        //public void AddResolution(ODRResolution resolution)
+        //{
+        //    if (ResolutionHistory == null)
+        //        ResolutionHistory = new List<ODRResolution>();
 
-            ResolutionHistory.Add(resolution);
-        }
+        //    ResolutionHistory.Add(resolution);
+        //}
 
-        public void AddNegotiationRound(ODRNegotiationRound round)
-        {
-            if (Rounds == null)
-                Rounds = new List<ODRNegotiationRound>();
+        //public void AddNegotiationRound(ODRNegotiationRound round)
+        //{
+        //    if (Rounds == null)
+        //        Rounds = new List<ODRNegotiationRound>();
 
-            Rounds.Add(round);
-        }
+        //    Rounds.Add(round);
+        //}
     }
 }
