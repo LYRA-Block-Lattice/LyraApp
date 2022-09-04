@@ -40,7 +40,7 @@
         @if(brief.DisputeLevel != DisputeLevels.None)
         {
             <div>
-                @foreach(var cmp in brief.DisputeHistory)
+                @foreach(var cmp in brief.GetDisputeHistory())
                 {
                     <div>
                         <hr />
@@ -55,9 +55,9 @@
                     <div>
                         Raised Time: @cmp.RaisedTime
                     </div>
-                    <div>
+@*                    <div>
                         Claimed Lost: @cmp.ClaimedLost LYR
-                    </div>
+                    </div>*@
 
                     @if (cmp.Complaint.level == DisputeLevels.DAO && votings != null)
                     {

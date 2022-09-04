@@ -478,6 +478,12 @@ namespace Dealer.Server.Services
                         RaisedTime = DateTime.UtcNow,
                         Complaint = complaint,
                     },
+                    DisputeLevels.LyraCouncil => new CouncilDisputeCase
+                    {
+                        Id = room.DisputeHistory?.Count + 1 ?? 1,
+                        RaisedTime = DateTime.UtcNow,
+                        Complaint = complaint,
+                    },
                     _ => throw new NotImplementedException()
                 };
 
@@ -565,8 +571,6 @@ namespace Dealer.Server.Services
 
                     ddc.Replies.Add(reply);
                 }
-                else
-                    throw new NotImplementedException("write code for lyra council");
 
                 await _db.UpdateRoomAsync(room.Id, room);
 
@@ -587,19 +591,24 @@ namespace Dealer.Server.Services
                 }
 
                 // execute DAO resolution if both agree
-                if(dispute is DaoDisputeCase ddcx)
+                if (dispute is DaoDisputeCase ddcx)
                 {
                     if(ddcx.Replies.Count(a => a.response == ComplaintResponse.AgreeResolution) == 2)
                     {
-                        // change state of trade
-                        var ret = await _keeper.DealerWallet.ExecuteResolution(ddcx.VoteId, ddcx.Resolution);
-                        if (!ret.Successful())
+                        if (dispute is CouncilDisputeCase cdc) // lyra council case
                         {
-                            return new APIResult
+                            // dealer shouldn't has such a high level of priviledge. 
+                            // notify the lord to execute
+                            Console.WriteLine("the lord will execute the resolution.");
+                        }
+                        else
+                        {
+                            // change state of trade
+                            var ret = await _keeper.DealerWallet.ExecuteResolution(ddcx.VoteId, ddcx.Resolution);
+                            if (!ret.Successful())
                             {
-                                ResultCode = Lyra.Core.Blocks.APIResultCodes.UndefinedError,
-                                ResultMessage = $"Error ExecuteResolution by dealer: {ret.ResultCode}",
-                            };
+                                return ret;
+                            }
                         }
                     }
                 }
