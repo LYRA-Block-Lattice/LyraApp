@@ -166,6 +166,10 @@
                     .Where(a => a.Order.amount > 0)
                     .OrderBy(a => a.Order.price)
                     .ToList();
+
+                if (Configuration["network"] == "devnet")   // too many on devnet
+                    tradableOrders = tradableOrders.Take(30).ToList();
+
                 tradableCryptos = tradableOrders.Select(a => a.Order.crypto)
                     .Distinct()
                     .ToList();

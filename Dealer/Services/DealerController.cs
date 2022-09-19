@@ -277,7 +277,10 @@ namespace Dealer.Server.Services
 
             if(room != null && room.DisputeLevel == DisputeLevels.Peer)
             {
-                var lastcase = room.DisputeHistory.Last() as PeerDisputeCase;
+                var lastcase = room.DisputeHistory
+                    .Where(a => a.IsPending)
+                    .OrderBy(a => a.Complaint.created)
+                    .Last() as PeerDisputeCase;
                 if(lastcase.Complaint != null && lastcase.Reply != null)
                 {
                     icPeer = lastcase.Complaint.request == ComplaintRequest.CancelTrade
@@ -441,12 +444,27 @@ namespace Dealer.Server.Services
                     room = await _db.CreateRoomAsync(tradeblk);
                 }
 
-                if(room.NextLevel != complaint.level)
+                if(room.DisputeLevel == complaint.level)
+                {
+                    if (room.DisputeHistory.Any(a => a.Complaint.level == complaint.level
+                        && a.Complaint.ownerId == complaint.ownerId
+                        && a.IsPending))   // don't allow same level of complain when pending one exists.
+                    {
+                        return new APIResult
+                        {
+                            ResultCode = Lyra.Core.Blocks.APIResultCodes.ResolutionPending,
+                            ResultMessage = $"Complaint pending.",
+                        };
+                    }
+                }
+                else if (room.NextLevel != complaint.level)
+                {
                     return new APIResult
                     {
                         ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidOperation,
                         ResultMessage = $"Please submit complaint level {room.DisputeLevel} first.",
                     };
+                }
 
                 if(complaint.level == DisputeLevels.DAO 
                     && tradeblk.OTStatus != OTCTradeStatus.Dispute
@@ -570,12 +588,30 @@ namespace Dealer.Server.Services
                     }
 
                     ddc.Replies.Add(reply);
+                }                
+
+                // do withdraw if the reply is from complaint's owner
+                if(dispute.Complaint.ownerId == reply.ownerId)
+                {
+                    if (dispute.IsPending && reply.response == ComplaintResponse.OwnerWithdraw)
+                    {
+                        dispute.State = DisputeNegotiationStates.PlaintiffWithdraw;
+                    }
+
+                    var lastcase = room.DisputeHistory
+                                        .Where(a => a.IsPending)
+                                        .OrderBy(a => a.Complaint.created)
+                                        .LastOrDefault();
+                    if (lastcase != null)
+                        room.DisputeLevel = lastcase.Complaint.level;
+                    else
+                        room.DisputeLevel = DisputeLevels.None;
                 }
 
                 await _db.UpdateRoomAsync(room.Id, room);
 
                 // do cancel if both agreed
-                if(dispute.Complaint.request == ComplaintRequest.CancelTrade 
+                if (dispute.Complaint.request == ComplaintRequest.CancelTrade 
                     && reply.response == ComplaintResponse.AgreeCancel)
                 {
                     // dealer cancel the trade

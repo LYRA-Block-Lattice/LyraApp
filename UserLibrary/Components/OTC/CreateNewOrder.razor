@@ -8,14 +8,14 @@
 @using UserLibrary.Data
 @using UserLibrary.Store.NotificationUseCase
 @inherits FluxorComponent
-@if(cfg == null)
+@if (cfg == null)
 {
     <div style="z-index: 5;" class="spinner"></div>
 }
-else if(order == null)
+else if (order == null)
 {
-<RadzenTemplateForm TItem="OrderConfig" Data=@cfg Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
-            <MudGrid>
+    <RadzenTemplateForm TItem="OrderConfig" Data=@cfg Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+        <MudGrid>
             @if (walletState.Value.wallet == null)
             {
                 <MudItem xs="12">
@@ -23,113 +23,114 @@ else if(order == null)
                 </MudItem>
             }
             else
-                {
-                    <MudItem xs="12">
-                        <h2>Order Type:</h2>
-                        <RadzenSelectBar @bind-Value=@dir TValue="bool" Change="@dirchgd">
-                            <Items>
-                                <RadzenSelectBarItem Text="Buy" Value="true" />
-                                <RadzenSelectBarItem Text="Sell" Value="false" />
-                            </Items>
-                        </RadzenSelectBar>
-                    </MudItem>
-                    <MudItem xs="12">
-                        Trusted Dealer Server:<br />
-                        <RadzenDropDown AllowClear="false" TValue="String" Class="w-100"
+            {
+                <MudItem xs="12">
+                    <h2>Order Type:</h2>
+                    <RadzenSelectBar @bind-Value=@dir TValue="bool" Change="@dirchgd">
+                        <Items>
+                            <RadzenSelectBarItem Text="Buy" Value="true" />
+                            <RadzenSelectBarItem Text="Sell" Value="false" />
+                        </Items>
+                    </RadzenSelectBar>
+                </MudItem>
+                <MudItem xs="12">
+                    Trusted Dealer Server:<br />
+                    <RadzenDropDown AllowClear="false" TValue="String" Class="w-100"
                             Name="dealerName"
-                                    @bind-Value=@cfg.dealerName Change="@seldealer"
-                                    Data=@(mydealers.Select(a => a.Name)) /> <br />
-                        <RadzenRequiredValidator Component="dealerName" Text="Trusted dealer is required." Popup="false" Style="position: absolute"/>
-                    </MudItem>
-                    <MudItem xs="12">
-                        In Orgnization:<br />
-                        <RadzenDropDown AllowClear="false" TValue="String" Class="w-100"
+                            @bind-Value=@cfg.dealerName Change="@seldealer"
+                            Data=@(mydealers.Select(a => a.Name)) /> <br />
+                    <RadzenRequiredValidator Component="dealerName" Text="Trusted dealer is required." Popup="false" Style="position: absolute" />
+                </MudItem>
+                <MudItem xs="12">
+                    In Orgnization:<br />
+                    <RadzenDropDown AllowClear="false" TValue="String" Class="w-100"
                             Name="daoName"
-                                    @bind-Value=@cfg.daoName Change="@seldao"
-                                    Data=@(mydaos.Select(a => (a as IBrokerAccount).Name)) /> <br />
-                        <RadzenRequiredValidator Component="daoName" Text="Orgnization is required." Popup="false" Style="position: absolute"/>
-                    </MudItem>
-                    <MudItem xs="12">
-                        Token To @action<br />
-                        <RadzenDropDown AllowClear="false" TValue="Ticker" Class="w-100"
+                            @bind-Value=@cfg.daoName Change="@seldao"
+                            Data=@(mydaos.Select(a => (a as IBrokerAccount).Name)) /> <br />
+                    <RadzenRequiredValidator Component="daoName" Text="Orgnization is required." Popup="false" Style="position: absolute" />
+                </MudItem>
+                <MudItem xs="12">
+                    Token To @action<br />
+                    <RadzenDropDown AllowClear="false" TValue="Ticker" Class="w-100"
                             Name="crypto"
-                                    @bind-Value=@cfg.crypto Change="@productchanged"
-                                    Data=@tickers /> <br />
-                        Current Balance: @maxsell @cfg.crypto.Name <br />
-                        <RadzenRequiredValidator Component="crypto" Text="Selling Crypto is required." Popup="false" Style="position: absolute"/>
+                            @bind-Value=@cfg.crypto Change="@productchanged"
+                            Data=@tickers /> <br />
+                    Current Balance: @maxsell @cfg.crypto.Name <br />
+                    <RadzenRequiredValidator Component="crypto" Text="Selling Crypto is required." Popup="false" Style="position: absolute" />
                     <MudItem xs="12">
                         Quantity<br />
                         <RadzenNumeric TValue="decimal" Class="w-100" Name="amount" @bind-Value=@cfg.amount Change="@CalCollat" /> <br />
-                        <RadzenNumericRangeValidator t Component="amount" Min="0.0001m" Max="@maxsell" Text="@($"Quantity should be between 0.0001 and {maxsell}")" Popup=false Style="position: absolute" />
+                        <RadzenNumericRangeValidator Component="amount" Min="0.0001m" Max="@maxsell" Text="@($"Quantity should be between 0.0001 and {maxsell}")" Popup=false Style="position: absolute" />
                     </MudItem>
-                    </MudItem>
-                    <MudItem xs="12">
-                        Fiat currency<br />
-                        <RadzenDropDown AllowClear="false" TValue="string" Class="w-100"
+                </MudItem>
+                <MudItem xs="12">
+                    Fiat currency<br />
+                    <RadzenDropDown AllowClear="false" TValue="string" Class="w-100"
                             Name="fiat"
-                                    @bind-Value=@cfg.fiat Change="@fiatchanged"
-                                    Data=@fiats /> <br />
-                        <RadzenRequiredValidator Component="fiat" Text="Fiat is required." Popup="false" Style="position: absolute"/>
-                        <div>@selfiatname</div>
-                    </MudItem>
-@*                    <MudItem xs="12">
-                        Order Type<br />
-                        <RadzenDropDown AllowClear="false" TValue="string" Class="w-100" Disabled
-                                    @bind-Value=@selodrtyp
-                                    Data=@odrtyps />
-                    </MudItem>*@
-                    <MudItem xs="12">
-                        @action price<br />
-                        <RadzenNumeric TValue="decimal" Class="w-100" Name="price" @bind-Value=@cfg.price Change="@CalCollat" /><br />
-                        <RadzenNumericRangeValidator Component="price" Min="0.0001m" Max="1000000000000m" Text="Price should be between 0.0001 and 1000000000000" Popup=false Style="position: absolute" />
-                        Market Price: @selCryptoMarketPrice @cfg.fiat <br />
-                        Total: @total @cfg.fiat
-                    </MudItem>
-                    <MudItem xs="12">
-                        Min Payment<br />
-                        <RadzenNumeric TValue="decimal" Class="w-80" Name="limitMin" @bind-Value=@cfg.limitMin Change="@CalCollat" /> @cfg.fiat <br />
-                        <RadzenNumericRangeValidator Component="limitMin" Min="0.0001m" Max="@cfg.limitMax" Text="@($"Limit should be between 0.0001 and {cfg.price * cfg.amount}")" Popup=false Style="position: absolute" />
-                    </MudItem>
-                    <MudItem xs="12">
-                        Max Payment<br />
-                        <RadzenNumeric TValue="decimal" Class="w-80" Name="limitMax" @bind-Value=@cfg.limitMax Change="@CalCollat" /> @cfg.fiat <br />
-                        <RadzenNumericRangeValidator Component="limitMax" Min="@cfg.limitMin" Max="@(cfg.price * cfg.amount)" Text="@($"Limit should be between 0.0001 and {cfg.price * cfg.amount}")" Popup=false Style="position: absolute" />
-                    </MudItem>
-                    <MudItem xs="12">
-                        Collateral<br />
-                        <RadzenNumeric TValue="decimal" Class="w-100" Name="collateral" @bind-Value=@cfg.collateral Change="@CalCollat2" /> <br />
-                        <br />
-                        <RadzenNumericRangeValidator Component="collateral" Min="@mincollt" Max="@(walletState.Value.wallet.BaseBalance)" Text="@($"Limit should be between 0.0001 and {cfg.price * cfg.amount}")" Popup=false Style="position: absolute" />
-                        Worth: @coltworth @cfg.fiat<br />
-                        Ratio: @(coltrito * 100) % <br />
-                        @if(dao != null)
-                        {
-                            <div>
-                                Minimum ratio required by DAO: @dao.SellerPar %
-                            </div>
-                        }
-                        
-                        Current Balance: @walletState.Value.wallet.BaseBalance LYR
-                    </MudItem>
-                    <MudItem xs="12">
-                        Accepted Payment Methods<br />
-                        <RadzenCheckBoxList Name="paymths" @bind-Value=@cfg.paymths TValue="string" Orientation="Radzen.Orientation.Vertical"
-                                        Data="@paymentMethods" /> <br />
-                        <RadzenRequiredValidator Component="paymths" Text="Payment method is required." Popup="false" Style="position: absolute"/>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudDivider />
-                        Total worth: @total @cfg.fiat
-                    </MudItem>
-                    <MudItem xs="12">
-                         <RadzenButton IsBusy=@busy ButtonType="Radzen.ButtonType.Submit" Text="Add New Order" Icon="add_circle_outline"></RadzenButton>
-@*                        <RadzenButton IsBusy=@busy Click=@(async args => await CreateOrder("adddao")) Text="Add New Order" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
-*@                    </MudItem>
-@*                    <MudItem xs="12">
-                        <RadzenButton Click=@(args => Back2("")) Text="Back" ButtonStyle="ButtonStyle.Light" />
-                    </MudItem>*@
-                }
-            </MudGrid>
+                            @bind-Value=@cfg.fiat Change="@fiatchanged"
+                            Data=@fiats /> <br />
+                    <RadzenRequiredValidator Component="fiat" Text="Fiat is required." Popup="false" Style="position: absolute" />
+                    <div>@selfiatname</div>
+                </MudItem>
+                @*                    <MudItem xs="12">
+        Order Type<br />
+        <RadzenDropDown AllowClear="false" TValue="string" Class="w-100" Disabled
+        @bind-Value=@selodrtyp
+        Data=@odrtyps />
+        </MudItem>*@
+                <MudItem xs="12">
+                    @action price<br />
+                    <RadzenNumeric TValue="decimal" Class="w-100" Name="price" @bind-Value=@cfg.price Change="@CalCollat" /><br />
+                    <RadzenNumericRangeValidator Component="price" Min="0.0001m" Max="1000000000000m" Text="Price should be between 0.0001 and 1000000000000" Popup=false Style="position: absolute" />
+                    Market Price: @selCryptoMarketPrice @cfg.fiat <br />
+                    Total: @total @cfg.fiat
+                </MudItem>
+                <MudItem xs="12">
+                    Min Payment<br />
+                    <RadzenNumeric TValue="decimal" Class="w-80" Name="limitMin" @bind-Value=@cfg.limitMin Change="@CalCollat" /> @cfg.fiat <br />
+                    <RadzenNumericRangeValidator Component="limitMin" Min="0.0001m" Max="@cfg.limitMax" Text="@($"Limit should be between 0.0001 and {cfg.price * cfg.amount}")" Popup=false Style="position: absolute" />
+                </MudItem>
+                <MudItem xs="12">
+                    Max Payment<br />
+                    <RadzenNumeric TValue="decimal" Class="w-80" Name="limitMax" @bind-Value=@cfg.limitMax Change="@CalCollat" /> @cfg.fiat <br />
+                    <RadzenNumericRangeValidator Component="limitMax" Min="@cfg.limitMin" Max="@(cfg.price * cfg.amount)" Text="@($"Limit should be between 0.0001 and {cfg.price * cfg.amount}")" Popup=false Style="position: absolute" />
+                </MudItem>
+                <MudItem xs="12">
+                    Collateral<br />
+                    <RadzenNumeric TValue="decimal" Class="w-100" Name="collateral" @bind-Value=@cfg.collateral Change="@CalCollat2" /> <br />
+                    <br />
+                    <RadzenNumericRangeValidator Component="collateral" Min="@mincollt" Max="@(walletState.Value.wallet.BaseBalance)" Text="@($"Limit should be between 0.0001 and {cfg.price * cfg.amount}")" Popup=false Style="position: absolute" />
+                    Worth: @coltworth @cfg.fiat<br />
+                    Ratio: @(coltrito * 100) % <br />
+                    @if (dao != null)
+                    {
+                        <div>
+                            Minimum ratio required by DAO: @dao.SellerPar %
+                        </div>
+                    }
+
+                    Current Balance: @walletState.Value.wallet.BaseBalance LYR
+                </MudItem>
+                <MudItem xs="12">
+                    Accepted Payment Methods<br />
+                    <RadzenCheckBoxList Name="paymths" @bind-Value=@cfg.paymths TValue="string" Orientation="Radzen.Orientation.Vertical"
+                                Data="@paymentMethods" /> <br />
+                    <RadzenRequiredValidator Component="paymths" Text="Payment method is required." Popup="false" Style="position: absolute" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudDivider />
+                    Total worth: @total @cfg.fiat
+                </MudItem>
+                <MudItem xs="12">
+                    <RadzenButton IsBusy=@busy ButtonType="Radzen.ButtonType.Submit" Text="Add New Order" Icon="add_circle_outline"></RadzenButton>
+                    @*                        <RadzenButton IsBusy=@busy Click=@(async args => await CreateOrder("adddao")) Text="Add New Order" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
+            *@
+                </MudItem>
+                @*                    <MudItem xs="12">
+        <RadzenButton Click=@(args => Back2("")) Text="Back" ButtonStyle="ButtonStyle.Light" />
+        </MudItem>*@
+            }
+        </MudGrid>
     </RadzenTemplateForm>
 }
 else
@@ -139,14 +140,14 @@ else
 
         <div class="info">
             <div>
-                @if(order.dir == TradeDirection.Buy)
+                @if (order.dir == TradeDirection.Buy)
                 {
                     <span>Buy&nbsp;</span>
                 }
                 else
                 {
                     <span>Sell&nbsp;</span>
-                }                
+                }
                 <span>@order.amount</span>
                 <span>@order.crypto</span>
             </div>
@@ -157,11 +158,11 @@ else
                 <span>@order.fiat</span>
             </div>
 
-            <div>Payment range from @order.limitMin @order.fiat to @order.limitMax @order.fiat</div>    
-            
+            <div>Payment range from @order.limitMin @order.fiat to @order.limitMax @order.fiat</div>
+
             <div>
                 Accept payment from:&nbsp;
-                @foreach(var pm in order.payBy)
+                @foreach (var pm in order.payBy)
                 {
                     <div>@pm &nbsp;</div>
                 }
@@ -170,23 +171,23 @@ else
             <div>
                 <span>Total @order.collateral</span> LYR will be used as collateral.
             </div>
-            
+
         </div>
 
         <div>
             <RadzenButton Text="Confirm Create New Order" Click="@SubmitOrder"></RadzenButton>
-        </div>   
-        
+        </div>
+
         <div>
             <RadzenButton Text="Go back" Click="@goback"></RadzenButton>
-        </div> 
+        </div>
     </div>
 
 }
 
 @code {
     [Inject]
-    IState<HotDataState> hotData { get; set; }  
+    IState<HotDataState> hotData { get; set; }
 
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
@@ -251,7 +252,7 @@ else
 
     OrderConfig cfg = new OrderConfig
         {
-            crypto = new Ticker{ dbname = "tether/USDT", Name = "$USDT"},
+            crypto = new Ticker { dbname = "tether/USDT", Name = "$USDT" },
             fiat = "USD",
             price = 1,
             amount = 1,
@@ -276,7 +277,7 @@ else
 
     protected async override Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender)
+        if (firstRender)
         {
             try
             {
@@ -307,17 +308,34 @@ else
                 // get sellable tokens
                 var tokens = await lyraApi.GetTokenNamesAsync(null, null, "(null)");
 
-                tickers = tokens.Entities
-                    .Where(a => !a.StartsWith("unittest/"))
-                    // only display which user have
-                    //.Where(b => walletState.Value.wallet.GetLastSyncBlock().Balances.ContainsKey(b))
-                    .Select(a => new Ticker
-                    {
-                        dbname = a,
-                        Name = a.Replace("tether/", "$")
-                    })
-                    .OrderBy(a => a.Name)
-                    .ToList();
+                if(Configuration["network"] == "devnet")
+                {
+                    tickers = tokens.Entities
+                        //.Where(a => !a.StartsWith("unittest/"))
+                        // only display which user have
+                        //.Where(b => walletState.Value.wallet.GetLastSyncBlock().Balances.ContainsKey(b))
+                        .Select(a => new Ticker
+                            {
+                                dbname = a,
+                                Name = a.Replace("tether/", "$")
+                            })
+                        .OrderBy(a => a.Name)
+                        .ToList();
+                }
+                else
+                {
+                    tickers = tokens.Entities
+                        .Where(a => !a.StartsWith("unittest/"))
+                        // only display which user have
+                        //.Where(b => walletState.Value.wallet.GetLastSyncBlock().Balances.ContainsKey(b))
+                        .Select(a => new Ticker
+                            {
+                                dbname = a,
+                                Name = a.Replace("tether/", "$")
+                            })
+                        .OrderBy(a => a.Name)
+                        .ToList();
+                }
 
                 // daos
                 var alldaoret = await lyraApi.GetAllDaosAsync(0, 10);
@@ -336,7 +354,7 @@ else
 
                 StateHasChanged();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Snackbar.Add($"Failed to initialize: {ex}", Severity.Error);
             }
@@ -346,7 +364,7 @@ else
 
     private void CalCollat(Decimal d)
     {
-        if(hotData.Value == null || dao == null)
+        if (hotData.Value == null || dao == null)
         {
             return;
         }
@@ -366,7 +384,7 @@ else
 
     private void CalCollat2(Decimal d)
     {
-        if(hotData.Value == null || dao == null)
+        if (hotData.Value == null || dao == null)
         {
             return;
         }
@@ -410,7 +428,7 @@ else
 
     private async Task productchanged()
     {
-        if(walletState.Value.wallet != null && walletState.Value.wallet.GetLastSyncBlock() != null)
+        if (walletState.Value.wallet != null && walletState.Value.wallet.GetLastSyncBlock() != null)
         {
             if (walletState.Value.wallet.GetLastSyncBlock().Balances.ContainsKey(@cfg.crypto.dbname))
                 maxsell = walletState.Value.wallet.GetLastSyncBlock().Balances[@cfg.crypto.dbname].ToBalanceDecimal();
@@ -431,7 +449,7 @@ else
             var fiatinfo = await client.GetFiatAsync(cfg.fiat);
             selfiatname = fiatinfo.name;
         }
-        catch(Exception)
+        catch (Exception)
         {
             selfiatname = "";
         }
@@ -442,7 +460,7 @@ else
         decimal usdprice = 0;
         var priceTag = @cfg.crypto.dbname.Replace("tether/", "").ToUpper();
         if (@cfg.crypto != null && hotData.Value.MarketPrices.ContainsKey(priceTag))
-        {            
+        {
             usdprice = hotData.Value.MarketPrices[priceTag];
         }
 
@@ -457,7 +475,7 @@ else
             var daot = daoret3.GetBlock() as TransactionBlock;
 
             var dealer = connMgr.GetPriceFeeder();
-            if(dealer == null)
+            if (dealer == null)
             {
                 Snackbar.Add($"No price feeder", Severity.Error);
                 return;
