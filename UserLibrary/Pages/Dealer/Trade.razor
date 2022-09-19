@@ -38,7 +38,7 @@
         <div>
             <h3>You will @(otc.Order.dir == TradeDirection.Sell ? "Pay" : "Sell")</h3>
             <div class="ipt">
-                <MudNumericField @bind-Value="@pay" DebounceInterval="500" OnDebounceIntervalElapsed="calc" Label="@($"Fiat {otc.Order.fiat} worth of {otc.Order.crypto}")" Variant="Variant.Outlined"  />
+                    <MudNumericField @bind-Value="@pay" DebounceInterval="500" OnDebounceIntervalElapsed="calc" Label="@($"Fiat {otc.Order.fiat} worth of {otc.Order.crypto}")" Variant="MudBlazor.Variant.Outlined" />
                 Limitation: @otc.Order.limitMin @otc.Order.fiat - @otc.Order.limitMax @otc.Order.fiat
             </div>
         </div>
@@ -52,8 +52,8 @@
         <div style="height:45px;" />
         <div>
             <h3>Collateral</h3>
-            <MudNumericField @bind-Value="@cltlyr" DebounceInterval="500" OnDebounceIntervalElapsed="calc2" 
-                Label="In LYR" Variant="Variant.Outlined"  />
+            <MudNumericField @bind-Value="@cltlyr" DebounceInterval="500" OnDebounceIntervalElapsed="calc2"
+                             Label="In LYR" Variant="MudBlazor.Variant.Outlined" />
             <div> Equivalent @(Math.Round((lyraprice * cltlyr) / hotData.Value.MarketPrices[otc.Order.fiat.ToLower()], 2)) @otc.Order.fiat</div>
             Ratio of collateral: @coltrito <br />
             Minimum ratio required by DAO: @dao.BuyerPar % <br />
@@ -73,7 +73,7 @@
         <div>
             @if (walletState.Value.wallet == null)
             {
-                <a href="wallet"><MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary">Open wallet to create token</MudButton></a>
+                    <a href="wallet"><MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true" Color="Color.Primary">Open wallet to create token</MudButton></a>
             }
             else
             {

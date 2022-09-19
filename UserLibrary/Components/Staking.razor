@@ -44,9 +44,9 @@
                         <td>@((stk as IStaking).Days)</td>
                         <td>@((stk as IStaking).Voting)</td>
                         <td>
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async (e) => await AddStkAsync(e, (stk as TransactionBlock).AccountID))">Add Staking</MudButton>
+                            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async (e) => await AddStkAsync(e, (stk as TransactionBlock).AccountID))">Add Staking</MudButton>
                             &nbsp;
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async () => {await UnstakingConfirm((stk as TransactionBlock).AccountID, (stk as IStaking).Start, (stk as IStaking).Days);})">Unstaking</MudButton>
+                            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async () => {await UnstakingConfirm((stk as TransactionBlock).AccountID, (stk as IStaking).Start, (stk as IStaking).Days);})">Unstaking</MudButton>
                         </td>
                     </tr>
                 }
@@ -103,7 +103,7 @@
             <input size="10" type="checkbox" @bind="@stkCompound" />
         </p>
         <div>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@adding"
+            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Disabled="@adding"
                        OnClick="@(async () => await StakingCreate())">
                 @if (adding)
                 {
@@ -140,7 +140,7 @@
             <MudTextField Label="Max number" @bind-Value="@pftSeats" />
         </p>
         <div>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@adding"
+            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Disabled="@adding"
                        OnClick="@(async () => await ProfitingCreate())">
                 @if (adding)
                 {

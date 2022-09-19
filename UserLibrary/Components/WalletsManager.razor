@@ -21,16 +21,16 @@
 {
 <MudGrid>
     <MudItem xs="12" sm="12" md="12">
-        <MudTextField T="string" Label="Wallet Name" Variant="Variant.Text" @bind-Value="@selName" />
+        <MudTextField T="string" Label="Wallet Name" Variant="MudBlazor.Variant.Text" @bind-Value="@selName" />
     </MudItem>
     <MudItem xs="12" sm="12" md="12">
-        <MudTextField T="string" Label="Note" Variant="Variant.Text" @bind-Value="@selNote" Lines="5" />
+                <MudTextField T="string" Label="Note" Variant="MudBlazor.Variant.Text" @bind-Value="@selNote" Lines="5" />
     </MudItem>
     <MudItem xs="12" sm="12" md="12">
-        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary"
             Disabled="@(!canupdate)"
             OnClick="Update">Update</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Delete">Delete</MudButton>
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Error" OnClick="Delete">Delete</MudButton>
     </MudItem>
 </MudGrid>
 }

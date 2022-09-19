@@ -32,7 +32,7 @@
                 @if (actable)
                 {
                     <div align="right">
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary"
                                OnClick="FinishAction">Finished</MudButton>
                     </div>
                 }
@@ -79,7 +79,7 @@
     </div>
 
     <div class="inp ext">
-        <MudTextField T="string" @ref="@inputTxt" Variant="Variant.Outlined" Lines="1" Class="inptxt"
+        <MudTextField T="string" @ref="@inputTxt" Variant="MudBlazor.Variant.Outlined" Lines="1" Class="inptxt"
                       OnKeyUp="@Enter" />
         <MudFab Color="Color.Primary" StartIcon="@Icons.Filled.Send"
                 Size="Size.Small" OnClick="SendIt" />
@@ -95,22 +95,20 @@
             <InputFile id="fileInput112" OnChange="UploadFiles" hidden multiple accept=".jpg, .jpeg, .png" />
 
             <MudButton HtmlTag="label"
-                   Variant="Variant.Filled"
+                   Variant="MudBlazor.Variant.Filled"
                    StartIcon="@Icons.Filled.Image"
                    for="fileInput112">
                 Send images
             </MudButton>
 
-            <MudButton
-                   Variant="Variant.Filled"
+            <MudButton Variant="MudBlazor.Variant.Filled"
                    StartIcon="@Icons.Filled.Close"
                    OnClick="CancelTrade"
                    >
                 Cancel Trade
             </MudButton>
 
-            <MudButton
-                   Variant="Variant.Filled"
+            <MudButton Variant="MudBlazor.Variant.Filled"
                    StartIcon="@Icons.Filled.Balance"
                    OnClick="Complaint"
                    >

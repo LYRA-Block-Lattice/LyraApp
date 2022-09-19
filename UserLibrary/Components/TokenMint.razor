@@ -60,11 +60,11 @@
         <p>
             @if (walletState.Value.wallet == null)
             {
-                <a href="wallet"><MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary">Open wallet to create token</MudButton></a>
+                <a href="wallet"><MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true" Color="Color.Primary">Open wallet to create token</MudButton></a>
             }
             else
             {
-                <MudButton Variant="Variant.Filled" Disabled="@loading" FullWidth="true" Color="Color.Primary" @ref="@btn"
+                <MudButton Variant="MudBlazor.Variant.Filled" Disabled="@loading" FullWidth="true" Color="Color.Primary" @ref="@btn"
                        OnClick="@mint">
                     @if (loading)
                     {

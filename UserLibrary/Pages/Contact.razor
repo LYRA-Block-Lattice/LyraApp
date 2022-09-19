@@ -17,7 +17,7 @@
         @if (action == "new")
         {
             <div>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Scan to Add</MudButton>
+            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">Scan to Add</MudButton>
                 <MudDivider />
             </div>
             <div>
@@ -30,7 +30,7 @@
                 Image: <RadzenTextBox />
                 </div>*@
             <div>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="add">Add</MudButton>
+            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="add">Add</MudButton>
         </div>
     }
     
@@ -46,9 +46,9 @@
                 <div>
                     <CopyToClipboard Text="@c.address" />
                 </div>
-                <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="@(() => send(c))">Send To</MudButton>
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Tertiary" OnClick="@(() => send(c))">Send To</MudButton>
 
-                <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="@(() => del(c))">Del</MudButton>
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Tertiary" OnClick="@(() => del(c))">Del</MudButton>
                 <hr />
             </div>
         }

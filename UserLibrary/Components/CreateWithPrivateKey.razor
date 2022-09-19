@@ -43,7 +43,7 @@
             </div>            
         }
         <div class="mid">
-            <MudButton Variant="Variant.Filled" Disabled="@busy" Color="Color.Primary" OnClick="@RestoreWallet">
+            <MudButton Variant="MudBlazor.Variant.Filled" Disabled="@busy" Color="Color.Primary" OnClick="@RestoreWallet">
                 @if (busy)
                 {
                     <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
@@ -63,7 +63,8 @@
         </div>
         <div class="mid">
         <a href="/login">
-            <MudButton Variant="Variant.Filled">@act with password</MudButton></a>
+                <MudButton Variant="MudBlazor.Variant.Filled">@act with password</MudButton>
+            </a>
         </div>
     }
 
@@ -119,11 +120,11 @@
 
     RenderFragment extraok =
     @<a href="login">
-        <MudButton Variant="Variant.Filled" Color="Color.Primary">Login</MudButton>
+        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">Login</MudButton>
     </a>;
 
     RenderFragment extrafail =
-    @<MudButton Variant="Variant.Filled" Color="Color.Primary">Retry</MudButton>
+    @<MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">Retry</MudButton>
     ;
 
     private string txtValue1 { get; set; }

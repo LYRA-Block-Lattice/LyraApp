@@ -35,12 +35,12 @@
                     <div>
                         @if((order as IOtcOrder).OOStatus == OTCOrderStatus.Partial)
                         {
-                            <MudButton Variant="Variant.Filled" OnClick="@(() => DelistOrder(order))" Color="Color.Tertiary">Delist</MudButton>
+                            <MudButton Variant="MudBlazor.Variant.Filled" OnClick="@(() => DelistOrder(order))" Color="Color.Tertiary">Delist</MudButton>
                         }
 
                         @if((order as IOtcOrder).OOStatus == OTCOrderStatus.Open || (order as IOtcOrder).OOStatus == OTCOrderStatus.Partial || (order as IOtcOrder).OOStatus == OTCOrderStatus.Delist)
                         {
-                            <MudButton Variant="Variant.Filled" OnClick="@(() => CloseOrder(order))" Color="Color.Tertiary">Close</MudButton>
+                            <MudButton Variant="MudBlazor.Variant.Filled" OnClick="@(() => CloseOrder(order))" Color="Color.Tertiary">Close</MudButton>
                         }
                     </div>
                 </Template>

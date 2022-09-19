@@ -565,6 +565,8 @@ namespace Dealer.Server.Services
                     };
                 }
 
+                // reply must be from either seller or buyer
+
                 if (dispute is PeerDisputeCase pdc)
                 {
                     pdc.Reply = reply;

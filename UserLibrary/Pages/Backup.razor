@@ -11,7 +11,7 @@
     @if(backuped)
         {
             <a href="/">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">
                     Home
                 </MudButton>     
             </a>
@@ -27,11 +27,11 @@
                     @pvtkey
                 </span>
             </MudPaper>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" 
-                @onclick="@(async() => await Finish())">
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary"
+                   @onclick="@(async() => await Finish())">
                 I have memorized the private key
             </MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary"
                 @onclick="@(async() => await Restart())">
                 Start Over Again     
             </MudButton>
@@ -50,7 +50,7 @@ else
             <MudTextField InputType="InputType.Password" Label="Password" Size="Size.Large" @bind-Value="@txtValue1" />
         </div>
         <div class="mid">
-            <MudButton Variant="Variant.Filled" Disabled="@busy" Color="Color.Primary" OnClick="@(async() => await OpenWallet())">
+            <MudButton Variant="MudBlazor.Variant.Filled" Disabled="@busy" Color="Color.Primary" OnClick="@(async() => await OpenWallet())">
                 @if (busy)
                 {
                     <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -73,10 +73,10 @@ else
     </TitleContent>
     <DialogContent>
         <p>What is the last 6 charactors of the private key?</p>
-        <MudTextField @bind-Value="last6" Label="Memorized" Variant="Variant.Text"></MudTextField>
+        <MudTextField @bind-Value="last6" Label="Memorized" Variant="MudBlazor.Variant.Text"></MudTextField>
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async() => await Submit())" Class="px-10">Test Me!</MudButton>
+        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async() => await Submit())" Class="px-10">Test Me!</MudButton>
     </DialogActions>
 </MudDialog>
 

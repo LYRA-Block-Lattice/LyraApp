@@ -16,7 +16,7 @@
     @if (ui == UI.Entry)
     {
         <div style="padding: 14px; width: 370px">
-            <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" 
+            <MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true" Color="Color.Primary" 
                 OnClick="@(async ()=>{ await OpenAddLiquidityUI(); })">
                 Add Liquidity
             </MudButton>
@@ -93,7 +93,7 @@
                             @if (walletState.Value.wallet == null)
                             {
                                 <a href="/wallet">
-                                    <MudButton Variant="Variant.Filled" FullWidth="true" class="rounded-pill"
+                                    <MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true" class="rounded-pill"
                                 Color="Color.Primary">
                                         Open Wallet to Create a Pool
                                     </MudButton>
@@ -101,7 +101,7 @@
                             }
                             else
                             {
-                                <MudButton Variant="Variant.Filled" FullWidth="true" Color="Color.Primary" Disabled="@(!alenabled || adding)"
+                                <MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true" Color="Color.Primary" Disabled="@(!alenabled || adding)"
                             OnClick="@(async ()=>{ await PoolDeposit(); })" class="rounded-pill">
                                     <MudIcon Icon="@Icons.Filled.Water" Title="Add" />                      
                                     @if (adding)
@@ -127,7 +127,7 @@
                         <tr>
                             <td colspan="2">
                                 <MudDivider>Or</MudDivider>
-                                <MudButton Variant="Variant.Filled" FullWidth="true" class="rounded-pill"
+                                <MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true" class="rounded-pill"
                             Color="Color.Primary" OnClick="@(async ()=>{ await PoolWithdraw(); })">
                                     Remove All My Share
                                 </MudButton>
@@ -145,7 +145,7 @@
                             @if (walletState.Value.wallet == null)
                             {
                                 <a href="/wallet">
-                                    <MudButton Variant="Variant.Filled" FullWidth="true" class="rounded-pill"
+                                    <MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true" class="rounded-pill"
                                 Color="Color.Primary">
                                         Open Wallet to Create a Pool
                                     </MudButton>
@@ -153,7 +153,7 @@
                             }
                             else
                             {
-                                <MudButton Variant="Variant.Filled" FullWidth="true" Disabled="@(!clenabled)" class="rounded-pill"
+                                <MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true" Disabled="@(!clenabled)" class="rounded-pill"
                             Color="Color.Primary" OnClick="@(async ()=>{ await CreateLiquidity(); })">
                                     Create Liquidity Pool
                                 </MudButton>

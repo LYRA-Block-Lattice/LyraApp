@@ -61,7 +61,7 @@
                     }
                     else
                     {
-                        <MudButton Variant="Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>
+                    <MudButton Variant="MudBlazor.Variant.Filled" OnClick="@ShowCreateTradeUI" Color="Color.Primary">@(Otc.Order.dir == TradeDirection.Sell ? "Buy" : "Sell")</MudButton>
                     }
                 </td>
             </tr>

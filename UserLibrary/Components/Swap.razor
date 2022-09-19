@@ -75,8 +75,8 @@
         @if (walletState.Value.wallet == null)
         {
             <a href="/wallet">
-                <MudButton Variant="Variant.Filled" FullWidth="true" 
-                    Color="Color.Primary" Size="Size.Large" class="rounded-pill">
+                <MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true"
+                       Color="Color.Primary" Size="Size.Large" class="rounded-pill">
                     <MudIcon Icon="@Icons.Filled.LockOpen" Title="Unlock" />
                     Open Wallet
                 </MudButton>
@@ -84,8 +84,8 @@
         }
         else
         {
-            <MudButton Variant="Variant.Filled" FullWidth="true" Disabled="@(!canswap || swapping)" 
-                Color="Color.Primary" Size="Size.Large" OnClick="@DoSwap" class="rounded-pill">
+            <MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true" Disabled="@(!canswap || swapping)"
+                   Color="Color.Primary" Size="Size.Large" OnClick="@DoSwap" class="rounded-pill">
 
                 @if (swapping)
                 {

@@ -17,7 +17,7 @@
 
 @if (walletState.Value.wallet == null)
 {
-    <a href="/wallet"><MudButton Variant="Variant.Filled" Color="Color.Primary">Open Wallet</MudButton></a>
+    <a href="/wallet"><MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">Open Wallet</MudButton></a>
 }
 else
 {
@@ -59,11 +59,11 @@ else
                     </MudText>
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async ()=>{ await OnDepositClick(token); })">
+                    <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async ()=>{ await OnDepositClick(token); })">
                         Deposit
                     </MudButton>
                     &nbsp;
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(async ()=>{ await OnWithdrawClick(token); })">
+                    <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async ()=>{ await OnWithdrawClick(token); })">
                         Withdraw
                     </MudButton>
                 </MudCardActions>
@@ -74,8 +74,8 @@ else
         <MudDivider />
 
         <div>
-            <MudButton Variant="Variant.Filled" Disabled="@refreshing" FullWidth="true" Color="Color.Primary" 
-                OnClick="@RefreshAllWallets">
+            <MudButton Variant="MudBlazor.Variant.Filled" Disabled="@refreshing" FullWidth="true" Color="Color.Primary"
+               OnClick="@RefreshAllWallets">
                 @if (refreshing)
                 {
                     <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />

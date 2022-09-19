@@ -37,7 +37,7 @@
         <MudTabPanel Text="Home">
             @if(walletState.Value.PendingRecv)
             {
-            <MudButton Variant="Variant.Outlined" Disabled="@busy" Color="Color.Success" OnClick="@Refresh" FullWidth>
+                <MudButton Variant="MudBlazor.Variant.Outlined" Disabled="@busy" Color="Color.Success" OnClick="@Refresh" FullWidth>
                 @if (busy)
                 {
                     <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -64,7 +64,7 @@
                                     <h4>@kvp.Key.Replace("tether/", "$")</h4>
                                 </CardHeaderContent>
                                 <CardHeaderActions>
-                                    <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                    <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary"
                                    OnClick="@(async ()=>{ await SendX(kvp.Key); })">Send</MudButton>
                                 </CardHeaderActions>
                             </MudCardHeader>
@@ -82,7 +82,7 @@
                                     <h4>LYR</h4>
                                 </CardHeaderContent>
                                 <CardHeaderActions>
-                                    <MudButton Variant="Variant.Filled" Disabled="@(true)" Color="Color.Primary"
+                                <MudButton Variant="MudBlazor.Variant.Filled" Disabled="@(true)" Color="Color.Primary"
                                    OnClick="@(async ()=>{ await SendX("LYR"); })">Send</MudButton>
                                 </CardHeaderActions>
                             </MudCardHeader>
@@ -119,7 +119,7 @@
                     <MudItem xs="12">
                         <MudTextField T="string" Label="Destination Wallet Address" @bind-Value="@dstAddr" />
                         <a href="/scan">
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary">Scan QR-Code</MudButton>
+                            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">Scan QR-Code</MudButton>
                         </a>
                         <RadzenDropDown AllowClear="true" TValue="ContactItem" Class="w-100" 
                             Data=@contacts Change=@(args => OnContact(args as ContactItem)) />
@@ -131,7 +131,7 @@
                     <MudNumericField T="decimal" Label="Amount" @bind-Value="@amount" />
                     </MudItem>
                     <MudItem xs="12">
-                <MudButton Variant="Variant.Filled" Disabled="@busysend" Color="Color.Primary" OnClick="@(async () => await SendTokenAsync())">
+                        <MudButton Variant="MudBlazor.Variant.Filled" Disabled="@busysend" Color="Color.Primary" OnClick="@(async () => await SendTokenAsync())">
                     @if (busysend)
                     {
                         <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
@@ -165,7 +165,7 @@
                         Send me Token!
                     </button>
                     &nbsp;&nbsp;
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="Return">Return</MudButton>
+                    <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="Return">Return</MudButton>
                 </div>
             </MudTabPanel>
         }

@@ -15,17 +15,17 @@
         <MudItem xs="12">
             @if (walletState.Value.wallet == null)
             {
-                <a href="/wallet"><MudButton Variant="Variant.Filled" Color="Color.Primary">Open Wallet to Create DAO</MudButton></a>
+                <a href="/wallet"><MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">Open Wallet to Create DAO</MudButton></a>
             }
             else
             {
                 <a href="/dao/new">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">New DAO</MudButton>
+                    <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">New DAO</MudButton>
                 </a>
             }
         </MudItem>
         <MudItem xs="12">
-            <MudTextField @bind-Value="@keywords" Label="Search DAO" Variant="Variant.Text"></MudTextField>
+            <MudTextField @bind-Value="@keywords" Label="Search DAO" Variant="MudBlazor.Variant.Text"></MudTextField>
         </MudItem>
             @if (alldaos != null)
             {
@@ -39,7 +39,7 @@
                                 @dao.Description
                             </p>
                             <a href="/dao/detail/@((dao as TransactionBlock).AccountID)">
-                            <MudButton Variant="Variant.Filled" Color="Color.Secondary">Details</MudButton></a>
+                            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Secondary">Details</MudButton></a>
                          
                             <MudDivider DividerType="DividerType.Middle" Class="my-6" />
 
