@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
 using MudBlazor.Services;
-using NebulaClient;
+using LyraWebPWA;
 using UserLibrary.Data;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

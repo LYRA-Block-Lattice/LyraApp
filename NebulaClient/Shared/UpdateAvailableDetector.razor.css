@@ -6,6 +6,21 @@
     animation: fadein 2s ease-out;
 }
 
+.btn {
+    position: relative;
+    z-index: 2
+}
+
+.btn-warning {
+    color: #000;
+    background-color: #ffc107;
+    border-color: #ffc107
+}
+
+.shadow {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important
+}
+
 @keyframes fadein {
     from {
         right: -100%;

@@ -333,9 +333,21 @@ namespace Dealer.Server.Services
                 receiverOptions: receiverOptions
             );
 
-            var me = await _botClient.GetMeAsync();
-            _botUserName = me.Username;
-            Console.WriteLine($"Hello, World! I am user {me.Id} and my name is {me.FirstName}.");
+            for(int i = 0; i < 100; i++)
+            {
+                try
+                {
+                    var me = await _botClient.GetMeAsync();
+                    _botUserName = me.Username;
+                    Console.WriteLine($"Hello, World! I am user {me.Id} and my name is {me.FirstName}.");
+                    break;
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine($"Failed to connect Telegram Bot: {ex}");
+                    await Task.Delay(5000);
+                }
+            }
         }
 
         async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)

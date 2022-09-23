@@ -2,7 +2,7 @@
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
 
-<PageTitle>Lyra</PageTitle>
+<PageTitle>Lyra PWA</PageTitle>
 
 <MudThemeProvider />
 <MudDialogProvider />
@@ -30,9 +30,10 @@
         <UserLibrary.Components.GlobalBanner />
         @Body
     </MudMainContent>
+    <UpdateAvailableDetector />
 </MudLayout>
 
-<UpdateAvailableDetector/>
+
 
 @code {
     bool _drawerOpen = false;
