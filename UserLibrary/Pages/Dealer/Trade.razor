@@ -192,8 +192,9 @@
 
         // cltlyr should be
         var totalInFiat = pay;
-        cltlyr = Math.Round(((totalInFiat * hotData.Value.MarketPrices[otc.Order.fiat.ToLower()]) / lyraprice) * (dao.BuyerPar / 100m), 4, MidpointRounding.ToPositiveInfinity);
-
+        var cltratio = otc.Order.dir == TradeDirection.Sell ? dao.SellerPar : dao.BuyerPar;
+        cltlyr = Math.Round(((totalInFiat * hotData.Value.MarketPrices[otc.Order.fiat.ToLower()]) / lyraprice) * (cltratio / 100m), 4, MidpointRounding.ToPositiveInfinity);
+        cltlyr = Math.Round(cltlyr * 1.01m, MidpointRounding.ToPositiveInfinity);  // TODO: replace with the real fee.
 
         calc2();
     }
