@@ -101,18 +101,18 @@
                 Send images
             </MudButton>
 
-            <MudButton Variant="MudBlazor.Variant.Filled"
+@*            <MudButton Variant="MudBlazor.Variant.Filled"
                    StartIcon="@Icons.Filled.Close"
                    OnClick="CancelTrade"
                    >
                 Cancel Trade
-            </MudButton>
+            </MudButton>*@
 
             <MudButton Variant="MudBlazor.Variant.Filled"
                    StartIcon="@Icons.Filled.Balance"
                    OnClick="Complaint"
                    >
-                Complaint
+                Complain
             </MudButton>
         </div>
     }
@@ -557,7 +557,7 @@
                 // init a negotiated cancellation
                 Snackbar.Add($"Will negotiate a cacellation with counterparty.");
             }            
-            
+
             Snackbar.Add($"Nothing to do.");
             return;
         }
@@ -579,6 +579,9 @@
 
     private async Task Complaint()
     {
+        Navigation.NavigateTo($"/dealer/newcomplain/{tradeid}");
+        return;
+
         Snackbar.Add($"Getting latest status...", Severity.Info);
         
         var tradeblk = (await walletState.Value.wallet.RPC.GetLastBlockAsync(tradeid)).As<IOtcTrade>();

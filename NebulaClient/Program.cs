@@ -25,6 +25,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 Signatures.Switch(true);
 
+builder.Services.AddCertificateManager();
 builder.Services.AddBlazoredLocalStorage();
 var networkid = builder.Configuration["network"];
 builder.Services.AddScoped<ILyraAPI>(a => LyraRestClient.Create(networkid, Environment.OSVersion.ToString(), "Nebula", "1.0"/*, $"http://nebula.{networkid}.lyra.live:{Neo.Settings.Default.P2P.WebAPI}/api/Node/"*/));
