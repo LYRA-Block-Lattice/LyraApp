@@ -190,7 +190,9 @@
             });
         SubscribeToAction<PinnedMessage>(a =>
             {
-                if (Navigation.Uri.Contains("/dealer/room"))
+                // if in current trade's room, bypass notification.
+                if (Navigation.Uri.Contains("/dealer/room") &&
+                        Navigation.Uri.Contains(a.TradeId))
                     return;
 
                 var title = a.Mode switch

@@ -8,6 +8,8 @@ using MongoDB.Bson;
 using Lyra.Data.Crypto;
 using Lyra.Data.API.WorkFlow;
 using Lyra.Data.API.ODR;
+using Lyra.Data.API;
+using Lyra.Core.Blocks;
 
 namespace Dealer.Server.Services
 {
@@ -24,12 +26,15 @@ namespace Dealer.Server.Services
 
         private readonly IMongoCollection<TGChat> _tgChatCollection;
 
+        IConfiguration _config;
         private string _networkId;
         public string NetworkId { get => _networkId; set => _networkId = value; }
 
         private string _dealerOwnerId, _dealerKey;
+
         public DealerDb(IConfiguration Configuration, IOptions<DealerDbSettings> dbSettings)
         {
+            _config = Configuration;
             _dbSettings = dbSettings;
             _networkId = Configuration["network"];
             _dealerOwnerId = Signatures.GetAccountIdFromPrivateKey(Configuration["DealerKey"]);
@@ -168,6 +173,7 @@ namespace Dealer.Server.Services
                     Members = new[] { seller, buyer },
                     TimeStamp = DateTime.UtcNow,
                     DisputeLevel = DisputeLevels.None,
+                    IsCancelable = true,
                 };
                 await CreateRoomAsync(crroom);
                 return await GetRoomByTradeAsync(trade.AccountID);
@@ -242,7 +248,102 @@ namespace Dealer.Server.Services
             await _tgChatCollection.DeleteOneAsync(x => x.ChatID == chatId);
         #endregion
 
-        //#region ODR Negociation Rounds
+        #region ODR Negociation Rounds
+        public async Task<TradeBrief> GetTradeBriefImplAsync(IOtcTrade trade, string? accountId, bool showRealName)
+        {
+            ArgumentNullException.ThrowIfNull(trade);
+            var tradeId = trade.AccountID;
+
+            // trade with api only may not has a room
+            var room = await GetRoomByTradeAsync(tradeId);
+            if (room == null)
+            {
+                room = await CreateRoomAsync(trade);
+            }
+
+            var txmsgs = await GetTxRecordsByTradeAsync(tradeId);
+
+            //// cancellable
+            //// 1, if both side has no chat message
+            //// 2, or negociated callation is agreed
+            //if (room == null)
+            //{
+            //    icStart = true;
+            //}
+            //else if (!string.IsNullOrEmpty(accountId))
+            //{
+            //    var peerHasMsg = txmsgs.Where(a =>
+            //        a.AccountId != accountId &&
+            //        a.AccountId != Signatures.GetAccountIdFromPrivateKey(_config["DealerKey"])
+            //        ).Any();
+            //    var sellerHasMsg = txmsgs.Where(a => a.AccountId == room.Members[0].AccountId).Any();
+            //    icStart = !peerHasMsg && !sellerHasMsg && room.DisputeLevel == DisputeLevels.None;
+            //}
+
+            //if (room != null && room.DisputeLevel == DisputeLevels.Peer)
+            //{
+            //    var lastcase = room.DisputeHistory
+            //        .Where(a => a.IsPending)
+            //        .OrderBy(a => a.Complaint.created)
+            //        .Last() as PeerDisputeCase;
+            //    if (lastcase.Complaint != null && lastcase.Reply != null)
+            //    {
+            //        icPeer = lastcase.Complaint.request == ComplaintRequest.CancelTrade
+            //            && lastcase.Reply.response == ComplaintResponse.AgreeToCancel;
+            //    }
+            //}
+
+            //DisputeLevels disputeLevel = DisputeLevels.None;
+            //if (room != null)
+            //    disputeLevel = room.DisputeLevel;
+            //if (disputeLevel == DisputeLevels.None && (trade.OTStatus == OTCTradeStatus.Dispute || trade.OTStatus == OTCTradeStatus.DisputeClosed))
+            //{
+            //    disputeLevel = DisputeLevels.DAO;
+            //}
+
+            bool icStart = false;
+            if (!string.IsNullOrEmpty(accountId))
+            {
+                var peerHasMsg = txmsgs.Where(a =>
+                    a.AccountId != accountId &&
+                    a.AccountId != Signatures.GetAccountIdFromPrivateKey(_config["DealerKey"])
+                    ).Any();
+                var sellerHasMsg = txmsgs.Where(a => a.AccountId == room.Members[0].AccountId).Any();
+                icStart = !peerHasMsg && !sellerHasMsg && room.DisputeLevel == DisputeLevels.None;
+            }
+
+            // construct roles
+            var seller = trade.Trade.dir == TradeDirection.Buy ? trade.Trade.orderOwnerId : trade.OwnerAccountId;
+            var buyer = trade.Trade.dir == TradeDirection.Sell ? trade.Trade.orderOwnerId : trade.OwnerAccountId;
+            var level = room?.DisputeLevel ?? DisputeLevels.None;
+            var brief = new TradeBrief
+            {
+                TradeId = tradeId,
+                Direction = trade.Trade.dir,
+                Members = new string[] { seller, buyer }.ToList(),
+                Names = new List<string>(),
+                RegTimes = new List<DateTime>(),
+                DisputeLevel = level,
+
+                // if no chat in 10 minutes after trade creation
+                // or if peer request cancel also
+                IsCancellable = room.IsCancelable || icStart,
+                Resolutions = new List<ResolutionContainer>(),
+            };
+            brief.SetDisputeHistory(room?.DisputeHistory ?? new List<DisputeCase?>());
+
+            foreach (var act in brief.Members)
+            {
+                var user = await GetUserByAccountIdAsync(act);
+                if (showRealName)
+                    brief.Names.Add(user.GetFullName());
+                else
+                    brief.Names.Add("[REDACTED FOR PRIVACY]");
+                brief.RegTimes.Add(user.RegistedTime);
+            }
+
+            return brief;
+        }
         //public async Task<List<ODRNegotiationRound>> GetODRNegotiationRoundAsync() =>
         //    await _odrRoundCollection.Find(_ => true).ToListAsync();
 
@@ -270,6 +371,6 @@ namespace Dealer.Server.Services
 
         //public async Task RemoveODRNegotiationRoundAsync(string roundId) =>
         //    await _odrRoundCollection.DeleteOneAsync(x => x.Id == roundId);
-        //#endregion
+        #endregion
     }
 }

@@ -29,13 +29,16 @@
                 <div>
                     @pinnedmsg
                 </div>
+
+                <div align="right">
+                    <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Secondary"
+                               OnClick="ActionGuide">Guide</MudButton>
                 @if (actable)
-                {
-                    <div align="right">
+                {                    
                         <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary"
-                               OnClick="FinishAction">Finished</MudButton>
-                    </div>
+                               OnClick="FinishAction">Finished</MudButton>                    
                 }
+                </div>
 
                 @if(level != DisputeLevels.None)
                 {
@@ -354,6 +357,11 @@
         {
             Snackbar.Add($"Not connected to dealer. Please retry again.", Severity.Error);
         }
+    }
+
+    private async Task ActionGuide()
+    {
+        Snackbar.Add($"Popup a windows to show hot to take action for {pinnedmsg}", Severity.Info);
     }
 
     private async Task FinishAction()

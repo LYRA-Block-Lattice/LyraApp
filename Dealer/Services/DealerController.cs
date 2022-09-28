@@ -91,14 +91,14 @@ namespace Dealer.Server.Services
                 Ratio = 0
             };
 
-            if(ret.Successful())
+            if (ret.Successful())
             {
                 var tstat = ret.Deserialize<List<TradeStats>>();
-                if(tstat.Count == 1)
+                if (tstat.Count == 1)
                 {
                     var ts = tstat.First();
                     stat.Total = ts.TotalTrades;
-                    if(ts.TotalTrades > 0)
+                    if (ts.TotalTrades > 0)
                         stat.Ratio = Math.Round((decimal)ts.FinishedCount / ts.TotalTrades, 4);
                 }
             }
@@ -134,7 +134,7 @@ namespace Dealer.Server.Services
 
             // validate signature
             var lsb = await _client.GetLastServiceBlockAsync();
-            if(!Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature))
+            if (!Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature))
                 return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
 
             var user = new LyraUser
@@ -159,7 +159,7 @@ namespace Dealer.Server.Services
             {
                 user.Id = usrx.Id;
                 await _db.UpdateUserAsync(user);
-            }                
+            }
 
             return APIResult.Success;
         }
@@ -236,113 +236,26 @@ namespace Dealer.Server.Services
             var lsb = await _client.GetLastServiceBlockAsync();
             var showRealName = Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature);
 
-            var brief = await GetTradeBriefImplAsync(tradeId, accountId, showRealName);
-            if(brief == null)
+            var trade = (await _client.GetLastBlockAsync(tradeId)).As<IOtcTrade>();
+            if (trade == null)
+                return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.NotFound };
+
+            var brief = await _db.GetTradeBriefImplAsync(trade, accountId, showRealName);
+            if (brief == null)
                 return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.NotFound };
 
             return SimpleJsonAPIResult.Create(brief);
-        }
-
-        private async Task<TradeBrief> GetTradeBriefImplAsync(string tradeId, string accountId, bool showRealName)
-        {
-            var trade = (await _client.GetLastBlockAsync(tradeId)).As<IOtcTrade>();
-            if (trade == null)
-                return null;
-
-            // trade with api only may not has a room
-            var room = await _db.GetRoomByTradeAsync(tradeId);
-
-            var txmsgs = await _db.GetTxRecordsByTradeAsync(tradeId);
-            bool icStart = false;   // Is Cancellable for startup.
-            bool icPeer = false;    // Is Cancellable for peer level dispute.
-            bool icDao = false;     // Is Cancellable for dao level
-            bool icLC = false;      // Is Cancellable for Lyra council level
-
-            // cancellable
-            // 1, if both side has no chat message
-            // 2, or negociated callation is agreed
-            if(room == null)
-            {
-                icStart = true;
-            }
-            else if(!string.IsNullOrEmpty(accountId))
-            {
-                var peerHasMsg = txmsgs.Where(a =>
-                    a.AccountId != accountId &&
-                    a.AccountId != Signatures.GetAccountIdFromPrivateKey(_config["DealerKey"])
-                    ).Any();
-                var sellerHasMsg = txmsgs.Where(a => a.AccountId == room.Members[0].AccountId).Any();
-                icStart = !peerHasMsg && !sellerHasMsg && room.DisputeLevel == DisputeLevels.None;
-            }
-
-            if(room != null && room.DisputeLevel == DisputeLevels.Peer)
-            {
-                var lastcase = room.DisputeHistory
-                    .Where(a => a.IsPending)
-                    .OrderBy(a => a.Complaint.created)
-                    .Last() as PeerDisputeCase;
-                if(lastcase.Complaint != null && lastcase.Reply != null)
-                {
-                    icPeer = lastcase.Complaint.request == ComplaintRequest.CancelTrade
-                        && lastcase.Reply.response == ComplaintResponse.AgreeCancel;
-                }
-            }
-
-            //DisputeLevels disputeLevel = DisputeLevels.None;
-            //if (room != null)
-            //    disputeLevel = room.DisputeLevel;
-            //if (disputeLevel == DisputeLevels.None && (trade.OTStatus == OTCTradeStatus.Dispute || trade.OTStatus == OTCTradeStatus.DisputeClosed))
-            //{
-            //    disputeLevel = DisputeLevels.DAO;
-            //}
-
-            // construct roles
-            var seller = trade.Trade.dir == TradeDirection.Buy ? trade.Trade.orderOwnerId : trade.OwnerAccountId;
-            var buyer = trade.Trade.dir == TradeDirection.Sell ? trade.Trade.orderOwnerId : trade.OwnerAccountId;
-            var level = room?.DisputeLevel ?? DisputeLevels.None;
-            var brief = new TradeBrief
-            {
-                TradeId = tradeId,
-                Direction = trade.Trade.dir,
-                Members = new[] { seller, buyer }.ToList(),
-                Names = new List<string>(),
-                RegTimes = new List<DateTime>(),
-                DisputeLevel = level,
-
-                // if no chat in 10 minutes after trade creation
-                // or if peer request cancel also
-                IsCancellable = level switch
-                {
-                    DisputeLevels.None => icStart,
-                    DisputeLevels.Peer => icPeer,
-                    DisputeLevels.DAO => icDao,
-                    DisputeLevels.LyraCouncil => icLC,
-                }
-            };
-            brief.SetDisputeHistory(room?.DisputeHistory ?? new List<DisputeCase?>());
-
-            foreach(var act in brief.Members)
-            {
-                var user = await _db.GetUserByAccountIdAsync(act);
-                if(showRealName)
-                    brief.Names.Add(user.GetFullName());
-                else
-                    brief.Names.Add("[REDACTED FOR PRIVACY]");
-                brief.RegTimes.Add(user.RegistedTime);
-            }
-
-            return brief;
         }
 
         [HttpPost]
         [Route("CommentTrade")]
         public async Task<APIResult> CommentTradeAsync([FromBody] CommentConfig cfg)
         {
-            if(cfg != null && cfg.VerifySignature(cfg.ByAccountId))
+            if (cfg != null && cfg.VerifySignature(cfg.ByAccountId))
             {
                 // comment should allow only once.
                 var exists = await _db.FindTxCommentByAuthorAsync(cfg.TradeId, cfg.ByAccountId);
-                if(exists == null)
+                if (exists == null)
                 {
                     // then authorize the comment
                     // fill the index fields
@@ -350,7 +263,7 @@ namespace Dealer.Server.Services
                     var orderblk = (await _client.GetLastBlockAsync(tradeblk.Trade.orderId)).As<IOtcOrder>();
                     if (tradeblk != null && orderblk != null)
                     {
-                        var brief = await GetTradeBriefImplAsync(cfg.TradeId, cfg.ByAccountId, true);
+                        var brief = await _db.GetTradeBriefImplAsync(tradeblk, cfg.ByAccountId, true);
                         if (brief.Members.Contains(cfg.ByAccountId))
                         {
                             // box/unbox to avoid string changed
@@ -377,7 +290,7 @@ namespace Dealer.Server.Services
                             return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.ArgumentOutOfRange };
                         }
                     }
-                }       
+                }
             }
 
             return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
@@ -389,9 +302,10 @@ namespace Dealer.Server.Services
         {
             var cmnts = await _db.GetTxCommentsForTradeAsync(tradeId);
             var cmtcfgs = cmnts.Select(a => a.ConvertTo<CommentConfig>()).ToList();
-            return new SimpleJsonAPIResult {
+            return new SimpleJsonAPIResult
+            {
                 ResultCode = Lyra.Core.Blocks.APIResultCodes.Success,
-                JsonString = JsonConvert.SerializeObject(cmnts) 
+                JsonString = JsonConvert.SerializeObject(cmnts)
             };
         }
 
@@ -418,7 +332,7 @@ namespace Dealer.Server.Services
                 // check if images all exists
                 foreach (var hash in complaint.imageHashes ?? Enumerable.Empty<string>())
                 {
-                    if(null == await _db.GetImageDataByIdAsync(hash))
+                    if (null == await _db.GetImageDataByIdAsync(hash))
                         return new APIResult
                         {
                             ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidOperation,
@@ -444,7 +358,7 @@ namespace Dealer.Server.Services
                     room = await _db.CreateRoomAsync(tradeblk);
                 }
 
-                if(room.DisputeLevel == complaint.level)
+                if (room.DisputeLevel == complaint.level)
                 {
                     if (room.DisputeHistory.Any(a => a.Complaint.level == complaint.level
                         && a.Complaint.ownerId == complaint.ownerId
@@ -466,7 +380,7 @@ namespace Dealer.Server.Services
                     };
                 }
 
-                if(complaint.level == DisputeLevels.DAO 
+                if (complaint.level == DisputeLevels.DAO
                     && tradeblk.OTStatus != OTCTradeStatus.Dispute
                     && tradeblk.OTStatus != OTCTradeStatus.DisputeClosed)
                 {
@@ -570,17 +484,17 @@ namespace Dealer.Server.Services
                 if (dispute is PeerDisputeCase pdc)
                 {
                     pdc.Reply = reply;
-                }                    
+                }
                 else if (dispute is DaoDisputeCase ddc)
                 {
                     (var c, var r) = ddc.GetRoles(tradeblk);
-                    if(reply.ownerId != c && reply.ownerId != r)
+                    if (reply.ownerId != c && reply.ownerId != r)
                         return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
 
                     if (ddc.Replies == null)
                         ddc.Replies = new List<ComplaintReply>();
 
-                    if(ddc.Replies.Any(a => a.ownerId == reply.ownerId))
+                    if (ddc.Replies.Any(a => a.ownerId == reply.ownerId))
                     {
                         return new APIResult
                         {
@@ -590,10 +504,10 @@ namespace Dealer.Server.Services
                     }
 
                     ddc.Replies.Add(reply);
-                }                
+                }
 
                 // do withdraw if the reply is from complaint's owner
-                if(dispute.Complaint.ownerId == reply.ownerId)
+                if (dispute.Complaint.ownerId == reply.ownerId)
                 {
                     if (dispute.IsPending && reply.response == ComplaintResponse.OwnerWithdraw)
                     {
@@ -608,46 +522,43 @@ namespace Dealer.Server.Services
                         room.DisputeLevel = lastcase.Complaint.level;
                     else
                         room.DisputeLevel = DisputeLevels.None;
+
+                    await _db.UpdateRoomAsync(room.Id, room);
                 }
-
-                await _db.UpdateRoomAsync(room.Id, room);
-
-                // do cancel if both agreed
-                if (dispute.Complaint.request == ComplaintRequest.CancelTrade 
-                    && reply.response == ComplaintResponse.AgreeCancel)
+                else if (dispute.Complaint.request == ComplaintRequest.CancelTrade)
                 {
-                    // dealer cancel the trade
-                    var ret = await _keeper.DealerWallet.CancelOTCTradeAsync(tradeblk.Trade.daoId, tradeblk.Trade.orderId, tradeblk.AccountID);
-                    if(!ret.Successful())
+                    // do cancel if both agreed
+                    if (reply.response == ComplaintResponse.AgreeToCancel)
+                    {
+                        dispute.State = DisputeNegotiationStates.AcceptanceConfirmed;
+                        room.DisputeLevel = DisputeLevels.None;
+                        room.IsCancelable = true;
+                        await _db.UpdateRoomAsync(room.Id, room);
+
+                        // dealer cancel the trade
+                        var ret = await _keeper.DealerWallet.CancelOTCTradeAsync(tradeblk.Trade.daoId, tradeblk.Trade.orderId, tradeblk.AccountID);
+                        if (!ret.Successful())
+                        {
+                            return new APIResult
+                            {
+                                ResultCode = Lyra.Core.Blocks.APIResultCodes.UndefinedError,
+                                ResultMessage = $"Error cancel trade by dealer: {ret.ResultCode}",
+                            };
+                        }
+                    }
+                    else if (reply.response == ComplaintResponse.RefuseToCancel)
+                    {
+                        dispute.State = DisputeNegotiationStates.AcceptanceConfirmed;
+                        room.IsCancelable = false;
+                        await _db.UpdateRoomAsync(room.Id, room);
+                    }
+                    else
                     {
                         return new APIResult
                         {
-                            ResultCode = Lyra.Core.Blocks.APIResultCodes.UndefinedError,
-                            ResultMessage = $"Error cancel trade by dealer: {ret.ResultCode}",
+                            ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidOperation,
+                            ResultMessage = "Only allow to agree cancel or not.",
                         };
-                    }
-                }
-
-                // execute DAO resolution if both agree
-                if (dispute is DaoDisputeCase ddcx)
-                {
-                    if(ddcx.Replies.Count(a => a.response == ComplaintResponse.AgreeResolution) == 2)
-                    {
-                        if (dispute is CouncilDisputeCase cdc) // lyra council case
-                        {
-                            // dealer shouldn't has such a high level of priviledge. 
-                            // notify the lord to execute
-                            Console.WriteLine("the lord will execute the resolution.");
-                        }
-                        else
-                        {
-                            // change state of trade
-                            var ret = await _keeper.DealerWallet.ExecuteResolution(ddcx.VoteId, ddcx.Resolution);
-                            if (!ret.Successful())
-                            {
-                                return ret;
-                            }
-                        }
                     }
                 }
 
@@ -664,7 +575,7 @@ namespace Dealer.Server.Services
         }
 
         /// <summary>
-        /// one complaint -> one resolution -> several response 
+        /// several complaint -> one resolution -> several response 
         /// </summary>
         /// <param name="resolution"></param>
         /// <returns></returns>
@@ -690,44 +601,58 @@ namespace Dealer.Server.Services
                     };
                 }
 
-                var dispute = room.DisputeHistory.FirstOrDefault(a => 
-                    a.Complaint.Hash == resolution.ComplaintHash)
-                    as DaoDisputeCase;
+                //var dispute = room.DisputeHistory.FirstOrDefault(a => 
+                //    a.Complaint.Hash == resolution.ComplaintHash)
+                //    as DaoDisputeCase;
 
                 // only dao owner can submit resolution for dao dispute
                 // and only lord can submit resolution for lyra council
                 var dao = (await _client.GetLastBlockAsync(trade.Trade.daoId)).As<IDao>();
                 if (resolution.Creator != dao.OwnerAccountId)
                 {
-                    return new APIResult {
+                    return new APIResult
+                    {
                         ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized,
                         ResultMessage = "Not DAO's Owner"
                     };
                 }
 
-                    //// check pending resolution
-                    //if (room.Rounds != null && room.Rounds.Any(a => a.TradeId == trade.AccountID && !a.Finished))
-                    //    return new APIResult { ResultCode = APIResultCodes.ResolutionPending };
+                //// check pending resolution
+                //if (room.Rounds != null && room.Rounds.Any(a => a.TradeId == trade.AccountID && !a.Finished))
+                //    return new APIResult { ResultCode = APIResultCodes.ResolutionPending };
 
-                    //resolution.Id = room.ResolutionHistory?.Count + 1 ?? 1;
-                    //room.AddResolution(resolution);
+                //resolution.Id = room.ResolutionHistory?.Count + 1 ?? 1;
+                //room.AddResolution(resolution);
 
-                    //var prnew = new ODRNegotiationRound
-                    //{
-                    //    Id = room.Rounds?.Count + 1 ?? 1,
-                    //    Timestamp = DateTime.UtcNow,
-                    //    LastUpdateTime = DateTime.UtcNow,
+                //var prnew = new ODRNegotiationRound
+                //{
+                //    Id = room.Rounds?.Count + 1 ?? 1,
+                //    Timestamp = DateTime.UtcNow,
+                //    LastUpdateTime = DateTime.UtcNow,
 
-                    //    TradeId = trade.AccountID,
-                    //    CaseId = resolution.CaseId,
-                    //    ResolutionId = resolution.Id,
+                //    TradeId = trade.AccountID,
+                //    CaseId = resolution.CaseId,
+                //    ResolutionId = resolution.Id,
 
-                    //    State = ODRNegotiationStatus.NewlyCreated,
-                    //};
+                //    State = ODRNegotiationStatus.NewlyCreated,
+                //};
 
-                    //room.AddNegotiationRound(prnew);
-                dispute.Resolution = resolution;
-                dispute.VoteId = voteid;
+                //room.AddNegotiationRound(prnew);
+                //dispute.Resolution = resolution;
+                //dispute.VoteId = voteid;
+
+                if (room.ResolutionHistory == null)
+                    room.ResolutionHistory = new List<ResolutionContainer>();
+
+                room.ResolutionHistory.Add(
+                    new ResolutionContainer
+                    {
+                        Resolution = resolution,
+                        VoteId = voteid,
+                        Status = ResolutionStatus.Pending,
+                        Replies = new List<AnswerToResolution>()
+                    }
+                    );
                 await _db.UpdateRoomAsync(room!.Id!, room);
 
                 return APIResult.Success;
@@ -737,33 +662,71 @@ namespace Dealer.Server.Services
         }
 
         [HttpPost]
-        [Route("AnswerToResolution")]
-        public async Task<APIResult> AnswerToResolutionAsync([FromBody] ComplaintReply reply)
+        [Route("ResolutionReply")]
+        public async Task<APIResult> ResolutionReplyAsync([FromBody] AnswerToResolution reply)
         {
-            if (reply != null && reply.VerifySignature(reply.ownerId))
+            if (reply == null || !reply.VerifySignature(reply.ownerId))
+                return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
+
+            // get dealer room
+            var room = await _db.GetRoomByTradeAsync(reply.tradeId);
+            if (room == null)
             {
-                // get dealer room
-                var room = await _db.GetRoomByTradeAsync(reply.tradeId);
-                if (room == null)
+                return new APIResult
+                {
+                    ResultCode = APIResultCodes.InvalidOperation,
+                    ResultMessage = "No trading room",
+                };
+            }
+
+            var oc = room.ResolutionHistory.FirstOrDefault(a => a.Resolution.Hash == reply.resolutionHash);
+            if (oc == null)
+            {
+                return new APIResult
+                {
+                    ResultCode = APIResultCodes.NotFound,
+                    ResultMessage = "No such resolution",
+                };
+            }
+
+            if (oc.Replies == null)
+                oc.Replies = new List<AnswerToResolution>();
+
+            if (oc.Replies.Any(a => a.ownerId == reply.ownerId))
+                return new APIResult
+                {
+                    ResultCode = APIResultCodes.InvalidOperation,
+                    ResultMessage = "Duplicate answer to resolution.",
+                };
+
+            if (!room.Members.Any(a => a.AccountId == reply.ownerId))
+                return new APIResult
+                {
+                    ResultCode = APIResultCodes.Unauthorized,
+                    ResultMessage = "Not authorized to answer to resolution.",
+                };
+
+            oc.Replies.Add(reply);
+            await _db.UpdateRoomAsync(room.Id, room);
+
+            // TODO: the execution should be in keeper. just signal it
+            //two agree and the resolution will be executed.
+            // execute DAO resolution if both agree
+            if (room.DisputeLevel == DisputeLevels.DAO && oc.Replies.Count(a => a.agreeToResolution) == room.Members.Length)
+            {
+                // change state of trade
+                var ret = await _keeper.DealerWallet.ExecuteResolution(oc.VoteId, oc.Resolution);
+                if (!ret.Successful())
                 {
                     return new APIResult
                     {
-                        ResultCode = APIResultCodes.InvalidOperation,
-                        ResultMessage = "No trading room",
+                        ResultCode = ret.ResultCode,
+                        ResultMessage = $"Unable to execute resolution: {ret.ResultMessage}",
                     };
                 }
-
-                var dispute = room.DisputeHistory.FirstOrDefault(a =>
-                    a.Complaint.Hash == reply.complaintHash)
-                    as DaoDisputeCase;
-
-                dispute.Replies.Add(reply);
-
-                await _db.UpdateRoomAsync(room.Id, room);
-                return APIResult.Success;
             }
 
-            return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
+            return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Success };
         }
     }
 }

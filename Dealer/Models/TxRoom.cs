@@ -36,7 +36,7 @@ namespace Lyra.Data.API.Identity
         public DisputeLevels DisputeLevel {get; set; }
 
         public List<DisputeCase?> DisputeHistory { get; set; } = null!;
-        public List<ODRResolution>? ResolutionHistory { get; set; }
+        public List<ResolutionContainer>? ResolutionHistory { get; set; }
 
         public DisputeLevels NextLevel => (DisputeLevels)((int)DisputeLevel + 1);
         public DisputeLevels PrevLevel => (DisputeLevels)((int)DisputeLevel - 1);
@@ -48,21 +48,5 @@ namespace Lyra.Data.API.Identity
 
             DisputeHistory.Add(disp);
         }
-
-        //public void AddResolution(ODRResolution resolution)
-        //{
-        //    if (ResolutionHistory == null)
-        //        ResolutionHistory = new List<ODRResolution>();
-
-        //    ResolutionHistory.Add(resolution);
-        //}
-
-        //public void AddNegotiationRound(ODRNegotiationRound round)
-        //{
-        //    if (Rounds == null)
-        //        Rounds = new List<ODRNegotiationRound>();
-
-        //    Rounds.Add(round);
-        //}
     }
 }

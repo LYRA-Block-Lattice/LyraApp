@@ -1,12 +1,14 @@
 ﻿@page "/dealer/complaint/{tradeid}"
 @using Fluxor
 @using Fluxor.Blazor.Web.Components
+@using Lyra.Data.API
 @using Lyra.Data.API.Identity
 @using Lyra.Data.API.ODR
 @using Lyra.Data.API.WorkFlow
 @using Lyra.Data.Crypto
 @using Nebula.Store.WebWalletUseCase
 @using UserLibrary.Data
+@using Humanizer;
 @inherits FluxorComponent
 
 <div class="mag">
@@ -15,11 +17,11 @@
         For Trade ID: <CopyToClipboard Text=@tradeid />
     </div>
 
-    @if(brief == null)
+    @if (brief == null)
     {
         <div style="z-index: 5;" class="spinner"></div>
     }
-    else if(!walletState.Value.IsOpening)
+    else if (!walletState.Value.IsOpening)
     {
         <a href="/wallet"><MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">Open Wallet to View Details</MudButton></a>
     }
@@ -30,18 +32,27 @@
         </div>
         <div>
             Litigant: <br />
-            @foreach(var mem in brief.Members)
+            @foreach (var mem in brief.Members)
             {
                 <div>
                     Account ID: <CopyToClipboard Text=@mem />
                 </div>
             }
         </div>
-        @if(brief.DisputeLevel != DisputeLevels.None)
-        {
-            <div>
-                @foreach(var cmp in brief.GetDisputeHistory())
+        <div>
+            @foreach (var cmp in brief.GetDisputeHistory())
+            {
+                var color = cmp.State switch
                 {
+                    DisputeNegotiationStates.NewlyCreated => "rz-background-color-warning-light",
+                    DisputeNegotiationStates.AllPartiesNotified => "rz-background-color-warning-light",
+                    DisputeNegotiationStates.PlaintiffWithdraw => "rz-background-color-base-700",
+                    DisputeNegotiationStates.AcceptanceConfirmed => "rz-background-color-success-light",
+                    DisputeNegotiationStates.Failed => "rz-background-color-danger-light",
+                    _ => ""
+                };
+                color = "m-3 " + color; 
+                <RadzenCard Class="@color">
                     <div>
                         <hr />
                     </div>
@@ -55,19 +66,77 @@
                     <div>
                         Raised Time: @cmp.RaisedTime
                     </div>
-@*                    <div>
-                        Claimed Lost: @cmp.ClaimedLost LYR
-                    </div>*@
+                    <div>
+                        State: @cmp.State
+                    </div>
+                    <div>
+                        Statement: @(string.IsNullOrEmpty(cmp.Complaint.statement) ? "(empty)" : cmp.Complaint.statement)
+                    </div>
+                    <div>
+                        Request: @cmp.Complaint.request
+                    </div>
+                    @if (cmp.Complaint.level == DisputeLevels.Peer &&
+                   walletState.Value.wallet.AccountId != cmp.Complaint.ownerId)
+                    {
+                        <RadzenAccordion>
+                            <Items>
+
+                                <RadzenAccordionItem Text="Reply to this complaint" Icon="reply">
+                                    <RadzenTemplateForm TItem="ComplaintReplyModel" Data=@replies[cmp.Complaint.Hash] Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+
+                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">My statement (Optional): </RadzenText>
+                                        <RadzenTextArea @bind-Value="@(replies[cmp.Complaint.Hash].statement)" Cols="50" Rows="3" Placeholder="Enter here..." Class="w-100" />
+                                        <br />
+
+                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Payment state: </RadzenText>
+                                        <RadzenRadioButtonList @bind-Value="@(replies[cmp.Complaint.Hash].fiatState)" Name="fiatState" TValue="ComplaintFiatStates">
+                                            <Items>
+                                                <RadzenRadioButtonListItem Text="I have got fiat paid" Value="ComplaintFiatStates.PeerPaid" />
+                                                <RadzenRadioButtonListItem Text="I havn't got fiat paid" Value="ComplaintFiatStates.PeerUnpaid" />
+                                            </Items>
+                                        </RadzenRadioButtonList>
+                                        <RadzenRequiredValidator Component="fiatState" Text="Fiat payment state is required" Popup=@popup Style="position: absolute" />
+                                        <br />
+
+                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">My reply (Required): </RadzenText>
+                                        <RadzenRadioButtonList Orientation="Radzen.Orientation.Vertical" @bind-Value="@(replies[cmp.Complaint.Hash].response)" Name="response" TValue="ComplaintResponse">
+                                            <Items>
+                                                @foreach (ComplaintResponse e in Enum.GetValues(typeof(ComplaintResponse)))
+                                                {
+                                                    if (replies[cmp.Complaint.Hash].request == ComplaintRequest.CancelTrade 
+                                                        && (e == ComplaintResponse.AgreeToCancel || e == ComplaintResponse.RefuseToCancel))
+                                                    {
+                                                        <RadzenRadioButtonListItem Text="@e.Humanize()" Value="@e" />
+                                                    }                                                    
+                                                }
+                                            </Items>
+                                        </RadzenRadioButtonList>
+@*                                        <RadzenRequiredValidator Component="response" Text="Your reply is required" Popup=@popup Style="position: absolute" />
+*@                                        <br />
+                                        <RadzenCheckBox @bind-Value="@(replies[cmp.Complaint.Hash].chkAgree)" Name="chkAgree" TValue="bool" />
+                                        <RadzenLabel Text="I confirm the information here can be used as proof for future arbitration. " Component="chkAgree" Style="margin-left: 8px; vertical-align: middle;" />
+                                        <RadzenCompareValidator Text="Need to agree before reply" Value=@true Component="chkAgree" Popup=@popup Style="position: absolute" Operator=@compareOperator />
+                                        <br />
+                                        <br />
+
+                                        <RadzenButton ButtonType="Radzen.ButtonType.Submit" Text="Reply"></RadzenButton>
+
+                                    </RadzenTemplateForm>
+                                </RadzenAccordionItem>
+
+                            </Items>
+                        </RadzenAccordion>
+                    }
 
                     @if (cmp.Complaint.level == DisputeLevels.DAO && votings != null)
                     {
-                        foreach(var vote in votings)
+                        foreach (var vote in votings)
                         {
                             <div>
                                 <div>
                                     Vote: @vote.Subject.Title
                                 </div>
-                                @if(summaries.ContainsKey((vote as TransactionBlock).AccountID))
+                                @if (summaries.ContainsKey((vote as TransactionBlock).AccountID))
                                 {
                                     <div>
                                         Decided: @(summaries[(vote as TransactionBlock).AccountID].IsDecided)
@@ -76,9 +145,9 @@
                             </div>
                         }
                     }
-                }
-            </div>
-        }
+                </RadzenCard>
+            }
+        </div>
     }
 </div>
 
@@ -92,18 +161,53 @@
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
     [Inject] DealerConnMgr connMgr { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
 
+    IOtcTrade trade;
     TradeBrief brief;
     List<IVoting> votings;
     Dictionary<string, VotingSummary> summaries;
+    ComplaintByRole myrole;
+
+    bool popup = false;
+    CompareOperator compareOperator = CompareOperator.Equal;
+
+    class ComplaintReplyModel
+    {
+        public DisputeCase dispute { get; set; }
+        public ComplaintRequest request { get; set; }
+        public ComplaintFiatStates fiatState { get; set; }
+        public string statement { get; set; } = "";
+        public ComplaintResponse response { get; set; }
+        public bool chkAgree { get; set; }
+    }
+
+    Dictionary<string, ComplaintReplyModel> replies = new Dictionary<string, ComplaintReplyModel>();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender)
+        if (firstRender)
         {
-            if(walletState.Value.IsOpening)
+            if (walletState.Value.IsOpening)
             {
                 await GetTradeBrief();
+
+                // create models
+                replies.Clear();
+                foreach (var hist in brief.GetDisputeHistory())
+                {
+                    var model = new ComplaintReplyModel { dispute = hist };
+                    replies.Add(hist.Complaint.Hash, model);
+                }
+
+                var tradeblk = await lyraApi.GetLastBlockAsync(tradeid);
+                trade = tradeblk.As<IOtcTrade>();
+
+                if (trade.Trade.dir == TradeDirection.Buy && walletState.Value.wallet.AccountId == trade.OwnerAccountId)
+                    myrole = ComplaintByRole.Buyer;
+                else
+                    myrole = ComplaintByRole.Seller;
+
                 await InvokeAsync(() => StateHasChanged());
             }
         }
@@ -123,26 +227,68 @@
             var tradeblk = await lyraApi.GetLastBlockAsync(tradeid);
             var dealer = connMgr.GetDealer(tradeblk.As<IOtcTrade>().Trade.dealerId);
             var ret = await dealer.GetTradeBriefAsync(tradeid, wallet.AccountId, sign);
-            if(ret.Successful())
+            if (ret.Successful())
             {
                 brief = ret.Deserialize<TradeBrief>();
 
-                if(brief.DisputeLevel == DisputeLevels.DAO)
+                if (brief.DisputeLevel == DisputeLevels.DAO)
                 {
                     var votesret = await lyraApi.FindAllVoteForTradeAsync(tradeid);
-                    if(votesret.Successful())
+                    if (votesret.Successful())
                     {
                         votings = votesret.GetBlocks().Cast<IVoting>().ToList();
                         summaries = new Dictionary<string, VotingSummary>();
-                        foreach(var vote in votings)
+                        foreach (var vote in votings)
                         {
                             var voteid = (vote as TransactionBlock).AccountID;
                             var retx = await lyraApi.GetVoteSummaryAsync(voteid);
                             summaries.Add(voteid, retx.Deserialize<VotingSummary>());
-                        }                        
+                        }
                     }
                 }
-            }                        
+            }
         }
+    }
+
+    async Task OnSubmit(ComplaintReplyModel model)
+    {
+        var wallet = walletState.Value.wallet;
+        var reply = new ComplaintReply
+            {
+                created = DateTime.UtcNow,
+
+                ownerId = wallet.AccountId,
+                tradeId = tradeid,
+                level = model.dispute.Complaint.level,
+                role = myrole,
+                fiatState = model.fiatState,
+                response = model.response,
+
+                statement = model.statement,
+                imageHashes = null,
+
+                complaintHash = model.dispute.Complaint.Hash,
+            };
+        reply.Sign(wallet.PrivateKey, wallet.AccountId);
+
+        var ret = await connMgr.GetDealer(trade.Trade.dealerId).ComplainReplyAsync(reply);
+        if(ret.Successful())
+        {
+            Snackbar.Add($"Reply to complaint successfully.", Severity.Success);
+
+            // debug
+            await GetTradeBrief();
+            if(!brief.IsCancellable)
+                Snackbar.Add($"TradeBrief not cancellable!", Severity.Error);
+        }
+        else
+        {
+            Snackbar.Add($"Reply to complaint failed: {ret.ResultCode.Humanize()}, {ret.ResultMessage}", Severity.Error);
+        }
+    }
+
+    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
+    {
+        //Log("InvalidSubmit", JsonSerializer.Serialize(args, new JsonSerializerOptions() { WriteIndented = true }));
     }
 }
