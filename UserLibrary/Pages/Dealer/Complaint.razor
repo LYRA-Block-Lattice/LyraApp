@@ -76,11 +76,22 @@
                         Request: @cmp.Complaint.request
                     </div>
                     @if (cmp.Complaint.level == DisputeLevels.Peer &&
-                   walletState.Value.wallet.AccountId != cmp.Complaint.ownerId)
+                        walletState.Value.wallet.AccountId != cmp.Complaint.ownerId)
                     {
                         <RadzenAccordion>
                             <Items>
-
+                                @if(cmp is PeerDisputeCase pdc && pdc.Reply != null)
+                                {
+                                    <RadzenAccordionItem Text="View Reply" Icon="reply">
+                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Replied by: @pdc.Reply.ownerId </RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Date time: @pdc.Reply.created </RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Fiat payment status: @pdc.Reply.fiatState </RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Statement: @(string.IsNullOrWhiteSpace(pdc.Reply.statement) ? "(empty)" : pdc.Reply.statement) </RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Response: @pdc.Reply.response </RadzenText>                                     
+                                    </RadzenAccordionItem>
+                                }
+                                else
+                                {
                                 <RadzenAccordionItem Text="Reply to this complaint" Icon="reply">
                                     <RadzenTemplateForm TItem="ComplaintReplyModel" Data=@replies[cmp.Complaint.Hash] Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
 
@@ -111,8 +122,7 @@
                                                 }
                                             </Items>
                                         </RadzenRadioButtonList>
-@*                                        <RadzenRequiredValidator Component="response" Text="Your reply is required" Popup=@popup Style="position: absolute" />
-*@                                        <br />
+                                        <br />
                                         <RadzenCheckBox @bind-Value="@(replies[cmp.Complaint.Hash].chkAgree)" Name="chkAgree" TValue="bool" />
                                         <RadzenLabel Text="I confirm the information here can be used as proof for future arbitration. " Component="chkAgree" Style="margin-left: 8px; vertical-align: middle;" />
                                         <RadzenCompareValidator Text="Need to agree before reply" Value=@true Component="chkAgree" Popup=@popup Style="position: absolute" Operator=@compareOperator />
@@ -123,7 +133,7 @@
 
                                     </RadzenTemplateForm>
                                 </RadzenAccordionItem>
-
+                                }
                             </Items>
                         </RadzenAccordion>
                     }

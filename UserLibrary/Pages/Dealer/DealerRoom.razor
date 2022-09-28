@@ -31,8 +31,8 @@
                 </div>
 
                 <div align="right">
-                    <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Secondary"
-                               OnClick="ActionGuide">Guide</MudButton>
+@*                    <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Secondary"
+                               OnClick="ActionGuide">Guide</MudButton>*@
                 @if (actable)
                 {                    
                         <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary"
@@ -40,7 +40,7 @@
                 }
                 </div>
 
-                @if(level != DisputeLevels.None)
+                @if(brief != null && brief.GetDisputeHistory().Count > 0)
                 {
                     <a href="/dealer/complaint/@tradeid">
                     <div class="disp">
