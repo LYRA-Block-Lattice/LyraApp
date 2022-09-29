@@ -493,7 +493,8 @@ namespace Dealer.Server.Services
                     if (ddc.Replies == null)
                         ddc.Replies = new List<ComplaintReply>();
 
-                    if (ddc.Replies.Any(a => a.ownerId == reply.ownerId))
+                    // non-comment replay is only allowed once.
+                    if (reply.response != ComplaintResponse.Comment && ddc.Replies.Any(a => a.ownerId == reply.ownerId))
                     {
                         return new APIResult
                         {
@@ -503,10 +504,15 @@ namespace Dealer.Server.Services
                     }
 
                     ddc.Replies.Add(reply);
+                    dispute.LastUpdateTime = DateTime.UtcNow;
                 }
 
                 // do withdraw if the reply is from complaint's owner
-                if (dispute.Complaint.ownerId == reply.ownerId)
+                if(reply.response == ComplaintResponse.Comment)
+                {
+                    // comment is always allowed.
+                }
+                else if (dispute.Complaint.ownerId == reply.ownerId)
                 {
                     if (dispute.IsPending && reply.response == ComplaintResponse.OwnerWithdraw)
                     {
@@ -522,6 +528,7 @@ namespace Dealer.Server.Services
                     else
                         room.DisputeLevel = DisputeLevels.None;
 
+                    dispute.LastUpdateTime = DateTime.UtcNow;
                     await _db.UpdateRoomAsync(room.Id, room);
                 }
                 else if (dispute.Complaint.request == ComplaintRequest.CancelTrade)
@@ -548,8 +555,8 @@ namespace Dealer.Server.Services
                     else if (reply.response == ComplaintResponse.RefuseToCancel)
                     {
                         dispute.State = DisputeNegotiationStates.AcceptanceConfirmed;
-                        room.IsCancelable = false;
-                        await _db.UpdateRoomAsync(room.Id, room);
+                        dispute.LastUpdateTime = DateTime.UtcNow;
+                        room.IsCancelable = false;                               
                     }
                     else
                     {
@@ -560,6 +567,8 @@ namespace Dealer.Server.Services
                         };
                     }
                 }
+
+                await _db.UpdateRoomAsync(room.Id, room);
 
                 // notify all client UI via hub
                 await NotifyTradeesInRoomAsync(room, tradeblk);

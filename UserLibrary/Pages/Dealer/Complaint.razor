@@ -81,7 +81,8 @@
 
                         <RadzenAccordion>
                             <Items>
-                                @if (walletState.Value.wallet.AccountId == cmp.Complaint.ownerId)
+                                @if (walletState.Value.wallet.AccountId == cmp.Complaint.ownerId
+                                        && cmp.State != DisputeNegotiationStates.PlaintiffWithdraw)
                                 {
                                 <RadzenAccordionItem Text="Actions to my complaint" Icon="auto_fix_normal">
                                     <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3"> If there was misunderstandings or the issue specified has been resolved, you can withdraw the complaint. </RadzenText>
@@ -92,9 +93,9 @@
                                 </RadzenAccordionItem>
                                 }
                                 
-                                @foreach(var reply in cmp.Replies)
+                                @foreach(var reply in cmp.Replies?? new List<ComplaintReply>())
                                 {
-                                    var title = $"Reply by {reply.ownerId.Shorten()} at {(DateTime.UtcNow - reply.created).Humanize()} ago";
+                                    var title = $"Response {reply.response.Humanize()} by {reply.ownerId.Shorten()} at {(DateTime.UtcNow - reply.created).Humanize()} ago";
                                     <RadzenAccordionItem Text="@title" Icon="reply">
                                         <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Replied by: @reply.ownerId </RadzenText>
                                         <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Date time: @reply.created </RadzenText>
@@ -114,19 +115,31 @@
                                         <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Payment state: </RadzenText>
                                         <RadzenRadioButtonList @bind-Value="@(replies[cmp.Complaint.Hash].fiatState)" Name="fiatState" TValue="ComplaintFiatStates">
                                             <Items>
-                                                <RadzenRadioButtonListItem Text="I have got fiat paid" Value="ComplaintFiatStates.PeerPaid" />
-                                                <RadzenRadioButtonListItem Text="I havn't got fiat paid" Value="ComplaintFiatStates.PeerUnpaid" />
+                                                @if (myrole == ComplaintByRole.Buyer)
+                                                {
+                                                    <RadzenRadioButtonListItem Text="I have paid to seller" Value="ComplaintFiatStates.SelfPaid" />
+                                                    <RadzenRadioButtonListItem Text="I did not pay" Value="ComplaintFiatStates.SelfUnpaid" />
+                                                }
+                                                else
+                                                {
+                                                    <RadzenRadioButtonListItem Text="I have got fiat paid" Value="ComplaintFiatStates.PeerPaid" />
+                                                    <RadzenRadioButtonListItem Text="I havn't got fiat paid" Value="ComplaintFiatStates.PeerUnpaid" />
+                                                }
                                             </Items>
                                         </RadzenRadioButtonList>
-                                        <RadzenRequiredValidator Component="fiatState" Text="Fiat payment state is required" Popup=@popup Style="position: absolute" />
-                                        <br />
+@*                                        <RadzenRequiredValidator Component="fiatState" Text="Fiat payment state is required" Popup=@popup Style="position: absolute" />
+*@                                        <br />
 
                                         <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">My reply (Required): </RadzenText>
                                         <RadzenRadioButtonList Orientation="Radzen.Orientation.Vertical" @bind-Value="@(replies[cmp.Complaint.Hash].response)" Name="response" TValue="ComplaintResponse">
                                             <Items>
                                                 @foreach (ComplaintResponse e in Enum.GetValues(typeof(ComplaintResponse)))
                                                 {
-                                                    if (replies[cmp.Complaint.Hash].request == ComplaintRequest.CancelTrade
+                                                    if(e == ComplaintResponse.Comment)
+                                                    {
+                                                        <RadzenRadioButtonListItem Text="@e.Humanize()" Value="@e" />
+                                                    }
+                                                    else if (replies[cmp.Complaint.Hash].request == ComplaintRequest.CancelTrade
                                                     && (e == ComplaintResponse.AgreeToCancel || e == ComplaintResponse.RefuseToCancel))
                                                     {
                                                         <RadzenRadioButtonListItem Text="@e.Humanize()" Value="@e" />
@@ -211,16 +224,6 @@
         {
             if (walletState.Value.IsOpening)
             {
-                await GetTradeBrief();
-
-                // create models
-                replies.Clear();
-                foreach (var hist in brief.GetDisputeHistory())
-                {
-                    var model = new ComplaintReplyModel { dispute = hist };
-                    replies.Add(hist.Complaint.Hash, model);
-                }
-
                 var tradeblk = await lyraApi.GetLastBlockAsync(tradeid);
                 trade = tradeblk.As<IOtcTrade>();
 
@@ -228,6 +231,22 @@
                     myrole = ComplaintByRole.Buyer;
                 else
                     myrole = ComplaintByRole.Seller;
+
+                await GetTradeBrief();
+
+                // create models
+                replies.Clear();
+                foreach (var hist in brief.GetDisputeHistory())
+                {
+                    var model = new ComplaintReplyModel
+                        {
+                            dispute = hist,
+                            fiatState = myrole == ComplaintByRole.Buyer ? ComplaintFiatStates.SelfUnpaid : ComplaintFiatStates.PeerUnpaid,
+                        };
+                    replies.Add(hist.Complaint.Hash, model);
+                }
+
+
 
                 await InvokeAsync(() => StateHasChanged());
             }
@@ -298,14 +317,16 @@
             Snackbar.Add($"Reply to complaint successfully.", Severity.Success);
 
             // debug
-            await GetTradeBrief();
-            if (!brief.IsCancellable)
-                Snackbar.Add($"TradeBrief not cancellable!", Severity.Error);
+            //await GetTradeBrief();
+            //if (!brief.IsCancellable)
+            //    Snackbar.Add($"TradeBrief not cancellable!", Severity.Error);
         }
         else
         {
             Snackbar.Add($"Reply to complaint failed: {ret.ResultCode.Humanize()}, {ret.ResultMessage}", Severity.Error);
         }
+
+        await UpdateUIAfterChange();
     }
 
     async Task WithdrawDisputeCaseAsync(DisputeCase dispute)
@@ -330,6 +351,36 @@
         reply.Sign(wallet.PrivateKey, wallet.AccountId);
 
         var ret = await connMgr.GetDealer(trade.Trade.dealerId).ComplainReplyAsync(reply);
+        if(ret.Successful())
+        {            
+            
+        }
+        else
+        {
+            Snackbar.Add($"Failed to withdraw: {ret.ResultCode}. Message: {ret.ResultMessage}", Severity.Normal);
+        }
+
+        await UpdateUIAfterChange();
+    }
+
+    async Task UpdateUIAfterChange()
+    {
+        Snackbar.Add($"Refresh content...", Severity.Normal);
+
+        await GetTradeBrief();
+
+        // create models
+        replies.Clear();
+        foreach (var hist in brief.GetDisputeHistory())
+        {
+            var model = new ComplaintReplyModel { dispute = hist };
+            replies.Add(hist.Complaint.Hash, model);
+        }
+
+        var tradeblk = await lyraApi.GetLastBlockAsync(tradeid);
+        trade = tradeblk.As<IOtcTrade>();
+
+        await InvokeAsync(() => StateHasChanged());
     }
 
     void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
