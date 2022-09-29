@@ -398,7 +398,7 @@ namespace Dealer.Server.Services
 
                 DisputeCase dispute = complaint.level switch
                 {
-                    DisputeLevels.Peer => new PeerDisputeCase
+                    DisputeLevels.Peer => new DisputeCase
                     {
                         Id = room.DisputeHistory?.Count + 1 ?? 1,
                         RaisedTime = DateTime.UtcNow,
@@ -484,11 +484,7 @@ namespace Dealer.Server.Services
 
                 // reply must be from either seller or buyer
 
-                if (dispute is PeerDisputeCase pdc)
-                {
-                    pdc.Reply = reply;
-                }
-                else if (dispute is DaoDisputeCase ddc)
+                if (dispute is DisputeCase ddc)
                 {
                     (var c, var r) = ddc.GetRoles(tradeblk);
                     if (reply.ownerId != c && reply.ownerId != r)

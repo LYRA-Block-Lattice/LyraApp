@@ -6,6 +6,7 @@
 @using Lyra.Data.API.ODR
 @using Lyra.Data.API.WorkFlow
 @using Lyra.Data.Crypto
+@using Lyra.Data.Shared
 @using Nebula.Store.WebWalletUseCase
 @using UserLibrary.Data
 @using Humanizer;
@@ -51,7 +52,7 @@
                     DisputeNegotiationStates.Failed => "rz-background-color-danger-light",
                     _ => ""
                 };
-                color = "m-3 " + color; 
+                color = "m-3 " + color;
                 <RadzenCard Class="@color">
                     <div>
                         <hr />
@@ -75,23 +76,34 @@
                     <div>
                         Request: @cmp.Complaint.request
                     </div>
-                    @if (cmp.Complaint.level == DisputeLevels.Peer &&
-                        walletState.Value.wallet.AccountId != cmp.Complaint.ownerId)
+                    @if (cmp.Complaint.level == DisputeLevels.Peer)
                     {
+
                         <RadzenAccordion>
                             <Items>
-                                @if(cmp is PeerDisputeCase pdc && pdc.Reply != null)
+                                @if (walletState.Value.wallet.AccountId == cmp.Complaint.ownerId)
                                 {
-                                    <RadzenAccordionItem Text="View Reply" Icon="reply">
-                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Replied by: @pdc.Reply.ownerId </RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Date time: @pdc.Reply.created </RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Fiat payment status: @pdc.Reply.fiatState </RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Statement: @(string.IsNullOrWhiteSpace(pdc.Reply.statement) ? "(empty)" : pdc.Reply.statement) </RadzenText>
-                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Response: @pdc.Reply.response </RadzenText>                                     
+                                <RadzenAccordionItem Text="Actions to my complaint" Icon="auto_fix_normal">
+                                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3"> If there was misunderstandings or the issue specified has been resolved, you can withdraw the complaint. </RadzenText>
+                                    <br />
+
+                                    <RadzenButton Text="Withdraw" Click="@(() => WithdrawDisputeCaseAsync(cmp))"></RadzenButton>
+
+                                </RadzenAccordionItem>
+                                }
+                                
+                                @foreach(var reply in cmp.Replies)
+                                {
+                                    var title = $"Reply by {reply.ownerId.Shorten()} at {(DateTime.UtcNow - reply.created).Humanize()} ago";
+                                    <RadzenAccordionItem Text="@title" Icon="reply">
+                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Replied by: @reply.ownerId </RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Date time: @reply.created </RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Fiat payment status: @reply.fiatState </RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Statement: @(string.IsNullOrWhiteSpace(reply.statement) ? "(empty)" : reply.statement) </RadzenText>
+                                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Response: @reply.response </RadzenText>
                                     </RadzenAccordionItem>
                                 }
-                                else
-                                {
+
                                 <RadzenAccordionItem Text="Reply to this complaint" Icon="reply">
                                     <RadzenTemplateForm TItem="ComplaintReplyModel" Data=@replies[cmp.Complaint.Hash] Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
 
@@ -114,11 +126,11 @@
                                             <Items>
                                                 @foreach (ComplaintResponse e in Enum.GetValues(typeof(ComplaintResponse)))
                                                 {
-                                                    if (replies[cmp.Complaint.Hash].request == ComplaintRequest.CancelTrade 
-                                                        && (e == ComplaintResponse.AgreeToCancel || e == ComplaintResponse.RefuseToCancel))
+                                                    if (replies[cmp.Complaint.Hash].request == ComplaintRequest.CancelTrade
+                                                    && (e == ComplaintResponse.AgreeToCancel || e == ComplaintResponse.RefuseToCancel))
                                                     {
                                                         <RadzenRadioButtonListItem Text="@e.Humanize()" Value="@e" />
-                                                    }                                                    
+                                                    }
                                                 }
                                             </Items>
                                         </RadzenRadioButtonList>
@@ -133,7 +145,6 @@
 
                                     </RadzenTemplateForm>
                                 </RadzenAccordionItem>
-                                }
                             </Items>
                         </RadzenAccordion>
                     }
@@ -282,19 +293,43 @@
         reply.Sign(wallet.PrivateKey, wallet.AccountId);
 
         var ret = await connMgr.GetDealer(trade.Trade.dealerId).ComplainReplyAsync(reply);
-        if(ret.Successful())
+        if (ret.Successful())
         {
             Snackbar.Add($"Reply to complaint successfully.", Severity.Success);
 
             // debug
             await GetTradeBrief();
-            if(!brief.IsCancellable)
+            if (!brief.IsCancellable)
                 Snackbar.Add($"TradeBrief not cancellable!", Severity.Error);
         }
         else
         {
             Snackbar.Add($"Reply to complaint failed: {ret.ResultCode.Humanize()}, {ret.ResultMessage}", Severity.Error);
         }
+    }
+
+    async Task WithdrawDisputeCaseAsync(DisputeCase dispute)
+    {
+        var wallet = walletState.Value.wallet;
+        var reply = new ComplaintReply
+            {
+                created = DateTime.UtcNow,
+
+                ownerId = wallet.AccountId,
+                tradeId = trade.AccountID,
+                level = DisputeLevels.Peer,
+                role = ComplaintByRole.Buyer,
+                fiatState = ComplaintFiatStates.SelfPaid,
+                response = ComplaintResponse.OwnerWithdraw,
+
+                statement = "test",
+                imageHashes = null,
+
+                complaintHash = dispute.Complaint.Hash,
+            };
+        reply.Sign(wallet.PrivateKey, wallet.AccountId);
+
+        var ret = await connMgr.GetDealer(trade.Trade.dealerId).ComplainReplyAsync(reply);
     }
 
     void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
