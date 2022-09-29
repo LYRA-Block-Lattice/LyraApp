@@ -26,14 +26,22 @@ else
         <br />
         <br />
         <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Payment state: </RadzenText>
-        <RadzenRadioButtonList @bind-Value="@model.fiatPaid" Name="fiatState" TValue="int" Change=@((args) => OnChange(args, "RadioButtonList with horizontal orientation"))>
+            <RadzenRadioButtonList @bind-Value="@model.fiatState" Name="fiatState" TValue="ComplaintFiatStates">
             <Items>
-                <RadzenRadioButtonListItem Text="Fiat paid" Value="1" />
-                <RadzenRadioButtonListItem Text="Fiat not paid" Value="2" />
+                    @if (myrole == ComplaintByRole.Buyer)
+                    {
+                        <RadzenRadioButtonListItem Text="I have paid to seller" Value="ComplaintFiatStates.SelfPaid" />
+                        <RadzenRadioButtonListItem Text="I did not pay" Value="ComplaintFiatStates.SelfUnpaid" />
+                    }
+                    else
+                    {
+                        <RadzenRadioButtonListItem Text="I have got fiat paid" Value="ComplaintFiatStates.PeerPaid" />
+                        <RadzenRadioButtonListItem Text="I havn't got fiat paid" Value="ComplaintFiatStates.PeerUnpaid" />
+                    }
             </Items>
         </RadzenRadioButtonList>
-        <RadzenRequiredValidator Component="fiatState" Text="Fiat payment state is required" Popup=@popup Style="position: absolute" />
-
+@*        <RadzenRequiredValidator Component="fiatState" Text="Fiat payment state is required" Popup=@popup Style="position: absolute" />
+*@
         <br />
         <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">I want to: </RadzenText>
         <RadzenRadioButtonList @bind-Value="@model.purpose" Name="purpose" TValue="int" Change=@((args) => OnChange(args, "RadioButtonList with horizontal orientation"))>
@@ -69,6 +77,9 @@ else
         <br />
         <br />
         <RadzenButton ButtonType="Radzen.ButtonType.Submit" Text="Submit"></RadzenButton>
+        &nbsp;&nbsp;
+
+            <RadzenButton Text="Go back" Click="@(() => JSRuntime.InvokeVoidAsync("history.back"))"></RadzenButton>
     </RadzenTemplateForm>
 </div>
 }
@@ -82,6 +93,8 @@ else
 
     [Inject] ILyraAPI lyraApi { get; set; }
     [Inject] DealerConnMgr connMgr { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] IJSRuntime JSRuntime { get; set; }
 
     bool popup = false;
     CompareOperator compareOperator = CompareOperator.Equal;
@@ -95,7 +108,7 @@ else
 
     class Model
     {
-        public int fiatPaid { get; set; }
+        public ComplaintFiatStates fiatState { get; set; }
         public int purpose { get; set; }
         public string statement { get; set; } = "";
         public bool chkAgree { get; set; }
@@ -134,6 +147,11 @@ else
             else
                 myrole = ComplaintByRole.Seller;
 
+            model = new Model
+                {
+                    fiatState = myrole == ComplaintByRole.Buyer ? ComplaintFiatStates.SelfUnpaid : ComplaintFiatStates.PeerUnpaid
+                };
+
             brief = await GetBrief();
             StateHasChanged();
         }
@@ -160,30 +178,25 @@ else
                 level = nextLevel,
                 role = myrole,
 
+                fiatState = model.fiatState,
                 request = model.purpose == 1 ? ComplaintRequest.ContinueTrade : ComplaintRequest.CancelTrade,
 
                 statement = model.statement,
                 imageHashes = null,
             };
 
-        if(myrole == ComplaintByRole.Buyer)
-        {
-            if (model.fiatPaid == 1)
-                cfg.fiatState = ComplaintFiatStates.SelfPaid;
-            else
-                cfg.fiatState = ComplaintFiatStates.SelfUnpaid;
-        }
-        else
-        {
-            if (model.fiatPaid == 1)
-                cfg.fiatState = ComplaintFiatStates.PeerPaid;
-            else
-                cfg.fiatState = ComplaintFiatStates.PeerUnpaid;
-        }
-
         cfg.Sign(walletState.Value.wallet.PrivateKey, walletState.Value.wallet.AccountId);
 
         var ret = await connMgr.GetDealer(trade.Trade.dealerId).ComplainAsync(cfg);
+
+        if (ret.Successful())
+        {
+            Snackbar.Add($"Complaint submited. Return to view.", Severity.Info);
+        }
+        else
+        {
+            Snackbar.Add($"Failed to complain: {ret.ResultCode}. Message: {ret.ResultMessage}", Severity.Error);
+        }
     }
 
     void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
