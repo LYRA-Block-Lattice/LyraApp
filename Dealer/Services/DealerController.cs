@@ -424,8 +424,7 @@ namespace Dealer.Server.Services
                 await _db.UpdateRoomAsync(room.Id, room);
 
                 // notify all client UI via hub
-                foreach(var act in room.Members)
-                    await ChatServer.PinMessageAsync(_db, _hub.Clients, tradeblk, act.AccountId);
+                await NotifyTradeesInRoomAsync(room, tradeblk);
                 
                 string from = complaint.role.ToString();
 
@@ -566,6 +565,9 @@ namespace Dealer.Server.Services
                     }
                 }
 
+                // notify all client UI via hub
+                await NotifyTradeesInRoomAsync(room, tradeblk);
+
                 ///*about lost of {dispute.ClaimedLost} LYR*/
                 var text = $"Reply was recorded.";
                 return new APIResult
@@ -659,6 +661,9 @@ namespace Dealer.Server.Services
                     );
                 await _db.UpdateRoomAsync(room!.Id!, room);
 
+                // notify all client UI via hub
+                await NotifyTradeesInRoomAsync(room, trade);
+
                 return APIResult.Success;
             }
 
@@ -671,6 +676,11 @@ namespace Dealer.Server.Services
         {
             if (reply == null || !reply.VerifySignature(reply.ownerId))
                 return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
+
+            // verify the trade
+            var trade = (await _client.GetLastBlockAsync(reply.tradeId)).As<IOtcTrade>();
+            if (trade == null)
+                return new APIResult { ResultCode = APIResultCodes.NotFound };
 
             // get dealer room
             var room = await _db.GetRoomByTradeAsync(reply.tradeId);
@@ -730,7 +740,16 @@ namespace Dealer.Server.Services
                 }
             }
 
+            // notify all client UI via hub
+            await NotifyTradeesInRoomAsync(room, trade);
+
             return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Success };
+        }
+
+        private async Task NotifyTradeesInRoomAsync(TxRoom room, IOtcTrade trade)
+        {
+            foreach (var act in room.Members)
+                await ChatServer.PinMessageAsync(_db, _hub.Clients, trade, act.AccountId);
         }
     }
 }
