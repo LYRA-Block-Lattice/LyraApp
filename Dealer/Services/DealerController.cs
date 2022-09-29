@@ -423,6 +423,10 @@ namespace Dealer.Server.Services
                 room.AddComplain(dispute);
                 await _db.UpdateRoomAsync(room.Id, room);
 
+                // notify all client UI via hub
+                foreach(var act in room.Members)
+                    await ChatServer.PinMessageAsync(_db, _hub.Clients, tradeblk, act.AccountId);
+                
                 string from = complaint.role.ToString();
 
                 ///*about lost of {dispute.ClaimedLost} LYR*/
