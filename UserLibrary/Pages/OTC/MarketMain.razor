@@ -35,9 +35,13 @@
                             <div class="cet mag">
                                 @foreach (var odr in orders[dir][crypto])
                                 {
+                                    if(!odr.Order.crypto.StartsWith("$"))
+                                    {
+                                        continue;
+                                    }
                                     @*Snackbar.Add($"display order {odr.AccountID.Shorten()}");*@
                                     var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoId);
-                                    var stat = userStats[odr.OwnerAccountId];
+                                    var stat = userStats.FirstOrDefault(a => a.AccountId == odr.OwnerAccountId);
                                     <UserLibrary.Components.OTC.OrderDisplay Otc=@odr Dao=@dao Stats="@stat" OrderSelected=@ShowCreateTradeUI />
                                 }
                             </div>
@@ -75,7 +79,7 @@
 
     List<IDao> alldaos = new List<IDao>();
     List<IDao> daos = new List<IDao>();
-    Dictionary<string, UserStats?> userStats = new Dictionary<string, UserStats?>();
+    List<UserStats> userStats = new List<UserStats>();
 
     int activeIndex = 0;
 
@@ -155,12 +159,21 @@
     {
         try
         {
+            var dealerClient = connMgr.GetDealer(null);
+            if (dealerClient == null)
+                return;
+
+            var payload = await dealerClient.GetAsync<UPOTCOrders>("GetOTC");
+
             // get tradable orders
-            var tosret = await lyraApi.FindTradableOtcAsync();
-            if (tosret.Successful())
+            if (payload != null)
             {
-                var allblks = tosret.GetBlocks("orders");
+                var allblks = payload.container.GetBlocks("orders");
                 var odrs = allblks.Cast<IOtcOrder>();
+
+                daos = payload.container.GetBlocks("daos").Cast<IDao>().ToList();
+                userStats = payload.users;
+
                 //if(odrs == null || !odrs.Any())
                 var tradableOrders = odrs
                     .Where(a => a.Order.amount > 0)
@@ -176,6 +189,9 @@
 
                 var sb = new StringBuilder();
 
+                // buy sell tab
+                // token tab
+                // orders
                 orders = new Dictionary<TradeDirection, Dictionary<string, List<IOtcOrder>>>();
                 foreach(var dir in new [] { TradeDirection.Sell, TradeDirection.Buy })
                 {
@@ -185,24 +201,23 @@
                         var olist = tradableOrders.Where(a => a.Order.dir == dir && a.Order.crypto == tcrypto).ToList();
                         drdlist.Add(tcrypto, olist);
 
-                        foreach(var o in olist)
-                        {
-                            sb.AppendLine($"{dir} {tcrypto} {o.AccountID}");
-                            
-                            if(!userStats.ContainsKey(o.OwnerAccountId))
-                            {
-                                sb.AppendLine($"GetUserStats {o.OwnerAccountId}");
-                                var us = await GetUserStats(o);
-                                userStats.Add(o.OwnerAccountId, us);
-                            }                                
-                        }
+                        //foreach(var o in olist)
+                        //{
+                        //    sb.AppendLine($"{dir} {tcrypto} {o.AccountID}");
+
+                        //    if(!userStats.ContainsKey(o.OwnerAccountId))
+                        //    {
+                        //        sb.AppendLine($"GetUserStats {o.OwnerAccountId}");
+                        //        var us = await GetUserStats(o);
+                        //        userStats.Add(o.OwnerAccountId, us);
+                        //    }                                
+                        //}
 
                     }
                     orders.Add(dir, drdlist);
                 }
 
-                var dbg = sb.ToString();
-                daos = tosret.GetBlocks("daos").Cast<IDao>().ToList();
+                var dbg = sb.ToString();                
             }
         }
         catch (Exception e)
@@ -213,14 +228,14 @@
 
     private async Task<UserStats?> GetUserStats(IOtcOrder order)
     {
-        var client = connMgr.GetDealer(order.Order.dealerId);
-        if (client == null)
+        var dealerClient = connMgr.GetDealer(order.Order.dealerId);
+        if (dealerClient == null)
             return null;
 
         // get users
         try
         {
-            var user = await client.GetUserByAccountIdAsync(order.OwnerAccountId);
+            var user = await dealerClient.GetUserByAccountIdAsync(order.OwnerAccountId);
             if (user.Successful())
             {
                 return user.Deserialize<UserStats>();

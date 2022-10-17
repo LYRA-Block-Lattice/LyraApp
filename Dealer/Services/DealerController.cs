@@ -35,6 +35,8 @@ namespace Dealer.Server.Services
         private IHubContext<DealerHub, IHubPushMethods> _hub;
         ILyraAPI _client;
 
+        private string _myDealerID;
+
         public DealerController(DealerDb db, IHubContext<DealerHub, IHubPushMethods> hub,
             IConfiguration Configuration, Keeper keeper, ILyraAPI client)
         {
@@ -43,6 +45,8 @@ namespace Dealer.Server.Services
             _config = Configuration;
             _keeper = keeper;
             _client = client;
+
+            _myDealerID = Signatures.GetAccountIdFromPrivateKey(_config["DealerKey"]);
         }
 
         [Route("GetBrief")]
@@ -51,7 +55,7 @@ namespace Dealer.Server.Services
         {
             var brief = new DealerBrief
             {
-                AccountId = Signatures.GetAccountIdFromPrivateKey(_config["DealerKey"]),
+                AccountId = _myDealerID,
                 TelegramBotUsername = _keeper.BotUserName
             };
             return Task.FromResult(SimpleJsonAPIResult.Create(brief));
@@ -226,6 +230,40 @@ namespace Dealer.Server.Services
             }
 
             return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidParameterFormat };
+        }
+
+        [Route("GetOTC")]
+        [HttpGet]
+        public async Task<UPOTCOrders> GetOTCAsync()
+        {
+            // get tradable orders
+            var tosret = await _client.FindTradableOtcAsync();
+            if (tosret.Successful())
+            {
+                var allblks = tosret.GetBlocks("orders");
+                var odrs = allblks.Cast<IOtcOrder>()
+                    .Where(a => a.Order.dealerId == _myDealerID)
+                    .ToList();
+                var daos = tosret.GetBlocks("daos").Cast<IDao>().ToList();
+
+                Dictionary<string, UserStats?> userStats = new Dictionary<string, UserStats?>();
+                foreach (var o in odrs)
+                {
+                    if (!userStats.ContainsKey(o.OwnerAccountId))
+                    {
+                        var us = await GetUserByAccountIdAsync(o.OwnerAccountId);
+                        userStats.Add(o.OwnerAccountId, us.Deserialize<UserStats>());
+                    }
+                }
+
+                return new UPOTCOrders
+                {
+                    container = tosret,
+                    users = userStats.Values.ToList()
+                };
+            }
+
+            return null;
         }
 
         [Route("GetTradeBrief")]

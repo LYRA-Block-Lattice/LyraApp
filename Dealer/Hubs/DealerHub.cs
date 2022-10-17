@@ -391,6 +391,11 @@ namespace Dealer.Server.Hubs
             }
         }
 
+        /// <summary>
+        /// join a dealer room. talk with trading peer.
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         public async Task<JoinRoomResponse> JoinRoom(JoinRoomRequest req)
         {
             // verify the signature
@@ -476,6 +481,11 @@ namespace Dealer.Server.Hubs
             };
         }
 
+        /// <summary>
+        /// join a uniqe virtual room named as user account id.
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
         public async Task Join(JoinRequest req)
         {
             var lsb = await _lyraApi.GetLastServiceBlockAsync();

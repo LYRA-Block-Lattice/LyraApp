@@ -31,7 +31,16 @@ builder.Services.Configure<DealerDbSettings>(
 builder.Services.AddScoped<ILyraAPI>(provider =>
                 {
                     var networkid = builder.Configuration["network"];
+                    var nodeAddr = builder.Configuration["lyraNode"];
+
                     var url = $"https://seed1.testnet.lyra.live:4504/api/Node/";
+
+                    if (!string.IsNullOrWhiteSpace(nodeAddr))
+                    {
+                        url = $"https://{nodeAddr}/api/Node/";
+                        return LyraRestClient.Create(networkid, Environment.OSVersion.ToString(), "Dealer", "1.0", url);
+                    }
+
                     if (networkid == "mainnet")
                         url = $"https://seed1.mainnet.lyra.live:5504/api/Node/";
                     else if (networkid == "devnet")
