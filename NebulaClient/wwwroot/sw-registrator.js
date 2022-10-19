@@ -14,7 +14,7 @@ function checkServiceWorkerUpdate(registration) {
         console.info(`Service worker registrator: Checking for update... (scope: ${registration.scope})`);
 
         registration.update();
-    }, 60 * 1000); // 60000ms -> check each minute
+    }, 120 * 1000); // 60000ms -> check each minute
 }
 
 // check if the browser supports serviceWorker at all

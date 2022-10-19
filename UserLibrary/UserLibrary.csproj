@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <Platforms>AnyCPU;x86</Platforms>
-	<Version>1.2.7.4</Version>
+	<Version>1.2.7.7</Version>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -43,9 +43,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Update="Resources\Pages.Entry.zh.resx">
-	    <Generator></Generator>
-	  </EmbeddedResource>
 	  <EmbeddedResource Update="Resources\Pages.Entry.resx">
 	    <Generator></Generator>
 	  </EmbeddedResource>
