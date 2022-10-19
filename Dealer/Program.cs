@@ -73,6 +73,7 @@ builder.Services.AddHostedService<Keeper>(provider => provider.GetService<Keeper
 
 var app = builder.Build();
 
+app.UseWebSockets();
 app.UseResponseCompression();
 
 if (app.Environment.IsDevelopment())
@@ -88,15 +89,15 @@ else
 
 app.UseCors(builder =>
     builder
-    //.WithOrigins(
-    //    "https://dealertestnet.lyra.live",
-    //    "https://dealer.lyra.live",
-    //    "https://localhost:8098",
-    //    "http://localhost:5098",
-    //    "https://lyra.live",
-    //    "https://apptestnet.lyra.live",
-    //    "https://app.lyra.live"
-    //    )
+    .WithOrigins(
+        "https://dealertestnet.lyra.live",
+        "https://dealer.lyra.live",
+        //"https://localhost:8098",
+        //"http://localhost:5098",
+        "https://lyra.live",
+        "https://apptestnet.lyra.live",
+        "https://app.lyra.live"
+        )
     .AllowAnyOrigin()
     .AllowAnyHeader()
     .AllowAnyMethod()

@@ -1,4 +1,5 @@
-﻿window.updateAvailable = new Promise((resolve, reject) => {
+﻿// ver 20221019-1
+window.updateAvailable = new Promise((resolve, reject) => {
     if (!('serviceWorker' in navigator)) {
         const errorMessage = `This browser doesn't support service workers`;
         console.error(errorMessage);

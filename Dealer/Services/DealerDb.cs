@@ -103,6 +103,8 @@ namespace Dealer.Server.Services
 
         public async Task<LyraUser?> GetUserByAccountIdAsync(string accountId) =>
             await _usersCollection.Find(x => x.AccountId == accountId).FirstOrDefaultAsync();
+        public async Task<LyraUser?> GetUserByUserNameAsync(string userName) =>
+            await _usersCollection.Find(x => x.UserName == userName).FirstOrDefaultAsync();
 
         public async Task CreateUserAsync(LyraUser newUser) =>
             await _usersCollection.InsertOneAsync(newUser);
@@ -327,7 +329,7 @@ namespace Dealer.Server.Services
 
                 // if no chat in 10 minutes after trade creation
                 // or if peer request cancel also
-                IsCancellable = room.IsCancelable || icStart,
+                IsCancellable = trade.OTStatus == OTCTradeStatus.Open ? room.IsCancelable || icStart : false,
                 Resolutions = new List<ResolutionContainer>(),
             };
             brief.SetDisputeHistory(room?.DisputeHistory ?? new List<DisputeCase?>());

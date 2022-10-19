@@ -85,6 +85,11 @@
 
     <MudDivider Style="margin: 30px" />
     <div style="font-size: xx-small">
+        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="CheckUpdate">Check New Version</MudButton>
+    </div>
+
+    <MudDivider Style="margin: 30px" />
+    <div style="font-size: xx-small">
         <LanguageSelector />    
     </div>
 
@@ -108,6 +113,7 @@
     [Inject] private IDialogService DialogService { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
+    [Inject] DealerConnMgr connMgr { get; set; }
 
     string voteAddr, altDisplay;
     string bexpurl;
@@ -207,6 +213,28 @@
         else
         {
             return " Amount: " + string.Join(", ", newBalance.Select(m => $"{m.Key} {(decimal)(m.Value - (oldBalance.ContainsKey(m.Key) ? oldBalance[m.Key] : 0)) / LyraGlobal.TOKENSTORAGERITO}"));
+        }
+    }
+
+    private async Task CheckUpdate()
+    {
+        // get version
+        var dealerClient = connMgr.GetDealer(null);
+        if (dealerClient != null)
+        {
+            var verb = await dealerClient.GetBriefAsync();
+            var myver = this.GetType().Assembly.GetName().Version.ToString();
+            if (verb.Version != myver)
+            {
+                var msg = $"Found new version {verb.Version}, my version {myver}";
+                Console.WriteLine(msg);
+
+                await JS.InvokeVoidAsync("alert", msg);
+            }
+            else
+            {
+                Console.WriteLine($"My version {myver} is up to date.");
+            }
         }
     }
 }

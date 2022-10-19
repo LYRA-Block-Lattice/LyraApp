@@ -1,4 +1,5 @@
-﻿@inject IJSRuntime _jsRuntime
+﻿@using UserLibrary.Data
+@inject IJSRuntime _jsRuntime
 
 @if (_newVersionAvailable)
 {
@@ -8,12 +9,40 @@
 }
 
 @code {
+    [Inject] DealerConnMgr connMgr { get; set; }
+    [Inject] IJSRuntime JsRuntime { get; set; }
 
     private bool _newVersionAvailable = false;
 
     protected override async Task OnInitializedAsync()
     {
         await RegisterForUpdateAvailableNotification();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            // get version
+            var dealerClient = connMgr.GetDealer(null);
+            if (dealerClient != null)
+            {
+                var verb = await dealerClient.GetBriefAsync();
+                var myver = this.GetType().Assembly.GetName().Version.ToString();
+                if(verb.Version != myver)
+                {
+                    var msg = $"Found new version {verb.Version}, my version {myver}";
+                    Console.WriteLine(msg);
+
+                    await JsRuntime.InvokeVoidAsync("alert", msg);
+                }
+                else
+                {
+                    Console.WriteLine($"My version {myver} is up to date.");
+                }
+            }
+        }
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task RegisterForUpdateAvailableNotification()

@@ -55,6 +55,7 @@ namespace Dealer.Server.Services
         {
             var brief = new DealerBrief
             {
+                Version = this.GetType().Assembly.GetName().Version.ToString(),
                 AccountId = _myDealerID,
                 TelegramBotUsername = _keeper.BotUserName
             };
@@ -158,11 +159,34 @@ namespace Dealer.Server.Services
             user.RegistedTime = DateTime.UtcNow;
             var usrx = await _db.GetUserByAccountIdAsync(user.AccountId);
             if (usrx == null)
-                await _db.CreateUserAsync(user);
+            {
+                var usr2 = await _db.GetUserByUserNameAsync(user.UserName);
+                if (usr2 == null)
+                {
+                    await _db.CreateUserAsync(user);
+                }
+                else
+                {
+                    return new APIResult
+                    {
+                        ResultCode = APIResultCodes.DuplicateName,
+                        ResultMessage = $"User name {user.UserName} is taken."
+                    };
+                }                
+            }                
             else
             {
-                user.Id = usrx.Id;
-                await _db.UpdateUserAsync(user);
+                if(user.UserName == usrx.UserName)
+                {
+                    user.Id = usrx.Id;
+                    await _db.UpdateUserAsync(user);
+                }
+                else
+                {
+                    return new APIResult { ResultCode = APIResultCodes.InvalidOperation,
+                        ResultMessage = "Can't change user name."
+                    };
+                }
             }
 
             return APIResult.Success;

@@ -188,6 +188,8 @@ namespace Dealer.Server.Hubs
                 var x = Clients.Group(mem.AccountId);
                 await Clients.Group(mem.AccountId).OnChat(container);
 
+                Console.WriteLine($"SendToTradeRoomAsync {container.MsgType} to {mem.AccountId}");
+
                 // send to telegram
                 var user = await _db.GetUserByAccountIdAsync(mem.AccountId);
                 if(user?.TelegramID != null)
@@ -424,7 +426,9 @@ namespace Dealer.Server.Hubs
 
                         // join the group
                         await Groups.AddToGroupAsync(Context.ConnectionId, req.TradeID);
+                        Console.WriteLine($"JoinRoom add client id {Context.ConnectionId} to group {req.TradeID}");
                         await Groups.AddToGroupAsync(Context.ConnectionId, req.UserAccountID);
+                        Console.WriteLine($"JoinRoom add client id {Context.ConnectionId} to group {req.UserAccountID}");
 
                         // pin a message
                         await ChatServer.PinMessageAsync(_db, Clients, tradeblk, req.UserAccountID);
@@ -498,6 +502,7 @@ namespace Dealer.Server.Hubs
 
                 _idgrps.Add(Context.ConnectionId, req.UserAccountID);
                 await Groups.AddToGroupAsync(Context.ConnectionId, req.UserAccountID);
+                Console.WriteLine($"Join add user {req.UserAccountID} to it's group with conn id: {Context.ConnectionId}.");
                 //File.AppendAllText("c:\\tmp\\connectionids.txt", $"AddToGroupAsync: {Context.ConnectionId}, {req.UserAccountID}\n");
             }
         }
@@ -510,7 +515,10 @@ namespace Dealer.Server.Hubs
             if (ok)
             {
                 if (_idgrps.ContainsKey(Context.ConnectionId))
+                {
                     await Groups.RemoveFromGroupAsync(Context.ConnectionId, _idgrps[Context.ConnectionId]);
+                    Console.WriteLine($"Leave remove client {Context.ConnectionId} from group {_idgrps[Context.ConnectionId]}");
+                }
                 //File.AppendAllText("c:\\tmp\\connectionids.txt", $"AddToGroupAsync: {Context.ConnectionId}, {req.UserAccountID}\n");
             }
         }

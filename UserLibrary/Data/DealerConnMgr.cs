@@ -81,8 +81,11 @@ namespace UserLibrary.Data
                 try
                 {
                     await conn.StartAsync();
+                    Console.WriteLine($"DealerConnMgr Connected with id {conn.ConnectionId}");
                 }
-                catch { }
+                catch (Exception ex) {
+                    Console.WriteLine($"DealerConnMgr StartAsync Error: {ex}");
+                }
             }            
             _started = _dealerClients.Count > 0;
         }
@@ -124,19 +127,19 @@ namespace UserLibrary.Data
 
         private Task _connection_Reconnecting(Exception? arg)
         {
-            Console.WriteLine($"Reconnecting: {arg}");
+            Console.WriteLine($"DealerConnMgr Reconnecting: {arg}");
             return Task.CompletedTask;
         }
 
         private Task _connection_Reconnected(string? arg)
         {
-            Console.WriteLine($"Reconnected: {arg}");
+            Console.WriteLine($"DealerConnMgr Reconnected: {arg}");
             return Task.CompletedTask;
         }
 
         private Task _connection_Closed(Exception? arg)
         {
-            Console.WriteLine($"Connection closed. {arg?.Message}");
+            Console.WriteLine($"DealerConnMgr Connection closed. {arg?.Message}");
             return Task.CompletedTask;
         }
 

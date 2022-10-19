@@ -101,7 +101,7 @@
                    Variant="MudBlazor.Variant.Filled"
                    StartIcon="@Icons.Filled.Image"
                    for="fileInput112">
-                Send images
+                Send image
             </MudButton>
 
 @*            <MudButton Variant="MudBlazor.Variant.Filled"
@@ -205,6 +205,8 @@
 
         SubscribeToAction<RespContainer>(a =>
             {
+                Console.WriteLine($"Got a msg from dealer: {a.MsgType}");
+
                 var obj = a.Get();
                 if(obj.TradeId == tradeid)
                 {
@@ -587,9 +589,6 @@
 
     private async Task Complaint()
     {
-        Navigation.NavigateTo($"/dealer/newcomplain/{tradeid}");
-        return;
-
         Snackbar.Add($"Getting latest status...", Severity.Info);
         
         var tradeblk = (await walletState.Value.wallet.RPC.GetLastBlockAsync(tradeid)).As<IOtcTrade>();
@@ -600,6 +599,18 @@
             Snackbar.Add($"Unable to get latest status. Please retry later.", Severity.Warning);
             return;
         }
+
+        // check if complain is feasible
+        if (tradeblk.OTStatus == OTCTradeStatus.CryptoReleased
+            || tradeblk.OTStatus == OTCTradeStatus.Canceled)
+        {
+            Snackbar.Add($"Trade is closed. Unable to complain.", Severity.Warning);
+            return;
+        }
+
+        Navigation.NavigateTo($"/dealer/newcomplain/{tradeid}");
+        return;
+
 
         if(brief.DisputeLevel == DisputeLevels.None)
         {

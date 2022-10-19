@@ -81,8 +81,8 @@ namespace Dealer.Server.Hubs
                 }
             }
 
-            var x = Clients.Group(accountId);
-            await Clients.Group(accountId).OnPinned(pinned);
+            var x = Clients.Group(tradeblk.AccountID);
+            await Clients.Group(tradeblk.AccountID).OnPinned(pinned);
         }
     }
 }
