@@ -2,45 +2,49 @@
 @using UserLibrary.Data
 @inject ISnackbar Snackbar
 
-<MudDialog>
-    <TitleContent>
-        <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Filled.AutoAwesome" Class="mr-3 mb-n1"/>
-            @Args.title
-        </MudText>
-    </TitleContent>
-    <DialogContent>
-        <MudGrid Style="font-size: larger">
-            <MudItem xs="12">
-                <h3><b>@Args.view.Symbol</b></h3>
-            </MudItem>
-            <MudItem xs="12">
-                Provider: @Args.view.NetworkProvider
-            </MudItem>
-            <MudItem xs="12">
-                Contract: @Args.view.Contract
-            </MudItem>
-            <MudItem xs="12">
-                Deposit Address: 
-                <p style="width:100%">
-                    <CopyToClipboard Text="@Args.address" />
-                </p>
-            </MudItem>
-            <MudItem xs="12">
-                Minimal Deposit: @Args.view.MinDeposit @Args.view.Symbol
-            </MudItem>
-            <MudItem xs="12">
-                Deposition Fee: @Args.view.DepositFee @Args.view.Symbol
-            </MudItem>
-            <MudItem xs="12">
-                Confirmation: @Args.view.ConfirmationInfo
-            </MudItem>
-        </MudGrid>
-    </DialogContent>
-    <DialogActions>
-        <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Cancel">Close</MudButton>
-    </DialogActions>
-</MudDialog>
+@if (Args != null)
+{
+    <MudDialog>
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                <MudIcon Icon="@Icons.Filled.AutoAwesome" Class="mr-3 mb-n1"/>
+                @Args?.title
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudGrid Style="font-size: larger">
+                <MudItem xs="12">
+                    <h3><b>@Args.view.Symbol</b></h3>
+                </MudItem>
+                <MudItem xs="12">
+                    Provider: @Args.view.NetworkProvider
+                </MudItem>
+                <MudItem xs="12">
+                    Contract: @Args.view.Contract
+                </MudItem>
+                <MudItem xs="12">
+                    Deposit Address: 
+                    <p style="width:100%">
+                        <CopyToClipboard Text="@Args.address" />
+                    </p>
+                </MudItem>
+                <MudItem xs="12">
+                    Minimal Deposit: @Args.view.MinDeposit @Args.view.Symbol
+                </MudItem>
+                <MudItem xs="12">
+                    Deposition Fee: @Args.view.DepositFee @Args.view.Symbol
+                </MudItem>
+                <MudItem xs="12">
+                    Confirmation: @Args.view.ConfirmationInfo
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Cancel">Close</MudButton>
+        </DialogActions>
+    </MudDialog>
+}
+
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 

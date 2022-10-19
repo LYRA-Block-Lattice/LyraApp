@@ -242,7 +242,7 @@ namespace Dealer.Server.Services
             {
                 var allblks = tosret.GetBlocks("orders");
                 var odrs = allblks.Cast<IOtcOrder>()
-                    .Where(a => a.Order.dealerId == _myDealerID)
+                    //.Where(a => a.Order.dealerId == _myDealerID)
                     .ToList();
                 var daos = tosret.GetBlocks("daos").Cast<IDao>().ToList();
 

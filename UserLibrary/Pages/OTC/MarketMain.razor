@@ -35,10 +35,6 @@
                             <div class="cet mag">
                                 @foreach (var odr in orders[dir][crypto])
                                 {
-                                    if(!odr.Order.crypto.StartsWith("$"))
-                                    {
-                                        continue;
-                                    }
                                     @*Snackbar.Add($"display order {odr.AccountID.Shorten()}");*@
                                     var dao = daos.First(a => (a as TransactionBlock).AccountID == odr.Order.daoId);
                                     var stat = userStats.FirstOrDefault(a => a.AccountId == odr.OwnerAccountId);
@@ -176,7 +172,7 @@
 
                 //if(odrs == null || !odrs.Any())
                 var tradableOrders = odrs
-                    .Where(a => a.Order.amount > 0)
+                    .Where(a => a.Order.amount > 0 && a.Order.crypto.StartsWith("tether/"))
                     .OrderBy(a => a.Order.price)
                     .ToList();
 
