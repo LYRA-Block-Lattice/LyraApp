@@ -50,3 +50,11 @@ async function onFetch(event) {
 
     return cachedResponse || fetch(event.request);
 }
+
+self.addEventListener('message', (event) => {
+    console.info('Service worker: Message received');
+    if (event.data === 'SKIP_WAITING') {
+        // Cause the service worker to update
+        self.skipWaiting();
+    }
+});

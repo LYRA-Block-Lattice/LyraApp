@@ -224,17 +224,17 @@
         {
             var verb = await dealerClient.GetBriefAsync();
             var myver = this.GetType().Assembly.GetName().Version.ToString();
+            string msg = "Version uncertain.";
             if (verb.Version != myver)
             {
-                var msg = $"Found new version {verb.Version}, my version {myver}";
-                Console.WriteLine(msg);
-
-                await JS.InvokeVoidAsync("alert", msg);
+                msg = $"Found new version {verb.Version}, my version {myver}";                
             }
             else
             {
-                Console.WriteLine($"My version {myver} is up to date.");
+                msg = $"My version {myver} is up to date.";
             }
+            Console.WriteLine(msg);
+            await JS.InvokeVoidAsync("alert", msg);
         }
     }
 }
