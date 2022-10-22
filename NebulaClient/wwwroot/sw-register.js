@@ -1,4 +1,6 @@
-﻿function invokeServiceWorkerUpdateFlow(registration) {
+﻿// ver 20221022-1
+
+function invokeServiceWorkerUpdateFlow(registration) {
     if (confirm("New version available, reload?") == true) {
         if (registration.waiting) {
             console.info(`Service worker registrator: Post skip_waiting...`);

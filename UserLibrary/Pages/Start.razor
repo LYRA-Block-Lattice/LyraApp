@@ -1,20 +1,42 @@
 ﻿@page "/start"
+@using Fluxor
+@using Lyra.Data.Crypto
 @using Microsoft.Extensions.Configuration
+@using Nebula.Store.WebWalletUseCase
 @inject IConfiguration Configuration
 
-<iframe width="100%" height="100%" src="@getStartUrl()" frameborder="0" allowfullscreen></iframe>
-
+<iframe width="100%" height="100%" src="@url" frameborder="0" allowfullscreen></iframe>
 
 @code {
-    string getStartUrl()
+    [Inject]
+    private IState<WebWalletState>? walletState { get; set; }
+    [Inject] ILyraAPI Client { get; set; }
+
+    string url;
+
+    protected async override Task OnInitializedAsync()
     {
-        if (Configuration["network"] == "mainnet")
-        {
-            return "https://start.lyra.live";
-        }
-        else if (Configuration["network"] == "testnet")
-            return "https://starttestnet.lyra.live";
+        url = await getStartUrl();
+
+        await base.OnInitializedAsync();
+    }
+
+    async Task<string> getStartUrl()
+    {
+        var url = "https://start.lyra.live";
+        if (Configuration["network"] == "testnet")
+            url = "https://starttestnet.lyra.live";
         else
-            return "https://localhost:7288/";
+            url = "https://localhost:7288";
+
+        if (walletState.Value.IsOpening)
+        {
+            var lsb = await Client.GetLastServiceBlockAsync();
+            var signature = Signatures.GetSignature(walletState.Value.wallet.PrivateKey,
+                lsb.GetBlock().Hash, walletState.Value.wallet.AccountId);
+
+            return $"{url}/?address={walletState.Value.wallet.AccountId}&signature={signature}";
+        }
+        return $"{url}";
     }
 }

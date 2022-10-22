@@ -291,7 +291,8 @@
         }
         catch (Exception ex)
         {
-            Snackbar.Add($"Exception reset connection: {ex}", Severity.Error);
+            //Snackbar.Add($"Exception reset connection: {ex}", Severity.Error);
+            Console.WriteLine($"Exception reset connection: {ex}");
         }
     }
 
@@ -402,7 +403,8 @@
         }
         catch (Exception ex)
         {
-            Snackbar.Add($"Exception in WalletChanged: {ex}", Severity.Error);
+            Console.WriteLine($"Exception in WalletChanged: {ex}");
+            //Snackbar.Add($"Exception in WalletChanged: {ex}", Severity.Error);
         }
     }
 
