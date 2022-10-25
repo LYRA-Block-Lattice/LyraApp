@@ -35,7 +35,7 @@
             var signature = Signatures.GetSignature(walletState.Value.wallet.PrivateKey,
                 lsb.GetBlock().Hash, walletState.Value.wallet.AccountId);
 
-            return $"{url}/?address={walletState.Value.wallet.AccountId}&signature={signature}";
+            return $"{url}/?network={Configuration["network"]}&address={walletState.Value.wallet.AccountId}&signature={signature}";
         }
         return $"{url}";
     }

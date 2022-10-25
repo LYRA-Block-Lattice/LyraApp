@@ -13,5 +13,13 @@ namespace Dealer.Server.Models
 
         public long ChatID { get; set; }
         public string Username { get; set; }
+        public int VerifyCode { get; set; }
+        public string AssociatedAccountID { get; set; }
+
+        // UI -> send hello to dealer telegram bot
+        // user -> hello -> bot -> your verify code is 111333
+        // or bot -> account is already associated with wallet L....., send disa to disassociate.
+        // user -> UI -> telegram verify code is 111333
+        // controller -> register req -> verify telegram verification code against database
     }
 }

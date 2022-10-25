@@ -78,6 +78,10 @@
             <p>
                 <h3>Email</h3>
                 <MudTextField @bind-Value="@email" Label="" />
+                <RadzenButton IsBusy="@busySendEmail" BusyText="Trying to send email..." Click=@SendVerifyEmail Text="Verify" />
+                <br />
+                <h3>Email Verification Code</h3>
+                <MudTextField @bind-Value="@emailCode" Label="" />
             </p>
             <div style="height:45px;" />
             <p>
@@ -93,7 +97,10 @@
             <p>
                 <h3>Telegram ID</h3>
                 <MudTextField @bind-Value="@telegramId" Label="" />
-                Note: Please send a message to <a target="_blank" href="https://t.me/@dealerbot">https://t.me/@dealerbot</a> to activate.
+                <br />
+                <h3>Telegram Verification Code</h3>
+                <MudTextField @bind-Value="@telegramCode" Label="" />
+                Note: Please send "hello" to <a target="_blank" href="https://t.me/@dealerbot">https://t.me/@dealerbot</a> to get a verification code.
             </p>
             <div style="height:45px;" />
 
@@ -135,13 +142,15 @@
     [Inject] NebulaConsts _consts { get; set; }
     [Inject] DealerConnMgr connMgr { get; set; }
 
-    string username, firstname, middlename, lastname, email, mobilephone, avatar, telegramId;
+    string username, firstname, middlename, lastname, email, mobilephone, avatar, telegramId, telegramCode, emailCode;
     bool busy, success;
     string dealerbot;
 
     IDealer dlr;
     LyraUser user;
     string btnText = "Register to Dealer";
+
+    bool busySendEmail = false;
 
     protected override void OnInitialized()
     {
@@ -209,6 +218,40 @@
         await base.OnAfterRenderAsync(firstRender);
     }
 
+    async Task SendVerifyEmail()
+    {
+        busySendEmail = true;
+        await Task.Yield();
+
+        if(!string.IsNullOrWhiteSpace(email) && email.Contains('@') &email.Contains('.'))
+        {
+            try
+            {
+                var lsb = await lyraApi.GetLastServiceBlockAsync();
+                var acac = new AcademyClient(Configuration["network"]);
+                var wallet = walletState.Value.wallet;
+                var input = $"{wallet.AccountId}:{email}:{lsb.GetBlock().Hash}";
+                var signatures = Signatures.GetSignature(wallet.PrivateKey, input, wallet.AccountId);
+                var ret = await acac.VerifyEmailAsync(wallet.AccountId, email, signatures);
+                if (ret.Successful())
+                {
+                    Snackbar.Add($"Verification email sent.", Severity.Success);
+                }
+                else
+                {
+                    Snackbar.Add($"Unable to verify email: {ret.ResultMessage}", Severity.Error);
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Unable to verify email: {ex.Message}");
+                Snackbar.Add($"Unable to verify email: {ex.Message}", Severity.Error);
+            }
+        }
+        busySendEmail = false;
+        StateHasChanged();
+    }
+
     async Task OnRegister()
     {
         busy = true;
@@ -228,13 +271,14 @@
             var dealer = connMgr.GetDealer(dealerid);
             var ret = await dealer.RegisterAsync(walletState.Value.wallet.AccountId,
                 username, firstname, middlename, lastname, email, mobilephone, avatar, telegramId,
-                Signatures.GetSignature(walletState.Value.wallet.PrivateKey, (lsb.GetBlock().Hash), walletState.Value.wallet.AccountId)
+                Signatures.GetSignature(walletState.Value.wallet.PrivateKey, (lsb.GetBlock().Hash), walletState.Value.wallet.AccountId),
+                emailCode, telegramCode
             );
             success = ret.Successful();
 
             if (!success)
             {
-                Snackbar.Add($"Failed to register: {ret.ResultCode.Humanize()}", Severity.Warning);
+                Snackbar.Add($"Failed to register: {ret.ResultMessage}", Severity.Warning);
             }
             else
             {

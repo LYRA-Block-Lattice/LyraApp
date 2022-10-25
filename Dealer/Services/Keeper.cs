@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System.Collections.Concurrent;
+using System.Linq.Expressions;
 using System.Timers;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
@@ -63,8 +64,11 @@ namespace Dealer.Server.Services
         public bool SupportTelegram { get; private set; }
 
         System.Timers.Timer _Timer;
+        private string? _lastSvcHash;
 
         public static Keeper Singleton { get; private set; } = null!;
+        public string? LastSvcHash { get => _lastSvcHash; }
+
         public Keeper(IHubContext<DealerHub, IHubPushMethods> dealerHub, IConfiguration config,
             DealerDb db, Dealeamon dealer, ILogger<Keeper> logger)
         {
@@ -95,6 +99,21 @@ namespace Dealer.Server.Services
 
         private async Task InitAsync()
         {
+            while(true)
+            {
+                try
+                {
+                    var lsbr = await _lyraApi.GetLastServiceBlockAsync();
+                    _lastSvcHash = lsbr.GetBlock().Hash;
+                    break;
+                }
+                catch(Exception ex)
+                {
+                    _logger.LogError($"InitAsync can't get LSB: {ex.Message}");
+                    await Task.Delay(3000);
+                }
+            }          
+
             await InitDealerServerAsync();
             await InitTelegramBotAsync();
             await UpdatePriceAsync();
@@ -207,6 +226,10 @@ namespace Dealer.Server.Services
                                     }));
                                 }
                             }                            
+                        }
+                        else if(block is ServiceBlock sb)
+                        {
+                            _lastSvcHash = sb.Hash;
                         }
                     }
 
@@ -366,18 +389,54 @@ namespace Dealer.Server.Services
 
                 Console.WriteLine($"Received a '{messageText}' message in chat {chatId}.");
 
-                if (update.Message.Chat.Username != null)    // some user never create user id
-                    await _db.CreateOrUpdateTGChatAsync(new Models.TGChat
+                var tchat = await _db.GetTGChatByChatIdAsync(chatId);
+                if(tchat == null)
+                {
+                    tchat = new Models.TGChat
                     {
                         ChatID = chatId,
-                        Username = update.Message.Chat.Username
-                    });
+                    };
+                    await _db.CreateOrUpdateTGChatAsync(tchat);
+                }
 
-                // Echo received message text
-                Message sentMessage = await botClient.SendTextMessageAsync(
-                    chatId: chatId,
-                    text: "Please open Lyra APP to reply.\n\nYou said:\n" + messageText,
-                    cancellationToken: cancellationToken);
+
+                if (update.Message.Chat.Username != null)    // some user never create user id
+                {
+                    tchat.Username = update.Message.Chat.Username;
+                    await _db.CreateOrUpdateTGChatAsync(tchat);
+                }
+
+                if(messageText?.ToLower() == "hello")
+                {
+                    if (update.Message.Chat.Username != null)
+                    {
+                        var rand = new Random();
+                        var code = rand.Next(100000, 999999);
+                        // Echo received message text
+                        Message sentMessage = await botClient.SendTextMessageAsync(
+                            chatId: chatId,
+                            text: $"Hello {update.Message.Chat.Username}, welcome to Lyra!\n\nYour verification code is : {code}\n",
+                            cancellationToken: cancellationToken);
+
+                        tchat.VerifyCode = code;
+                        await _db.CreateOrUpdateTGChatAsync(tchat);
+                    }
+                    else
+                    {
+                        Message sentMessage = await botClient.SendTextMessageAsync(
+                            chatId: chatId,
+                            text: $"Hello {update.Message.Chat.Username}, welcome to Lyra!\n\nUnable to send verification code because I can't see your name.\n",
+                            cancellationToken: cancellationToken);
+                    }
+                }
+                else
+                {
+                    // Echo received message text
+                    Message sentMessage = await botClient.SendTextMessageAsync(
+                        chatId: chatId,
+                        text: "Please open Lyra APP to reply.\n\nYou said:\n" + messageText,
+                        cancellationToken: cancellationToken);
+                }
             }
             catch(Exception ex)
             {

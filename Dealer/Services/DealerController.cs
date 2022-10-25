@@ -9,8 +9,11 @@ using Lyra.Data.API.Identity;
 using Lyra.Data.API.ODR;
 using Lyra.Data.API.WorkFlow;
 using Lyra.Data.Crypto;
+using MailKit.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using MimeKit.Text;
+using MimeKit;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Tsp;
 using System;
@@ -20,6 +23,8 @@ using System.Text;
 using UserLibrary.Data;
 using UserLibrary.Pages.Dealer;
 using static MudBlazor.CategoryTypes;
+using MailKit.Net.Smtp;
+using Lyra.Core.Accounts;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -131,65 +136,94 @@ namespace Dealer.Server.Services
         [Route("Register")]
         public async Task<APIResult> RegisterAsync(string accountId,
             string userName, string firstName, string? middleName, string lastName,
-            string email, string mibilePhone, string? avatarId, string? telegramID, string signature)
+            string email, string mibilePhone, string? avatarId, string? telegramID, string signature,
+            string ec, string tc)   // email verify code, telegram verify code
         {
-            // validate data
-            if (userName.ToLower().Contains("dealer"))
-                return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidName };
-
-            // validate signature
-            var lsb = await _client.GetLastServiceBlockAsync();
-            if (!Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature))
-                return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
-
-            var user = new LyraUser
+            try
             {
-                UserName = userName,
-                FirstName = firstName,
-                MiddleName = middleName,
-                LastName = lastName,
-                Email = email,
-                MobilePhone = mibilePhone,
-                AvatarId = avatarId,
-                AccountId = accountId,
-                TelegramID = telegramID,
-                RegistedTime = DateTime.UtcNow,
-            };
+                // validate data
+                if (userName.ToLower().Contains("dealer"))
+                    return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidName };
 
-            user.RegistedTime = DateTime.UtcNow;
-            var usrx = await _db.GetUserByAccountIdAsync(user.AccountId);
-            if (usrx == null)
-            {
-                var usr2 = await _db.GetUserByUserNameAsync(user.UserName);
-                if (usr2 == null)
+                // validate signature
+                var lsb = await _client.GetLastServiceBlockAsync();
+                if (!Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature))
+                    return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
+
+                // validate verify code
+                var acac = new AcademyClient(_config["network"]);
+                var input = $"{_myDealerID}:{email}:{lsb.GetBlock().Hash}";
+                var dealerSign = Signatures.GetSignature(_config["DealerKey"], input, _myDealerID);
+                var code = await acac.GetCodeForEmailAsync(_myDealerID, email, dealerSign);
+                int emlcode;
+                if (!int.TryParse(code, out emlcode) || emlcode == 0)
+                    return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidVerificationCode };
+
+                int tgcode;
+                var tchat = await _db.GetTGChatByUserIDAsync(telegramID.Trim('@').Trim());
+                if (tchat == null || tchat.VerifyCode == 0)
+                    return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidVerificationCode };
+
+                if (emlcode.ToString() != ec || tchat.VerifyCode.ToString() != tc)
+                    return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidVerificationCode };
+
+                var user = new LyraUser
                 {
-                    await _db.CreateUserAsync(user);
-                }
-                else
+                    UserName = userName,
+                    FirstName = firstName,
+                    MiddleName = middleName,
+                    LastName = lastName,
+                    Email = email,
+                    MobilePhone = mibilePhone,
+                    AvatarId = avatarId,
+                    AccountId = accountId,
+                    TelegramID = telegramID,
+                    RegistedTime = DateTime.UtcNow,
+                };
+
+                user.RegistedTime = DateTime.UtcNow;
+                var usrx = await _db.GetUserByAccountIdAsync(user.AccountId);
+                if (usrx == null)
                 {
-                    return new APIResult
+                    var usr2 = await _db.GetUserByUserNameAsync(user.UserName);
+                    if (usr2 == null)
                     {
-                        ResultCode = APIResultCodes.DuplicateName,
-                        ResultMessage = $"User name {user.UserName} is taken."
-                    };
-                }                
-            }                
-            else
-            {
-                if(user.UserName == usrx.UserName)
-                {
-                    user.Id = usrx.Id;
-                    await _db.UpdateUserAsync(user);
+                        await _db.CreateUserAsync(user);
+                    }
+                    else
+                    {
+                        return new APIResult
+                        {
+                            ResultCode = APIResultCodes.DuplicateName,
+                            ResultMessage = $"User name {user.UserName} is taken."
+                        };
+                    }
                 }
                 else
                 {
-                    return new APIResult { ResultCode = APIResultCodes.InvalidOperation,
-                        ResultMessage = "Can't change user name."
-                    };
+                    if (user.UserName == usrx.UserName)
+                    {
+                        user.Id = usrx.Id;
+                        await _db.UpdateUserAsync(user);
+                    }
+                    else
+                    {
+                        return new APIResult
+                        {
+                            ResultCode = APIResultCodes.InvalidOperation,
+                            ResultMessage = "Can't change user name."
+                        };
+                    }
                 }
-            }
 
-            return APIResult.Success;
+                return APIResult.Success;
+            }
+            catch (Exception ex)
+            {
+                return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Exception,
+                    ResultMessage = ex.Message 
+                };
+            }
         }
 
         public class ImageModel

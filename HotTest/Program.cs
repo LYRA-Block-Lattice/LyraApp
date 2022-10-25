@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddCors();
 
 builder.Services.AddLocalization(options =>
 {
@@ -74,6 +75,21 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseCors(builder =>
+    builder
+    .WithOrigins(
+        "https://dealertestnet.lyra.live",
+        "https://dealer.lyra.live",
+        "https://lyra.live",
+        "https://apptestnet.lyra.live",
+        "https://app.lyra.live",
+        "https://starttestnet.lyra.live",
+        "https://start.lyra.live")
+    .AllowAnyOrigin()
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    );
 
 app.UseHttpsRedirection();
 

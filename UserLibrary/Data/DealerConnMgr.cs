@@ -127,7 +127,7 @@ namespace UserLibrary.Data
 
         private Task _connection_Reconnecting(Exception? arg)
         {
-            Console.WriteLine($"DealerConnMgr Reconnecting: {arg}");
+            //Console.WriteLine($"DealerConnMgr Reconnecting: {arg}");
             return Task.CompletedTask;
         }
 
