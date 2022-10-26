@@ -96,7 +96,7 @@ namespace Dealer.Server.Services
             var stat = new UserStats
             {
                 AccountId = accountId,
-                UserName = user.UserName,
+                UserName = user.User.UserName,
                 Total = 0,
                 Ratio = 0
             };
@@ -130,6 +130,19 @@ namespace Dealer.Server.Services
                 return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.NotFound };
 
             return SimpleJsonAPIResult.Create(user);
+        }
+
+        [HttpGet]
+        [Route("GetTrustedUser")]
+        public async Task<SimpleJsonAPIResult> GetTrustedUserAsync(string accountId)
+        {
+            var user = await _db.GetUserByAccountIdAsync(accountId);
+            var info = new
+            {
+                EmailVerified = user.EmailVerified,
+                TelegramVerified = user.TelegramVerified
+            };
+            return SimpleJsonAPIResult.Create(info);
         }
 
         [HttpGet]
@@ -188,7 +201,14 @@ namespace Dealer.Server.Services
                     var usr2 = await _db.GetUserByUserNameAsync(user.UserName);
                     if (usr2 == null)
                     {
-                        await _db.CreateUserAsync(user);
+                        await _db.CreateUserAsync(
+                            new TxUser
+                            {
+                                User = user,
+                                EmailVerified = true,
+                                TelegramVerified = true,
+                            }
+                            );
                     }
                     else
                     {
@@ -201,10 +221,10 @@ namespace Dealer.Server.Services
                 }
                 else
                 {
-                    if (user.UserName == usrx.UserName)
+                    if (user.UserName == usrx.User.UserName)
                     {
-                        user.Id = usrx.Id;
-                        await _db.UpdateUserAsync(user);
+                        usrx.User = user;
+                        await _db.UpdateUserAsync(usrx);
                     }
                     else
                     {

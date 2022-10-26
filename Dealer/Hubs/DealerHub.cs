@@ -137,7 +137,7 @@ namespace Dealer.Server.Hubs
             else
             {
                 var user = await _db.GetUserByAccountIdAsync(speakerAccountId);
-                userName = user.UserName;
+                userName = user.User.UserName;
             }
             
             var resp = new RespMessage
@@ -161,7 +161,7 @@ namespace Dealer.Server.Hubs
             else
             {
                 var user = await _db.GetUserByAccountIdAsync(file.AccountId);
-                userName = user.UserName;
+                userName = user.User.UserName;
             }
 
             var resp = new RespFile
@@ -192,9 +192,9 @@ namespace Dealer.Server.Hubs
 
                 // send to telegram
                 var user = await _db.GetUserByAccountIdAsync(mem.AccountId);
-                if(user?.TelegramID != null)
+                if(user?.User.TelegramID != null)
                 {
-                    await _keeper.SendToTelegramAsync(user?.TelegramID, container);
+                    await _keeper.SendToTelegramAsync(user?.User.TelegramID, container);
                 }
             }
         }

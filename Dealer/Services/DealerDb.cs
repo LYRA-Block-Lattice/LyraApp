@@ -19,12 +19,13 @@ namespace Dealer.Server.Services
 
         private readonly IMongoCollection<PaymentPlatform> _paymentsCollection;
         private readonly IMongoCollection<LyraUser> _usersCollection;
+        private readonly IMongoCollection<TxUser> _txUserCollection;
         private readonly IMongoCollection<TxRecord> _txRecordsCollection;
         private readonly IMongoCollection<TxRoom> _txRoomsCollection;
         private readonly IMongoCollection<TxComment> _txCommentsCollection;
         private readonly IMongoCollection<ImageData> _txImageDataCollection;
 
-        private readonly IMongoCollection<TGChat> _tgChatCollection;
+        private readonly IMongoCollection<TGChat> _tgChatCollection;        
 
         IConfiguration _config;
         private string _networkId;
@@ -61,6 +62,9 @@ namespace Dealer.Server.Services
             _usersCollection = mongoDatabase.GetCollection<LyraUser>(
                 _networkId + "_lyraUsers");
 
+            _txUserCollection = mongoDatabase.GetCollection<TxUser>(
+                _networkId + "_txUsers");
+
             _txRecordsCollection = mongoDatabase.GetCollection<TxRecord>(
                 _networkId + "_txRecords");
 
@@ -75,6 +79,26 @@ namespace Dealer.Server.Services
 
             _tgChatCollection = mongoDatabase.GetCollection<TGChat>(
                 _networkId + "_tgChat");
+
+            _ = Task.Run(async () => await StartupAsync());
+        }
+
+        private async Task StartupAsync()
+        {
+            // migrate old lyraUser to new TxUser
+            var oldUsers = await _usersCollection.Find(_ => true).ToListAsync();
+            foreach(var oldUser in oldUsers)
+            {
+                var txu = new TxUser
+                {
+                    User = oldUser,
+                    EmailVerified = false,
+                    TelegramVerified = false
+                };
+                await CreateUserAsync(txu);
+
+                await _usersCollection.DeleteOneAsync(x => x.Id == oldUser.Id);
+            }
         }
 
         #region payments methods
@@ -95,25 +119,25 @@ namespace Dealer.Server.Services
         #endregion
 
         #region Lyra User management
-        public async Task<List<LyraUser>> GetUsersAsync() =>
-            await _usersCollection.Find(_ => true).ToListAsync();
+        public async Task<List<TxUser>> GetUsersAsync() =>
+            await _txUserCollection.Find(_ => true).ToListAsync();
 
-        public async Task<LyraUser?> GetUserAsync(string id) =>
-            await _usersCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        public async Task<TxUser?> GetUserAsync(string id) =>
+            await _txUserCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
-        public async Task<LyraUser?> GetUserByAccountIdAsync(string accountId) =>
-            await _usersCollection.Find(x => x.AccountId == accountId).FirstOrDefaultAsync();
-        public async Task<LyraUser?> GetUserByUserNameAsync(string userName) =>
-            await _usersCollection.Find(x => x.UserName == userName).FirstOrDefaultAsync();
+        public async Task<TxUser?> GetUserByAccountIdAsync(string accountId) =>
+            await _txUserCollection.Find(x => x.User.AccountId == accountId).FirstOrDefaultAsync();
+        public async Task<TxUser?> GetUserByUserNameAsync(string userName) =>
+            await _txUserCollection.Find(x => x.User.UserName == userName).FirstOrDefaultAsync();
 
-        public async Task CreateUserAsync(LyraUser newUser) =>
-            await _usersCollection.InsertOneAsync(newUser);
+        public async Task CreateUserAsync(TxUser newUser) =>
+            await _txUserCollection.InsertOneAsync(newUser);
 
-        public async Task UpdateUserAsync(LyraUser updatedUser) =>
-            await _usersCollection.ReplaceOneAsync(x => x.AccountId == updatedUser.AccountId, updatedUser);
+        public async Task UpdateUserAsync(TxUser updatedUser) =>
+            await _txUserCollection.ReplaceOneAsync(x => x.User.AccountId == updatedUser.User.AccountId, updatedUser);
 
         public async Task RemoveUserAsync(string id) =>
-            await _usersCollection.DeleteOneAsync(x => x.Id == id);
+            await _txUserCollection.DeleteOneAsync(x => x.Id == id);
         #endregion
 
         #region Lyra Tx Record
@@ -172,7 +196,7 @@ namespace Dealer.Server.Services
                 {
                     TradeId = trade.AccountID,
                     Dir = trade.Trade.dir,
-                    Members = new[] { seller, buyer },
+                    Members = new[] { seller.User, buyer.User },
                     TimeStamp = DateTime.UtcNow,
                     DisputeLevel = DisputeLevels.None,
                     IsCancelable = true,
@@ -338,10 +362,10 @@ namespace Dealer.Server.Services
             {
                 var user = await GetUserByAccountIdAsync(act);
                 if (showRealName)
-                    brief.Names.Add(user.GetFullName());
+                    brief.Names.Add(user.User.GetFullName());
                 else
                     brief.Names.Add("[REDACTED FOR PRIVACY]");
-                brief.RegTimes.Add(user.RegistedTime);
+                brief.RegTimes.Add(user.User.RegistedTime);
             }
 
             return brief;
