@@ -11,6 +11,8 @@
     [Inject]
     private IState<WebWalletState>? walletState { get; set; }
     [Inject] ILyraAPI Client { get; set; }
+    [Inject] ILocalStorageService localStorage { get; set; }
+    [Inject] NebulaConsts _consts { get; set; }
 
     string url;
 
@@ -26,17 +28,25 @@
         var url = "https://start.lyra.live";
         if (Configuration["network"] == "testnet")
             url = "https://starttestnet.lyra.live";
-        else
+        else if(Configuration["network"] == "devnet")
             url = "https://localhost:7288";
+
+#if DEBUG
+        url = "https://localhost:7288";
+#endif
 
         if (walletState.Value.IsOpening)
         {
+            var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+            var wc = new WalletContainer(wcjson);
+            var meta = wc.Get(walletState.Value.wallet.AccountName);
+
             var lsb = await Client.GetLastServiceBlockAsync();
             var signature = Signatures.GetSignature(walletState.Value.wallet.PrivateKey,
                 lsb.GetBlock().Hash, walletState.Value.wallet.AccountId);
 
-            return $"{url}/?network={Configuration["network"]}&address={walletState.Value.wallet.AccountId}&signature={signature}";
+            return $"{url}/?network={Configuration["network"]}&address={walletState.Value.wallet.AccountId}&signature={signature}&backup={meta.Backup}";
         }
-        return $"{url}";
+        return $"{url}/?network={Configuration["network"]}&address=";
     }
 }
