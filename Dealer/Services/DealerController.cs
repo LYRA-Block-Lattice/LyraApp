@@ -25,6 +25,7 @@ using UserLibrary.Pages.Dealer;
 using static MudBlazor.CategoryTypes;
 using MailKit.Net.Smtp;
 using Lyra.Core.Accounts;
+using Newtonsoft.Json.Linq;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,6 +37,7 @@ namespace Dealer.Server.Services
     {
         private Keeper _keeper;
         private IConfiguration _config;
+        private ILogger<DealerController> _logger;
         private DealerDb _db;
         private IHubContext<DealerHub, IHubPushMethods> _hub;
         ILyraAPI _client;
@@ -43,11 +45,13 @@ namespace Dealer.Server.Services
         private string _myDealerID;
 
         public DealerController(DealerDb db, IHubContext<DealerHub, IHubPushMethods> hub,
+            ILogger<DealerController> logger,
             IConfiguration Configuration, Keeper keeper, ILyraAPI client)
         {
             _db = db;
             _hub = hub;
             _config = Configuration;
+            _logger = logger;
             _keeper = keeper;
             _client = client;
 
@@ -129,7 +133,7 @@ namespace Dealer.Server.Services
             if (user == null)
                 return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.NotFound };
 
-            return SimpleJsonAPIResult.Create(user);
+            return SimpleJsonAPIResult.Create(user.User);
         }
 
         [HttpGet]
@@ -167,10 +171,17 @@ namespace Dealer.Server.Services
                 var acac = new AcademyClient(_config["network"]);
                 var input = $"{_myDealerID}:{email}:{lsb.GetBlock().Hash}";
                 var dealerSign = Signatures.GetSignature(_config["DealerKey"], input, _myDealerID);
-                var code = await acac.GetCodeForEmailAsync(_myDealerID, email, dealerSign);
+                var retJson = await acac.GetCodeForEmailAsync(_myDealerID, email, dealerSign);
+                dynamic evc = JObject.Parse(retJson);
+
+                if (evc.msg != "success")
+                    _logger.LogError($"RegisterAsync GetCodeForEmailAsync Error: {evc.msg}");
+
                 int emlcode;
-                if (!int.TryParse(code, out emlcode) || emlcode == 0)
+                if (evc.msg != "success" || evc.code == 0)
                     return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidVerificationCode };
+                else
+                    emlcode = evc.code;
 
                 int tgcode;
                 var tchat = await _db.GetTGChatByUserIDAsync(telegramID.Trim('@').Trim());

@@ -4,6 +4,7 @@
 @using Lyra.Data.API.WorkFlow
 @using Lyra.Data.Crypto
 @using Microsoft.Extensions.Configuration
+@using Newtonsoft.Json.Linq
 @using UserLibrary.Data
 @using Nebula.Store.WebWalletUseCase
 @inject NavigationManager NavigationManager
@@ -233,13 +234,14 @@
                 var input = $"{wallet.AccountId}:{email}:{lsb.GetBlock().Hash}";
                 var signatures = Signatures.GetSignature(wallet.PrivateKey, input, wallet.AccountId);
                 var ret = await acac.VerifyEmailAsync(wallet.AccountId, email, signatures);
-                if (ret.Successful())
+                dynamic qs = JObject.Parse(ret);
+                if (qs.msg == "success")
                 {
                     Snackbar.Add($"Verification email sent.", Severity.Success);
                 }
                 else
                 {
-                    Snackbar.Add($"Unable to verify email: {ret.ResultMessage}", Severity.Error);
+                    Snackbar.Add($"Unable to verify email: {qs.msg}", Severity.Error);
                 }
             }
             catch(Exception ex)
