@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -6,7 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <Platforms>AnyCPU;x86</Platforms>
-	<Version>1.2.9.3</Version>
+	<AssemblyVersion>1.2.9.8</AssemblyVersion>
+	<PackageVersion>1.2.9.8</PackageVersion>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -48,4 +49,8 @@
 	  </EmbeddedResource>
 	</ItemGroup>
 
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+		<Exec Command="powershell.exe -ExecutionPolicy Bypass -NoProfile -NonInteractive -File ..\BuidTasks\Set-VersionTask.ps1  -projectFile $(ProjectPath) -assemblyVersion =.=.=.+ -fileVersion =.=.=.+ -packageVersion =.=.=.+" />
+	</Target>
+	
 </Project>

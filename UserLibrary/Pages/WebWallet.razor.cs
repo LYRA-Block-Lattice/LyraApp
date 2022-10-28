@@ -78,6 +78,7 @@ namespace UserLibrary.Pages
                     dstAddr = target;
                     tabs.ActivatePanel(1);
                 }
+
                 Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Wallet" });
 
                 var storStr = await localStorage.GetItemAsync<string>(_consts.ContactStorName) ?? "[]";

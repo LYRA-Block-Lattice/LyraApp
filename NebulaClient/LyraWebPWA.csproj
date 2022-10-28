@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
-    <Version>1.2.9.3</Version>
+	<AssemblyVersion>1.2.9.5</AssemblyVersion>
 	<TrimMode>copyused</TrimMode>
 	<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
   </PropertyGroup>
@@ -53,4 +53,8 @@
     <Folder Include="wwwroot\js\" />
   </ItemGroup>
 
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+		<Exec Command="powershell.exe -ExecutionPolicy Bypass -NoProfile -NonInteractive -File ..\BuidTasks\Set-VersionTask.ps1  -projectFile $(ProjectPath) -assemblyVersion =.=.=.+ -fileVersion =.=.=.+ -packageVersion =.=.=.+" />
+	</Target>
+	
 </Project>

@@ -1,10 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	<Version>1.2.9.3</Version>
+	<AssemblyVersion>1.2.9.5</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,5 +30,8 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="powershell.exe -ExecutionPolicy Bypass -NoProfile -NonInteractive -File ..\BuidTasks\Set-VersionTask.ps1  -projectFile $(ProjectPath) -assemblyVersion =.=.=.+ -fileVersion =.=.=.+ -packageVersion =.=.=.+" />
+  </Target>
 
 </Project>

@@ -34,13 +34,14 @@
         {
             SubscribeToAction<WebWalletBackupAction>(async a =>
             {
-                if(a.IsBackuped)
-                {
-                    var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
-                    var wc = new WalletContainer(wcjson);
-                    var meta = wc.Get(walletState.Value.wallet.AccountName);
-                    showbackup = !meta.Backup;
-                }
+                showbackup = !a.IsBackuped;
+                //if(a.IsBackuped)
+                //{
+                //    var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+                //    var wc = new WalletContainer(wcjson);
+                //    var meta = wc.Get(walletState.Value.wallet.AccountName);
+                //    showbackup = !meta.Backup;
+                //}
             });
 
             if(walletState.Value.wallet != null)

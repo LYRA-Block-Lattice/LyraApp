@@ -15,6 +15,7 @@ using Blazored.LocalStorage;
 using Lyra.Data.Blocks;
 using Humanizer;
 using Lyra.Data.API.WorkFlow;
+using UserLibrary.Pages;
 
 namespace Nebula.Store.WebWalletUseCase
 {
@@ -248,7 +249,12 @@ namespace Nebula.Store.WebWalletUseCase
 				wallet.SetClient(client);
 				var pending = await wallet.GetPendingRecvAsync();
 				dispatcher.Dispatch(new WebWalletResultAction(wallet, true, UIStage.Main, pending));
-			}
+
+                dispatcher.Dispatch(new WebWalletBackupAction
+				{
+                    IsBackuped = wltdat.Backup
+                });
+            }
 			catch(Exception ex)
             {
 				logger.LogError($"IN HandleOpen: {ex}");
