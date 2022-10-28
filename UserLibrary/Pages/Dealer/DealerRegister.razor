@@ -96,7 +96,7 @@
             </p>
             <div style="height:45px;" />
             <p>
-                <h3>Telegram ID</h3>
+                <h3>Telegram Username</h3>
                 <MudTextField @bind-Value="@telegramId" Label="" />
                 <br />
                 <h3>Telegram Verification Code</h3>
@@ -272,9 +272,17 @@
 
             var dealer = connMgr.GetDealer(dealerid);
             var ret = await dealer.RegisterAsync(walletState.Value.wallet.AccountId,
-                username, firstname, middlename, lastname, email, mobilephone, avatar, telegramId,
+                username?.Trim(), 
+                firstname?.Trim(), 
+                middlename?.Trim(), 
+                lastname?.Trim(), 
+                email?.Trim(), 
+                mobilephone?.Trim(), 
+                avatar?.Trim(), 
+                telegramId?.Trim(),
                 Signatures.GetSignature(walletState.Value.wallet.PrivateKey, (lsb.GetBlock().Hash), walletState.Value.wallet.AccountId),
-                emailCode, telegramCode
+                emailCode?.Trim(), 
+                telegramCode?.Trim()
             );
             success = ret.Successful();
 

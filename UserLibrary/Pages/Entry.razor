@@ -53,10 +53,17 @@
 </div>
 
 @code {
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "ref")]
+    public string? reftag { get; set; }
+
     [Inject]
     private IDispatcher Dispatcher { get; set; }
 
     [Inject] IStringLocalizer<Entry> localizer { get; set; }
+
+    [Inject] ILocalStorageService localStorage { get; set; }
+    [Inject] NebulaConsts _consts { get; set; }
 
     private MudTheme Theme = new MudTheme();
 
@@ -81,11 +88,19 @@
         base.OnInitialized();
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender)
+        if (firstRender)
+        {
             Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra" });
 
-        base.OnAfterRender(firstRender);
+            // store ref like if any
+            if(!string.IsNullOrWhiteSpace(reftag))
+            {
+                await localStorage.SetItemAsync("ref", reftag);
+            }
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
     }
 }

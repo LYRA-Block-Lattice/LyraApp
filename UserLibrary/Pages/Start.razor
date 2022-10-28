@@ -9,6 +9,8 @@
 
 @code {
     [Inject]
+    private IDispatcher Dispatcher { get; set; }
+    [Inject]
     private IState<WebWalletState>? walletState { get; set; }
     [Inject] ILyraAPI Client { get; set; }
     [Inject] ILocalStorageService localStorage { get; set; }
@@ -18,6 +20,8 @@
 
     protected async override Task OnInitializedAsync()
     {
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Academy" });
+
         url = await getStartUrl();
 
         await base.OnInitializedAsync();
@@ -31,9 +35,9 @@
         else if(Configuration["network"] == "devnet")
             url = "https://localhost:7288";
 
-#if DEBUG
-        url = "https://localhost:7288";
-#endif
+//#if DEBUG
+//        url = "https://localhost:7288";
+//#endif
 
         if (walletState.Value.IsOpening)
         {
