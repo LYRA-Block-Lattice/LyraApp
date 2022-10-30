@@ -421,11 +421,12 @@ else
 
         try
         {
-            var dc = new DexClient(Configuration["network"]);
-            var ext = await dc.GetSupportedExtTokenAsync(Configuration["network"]);
-            //_tokens = ext.Asserts;
-
             var wallet = walletState.Value.wallet;
+
+            var dc = new DexClient(Configuration["network"]);
+            var ext = await dc.GetSupportedExtTokenAsync(Configuration["network"], wallet.AccountId);
+            //_tokens = ext.Asserts;
+            
             var brks = await wallet.GetAllDexWalletsAsync(wallet.AccountId);
             await wallet.SyncAsync(null);
 
