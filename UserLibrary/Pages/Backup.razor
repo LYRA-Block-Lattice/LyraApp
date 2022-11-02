@@ -12,7 +12,7 @@
         {
             <a href="/">
                 <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">
-                    Home
+                    @localizer["Home"]
                 </MudButton>     
             </a>
         }
@@ -20,7 +20,7 @@
         {
             <div class="flex-container">
             <h3>
-                Your private key is
+                    @localizer["Private key for current wallet is"]
             </h3>
             <MudPaper Elevation="4" Style="margin: 20px;">
                 <span style="margin:20%; width:100px; word-wrap:break-word; display:inline-block;">
@@ -29,11 +29,11 @@
             </MudPaper>
                 <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary"
                    @onclick="@(async() => await Finish())">
-                I have memorized the private key
+                    @localizer["I have memorized the private key"]
             </MudButton>
                 <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary"
                 @onclick="@(async() => await Restart())">
-                Start Over Again     
+                @localizer["Start Over Again"]
             </MudButton>
             </div>
         }
@@ -44,21 +44,21 @@ else
 {
     <div class="mag flex-container">
         <div>
-            Input your password to backup.
+            @localizer["Input your password to backup."]
         </div>
         <div class="mid">
-            <MudTextField InputType="InputType.Password" Label="Password" Size="Size.Large" @bind-Value="@txtValue1" />
+            <MudTextField InputType="InputType.Password" Label=@localizer["Password"] Size="Size.Large" @bind-Value="@txtValue1" />
         </div>
         <div class="mid">
             <MudButton Variant="MudBlazor.Variant.Filled" Disabled="@busy" Color="Color.Primary" OnClick="@(async() => await OpenWallet())">
                 @if (busy)
                 {
                     <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2">Processing</MudText>
+                    <MudText Class="ms-2">@localizer["Processing"]</MudText>
                 }
                 else
                 {
-                    <MudText>Verify password and backup</MudText>
+                    <MudText>@localizer["Verify password and backup"]</MudText>
                 }
             </MudButton>
         </div>
@@ -68,15 +68,15 @@ else
 <MudDialog @bind-IsVisible="visible" Options="dialogOptions">
     <TitleContent>
         <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3"/> Confirm the private key has been memorized
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3"/>@localizer["Confirm the private key has been memorized"]
         </MudText>
     </TitleContent>
     <DialogContent>
-        <p>What is the last 6 charactors of the private key?</p>
-        <MudTextField @bind-Value="last6" Label="Memorized" Variant="MudBlazor.Variant.Text"></MudTextField>
+        <p>@localizer["What is the last 6 charactors of the private key?"]</p>
+        <MudTextField @bind-Value="last6" Label=@localizer["Memorized"] Variant="MudBlazor.Variant.Text"></MudTextField>
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async() => await Submit())" Class="px-10">Test Me!</MudButton>
+        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async() => await Submit())" Class="px-10">@localizer["Test Me!"]</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -93,6 +93,8 @@ else
     [Inject] ILocalStorageService localStorage { get; set; }
     [Inject] NebulaConsts _consts { get; set; }
 
+    [Inject] IStringLocalizer<Backup> localizer { get; set; }
+
     bool authed, busy, backuped;
     string txtValue1;
     string pvtkey, pvtkey2;
@@ -102,6 +104,12 @@ else
     private string last6 { get; set; }
 
     private MudBlazor.DialogOptions dialogOptions = new() { FullWidth = true };
+
+    protected override void OnInitialized()
+    {
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = localizer["Backup Wallet"] });
+        base.OnInitialized();
+    }
 
     async Task Restart()
     {
@@ -122,12 +130,12 @@ else
             visible = false;
             backuped = true;
             StateHasChanged();
-            Snackbar.Add("Congratulations! You have backup your private key properly.", Severity.Success);
+            Snackbar.Add(localizer["Congratulations! You have backup your private key properly."], Severity.Success);
         }
         else
         {
             backuped = false;
-            Snackbar.Add("Unfortunately you dont backup your private key properly.", Severity.Warning);
+            Snackbar.Add(localizer["Unfortunately you dont backup your private key properly."], Severity.Warning);
         }
 
         if(backuped)
@@ -168,7 +176,7 @@ else
             var wallet = Wallet.Open(aib, walletState.Value.wallet.AccountName, txtValue1);
 
             if (walletState.Value.wallet != null && wallet.AccountId != walletState.Value.wallet.AccountId)
-                throw new Exception("Wrong Wallet");
+                throw new Exception(localizer["Wrong Wallet"]);
 
             pvtkey = wallet.PrivateKey;
             authed = true;    
@@ -176,7 +184,7 @@ else
         catch(Exception ex)
         {
             authed = false;
-            Snackbar.Add($"Failed to authorize. {ex.Message}. Unable to backup.", Severity.Error);
+            Snackbar.Add(localizer["Failed to authorize. {0}. Unable to backup.", ex.Message], Severity.Error);
         }
         busy = false;
     }

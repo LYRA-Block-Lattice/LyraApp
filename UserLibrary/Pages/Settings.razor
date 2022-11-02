@@ -14,7 +14,7 @@
         <a href="/login">
                 <MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
                 <MudIcon Icon="@Icons.Filled.LockOpen" />
-                Open Wallet
+                    @localizer["Open Wallet"]
             </MudButton>
         </a>
         </div>
@@ -28,22 +28,24 @@
     else
     {
         <div>
-            <h3>Scan to Pay Me</h3>
+            <h3>@localizer["Scan to Pay Me"]</h3>
             <p><QRCodeWriter Text="@walletState.Value.wallet.AccountId" Width="300" Heigth="300"></QRCodeWriter></p>
             <MudDivider />
-            <p>Current wallet's name is: <b>@walletState.Value.wallet.AccountName      </b>      
-                </p>
-            <p>Current wallet's address is: <CopyToClipboard Text="@walletState.Value.wallet.AccountId" />                
-                </p>
-            <p>Current wallet's balance is: @walletState.Value.balanceString</p>
- 
-            <p>Current voting for: @walletState.Value.wallet.VoteFor</p>
+            <p>
+                @localizer["Current wallet's name is:"] <b>@walletState.Value.wallet.AccountName      </b>
+            </p>
+            <p>
+                @localizer["Current wallet's address is:"] <CopyToClipboard Text="@walletState.Value.wallet.AccountId" />
+            </p>
+            <p>@localizer["Current wallet's balance is:"] @walletState.Value.balanceString</p>
+
+            <p>@localizer["Current voting for:"] @walletState.Value.wallet.VoteFor</p>
 
             <p>
-                <MudTextField T="string" Label="Vote For Address" @bind-Value="@voteAddr" />
+                <MudTextField T="string" Label=@localizer["Vote For Address"] @bind-Value="@voteAddr" />
             </p>
             <div>
-                <p style="color: red">Please save private key properly if you want to open this wallet again.</p>
+                <p style="color: red">@localizer["Please backup private key properly if you want to open this wallet again."]</p>
             </div>
             <MudDivider />
 
@@ -53,11 +55,11 @@
                 @if (fetching)
                 {
                     <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2">Processing</MudText>
+                    <MudText Class="ms-2">@localizer["Processing"]</MudText>
                 }
                 else
                 {
-                    <MudText>Show Last 10 Transactions</MudText>
+                    <MudText>@localizer["Show Last 10 Transactions"]</MudText>
                 }
             </MudButton>
 
@@ -71,21 +73,21 @@
                     }
                         </pre>
             }
-            &nbsp;<MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="SaveSettings">Save</MudButton>
-            &nbsp;<a href="/backup"><MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">Backup Wallet</MudButton></a>
+            &nbsp;<MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="SaveSettings">@localizer["Save"]</MudButton>
+            &nbsp;<a href="/backup"><MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">@localizer["Backup Wallet"]</MudButton></a>
 
-            &nbsp;<MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="CloseWallet">Close Wallet</MudButton>
+            &nbsp;<MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="CloseWallet">@localizer["Close Wallet"]</MudButton>
         </div>
     }
 
     <MudDivider Style="margin: 30px" />
     <div style="font-size: xx-small">
-        <a href="/dealer/panel"><MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">Dealer Panel</MudButton></a>
+        <a href="/dealer/panel"><MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">@localizer["Dealer Panel"]</MudButton></a>
     </div>
 
     <MudDivider Style="margin: 30px" />
     <div style="font-size: xx-small">
-        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="CheckUpdate">Check New Version</MudButton>
+        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="CheckUpdate">@localizer["Check New Version"]</MudButton>
     </div>
 
     <MudDivider Style="margin: 30px" />
@@ -95,9 +97,9 @@
 
     <MudDivider Style="margin: 30px" />
     <div style="font-size: xx-small">
-        Main Program Version: @(Assembly.GetEntryAssembly()?.GetName().Version)<br />
-        User Library Version: @(typeof(UserLibrary.Data.WalletView).Assembly.GetName().Version)<br />
-        Lyra Library Version: @(typeof(Lyra.Core.Blocks.Block).Assembly.GetName().Version)<br />
+        @localizer["Main Program Version:"] @(Assembly.GetEntryAssembly()?.GetName().Version)<br />
+        @localizer["User Library Version:"] @(typeof(UserLibrary.Data.WalletView).Assembly.GetName().Version)<br />
+        @localizer["Lyra Library Version:"] @(typeof(Lyra.Core.Blocks.Block).Assembly.GetName().Version)<br />
     </div>
 </div>
 @code {
@@ -115,6 +117,8 @@
     [Inject] ILyraAPI lyraApi { get; set; }
     [Inject] DealerConnMgr connMgr { get; set; }
 
+    [Inject] IStringLocalizer<Settings> localizer { get; set; }
+
     string voteAddr, altDisplay;
     string bexpurl;
     bool fetching;
@@ -122,7 +126,7 @@
 
     protected override void OnInitialized()
     {
-        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "App Settings" });
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = localizer["App Settings"] });
         bexpurl = Configuration["network"] == "mainnet" ? "https://nebula.lyra.live" : "https://nebulatestnet.lyra.live";
         base.OnInitialized();
     }
@@ -166,27 +170,28 @@
                     var blockResult = await lyraApi.GetBlockByIndexAsync(walletState.Value.wallet.AccountId, i);
                     var block = blockResult.GetBlock() as TransactionBlock;
                     if (block == null)
-                        txs.Add("Null");
+                        txs.Add(localizer["Null"]);
                     else
                     {
                         var str = $"No. {block.Height} {block.TimeStamp}, ";
                         if (block is SendTransferBlock sb)
-                            str += $"Send to {sb.DestinationAccountId}";
+                            str += localizer["Send to"] + $" {sb.DestinationAccountId}";
                         else if (block is ReceiveTransferBlock rb)
                         {
                             if (rb.SourceHash == null)
                             {
-                                str += $"Genesis";
+                                str += localizer["Genesis"];
                             }
                             else
                             {
                                 var srcBlockResult = await lyraApi.GetBlockAsync(rb.SourceHash);
                                 var srcBlock = srcBlockResult.GetBlock() as TransactionBlock;
-                                str += $"Receive from {srcBlock.AccountID}";
+                                str += localizer["Receive from"] + $" {srcBlock.AccountID}";
                             }
                         }
                         str += BalanceDifference(oldBalance, block.Balances);
-                        str += $" Balance: {string.Join(", ", block.Balances.Select(m => $"{m.Key}: {m.Value.ToBalanceDecimal()}"))}";
+                        var blstr = localizer["Balance:"];
+                        str += $" {blstr} {string.Join(", ", block.Balances.Select(m => $"{m.Key}: {m.Value.ToBalanceDecimal()}"))}";
 
                         txs.Add(str);
 
@@ -198,7 +203,7 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"In Transactions: {ex}");
+            Console.WriteLine(localizer["In Transactions:"] + $" {ex}");
         }
         fetching = false;
         StateHasChanged();
@@ -218,23 +223,35 @@
 
     private async Task CheckUpdate()
     {
-        // get version
-        var dealerClient = connMgr.GetDealer(null);
-        if (dealerClient != null)
+        string msg = "";
+        try
         {
-            var verb = await dealerClient.GetBriefAsync();
-            var myver = this.GetType().Assembly.GetName().Version.ToString();
-            string msg = "Version uncertain.";
-            if (verb.Version != myver)
+            // get version
+            var dealerClient = connMgr.GetDealer(null);
+            if (dealerClient != null)
             {
-                msg = $"Found new version {verb.Version}, my version {myver}";                
+                var verb = new Version((await dealerClient.GetBriefAsync()).Version);
+                var myver = this.GetType().Assembly.GetName().Version;
+
+                if (verb > myver)
+                {
+                    msg = localizer["Found new version {0}, my version {1}", verb, myver];
+                }
+                else
+                {
+                    msg = localizer["My version {0} is up to date.", myver];
+                }
             }
             else
             {
-                msg = $"My version {myver} is up to date.";
+                msg = localizer["Unable to find a dealer."];
             }
-            Console.WriteLine(msg);
-            await JS.InvokeVoidAsync("alert", msg);
         }
+        catch(Exception ex)
+        {
+            msg = localizer["Error checking version: "] + ex.Message;
+        }
+        Console.WriteLine(msg);
+        await JS.InvokeVoidAsync("alert", msg);
     }
 }

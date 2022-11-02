@@ -6,12 +6,12 @@
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 <div style="padding:15px;">
-    <h3>Multiple wallet manager</h3>
+    <h3>@localizer["Multiple wallet manager"]</h3>
 
-            <MudSelect T="string" Label="Select the wallet you want to manage" @ref="@sel" 
-                SelectedValuesChanged="@Selected"
+    <MudSelect T="string" Label=@localizer["Select the wallet you want to manage"] @ref="@sel"
+               SelectedValuesChanged="@Selected"
                 AnchorOrigin="Origin.BottomCenter">
-    @foreach(var name in walletNames)
+            @foreach(var name in walletNames)
             {
                 <MudSelectItem Value="@name" />
             }
@@ -21,16 +21,16 @@
 {
 <MudGrid>
     <MudItem xs="12" sm="12" md="12">
-        <MudTextField T="string" Label="Wallet Name" Variant="MudBlazor.Variant.Text" @bind-Value="@selName" />
+                <MudTextField T="string" Label=@localizer["Wallet Name"] Variant="MudBlazor.Variant.Text" @bind-Value="@selName" />
     </MudItem>
     <MudItem xs="12" sm="12" md="12">
-                <MudTextField T="string" Label="Note" Variant="MudBlazor.Variant.Text" @bind-Value="@selNote" Lines="5" />
+                <MudTextField T="string" Label=@localizer["Note"] Variant="MudBlazor.Variant.Text" @bind-Value="@selNote" Lines="5" />
     </MudItem>
     <MudItem xs="12" sm="12" md="12">
                 <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary"
             Disabled="@(!canupdate)"
-            OnClick="Update">Update</MudButton>
-                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Error" OnClick="Delete">Delete</MudButton>
+            OnClick="Update">@localizer["Update"]</MudButton>
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Error" OnClick="Delete">@localizer["Delete"]</MudButton>
     </MudItem>
 </MudGrid>
 }
@@ -47,6 +47,8 @@
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] private IDialogService DialogService { get; set; }
 
+    [Inject] IStringLocalizer<WalletsManager> localizer { get; set; }
+
     MudSelect<string> sel;
     bool busy, canupdate;
     string[] walletNames = new string[]{};
@@ -62,7 +64,7 @@
 
         if(wc.Names.Contains(selName))
         {
-            Snackbar.Add("Wallet name exists!", Severity.Warning);
+            Snackbar.Add(localizer["Wallet name exists!"], Severity.Warning);
             return;
         }
 
@@ -74,15 +76,15 @@
         sel.Value = selName;
         StateHasChanged();
 
-        Snackbar.Add("Wallet updated!", Severity.Success);
+        Snackbar.Add(localizer["Wallet updated!"], Severity.Success);
     }
 
     private async Task Delete()
     {
         var result = await DialogService.ShowMessageBox(
-            "Warning",
-                $"\nOnce you have deleted the wallet, you will never get it back. Make sure you have backup the private key. Are you sure you want to delete the wallet named \"{selName}\"?",
-                yesText: "Confirm!", cancelText: "Cancel");
+            localizer["Warning"],
+                localizer["Once you have deleted the wallet, you will never get it back. Make sure you have backup the private key. Are you sure you want to delete the wallet named \"{0}\"?", selName],
+                yesText: localizer["Confirm!"], cancelText: localizer["Cancel"]);
 
         if (result != null && result.Value)
         {
@@ -100,11 +102,11 @@
             sel.Reset();
             StateHasChanged();
 
-            Snackbar.Add("Wallet deleted!", Severity.Success);
+            Snackbar.Add(localizer["Wallet deleted!"], Severity.Success);
         }
         else
         {
-            Snackbar.Add("Nothing changed.", Severity.Normal);
+            Snackbar.Add(localizer["Nothing changed."], Severity.Normal);
         }
     }
 
@@ -140,14 +142,12 @@
                 var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
                 var wc = new WalletContainer(wcjson);
 
-                Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Wallet Manager" });
-
                 walletNames = wc.Names;
                 StateHasChanged();
             }
             catch(Exception ex)
             {
-                Snackbar.Add($"Error init: {ex}", Severity.Error);
+                Snackbar.Add(localizer["Error init: {0}", ex], Severity.Error);
             }
         }
         await base.OnAfterRenderAsync(firstRender);
