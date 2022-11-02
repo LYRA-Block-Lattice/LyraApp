@@ -152,9 +152,9 @@ namespace Dealer.Server.Services
         [HttpGet]
         [Route("Register")]
         public async Task<APIResult> RegisterAsync(string accountId,
-            string userName, string firstName, string? middleName, string lastName,
-            string email, string mibilePhone, string? avatarId, string? telegramID, string signature,
-            string ec, string tc)   // email verify code, telegram verify code
+            string userName, string? firstName, string? middleName, string? lastName,
+            string email, string? mibilePhone, string? avatarId, string? telegramID, string signature,
+            string? ec, string? tc)   // email verify code, telegram verify code
         {
             try
             {
