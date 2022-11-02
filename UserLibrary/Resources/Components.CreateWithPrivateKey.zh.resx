@@ -117,40 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Block Explorer" xml:space="preserve">
-    <value>区块浏览器</value>
+  <data name="Confirm delete existing wallet" xml:space="preserve">
+    <value>确认删除已经存在的钱包</value>
   </data>
-  <data name="contacts" xml:space="preserve">
-    <value>联系人</value>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>确认密码</value>
   </data>
-  <data name="dao" xml:space="preserve">
-    <value>自治组织</value>
+  <data name="Create new" xml:space="preserve">
+    <value>创新新钱包</value>
   </data>
-  <data name="dex" xml:space="preserve">
-    <value>跨链传送</value>
+  <data name="Create wallet with private key" xml:space="preserve">
+    <value>使用密钥创建钱包</value>
   </data>
-  <data name="Lyra Site" xml:space="preserve">
-    <value>网站</value>
+  <data name="Login" xml:space="preserve">
+    <value>登录</value>
   </data>
-  <data name="mint" xml:space="preserve">
-    <value>铸币</value>
+  <data name="Name of wallet" xml:space="preserve">
+    <value>钱包的名称</value>
   </data>
-  <data name="otc" xml:space="preserve">
-    <value>场外交易</value>
+  <data name="Open existing wallet" xml:space="preserve">
+    <value>打开已经存在的钱包</value>
   </data>
-  <data name="revenue" xml:space="preserve">
-    <value>盈利</value>
+  <data name="Password" xml:space="preserve">
+    <value>密码</value>
   </data>
-  <data name="settings" xml:space="preserve">
-    <value>设置</value>
+  <data name="Passwords not match." xml:space="preserve">
+    <value>密码不匹配。</value>
   </data>
-  <data name="staking" xml:space="preserve">
-    <value>质押</value>
+  <data name="Please specify the name of wallet." xml:space="preserve">
+    <value>请指定钱包的名称。</value>
   </data>
-  <data name="swap" xml:space="preserve">
-    <value>兑换</value>
+  <data name="Private Key" xml:space="preserve">
+    <value>私钥</value>
   </data>
-  <data name="wallet" xml:space="preserve">
-    <value>钱包</value>
+  <data name="Processing" xml:space="preserve">
+    <value>处理中</value>
+  </data>
+  <data name="Restore Wallet" xml:space="preserve">
+    <value>恢复钱包</value>
+  </data>
+  <data name="Restored: {0}" xml:space="preserve">
+    <value>恢复于： {0}</value>
+  </data>
+  <data name="Wallet name exists. Please pick another one." xml:space="preserve">
+    <value>钱包名称已经存在。请指定另外的名称。</value>
+  </data>
+  <data name="with password" xml:space="preserve">
+    <value>使用密码</value>
+  </data>
+  <data name="Your current wallet will be overwritten!!! Please make sure you want to do this." xml:space="preserve">
+    <value>你的已存在的钱包将会被覆盖，或造成数据丢失！请确认你需要这么做。</value>
+  </data>
+  <data name="Your wallet has been created." xml:space="preserve">
+    <value>您的钱包已经创建。</value>
   </data>
 </root>

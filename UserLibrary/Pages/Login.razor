@@ -37,6 +37,8 @@ else
     public ILocalStorageService localStorage { get; set; }
     [Inject] NebulaConsts _consts { get; set; }
 
+    [Inject] IStringLocalizer<Login> localizer { get; set; }
+
     bool hasStore = false;
     bool busy = true;
 
@@ -65,12 +67,12 @@ else
                 var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
                 var wc = new WalletContainer(wcjson);
 
-			    var meta = new WalletContainer.WalletData
-			    {
-				    Name = "Default",
-				    Data = await localStorage.GetItemAsync<byte[]>("nebdat"),
-				    Backup = false,
-				    Note = $"Migrated: {DateTime.Now}"
+                var meta = new WalletContainer.WalletData
+                    {
+                        Name = "Default",
+                        Data = await localStorage.GetItemAsync<byte[]>("nebdat"),
+                        Backup = false,
+                        Note = localizer["Migrated: {0}", DateTime.Now]
 			    };
 			    wc.Add(meta);
                 await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());

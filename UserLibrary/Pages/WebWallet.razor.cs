@@ -4,6 +4,7 @@ using Lyra.Core.API;
 using Lyra.Data.Crypto;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using MudBlazor;
 using Nebula.Store.WebWalletUseCase;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UserLibrary.Components;
 using UserLibrary.Data;
 
 namespace UserLibrary.Pages
@@ -32,6 +34,7 @@ namespace UserLibrary.Pages
 
         [Inject] ILocalStorageService localStorage { get; set; }
         [Inject] NebulaConsts _consts { get; set; }
+        [Inject] IStringLocalizer<WebWallet> localizer { get; set; }
 
         [Parameter]
         public string action { get; set; }
@@ -79,7 +82,7 @@ namespace UserLibrary.Pages
                     tabs.ActivatePanel(1);
                 }
 
-                Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Wallet" });
+                Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = localizer["Lyra Wallet"] });
 
                 var storStr = await localStorage.GetItemAsync<string>(_consts.ContactStorName) ?? "[]";
                 contacts = JsonConvert.DeserializeObject<List<ContactItem>>(storStr);
@@ -109,7 +112,7 @@ namespace UserLibrary.Pages
         private async Task SendTokenAsync()
         {
             busysend = true;
-            Snackbar.Add("Refresh balance...");
+            Snackbar.Add(localizer["Refresh balance..."]);
             StateHasChanged();
 
             try
@@ -117,7 +120,7 @@ namespace UserLibrary.Pages
                 var result = await walletState.Value.wallet.SyncAsync(null);
                 if (result != Lyra.Core.Blocks.APIResultCodes.Success)
                 {
-                    Snackbar.Add($"Unable to refresh balance: {result}. Abort send.", Severity.Error);
+                    Snackbar.Add(localizer["Unable to refresh balance: {0}. Abort send.", result], Severity.Error);
                     busysend = false;
                     StateHasChanged();
                     return;
@@ -125,24 +128,24 @@ namespace UserLibrary.Pages
 
                 var oldbalance = walletState.Value.wallet.GetLastSyncBlock().Balances.ToDecimalDict();
 
-                Snackbar.Add($"Current balance is {oldbalance[tokenName]} {tokenName}");
-                Snackbar.Add($"Sending {amount} {tokenName}");
+                Snackbar.Add(localizer["Current balance is {0} {1}", oldbalance[tokenName], tokenName]);
+                Snackbar.Add(localizer["Sending {0} {1}", amount, tokenName]);
 
                 var result2 = await walletState.Value.wallet.SendAsync(amount, dstAddr, tokenName);
                 if (!result2.Successful())
                 {
-                    Snackbar.Add($"Unable to send token: {result2.ResultCode}.", Severity.Error);
+                    Snackbar.Add(localizer["Unable to send token: {0}.", result2.ResultCode], Severity.Error);
                     busysend = false;
                     StateHasChanged();
                     return;
                 }
 
-                Snackbar.Add($"Seccess send {amount} {tokenName}.", Severity.Success);
-                Snackbar.Add("Refresh balance...");
+                Snackbar.Add(localizer["Seccess send {0} {1}.", amount, tokenName], Severity.Success);
+                Snackbar.Add(localizer["Refresh balance..."]);
                 var result3 = await walletState.Value.wallet.SyncAsync(null);
                 if (result3 != Lyra.Core.Blocks.APIResultCodes.Success)
                 {
-                    Snackbar.Add($"Unable to refresh balance: {result3}.", Severity.Error);
+                    Snackbar.Add(localizer["Unable to refresh balance: {0}.", result3], Severity.Error);
                     busysend = false;
                     StateHasChanged();
                     return;
@@ -150,13 +153,13 @@ namespace UserLibrary.Pages
 
                 var newbalance = walletState.Value.wallet.GetLastSyncBlock().Balances.ToDecimalDict();
                 var changed = oldbalance[tokenName] - newbalance[tokenName];
-                Snackbar.Add($"The latest balance is {newbalance[tokenName]} {tokenName} Changed: -{changed} {tokenName}");
+                Snackbar.Add(localizer["The latest balance is {0} {1} Changed: -{2} {1}", newbalance[tokenName], tokenName, changed]);
                 busysend = false;
                 StateHasChanged();
             }
             catch(Exception ex)
             {
-                Snackbar.Add($"Unexpected Error: {ex.Message}.", Severity.Error);
+                Snackbar.Add(localizer["Unexpected Error: {0}.", ex.Message], Severity.Error);
                 busysend = false;
                 StateHasChanged();
             }

@@ -34,20 +34,20 @@
 @if (walletState.Value.wallet != null)
 {
     <MudTabs @ref="tabs" Elevation="4" Rounded="true" Centered="true" Color="Color.Secondary">
-        <MudTabPanel Text="Home">
+        <MudTabPanel Text=@localizer["Home"]>
             @if(walletState.Value.PendingRecv)
             {
                 <MudButton Variant="MudBlazor.Variant.Outlined" Disabled="@busy" Color="Color.Success" OnClick="@Refresh" FullWidth>
                 @if (busy)
                 {
                     <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2">Processing</MudText>
+                        <MudText Class="ms-2">@localizer["Processing"]</MudText>
                 }
                 else
                 {
 
                     <MudBadge Content="@(walletState.Value.PendingRecvCount)" Color="Color.Primary" Overlap="true" Class="mx-6 my-4">
-                        <MudText>Receive</MudText>
+                            <MudText>@localizer["Receive"]</MudText>
                     </MudBadge>
                 }
             </MudButton>
@@ -65,7 +65,7 @@
                                 </CardHeaderContent>
                                 <CardHeaderActions>
                                     <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary"
-                                   OnClick="@(async ()=>{ await SendX(kvp.Key); })">Send</MudButton>
+                                   OnClick="@(async ()=>{ await SendX(kvp.Key); })">@localizer["Send"]</MudButton>
                                 </CardHeaderActions>
                             </MudCardHeader>
                             <MudCardContent>
@@ -83,7 +83,7 @@
                                 </CardHeaderContent>
                                 <CardHeaderActions>
                                 <MudButton Variant="MudBlazor.Variant.Filled" Disabled="@(true)" Color="Color.Primary"
-                                   OnClick="@(async ()=>{ await SendX("LYR"); })">Send</MudButton>
+                                   OnClick="@(async ()=>{ await SendX("LYR"); })">@localizer["Send"]</MudButton>
                                 </CardHeaderActions>
                             </MudCardHeader>
                             <MudCardContent>
@@ -95,7 +95,7 @@
                 <MudCard Style="width: 200px;" Elevation="8">
                         <MudCardHeader>
                             <CardHeaderContent>
-                                <h4>Your New Token</h4>
+                            <h4>@localizer["Your New Token"]</h4>
                             </CardHeaderContent>
                             <CardHeaderActions>
 
@@ -113,33 +113,33 @@
 
         </MudTabPanel>
 
-        <MudTabPanel Text="Send">
+        <MudTabPanel Text=@localizer["Send"]>
             <div class="mag">
                 <MudGrid>
                     <MudItem xs="12">
-                        <MudTextField T="string" Label="Destination Wallet Address" @bind-Value="@dstAddr" />
+                        <MudTextField T="string" Label=@localizer["Destination Wallet Address"] @bind-Value="@dstAddr" />
                         <a href="/scan">
-                            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">Scan QR-Code</MudButton>
+                            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">@localizer["Scan QR-Code"]</MudButton>
                         </a>
                         <RadzenDropDown AllowClear="true" TValue="ContactItem" Class="w-100" 
                             Data=@contacts Change=@(args => OnContact(args as ContactItem)) />
                     </MudItem>
                     <MudItem xs="12">
-                    <MudTextField T="string" Label="Token Name" @bind-Value="@tokenName" />
+                        <MudTextField T="string" Label=@localizer["Token Name"] @bind-Value="@tokenName" />
                     </MudItem>
                     <MudItem xs="12">
-                    <MudNumericField T="decimal" Label="Amount" @bind-Value="@amount" />
+                        <MudNumericField T="decimal" Label=@localizer["Amount"] @bind-Value="@amount" />
                     </MudItem>
                     <MudItem xs="12">
                         <MudButton Variant="MudBlazor.Variant.Filled" Disabled="@busysend" Color="Color.Primary" OnClick="@(async () => await SendTokenAsync())">
                     @if (busysend)
                     {
                         <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                        <MudText Class="ms-2">Processing</MudText>
+                                <MudText Class="ms-2">@localizer["Processing"]</MudText>
                     }
                     else
                     {
-                        <MudText>Send Token</MudText>
+                                <MudText>@localizer["Send Token"]</MudText>
                     }
                 </MudButton>
                     </MudItem>

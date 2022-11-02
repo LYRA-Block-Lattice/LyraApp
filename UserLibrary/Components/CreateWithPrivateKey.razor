@@ -25,21 +25,21 @@
     @if (ui == UI.entry)
     {
         <div class="mid">
-            <MudTextField InputType="InputType.Text" Label="Name of wallet" Size="Size.Large" @bind-Value="@walletName" />
+            <MudTextField InputType="InputType.Text" Label=@localizer["Name of wallet"] Size="Size.Large" @bind-Value="@walletName" />
         </div>
         <div class="mid">
-            <MudTextField InputType="InputType.Password" Label="Password" Size="Size.Large" @bind-Value="@txtValue1" />
+            <MudTextField InputType="InputType.Password" Label=@localizer["Password"] Size="Size.Large" @bind-Value="@txtValue1" />
         </div>
         <div class="mid">
-            <MudTextField InputType="InputType.Password" Label="Confirm Password" Size="Size.Large" @bind-Value="@txtValue2" />
+            <MudTextField InputType="InputType.Password" Label=@localizer["Confirm Password"] Size="Size.Large" @bind-Value="@txtValue2" />
         </div>
         <div class="mid">
-            <MudTextField Size="Size.Large" Label="Private Key" @bind-Value="@prvKey" />
+            <MudTextField Size="Size.Large" Label=@localizer["Private Key"] @bind-Value="@prvKey" />
         </div>
         @if(false)//hasStore)
         {
             <div class="mid">
-                <MudSwitch T="bool" @bind-Checked="@confirmdelete" Color="Color.Primary">Confirm delete existing wallet</MudSwitch>
+                <MudSwitch T="bool" @bind-Checked="@confirmdelete" Color="Color.Primary">@localizer["Confirm delete existing wallet"]</MudSwitch>
             </div>            
         }
         <div class="mid">
@@ -47,11 +47,11 @@
                 @if (busy)
                 {
                     <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                    <MudText Class="ms-2">Processing</MudText>
+                    <MudText Class="ms-2">@localizer["Processing"]</MudText>
                 }
                 else
                 {
-                    <MudText>Restore Wallet</MudText>
+                    <MudText>@localizer["Restore Wallet"]</MudText>
                 }
             </MudButton>
         </div>
@@ -63,7 +63,7 @@
         </div>
         <div class="mid">
         <a href="/login">
-                <MudButton Variant="MudBlazor.Variant.Filled">@act with password</MudButton>
+                <MudButton Variant="MudBlazor.Variant.Filled">@act @localizer["with password"]</MudButton>
             </a>
         </div>
     }
@@ -71,7 +71,7 @@
     @if (ui == UI.success)
     {
         <div class="mid">
-            <p>Your wallet has been created</p>
+            <p>@localizer["Your wallet has been created."]</p>
             @extraok
         </div>
     }
@@ -94,6 +94,8 @@
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] NebulaConsts _consts { get; set; }
 
+    [Inject] IStringLocalizer<CreateWithPrivateKey> localizer { get; set; }
+
     bool busy;
 
     enum UI { entry, success, failed }
@@ -101,7 +103,7 @@
 
     string walletName;
 
-    string act = "Create new";
+    string act;
     string prvKey;
 
     bool _confirmdelete = false;
@@ -120,12 +122,12 @@
 
     RenderFragment extraok =
     @<a href="login">
-        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">Login</MudButton>
+        <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">@@localizer["Login"]</MudButton>
     </a>;
 
-    RenderFragment extrafail =
-    @<MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">Retry</MudButton>
-    ;
+    //RenderFragment extrafail =
+    //@<MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">localizer["Retry"]</MudButton>
+    //;
 
     private string txtValue1 { get; set; }
     private string txtValue2 { get; set; }
@@ -133,17 +135,18 @@
     protected async override Task OnInitializedAsync()
     {
         var storeName = _consts.NebulaStorName;
+        act = localizer["Create new"];
 
         if (await localStorage.ContainKeyAsync(storeName))
         {
-            act = "Open existing wallet";
+            act = localizer["Open existing wallet"];
         }        
         else
         {
-            act = "Create new";
+            act = localizer["Create new"];
         }
 
-        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Create wallet with private key" });
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = localizer["Create wallet with private key"] });
         await base.OnInitializedAsync();
     }
 
@@ -151,7 +154,7 @@
     {
         if(string.IsNullOrWhiteSpace(walletName))
         {
-            Snackbar.Add("Please specify the name of wallet.");
+            Snackbar.Add(localizer["Please specify the name of wallet."]);
             return;
         }
 
@@ -159,7 +162,13 @@
         var wc = new WalletContainer(wcjson);
         if(wc.Names.Contains(walletName))
         {
-            Snackbar.Add($"Wallet name exists. Please pick another one.", Severity.Warning);
+            Snackbar.Add(localizer["Wallet name exists. Please pick another one."], Severity.Warning);
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(txtValue1))
+        {
+            Snackbar.Add(localizer["Password can't be empty."], Severity.Warning);
             return;
         }
 
@@ -167,7 +176,7 @@
         {
             if(!Signatures.ValidatePrivateKey(prvKey))
             {
-                Snackbar.Add("Invalid private key.", Severity.Warning);
+                Snackbar.Add(localizer["Invalid private key."], Severity.Warning);
                 return;
             }
 
@@ -181,7 +190,7 @@
 				Name = walletName,
 				Data = data,
 				Backup = false,
-				Note = $"Restored: {DateTime.Now}"
+                Note = localizer["Restored: {0}", DateTime.Now]
 			};
 			wc.Add(meta);
 
@@ -192,7 +201,7 @@
 
         else
         {
-            Snackbar.Add("Passwords not match.", Severity.Warning);
+            Snackbar.Add(localizer["Passwords not match."], Severity.Warning);
         }
     }
 
@@ -200,7 +209,7 @@
     {
         if(ck)
         {
-            Snackbar.Add("Your current wallet will be overwritten!!! Please make sure you want to do this.", Severity.Warning);
+            Snackbar.Add(localizer["Your current wallet will be overwritten!!! Please make sure you want to do this."], Severity.Warning);
         }
     }
 }

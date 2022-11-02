@@ -16,6 +16,7 @@ using Lyra.Data.Blocks;
 using Humanizer;
 using Lyra.Data.API.WorkFlow;
 using UserLibrary.Pages;
+using MudBlazor;
 
 namespace Nebula.Store.WebWalletUseCase
 {
@@ -235,7 +236,7 @@ namespace Nebula.Store.WebWalletUseCase
 		[EffectMethod]
 		public async Task HandleOpen(WebWalletOpenAction action, IDispatcher dispatcher)
 		{
-			try
+            try
             {
 				var wcjson = await _localStorage.GetItemAsync<string>(action.store);
 				var wc = new WalletContainer(wcjson);

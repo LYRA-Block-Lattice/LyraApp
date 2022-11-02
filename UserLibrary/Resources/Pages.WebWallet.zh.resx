@@ -117,40 +117,61 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Block Explorer" xml:space="preserve">
-    <value>区块浏览器</value>
+  <data name="Amount" xml:space="preserve">
+    <value>金额</value>
   </data>
-  <data name="contacts" xml:space="preserve">
-    <value>联系人</value>
+  <data name="Current balance is {0} {1}" xml:space="preserve">
+    <value>当前余额： {0} {1}</value>
   </data>
-  <data name="dao" xml:space="preserve">
-    <value>自治组织</value>
+  <data name="Destination Wallet Address" xml:space="preserve">
+    <value>目标钱包地址</value>
   </data>
-  <data name="dex" xml:space="preserve">
-    <value>跨链传送</value>
+  <data name="Home" xml:space="preserve">
+    <value>主页</value>
   </data>
-  <data name="Lyra Site" xml:space="preserve">
-    <value>网站</value>
+  <data name="Lyra Wallet" xml:space="preserve">
+    <value>Lyra 钱包</value>
   </data>
-  <data name="mint" xml:space="preserve">
-    <value>铸币</value>
+  <data name="Processing" xml:space="preserve">
+    <value>处理中</value>
   </data>
-  <data name="otc" xml:space="preserve">
-    <value>场外交易</value>
+  <data name="Receive" xml:space="preserve">
+    <value>接收</value>
   </data>
-  <data name="revenue" xml:space="preserve">
-    <value>盈利</value>
+  <data name="Refresh balance..." xml:space="preserve">
+    <value>更新钱包余额 ...</value>
   </data>
-  <data name="settings" xml:space="preserve">
-    <value>设置</value>
+  <data name="Scan QR-Code" xml:space="preserve">
+    <value>扫描二维码</value>
   </data>
-  <data name="staking" xml:space="preserve">
-    <value>质押</value>
+  <data name="Send" xml:space="preserve">
+    <value>发送</value>
   </data>
-  <data name="swap" xml:space="preserve">
-    <value>兑换</value>
+  <data name="Send Token" xml:space="preserve">
+    <value>发送通证</value>
   </data>
-  <data name="wallet" xml:space="preserve">
-    <value>钱包</value>
+  <data name="Sending {0} {1}" xml:space="preserve">
+    <value>正在发送 {0} {1}</value>
+  </data>
+  <data name="The latest balance is {0} {1} Changed: -{2} {1}" xml:space="preserve">
+    <value>最新的余额是 {0} {1} 变动： -{2} {1}</value>
+  </data>
+  <data name="Token Name" xml:space="preserve">
+    <value>通证名称</value>
+  </data>
+  <data name="Unable to refresh balance: {0}." xml:space="preserve">
+    <value>无法更新余额： {0}</value>
+  </data>
+  <data name="Unable to refresh balance: {0}. Abort send." xml:space="preserve">
+    <value>无法更新余额： {0}。 取消发送。</value>
+  </data>
+  <data name="Unable to send token: {0}." xml:space="preserve">
+    <value>无法发送通证 {0}。</value>
+  </data>
+  <data name="Unexpected Error: {0}." xml:space="preserve">
+    <value>预料之外的错误： {0}。</value>
+  </data>
+  <data name="Your New Token" xml:space="preserve">
+    <value>新的通证</value>
   </data>
 </root>
