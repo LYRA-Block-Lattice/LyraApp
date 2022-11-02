@@ -12,10 +12,10 @@
 @inject NavigationManager Navigation
 
 <div class="mag">
-    <h2>Comment</h2>
+    <h2>@localizer["Comment"]</h2>
 
     <div>
-        About trade @tid.Shorten()
+        @localizer["About trade"] @tid.Shorten()
     </div>
 
     @if (comments != null)
@@ -29,7 +29,7 @@
                     </CardHeaderAvatar>
                     <CardHeaderContent>
                         <MudText Typo="Typo.body1">@users[comment.ByAccountId]</MudText>
-                        <MudText Typo="Typo.body2">Role: @roles[comment.ByAccountId], registered since @times[comment.ByAccountId].Humanize()</MudText>
+                        <MudText Typo="Typo.body2">@localizer["Role:"] @roles[comment.ByAccountId], @localizer["registered since"] @times[comment.ByAccountId].Humanize()</MudText>
                     </CardHeaderContent>
                     <CardHeaderActions>
                         @*<MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />*@
@@ -64,12 +64,12 @@
         <RadzenTemplateForm TItem="CommentConfig" Data=@cfg Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
 
             <div class="spc">
-                <label class="ratile">Rate your recent experience</label>
+                <label class="ratile">@localizer["Rate your recent experience"]</label>
                 <div class="d-flex flex-column">
                     <MudRating @bind-SelectedValue="cfg.Rating" Size="Size.Large" HoveredValueChanged="HandleHoveredValueChanged" />
                     @if (cfg.Rating == 0)
                     {
-                        <p style="color: red;">Rating is required.</p>
+                        <p style="color: red;">@localizer["Rating is required."]</p>
                     }
                 <MudText Typo="Typo.subtitle2" Class="deep-purple-text mt-2">@LabelText</MudText>
 
@@ -77,32 +77,32 @@
             </div>
         </div>
         <div class="spc">
-            <p>Tell us about your experience</p>
+            <p>@localizer["Tell us about your experience"]</p>
             @*        <a href="#" target="_blank" class="">Read our Guidelines for Reviewers</a>
                 <p>How to write a useful review</p>*@
             <div class="">
                 <RadzenTextArea Style="width: 420px; height: 128px" Name="comment" Placeholder="This is where you write your review. Explain what happened, and leave out offensive words. Keep your feedback honest, helpful, and constructive." @bind-Value="@cfg.Content" /> <br />
-                <RadzenRequiredValidator Component="comment" Text="Comment is required" Popup=false Style="position: absolute" />
+                <RadzenRequiredValidator Component="comment" Text=@localizer["Comment is required"] Popup=false Style="position: absolute" />
             </div>
 
         </div>
         <div class="spc">
-            <label class="" for="review-title">Give your review a title</label>
+            <label class="" for="review-title">@localizer["Give your review a title"]</label>
             <div class="">
                 <RadzenTextBox Class="" Style="width: 420px; " Name="title" Placeholder="Write the title of your review here." @bind-Value="@cfg.Title" /> <br />
-                <RadzenRequiredValidator Component="title" Text="Title is required" Popup=false Style="position: absolute" />
+                <RadzenRequiredValidator Component="title" Text=@localizer["Title is required"] Popup=false Style="position: absolute" />
             </div>
         </div>
         <div class="spc">
             <div>
                 <RadzenCheckBox @bind-Value=@cfg.Confirm Name="confirm" TValue="bool" />
-                <label for="confirm">I confirm this review is about my own genuine experience. I have not been offered any incentive or payment to leave a review for this trade.</label> <br />
+                <label for="confirm">@localizer["I confirm this review is about my own genuine experience. I have not been offered any incentive or payment to leave a review for this trade."]</label> <br />
 
             </div>
-            <RadzenRequiredValidator Component="confirm" Text="Confirmation is required" Popup=false Style="position: absolute" />
+            <RadzenRequiredValidator Component="confirm" Text=@localizer["Confirmation is required"] Popup=false Style="position: absolute" />
         </div>
         <div class="spc">
-            <RadzenButton ButtonType="Radzen.ButtonType.Submit" Text="Submit">
+            <RadzenButton ButtonType="Radzen.ButtonType.Submit" Text=@localizer["Submit"]>
             </RadzenButton>
         </div>
 
@@ -119,6 +119,7 @@
     [Inject] ILyraAPI lyraApi { get; set; }
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
+    [Inject] IStringLocalizer<Comment>? localizer { get; set; }
     [Parameter]
     public string tid { get; set; }
 
@@ -128,12 +129,12 @@
 
     private string LabelText => (activeVal ?? cfg.Rating) switch
     {
-        1 => "Very bad",
-        2 => "Bad",
-        3 => "Sufficient",
-        4 => "Good",
-        5 => "Awesome!",
-        _ => "Rate your trade!"
+        1 => localizer["Very bad"],
+        2 => localizer["Bad"],
+        3 => localizer["Sufficient"],
+        4 => localizer["Good"],
+        5 => localizer["Awesome!"],
+        _ => localizer["Rate your trade!"]
     };
 
     TradeBrief brief;
@@ -174,8 +175,8 @@
                 times.Add(brief.Members.Skip(1).First(), brief.RegTimes.Skip(1).First());
 
                 roles = new Dictionary<string, string>();
-                roles.Add(brief.Members.First(), "Seller");
-                roles.Add(brief.Members.Skip(1).First(), "Buyer");
+                roles.Add(brief.Members.First(), localizer["Seller"]);
+                roles.Add(brief.Members.Skip(1).First(), localizer["Buyer"]);
 
                 comments = await dealer.GetCommentsForTradeAsync(tid);
                 StateHasChanged();
@@ -203,13 +204,13 @@
             var result = await dlr.CommentTradeAsync(cfg);
             if (result.Successful())
             {
-                Snackbar.Add($"Comment Posted.", Severity.Success);
+                Snackbar.Add(localizer["Comment Posted."], Severity.Success);
                 comments = await dlr.GetCommentsForTradeAsync(tid);
                 StateHasChanged();
             }
             else
             {
-                Snackbar.Add($"Failed to comment: {result.ResultCode.Humanize()}", Severity.Warning);
+                Snackbar.Add(localizer["Failed to comment: {0}", result.ResultCode.Humanize()], Severity.Warning);
             }
         });
     }

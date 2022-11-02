@@ -11,7 +11,7 @@
 {
     <div style="width:100%;">
         <MudLink Href="/backup" Underline="Underline.None">
-            <MudAlert Severity="Severity.Warning" Variant="MudBlazor.Variant.Filled">Wallet not backup. Tap here to backup your wallet.</MudAlert>
+            <MudAlert Severity="Severity.Warning" Variant="MudBlazor.Variant.Filled">@localizer?["Wallet not backup. Tap here to backup your wallet."]</MudAlert>
         </MudLink>
     </div>
 }
@@ -21,10 +21,11 @@
     [Inject]
     private IState<WebWalletState>? walletState { get; set; }
     [Inject]
-    private IDispatcher Dispatcher { get; set; }
+    private IDispatcher? Dispatcher { get; set; }
     [Inject] 
-    private ILocalStorageService localStorage { get; set; }
-    [Inject] NebulaConsts _consts { get; set; }
+    private ILocalStorageService? localStorage { get; set; }
+    [Inject] NebulaConsts? _consts { get; set; }
+    [Inject] IStringLocalizer<GlobalBanner>? localizer { get; set; }
 
     bool showbackup;
 
@@ -32,7 +33,7 @@
     {
         if(firstRender)
         {
-            SubscribeToAction<WebWalletBackupAction>(async a =>
+            SubscribeToAction<WebWalletBackupAction>(a =>
             {
                 showbackup = !a.IsBackuped;
                 //if(a.IsBackuped)
@@ -44,13 +45,13 @@
                 //}
             });
 
-            if(walletState.Value.wallet != null)
+            if(walletState?.Value.wallet != null && localStorage != null)
             {
-                var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+                var wcjson = await localStorage.GetItemAsync<string>(_consts?.NebulaStorName);
                 var wc = new WalletContainer(wcjson);
                 var meta = wc.Get(walletState.Value.wallet.AccountName);
 
-                Dispatcher.Dispatch(new WebWalletBackupAction
+                Dispatcher?.Dispatch(new WebWalletBackupAction
                     {
                         IsBackuped = meta.Backup
                     });       

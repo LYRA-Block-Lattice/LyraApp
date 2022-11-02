@@ -12,25 +12,25 @@
 
 @if (ui == UI.Loading)
 {
-    <p><i>Loading...</i></p>
+        <p><i>@localizer["Loading..."]</i></p>
 }
 
 @if (ui == UI.Main)
 {
-    <h1>All Profiting Accounts</h1>
+    <h1>@localizer["All Profiting Accounts"]</h1>
 
     <div>
         <table class="table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Created Time</th>
-                    <th>Share Ratio</th>
-                    <th>Seats</th>
-                    <th>Total Profit</th>
-                    <th>Profiting Account ID</th>
-                    <th>Owner</th>
+                        <th>@localizer["Name"]</th>
+                        <th>@localizer["Type"]</th>
+                        <th>@localizer["Created Time"]</th>
+                        <th>@localizer["Share Ratio"]</th>
+                        <th>@localizer["Seats"]</th>
+                        <th>@localizer["Total Profit"]</th>
+                        <th>@localizer["Profiting Account ID"]</th>
+                        <th>@localizer["Owner"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -59,47 +59,48 @@
 
 @if(ui == UI.Details)
 {
-    <h1>Details of profiting account</h1>
+        <h1>@localizer["Details of profiting account"]</h1>
     @if (pft == null)
     {
-        <p>No profiting account.</p>
+            <p>
+                @localizer["No profiting account."]</p>
     }
     else
     {
         <div>
-                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="Back">Return</MudButton>
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="Back">@localizer["Return"]</MudButton>
         </div>
         <hr />
 
-        <p>Name: <b>@pft.Name</b></p>
-        <p>Type: <b>@pft.PType</b></p>
+        <p>@localizer["Name:"] <b>@pft.Name</b></p>
+        <p>@localizer["Type:"] <b>@pft.PType</b></p>
         <p>
-            Node Owner Account ID: <a target="_blank" href="@bexpurl/showblock/@pft?.OwnerAccountId">@pft?.OwnerAccountId.Substring(0, 10)...</a>
+                @localizer["Node Owner Account ID:"] <a target="_blank" href="@bexpurl/showblock/@pft?.OwnerAccountId">@pft?.OwnerAccountId.Substring(0, 10)...</a>
         </p>
         <p>
-            Profiting Account ID:
+                @localizer["Profiting Account ID:"]
             <a target="_blank" href="@bexpurl/showblock/@GetPftID()">@GetPftID()</a>
         </p>
-        <p>Total Earn: @pftStats.Total LYR</p>
-        <p>Profit sharing ratio: @FormatShare() </p>
-        <p>Pay to stakers: @GetToStakers() LYR</p>
-        <p>Pay to owner: @GetToOwner() LYR</p>
+            <p>@localizer["Total Earn:"] @pftStats.Total LYR</p>
+            <p>@localizer["Profit sharing ratio:"] @FormatShare() </p>
+            <p>@localizer["Pay to stakers:"] @GetToStakers() LYR</p>
+            <p>@localizer["Pay to owner:"] @GetToOwner() LYR</p>
         <p>
 
         </p>
         <p>
-            <div><h4>All Current Stakings</h4></div>
+            <div><h4>@localizer["All Current Stakings"]</h4></div>
             <div>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Staking Amount</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                            <th>Staking Days</th>                            
-                            <th>Earns</th>                            
-                            <th>Staking Account</th>
-                            <th>Owner Account</th>
+                                <th>@localizer["Staking Amount"]</th>
+                                <th>@localizer["Start Time"]</th>
+                            <th>@localizer["End Time"]</th>
+                            <th>@localizer["Staking Days"]</th>
+                                <th>@localizer["Earns"]</th>
+                                <th>@localizer["Staking Account"]</th>
+                                <th>@localizer["Owner Account"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -133,11 +134,11 @@
                 </table>
             </div>
         </p>
-        <p style="font-size:xx-small">Note: Statistics data may not be updated in time. Only for reference.</p>
+        <p style="font-size:xx-small">@localizer["Note: Statistics data may not be updated in time. Only for reference."]</p>
     }
     <hr />
     <div>
-            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="Back">Return</MudButton>
+            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="Back">@localizer["Return"]</MudButton>
     </div>
 }
 
@@ -159,6 +160,7 @@
     [Inject]
     private IDispatcher Dispatcher { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
+    [Inject] IStringLocalizer<TopProfit>? localizer { get; set; }
 
     string error;
 
@@ -178,7 +180,7 @@
     {
         bexpurl = Configuration["network"] == "mainnet" ? "https://nebula.lyra.live" : "https://nebulatestnet.lyra.live";
 
-        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Revenue Center" });
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = localizer["Lyra Revenue Center"] });
 
         try
         {

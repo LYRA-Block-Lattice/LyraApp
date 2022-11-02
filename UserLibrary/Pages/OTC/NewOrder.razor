@@ -7,9 +7,11 @@
 </div>
 
 @code {
+    [Inject] IStringLocalizer<NewOrder>? localizer { get; set; }
+
     protected override void OnInitialized()
     {
-        _title = "Create New OTC Order";
+        _title = localizer["Create New OTC Order"];
         base.OnInitialized();
     }
 }

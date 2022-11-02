@@ -6,11 +6,11 @@
 <div class="mag cet">
     @if (walletState.Value.wallet == null)
     {
-        <a href="/wallet">Open wallet to view orders.</a>
+        <a href="/wallet">@localizer["Open wallet to view orders."]</a>
     }
     else
     {
-        <h3>All my OTC orders</h3>
+        <h3>@localizer["All my OTC orders"]</h3>
         <UserLibrary.Components.OTC.OrdersList />
     }
 </div>
@@ -18,10 +18,11 @@
 @code {
     [Inject]
     private IState<WebWalletState> walletState { get; set; }
+    [Inject] IStringLocalizer<MyOrders>? localizer { get; set; }
 
     protected override void OnInitialized()
     {
-        _title = "My OTC Orders";
+        _title = localizer["My OTC Orders"];
         base.OnInitialized();
     }
 }

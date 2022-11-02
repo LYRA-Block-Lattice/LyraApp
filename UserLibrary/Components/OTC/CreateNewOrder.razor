@@ -206,6 +206,8 @@ else
     [Inject] NebulaConsts _consts { get; set; }
     [Inject] ILocalStorageService localStorage { get; set; }
 
+    [Inject] IStringLocalizer<CreateNewOrder>? localizer { get; set; }
+
     List<IDao> mydaos = new List<IDao>();
     List<DealerDesc> mydealers = new List<DealerDesc>();
     bool dir;

@@ -22,8 +22,8 @@
             <div>
                 <RadzenSelectBar @bind-Value=@dir TValue="TradeDirection" Change="@dirchgd">
                     <Items>
-                        <RadzenSelectBarItem Text="Sell" Value="TradeDirection.Buy" />
-                        <RadzenSelectBarItem Text="Buy" Value="TradeDirection.Sell" />
+                        <RadzenSelectBarItem Text=@localizer["Sell"] Value="TradeDirection.Buy" />
+                        <RadzenSelectBarItem Text=@localizer["Buy"] Value="TradeDirection.Sell" />
                     </Items>
                 </RadzenSelectBar>
             </div>
@@ -65,6 +65,7 @@
     [Inject] NavigationManager Navigation { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
     [Inject] DealerConnMgr connMgr { get; set; }
+    [Inject] IStringLocalizer<MarketMain>? localizer { get; set; }
 
     TradeDirection dir = TradeDirection.Sell;
     MudTabs tabs;
@@ -86,7 +87,7 @@
 
     protected override void OnInitialized()
     {
-        _title = "Lyra P2P OTC Trade";
+        _title = localizer["Lyra P2P OTC Trade"];
         base.OnInitialized();
     }
 
@@ -112,15 +113,15 @@
         if (walletState.Value.wallet == null)
         {
             return new Dictionary<string, string> {
-                            { "Open wallet to trade", "/wallet" },
+                            { localizer["Open wallet to trade"], "/wallet" },
                         };
         }
         else
         {
             return  new Dictionary<string, string> {
-                            { "Create New Order", "/otc/new" },
-                            { "My Orders", "/otc/myorders" },
-                            { "My Trades", "/otc/mytrades" },
+                            { localizer["Create New Order"], "/otc/new" },
+                            { localizer["My Orders"], "/otc/myorders" },
+                            { localizer["My Trades"], "/otc/mytrades" },
                         };
         }
     }
@@ -218,7 +219,7 @@
         }
         catch (Exception e)
         {
-            Snackbar.Add($"Failed to refresh orders: {e}", Severity.Error);
+            Snackbar.Add(localizer["Failed to refresh orders: {0}", e], Severity.Error);
         }
     }
 
