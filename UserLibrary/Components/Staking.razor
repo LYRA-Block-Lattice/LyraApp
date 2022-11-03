@@ -11,18 +11,18 @@
 @inject IConfiguration Configuration
 
 <MudTabs SelectedTab="@selectedTab1">
-    <MudTabPanel Text="Staking Accounts">
+    <MudTabPanel Text=@localizer["Staking Accounts"]>
         <table class="table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Staking Amount</th>
-                    <th>Compound Mode</th>
-                    <th>Total Reward</th>
-                    <th>Start Time</th>
-                    <th>Staking Days</th>
-                    <th>Staking to Account</th>
-                    <th>Action</th>
+                    <th>@localizer["Name"]</th>
+                    <th>@localizer["Staking Amount"]</th>
+                    <th>@localizer["Compound Mode"]</th>
+                    <th>@localizer["Total Reward"]</th>
+                    <th>@localizer["Start Time"]</th>
+                    <th>@localizer["Staking Days"]</th>
+                    <th>@localizer["Staking to Account"]</th>
+                    <th>@localizer["Action"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,24 +44,26 @@
                         <td>@((stk as IStaking).Days)</td>
                         <td>@((stk as IStaking).Voting)</td>
                         <td>
-                            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async (e) => await AddStkAsync(e, (stk as TransactionBlock).AccountID))">Add Staking</MudButton>
+                            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary"
+                                   OnClick="@(async (e) => await AddStkAsync(e, (stk as TransactionBlock).AccountID))">@localizer["Add Staking"]</MudButton>
                             &nbsp;
-                            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async () => {await UnstakingConfirm((stk as TransactionBlock).AccountID, (stk as IStaking).Start, (stk as IStaking).Days);})">Unstaking</MudButton>
+                            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary"
+                                   OnClick="@(async () => {await UnstakingConfirm((stk as TransactionBlock).AccountID, (stk as IStaking).Start, (stk as IStaking).Days);})">@localizer["Unstaking"]</MudButton>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
     </MudTabPanel>
-    <MudTabPanel Text="Profiting Accounts">
+    <MudTabPanel Text=@localizer["Profiting Accounts"]>
         <table class="table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Share Ratio</th>
-                    <th>Seats</th>
-                    <th>Profiting Account ID</th>
+                    <th>@localizer["Name"]</th>
+                    <th>@localizer["Type"]</th>
+                    <th>@localizer["Share Ratio"]</th>
+                    <th>@localizer["Seats"]</th>
+                    <th>@localizer["Profiting Account ID"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -85,21 +87,21 @@
 <div style="height:60px;" />
 
 <MudTabs SelectedTab="@selectedTab2">
-    <MudTabPanel Text="Create Staking Account">
+    <MudTabPanel Text=@localizer["Create Staking Account"]>
         <p>
-            Name:
-            <MudTextField Label="Name" @bind-Value="@stkName" />
+            @localizer["Name:"]
+            <MudTextField Label=@localizer["Name"] @bind-Value="@stkName" />
         </p>
         <p>
-            Staking For Address:
-            <MudTextField Label="Address" @bind-Value="@stkVoting" />
+            @localizer["Staking For Address:"]
+            <MudTextField Label=@localizer["Address"] @bind-Value="@stkVoting" />
         </p>
         <p>
-            Days of staking:
-            <MudTextField Label="Days, >= 3" @bind-Value="@stkDays" />
+            @localizer["Days of staking:"]
+            <MudTextField Label=@localizer["Days, >= 3"] @bind-Value="@stkDays" />
         </p>
         <p>
-            Compound staking mode:
+            @localizer["Compound staking mode:"]
             <input size="10" type="checkbox" @bind="@stkCompound" />
         </p>
         <div>
@@ -108,36 +110,36 @@
                 @if (adding)
                 {
                     <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2">Processing</MudText>
+                    <MudText Class="ms-2">@localizer["Processing"]</MudText>
                 }
                 else
                 {
-                    <MudText>Create Staking</MudText>
+                    <MudText>@localizer["Create Staking"]</MudText>
                 }
             </MudButton>
         </div>
     </MudTabPanel>
-    <MudTabPanel Text="Create Profiting Account">
+    <MudTabPanel Text=@localizer["Create Profiting Account"]>
         <p>
-            Name:
-            <MudTextField Label="Name" @bind-Value="@pftName" />
+            @localizer["Name:"]
+            <MudTextField Label=@localizer["Name"] @bind-Value="@pftName" />
         </p>
         <p>
-            Type:
+            @localizer["Type:"]
             <select style="height: 40px; width: 380px" @bind="@pftType">
-                <option value="Node">Node</option>
-                <option disabled value="Oracle">Oracle</option>
-                <option disabled value="Merchant">Merchant</option>
-                <option value="Yield">Yield</option>
+                <option value="Node">@localizer["Node"]</option>
+                <option disabled value="Oracle">@localizer["Oracle"]</option>
+                <option disabled value="Merchant">@localizer["Merchant"]</option>
+                <option value="Yield">@localizer["Yield"]</option>
             </select>
         </p>
         <p>
-            Ratio to share to staking (0% - 100%):
-            <MudTextField Label="Ratio" @bind-Value="@pftShare" />
+            @localizer["Ratio to share to staking (0% - 100%):"]
+            <MudTextField Label=@localizer["Ratio"] @bind-Value="@pftShare" />
         </p>
         <p>
-            Number of staking (0 - 100):
-            <MudTextField Label="Max number" @bind-Value="@pftSeats" />
+            @localizer["Number of staking (0 - 100):"]
+            <MudTextField Label=@localizer["Seats number"] @bind-Value="@pftSeats" />
         </p>
         <div>
             <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" Disabled="@adding"
@@ -145,11 +147,11 @@
                 @if (adding)
                 {
                     <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2">Processing</MudText>
+                    <MudText Class="ms-2">@localizer["Processing"]</MudText>
                 }
                 else
                 {
-                    <MudText>Create Profiting Account</MudText>
+                    <MudText>@localizer["Create Profiting Account"]</MudText>
                 }
             </MudButton>
         </div>
@@ -169,6 +171,7 @@
     [Inject] private IDialogService DialogService { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
+    [Inject] IStringLocalizer<Staking>? localizer { get; set; }
 
     string selectedTab1 = "staking";
     bool adding;
@@ -204,7 +207,7 @@
             var amt = await GetAmountInput();
             if (amt > 0)
             {
-                Snackbar.Add($"Add staking of {amt} LYR...");
+                Snackbar.Add(localizer["Add staking of {0} LYR...", amt]);
 			    var crpftret = await walletState.Value.wallet.AddStakingAsync(
 				    stkid, amt
 				    );
@@ -212,18 +215,18 @@
 			    if (crpftret.Successful())
 			    {
 				    await Task.Delay(3000);
-                    Snackbar.Add("Success. Refreshing...", Severity.Success);
+                    Snackbar.Add(localizer["Success. Refreshing..."], Severity.Success);
 				    await RefreshStakingAsync(walletState.Value.wallet);
 			    }
 			    else
 			    {
-                    Snackbar.Add($"Failed adding staking. Error: {crpftret.ResultCode.Humanize()}", Severity.Error);
+                    Snackbar.Add(localizer["Failed adding staking. Error: {0}", crpftret.ResultCode.Humanize()], Severity.Error);
 			    }
             }
         }
         catch (Exception ex)
         {
-            Snackbar.Add($"Error: {ex}", Severity.Error);
+            Snackbar.Add(localizer["Error: {0}", ex], Severity.Error);
         }
     }
 
@@ -235,17 +238,17 @@
         if (expired)
         {
             result = await DialogService.ShowMessageBox(
-            "Notice",
-                "Staking has expired. It's now safe to unstake.",
-                yesText: "Confirm!", cancelText: "Cancel");
+            localizer["Notice"],
+                localizer["Staking has expired. It's now safe to unstake."],
+                yesText: localizer["Confirm!"], cancelText: localizer["Cancel"]);
         }
         else
         {
-            var timeleft = $"Staking will expire in {(dtStart.AddDays(days) - DateTime.UtcNow).TotalHours:N2} Hours.";
+            var timeleft = localizer["Staking will expire in {0:N2} Hours.", (dtStart.AddDays(days) - DateTime.UtcNow).TotalHours];
             result = await DialogService.ShowMessageBox(
-            "Warning",
-                timeleft + "\nUnstaking within the promised staking period will pay 0.8% panalise fee. Are you sure you want to confirm?",
-                yesText: "Confirm!", cancelText: "Cancel");
+            localizer["Warning"],
+                timeleft + localizer["Unstaking within the promised staking period will pay 0.8% panalise fee. Are you sure you want to confirm?"],
+                yesText: localizer["Confirm!"], cancelText: localizer["Cancel"]);
         }
 
         if (result != null && result.Value)
@@ -254,7 +257,7 @@
         }
         else
         {
-            Snackbar.Add("Nothing changed.", Severity.Normal);
+            Snackbar.Add(localizer["Nothing changed."], Severity.Normal);
         }
     }
 
@@ -262,28 +265,28 @@
     {
         try
         {
-            Snackbar.Add("Remove staking...");
+            Snackbar.Add(localizer["Remove staking..."]);
 			var crpftret = await walletState.Value.wallet.UnStakingAsync(stkid);
 			if (crpftret.Successful())
 			{
                 await Task.Delay(3000);
-                Snackbar.Add("Success. Refreshing...", Severity.Success);
+                Snackbar.Add(localizer["Success. Refreshing..."], Severity.Success);
                 await RefreshStakingAsync(walletState.Value.wallet);
 			}
 			else
 			{
-                Snackbar.Add($"Failed to unstake. Error: {crpftret.ResultCode.Humanize()}", Severity.Error);
+                Snackbar.Add(localizer["Failed to unstake. Error: {0}", crpftret.ResultCode.Humanize()], Severity.Error);
 			}
         }
         catch (Exception ex)
         {
-            Snackbar.Add($"Error: {ex}", Severity.Error);
+            Snackbar.Add(localizer["Error: {0}", ex], Severity.Error);
         }
     }
 
     private async Task<decimal> GetAmountInput()
     {
-        string prompted = await JS.InvokeAsync<string>("prompt", "How many LYR do you want to stake?"); // Prompt
+        string prompted = await JS.InvokeAsync<string>("prompt", localizer["How many LYR do you want to stake?"]); // Prompt
         if (prompted == null)
             return 0;
         return decimal.Parse(prompted);
@@ -294,7 +297,7 @@
         adding = true;
         try
         {
-            Snackbar.Add("Adding staking account...");
+            Snackbar.Add(localizer["Adding staking account..."]);
             var action = new WebWalletCreateStakingAction
                 {
                     wallet = walletState.Value.wallet,
@@ -312,17 +315,17 @@
             {
                 // wait for a while
                 await Task.Delay(2000);
-                Snackbar.Add("Success. Refreshing...", Severity.Success);
+                Snackbar.Add(localizer["Success. Refreshing..."], Severity.Success);
                 await RefreshStakingAsync(walletState.Value.wallet);
             }
             else
             {
-                Snackbar.Add($"Error: {crstkret.ResultCode.Humanize()}", Severity.Error);
+                Snackbar.Add(localizer["Error: {0}", crstkret.ResultCode.Humanize()], Severity.Error);
             }
         }
         catch (Exception ex)
         {
-            Snackbar.Add($"Error: {ex}", Severity.Error);
+            Snackbar.Add(localizer["Error: {0}", ex], Severity.Error);
         }
         adding = false;
     }
@@ -337,7 +340,7 @@
                 return;
             }
 
-            Snackbar.Add("Adding profiting account...");
+            Snackbar.Add(localizer["Adding profiting account..."]);
 
             var type = (ProfitingType)Enum.Parse(typeof(ProfitingType), pftType);
 
@@ -358,17 +361,17 @@
             {
                 // wait for a while
                 await Task.Delay(2000);
-                Snackbar.Add("Success. Refreshing...", Severity.Success);
+                Snackbar.Add(localizer["Success. Refreshing..."], Severity.Success);
                 await RefreshStakingAsync(walletState.Value.wallet);
             }
             else
             {
-                Snackbar.Add($"Error: {crpftret.ResultCode.Humanize()}", Severity.Error);
+                Snackbar.Add(localizer["Error: {0}", crpftret.ResultCode.Humanize()], Severity.Error);
             }
         }
         catch (Exception ex)
         {
-            Snackbar.Add($"Error: {ex}", Severity.Error);
+            Snackbar.Add(localizer["Error: {0}", ex], Severity.Error);
         }
         adding = false;
     }
@@ -421,7 +424,7 @@
         }
         else
         {
-            Snackbar.Add($"Error: {result.ResultCode.Humanize()}", Severity.Error);
+            Snackbar.Add(localizer["Error: {0}", result.ResultCode.Humanize()], Severity.Error);
         }
     }
 }

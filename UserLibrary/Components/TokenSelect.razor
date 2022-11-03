@@ -1,7 +1,7 @@
 ﻿@namespace UserLibrary.Components
 @using UserLibrary.Data
 
-<MudSelect T="string" Placeholder="Choose Token" @ref="@sel" DisableUnderLine
+<MudSelect T="string" Placeholder=@localizer["Choose Token"] @ref="@sel" DisableUnderLine
     Style="margin: 0px; font-size: 28px; min-width: 140px;"
     ValueChanged="@(async (a) => await SetValue(a))">
        
@@ -34,6 +34,8 @@
             sel.Value = _old;
         }
     }
+
+    [Inject] IStringLocalizer<TokenSelect>? localizer { get; set; }
 
     MudSelect<string> sel;
     string _old;

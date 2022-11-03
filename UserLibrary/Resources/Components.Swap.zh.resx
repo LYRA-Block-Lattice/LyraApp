@@ -117,40 +117,97 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Block Explorer" xml:space="preserve">
-    <value>区块浏览器</value>
+  <data name="Balance:" xml:space="preserve">
+    <value>余额：</value>
   </data>
-  <data name="contacts" xml:space="preserve">
-    <value>联系人</value>
+  <data name="Error Swap Token: {0}" xml:space="preserve">
+    <value>通证置换不成功： {0}</value>
   </data>
-  <data name="dao" xml:space="preserve">
-    <value>自治组织</value>
+  <data name="Estimated ratio" xml:space="preserve">
+    <value>估计比例</value>
   </data>
-  <data name="dex" xml:space="preserve">
-    <value>跨链传送</value>
+  <data name="Estimated total value. Only for reference." xml:space="preserve">
+    <value>估计总额。仅供参考。</value>
   </data>
-  <data name="Lyra Site" xml:space="preserve">
-    <value>网站</value>
+  <data name="Init refresh failed: {0}" xml:space="preserve">
+    <value>初始化失败： {0}</value>
   </data>
-  <data name="mint" xml:space="preserve">
-    <value>铸币局</value>
+  <data name="Initialize Swap App..." xml:space="preserve">
+    <value>初始化置换 App……</value>
   </data>
-  <data name="otc" xml:space="preserve">
-    <value>场外交易</value>
+  <data name="LYR external price" xml:space="preserve">
+    <value>LYR 外部价格</value>
   </data>
-  <data name="revenue" xml:space="preserve">
-    <value>盈利</value>
+  <data name="LYR internal price" xml:space="preserve">
+    <value>LYR 链上价格</value>
   </data>
-  <data name="settings" xml:space="preserve">
-    <value>设置</value>
+  <data name="Lyra Swap" xml:space="preserve">
+    <value>Lyra 通证置换</value>
   </data>
-  <data name="staking" xml:space="preserve">
-    <value>质押</value>
+  <data name="Network Fee" xml:space="preserve">
+    <value>网络费用</value>
   </data>
-  <data name="swap" xml:space="preserve">
-    <value>通证置换</value>
+  <data name="Open Wallet" xml:space="preserve">
+    <value>打开钱包</value>
   </data>
-  <data name="wallet" xml:space="preserve">
-    <value>钱包</value>
+  <data name="per" xml:space="preserve">
+    <value>每</value>
+  </data>
+  <data name="Please change swap amount" xml:space="preserve">
+    <value>请更改置换数量</value>
+  </data>
+  <data name="Please chose what to swap." xml:space="preserve">
+    <value>请选择想要置换的通证对。</value>
+  </data>
+  <data name="Please select a token pair." xml:space="preserve">
+    <value>请选择一个通证对。</value>
+  </data>
+  <data name="Pool Fee" xml:space="preserve">
+    <value>流动性池费用</value>
+  </data>
+  <data name="Pool refresh failed: {0}" xml:space="preserve">
+    <value>流动性池刷新错误： {0}</value>
+  </data>
+  <data name="Price calculated from liquidate pool. Only for reference." xml:space="preserve">
+    <value>价格计算自流动性池，仅供参考。</value>
+  </data>
+  <data name="Price Impact" xml:space="preserve">
+    <value>价格影响</value>
+  </data>
+  <data name="Price queried from CoinGecko. Only for reference." xml:space="preserve">
+    <value>价格来自 CoinGecko。仅供参考</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>处理中</value>
+  </data>
+  <data name="Refresh pool and wallet..." xml:space="preserve">
+    <value>更新流动性池和钱包……</value>
+  </data>
+  <data name="Swap" xml:space="preserve">
+    <value>置换</value>
+  </data>
+  <data name="Swap App is ready." xml:space="preserve">
+    <value>置换 App 已就绪。</value>
+  </data>
+  <data name="Token Pair" xml:space="preserve">
+    <value>通证对</value>
+  </data>
+  <data name="Token Swap Success! Waiting for pool updating..." xml:space="preserve">
+    <value>通证置换成功！等待流动性池更新……</value>
+  </data>
+  <data name="Total Liquidate" xml:space="preserve">
+    <value>总共流动性</value>
+  </data>
+  <data name="Updated." xml:space="preserve">
+    <value>已更新。</value>
+  </data>
+  <data name="You will get" xml:space="preserve">
+    <value>您会得到</value>
+  </data>
+  <data name="You will sell" xml:space="preserve">
+    <value>您将卖出</value>
+  </data>
+  <data name="Your Share" xml:space="preserve">
+    <value>您的份额</value>
   </data>
 </root>

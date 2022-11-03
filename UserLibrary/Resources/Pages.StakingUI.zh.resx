@@ -117,40 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Block Explorer" xml:space="preserve">
-    <value>区块浏览器</value>
+  <data name="Lyra Staking" xml:space="preserve">
+    <value>Lyra 质押</value>
   </data>
-  <data name="contacts" xml:space="preserve">
-    <value>联系人</value>
+  <data name="Open Wallet" xml:space="preserve">
+    <value>打开钱包</value>
   </data>
-  <data name="dao" xml:space="preserve">
-    <value>自治组织</value>
-  </data>
-  <data name="dex" xml:space="preserve">
-    <value>跨链传送</value>
-  </data>
-  <data name="Lyra Site" xml:space="preserve">
-    <value>网站</value>
-  </data>
-  <data name="mint" xml:space="preserve">
-    <value>铸币局</value>
-  </data>
-  <data name="otc" xml:space="preserve">
-    <value>场外交易</value>
-  </data>
-  <data name="revenue" xml:space="preserve">
-    <value>盈利</value>
-  </data>
-  <data name="settings" xml:space="preserve">
-    <value>设置</value>
-  </data>
-  <data name="staking" xml:space="preserve">
-    <value>质押</value>
-  </data>
-  <data name="swap" xml:space="preserve">
-    <value>通证置换</value>
-  </data>
-  <data name="wallet" xml:space="preserve">
-    <value>钱包</value>
+  <data name="Refreshing..." xml:space="preserve">
+    <value>更新中……</value>
   </data>
 </root>

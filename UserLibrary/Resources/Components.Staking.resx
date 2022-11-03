@@ -117,40 +117,157 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Block Explorer" xml:space="preserve">
-    <value>区块浏览器</value>
+  <data name="Action" xml:space="preserve">
+    <value>操作</value>
   </data>
-  <data name="contacts" xml:space="preserve">
-    <value>联系人</value>
+  <data name="Add Staking" xml:space="preserve">
+    <value>添加质押</value>
   </data>
-  <data name="dao" xml:space="preserve">
-    <value>自治组织</value>
+  <data name="Add staking of {0} LYR..." xml:space="preserve">
+    <value>添加 {0} LYR 到质押……</value>
   </data>
-  <data name="dex" xml:space="preserve">
-    <value>跨链传送</value>
+  <data name="Adding profiting account..." xml:space="preserve">
+    <value>添加盈利账号……</value>
   </data>
-  <data name="Lyra Site" xml:space="preserve">
-    <value>网站</value>
+  <data name="Adding staking account..." xml:space="preserve">
+    <value>添加质押账号……</value>
   </data>
-  <data name="mint" xml:space="preserve">
-    <value>铸币局</value>
+  <data name="Address" xml:space="preserve">
+    <value>地址</value>
   </data>
-  <data name="otc" xml:space="preserve">
-    <value>场外交易</value>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
   </data>
-  <data name="revenue" xml:space="preserve">
-    <value>盈利</value>
+  <data name="Compound Mode" xml:space="preserve">
+    <value>复利模式</value>
   </data>
-  <data name="settings" xml:space="preserve">
-    <value>设置</value>
+  <data name="Compound staking mode:" xml:space="preserve">
+    <value>复利质押模式：</value>
   </data>
-  <data name="staking" xml:space="preserve">
-    <value>质押</value>
+  <data name="Confirm!" xml:space="preserve">
+    <value>确认！</value>
   </data>
-  <data name="swap" xml:space="preserve">
-    <value>通证置换</value>
+  <data name="Create Profiting Account" xml:space="preserve">
+    <value>创建盈利账号</value>
   </data>
-  <data name="wallet" xml:space="preserve">
-    <value>钱包</value>
+  <data name="Create Staking" xml:space="preserve">
+    <value>创建质押</value>
+  </data>
+  <data name="Create Staking Account" xml:space="preserve">
+    <value>创建质押账号</value>
+  </data>
+  <data name="Days of staking:" xml:space="preserve">
+    <value>要质押的天数：</value>
+  </data>
+  <data name="Error: {0}" xml:space="preserve">
+    <value>错误： {0}</value>
+  </data>
+  <data name="Failed adding staking. Error: {0}" xml:space="preserve">
+    <value>添加质押失败。错误 {0}</value>
+  </data>
+  <data name="Failed to unstake. Error: {0}" xml:space="preserve">
+    <value>移除质押失败。错误 {0}</value>
+  </data>
+  <data name="How many LYR do you want to stake?" xml:space="preserve">
+    <value>你想质押多少 LYR？</value>
+  </data>
+  <data name="Merchant" xml:space="preserve">
+    <value>店铺</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="Name:" xml:space="preserve">
+    <value>名称：</value>
+  </data>
+  <data name="Node" xml:space="preserve">
+    <value>节点</value>
+  </data>
+  <data name="Nothing changed." xml:space="preserve">
+    <value>什么都没改变。</value>
+  </data>
+  <data name="Notice" xml:space="preserve">
+    <value>通知</value>
+  </data>
+  <data name="Number of staking (0 - 100):" xml:space="preserve">
+    <value>质押的数量 （0 - 100）</value>
+  </data>
+  <data name="Oracle" xml:space="preserve">
+    <value>预言机</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>处理中</value>
+  </data>
+  <data name="Profiting Account ID" xml:space="preserve">
+    <value>盈利账号</value>
+  </data>
+  <data name="Profiting Accounts" xml:space="preserve">
+    <value>所有盈利账号</value>
+  </data>
+  <data name="Ratio" xml:space="preserve">
+    <value>比例</value>
+  </data>
+  <data name="Ratio to share to staking (0% - 100%):" xml:space="preserve">
+    <value>分享给质押的比例 (0% - 100%):</value>
+  </data>
+  <data name="Remove staking..." xml:space="preserve">
+    <value>移除质押……</value>
+  </data>
+  <data name="Seats" xml:space="preserve">
+    <value>席位数</value>
+  </data>
+  <data name="Seats number" xml:space="preserve">
+    <value>席位数量</value>
+  </data>
+  <data name="Share Ratio" xml:space="preserve">
+    <value>分享比例</value>
+  </data>
+  <data name="Staking Accounts" xml:space="preserve">
+    <value>所有质押账号</value>
+  </data>
+  <data name="Staking Amount" xml:space="preserve">
+    <value>质押数额</value>
+  </data>
+  <data name="Staking Days" xml:space="preserve">
+    <value>质押天数</value>
+  </data>
+  <data name="Staking For Address:" xml:space="preserve">
+    <value>质押给地址：</value>
+  </data>
+  <data name="Staking has expired. It's now safe to unstake." xml:space="preserve">
+    <value>质押已过期。现在可以安全移除质押。</value>
+  </data>
+  <data name="Staking to Account" xml:space="preserve">
+    <value>质押到账号</value>
+  </data>
+  <data name="Staking will expire in {0:N2} Hours." xml:space="preserve">
+    <value>质押在 {0} 小时后过期。</value>
+  </data>
+  <data name="Start Time" xml:space="preserve">
+    <value>开始时间</value>
+  </data>
+  <data name="Success. Refreshing..." xml:space="preserve">
+    <value>成功。更新中……</value>
+  </data>
+  <data name="Total Reward" xml:space="preserve">
+    <value>奖励总额</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>类型</value>
+  </data>
+  <data name="Type:" xml:space="preserve">
+    <value>类型：</value>
+  </data>
+  <data name="Unstaking" xml:space="preserve">
+    <value>移除质押</value>
+  </data>
+  <data name="Unstaking within the promised staking period will pay 0.8% panalise fee. Are you sure you want to confirm?" xml:space="preserve">
+    <value>在承诺的质押期间移除质押会被收取 0.8% 的罚金。你确认要这么做吗？</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>警告</value>
+  </data>
+  <data name="Yield" xml:space="preserve">
+    <value>收益</value>
   </data>
 </root>

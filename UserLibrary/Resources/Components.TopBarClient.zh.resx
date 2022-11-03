@@ -117,40 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Block Explorer" xml:space="preserve">
-    <value>区块浏览器</value>
+  <data name="Await:" xml:space="preserve">
+    <value>等待：</value>
   </data>
-  <data name="contacts" xml:space="preserve">
-    <value>联系人</value>
+  <data name="Free LYR" xml:space="preserve">
+    <value>免费 LYR</value>
   </data>
-  <data name="dao" xml:space="preserve">
-    <value>自治组织</value>
+  <data name="Incoming transfer from: {0}" xml:space="preserve">
+    <value>从 {0} 发送给我</value>
   </data>
-  <data name="dex" xml:space="preserve">
-    <value>跨链传送</value>
+  <data name="Open Trade" xml:space="preserve">
+    <value>打开交易</value>
   </data>
-  <data name="Lyra Site" xml:space="preserve">
-    <value>网站</value>
+  <data name="Scan to Pay" xml:space="preserve">
+    <value>扫描支付</value>
   </data>
-  <data name="mint" xml:space="preserve">
-    <value>铸币局</value>
+  <data name="Take Action:" xml:space="preserve">
+    <value>采取行动：</value>
   </data>
-  <data name="otc" xml:space="preserve">
-    <value>场外交易</value>
+  <data name="Your contract {0} is changed." xml:space="preserve">
+    <value>我的智能合约 {0} 已经更新。</value>
   </data>
-  <data name="revenue" xml:space="preserve">
-    <value>盈利</value>
-  </data>
-  <data name="settings" xml:space="preserve">
-    <value>设置</value>
-  </data>
-  <data name="staking" xml:space="preserve">
-    <value>质押</value>
-  </data>
-  <data name="swap" xml:space="preserve">
-    <value>通证置换</value>
-  </data>
-  <data name="wallet" xml:space="preserve">
-    <value>钱包</value>
+  <data name="Your send to: {0} is received." xml:space="preserve">
+    <value>我发送给 {0} 已被接收。</value>
   </data>
 </root>

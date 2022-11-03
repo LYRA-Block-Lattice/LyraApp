@@ -117,40 +117,88 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Block Explorer" xml:space="preserve">
-    <value>区块浏览器</value>
+  <data name="Add Liquidate" xml:space="preserve">
+    <value>添加流动性</value>
   </data>
-  <data name="contacts" xml:space="preserve">
-    <value>联系人</value>
+  <data name="Add liquidate success." xml:space="preserve">
+    <value>添加流动性成功。</value>
   </data>
-  <data name="dao" xml:space="preserve">
-    <value>自治组织</value>
+  <data name="Add Liquidity" xml:space="preserve">
+    <value>添加流动性</value>
   </data>
-  <data name="dex" xml:space="preserve">
-    <value>跨链传送</value>
+  <data name="Adding liquidate..." xml:space="preserve">
+    <value>添加流动性……</value>
   </data>
-  <data name="Lyra Site" xml:space="preserve">
-    <value>网站</value>
+  <data name="Balance:" xml:space="preserve">
+    <value>余额：</value>
   </data>
-  <data name="mint" xml:space="preserve">
-    <value>铸币局</value>
+  <data name="Create Liquidity Pool" xml:space="preserve">
+    <value>创建流动性池</value>
   </data>
-  <data name="otc" xml:space="preserve">
-    <value>场外交易</value>
+  <data name="Failed add liquidate. {0}" xml:space="preserve">
+    <value>添加流动性失败： {0}</value>
   </data>
-  <data name="revenue" xml:space="preserve">
-    <value>盈利</value>
+  <data name="Failed remove liquidate. {0}" xml:space="preserve">
+    <value>移除流动性失败： {0}</value>
   </data>
-  <data name="settings" xml:space="preserve">
-    <value>设置</value>
+  <data name="Finished successfully." xml:space="preserve">
+    <value>成功完成。</value>
   </data>
-  <data name="staking" xml:space="preserve">
-    <value>质押</value>
+  <data name="Input" xml:space="preserve">
+    <value>输入</value>
   </data>
-  <data name="swap" xml:space="preserve">
-    <value>通证置换</value>
+  <data name="My Liquidity" xml:space="preserve">
+    <value>我的流动性</value>
   </data>
-  <data name="wallet" xml:space="preserve">
-    <value>钱包</value>
+  <data name="My Share" xml:space="preserve">
+    <value>我的份额</value>
+  </data>
+  <data name="No Liquidate in Pool" xml:space="preserve">
+    <value>池中流动性是空的</value>
+  </data>
+  <data name="No pool for selected pair." xml:space="preserve">
+    <value>所选通证对没有流动性池。</value>
+  </data>
+  <data name="No Share in Pool" xml:space="preserve">
+    <value>在池中没有我的份额</value>
+  </data>
+  <data name="Open Wallet to Create a Pool" xml:space="preserve">
+    <value>打开钱包来创建一个池</value>
+  </data>
+  <data name="Pool created failed. {0}" xml:space="preserve">
+    <value>池创建失败。 {0}</value>
+  </data>
+  <data name="Pool Liquidate" xml:space="preserve">
+    <value>池中流动性</value>
+  </data>
+  <data name="Pool Not Exists." xml:space="preserve">
+    <value>池不存在。</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>处理中</value>
+  </data>
+  <data name="Remove All My Share" xml:space="preserve">
+    <value>移除我的份额</value>
+  </data>
+  <data name="Remove liquidate success." xml:space="preserve">
+    <value>移除流动性成功。</value>
+  </data>
+  <data name="Removing liquidate ..." xml:space="preserve">
+    <value>移除流动性中……</value>
+  </data>
+  <data name="Success." xml:space="preserve">
+    <value>成功。</value>
+  </data>
+  <data name="Unexpected Error: {0}" xml:space="preserve">
+    <value>出乎意料的错误： {0}</value>
+  </data>
+  <data name="Updating balance..." xml:space="preserve">
+    <value>更新余额……</value>
+  </data>
+  <data name="Updating pool..." xml:space="preserve">
+    <value>更新池……</value>
+  </data>
+  <data name="Waiting for pool be created..." xml:space="preserve">
+    <value>等待流动性池的建立……</value>
   </data>
 </root>

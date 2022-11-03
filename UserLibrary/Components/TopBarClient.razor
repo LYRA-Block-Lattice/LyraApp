@@ -26,7 +26,7 @@
         <div>
             <a href="/start">
                 <RadzenButton Variant="Radzen.Variant.Text">
-                    Get Free LYR &nbsp;
+                    @localizer["Free LYR"]&nbsp;
                     <RadzenBadge BadgeStyle="BadgeStyle.Secondary" IsPill="@true" Text="1" />
                 </RadzenButton>
             </a>
@@ -48,7 +48,7 @@
                                     <svg t="1640580184239" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3899" width="32" height="32"><path d="M128 669.866667v154.133333a72 72 0 0 0 67.776 71.893333l4.224 0.106667H354.133333c4.693333 0 8.533333 3.84 8.533334 8.533333v46.933334a8.533333 8.533333 0 0 1-8.533334 8.533333H205.482667A141.482667 141.482667 0 0 1 64 818.517333V669.866667c0-4.693333 3.84-8.533333 8.533333-8.533334h46.933334c4.693333 0 8.533333 3.84 8.533333 8.533334z m832 0v148.650666A141.482667 141.482667 0 0 1 818.517333 960H669.866667a8.533333 8.533333 0 0 1-8.533334-8.533333v-46.933334c0-4.693333 3.84-8.533333 8.533334-8.533333h154.133333a72 72 0 0 0 71.893333-67.776l0.106667-4.224V669.866667c0-4.693333 3.84-8.533333 8.533333-8.533334h46.933334c4.693333 0 8.533333 3.84 8.533333 8.533334z m0-170.666667v46.933333a8.533333 8.533333 0 0 1-8.533333 8.533334H72.533333a8.533333 8.533333 0 0 1-8.533333-8.533334v-46.933333c0-4.693333 3.84-8.533333 8.533333-8.533333h878.933334c4.693333 0 8.533333 3.84 8.533333 8.533333z m-597.333333-426.666667v46.933334a8.533333 8.533333 0 0 1-8.533334 8.533333H200a72 72 0 0 0-71.893333 67.776L128 200V354.133333a8.533333 8.533333 0 0 1-8.533333 8.533334H72.533333a8.533333 8.533333 0 0 1-8.533333-8.533334V205.482667A141.482667 141.482667 0 0 1 205.482667 64H354.133333c4.693333 0 8.533333 3.84 8.533334 8.533333zM818.517333 64A141.482667 141.482667 0 0 1 960 205.482667V354.133333a8.533333 8.533333 0 0 1-8.533333 8.533334h-46.933334a8.533333 8.533333 0 0 1-8.533333-8.533334V200a72 72 0 0 0-67.776-71.893333L824 128H669.866667a8.533333 8.533333 0 0 1-8.533334-8.533333V72.533333c0-4.693333 3.84-8.533333 8.533334-8.533333h148.650666z" fill="#333333" p-id="3900"></path></svg>
                                 </div>
                                 <div>
-                                    Scan to Pay
+                                    @localizer["Scan to Pay"]
                                 </div>
                             </div>
                         </a>
@@ -81,6 +81,7 @@
     [Inject] IConfiguration _config { get; set; }
     [Inject] ILocalStorageService localStorage { get; set; }
     [Inject] NebulaConsts _consts { get; set; }
+    [Inject] IStringLocalizer<TopBarClient>? localizer { get; set; }
 
     MudMenu mnu;
 
@@ -172,7 +173,7 @@
                 {
                     Snackbar.Add($"{a.UserName}: {a.Text}", Severity.Normal, config =>
                     {
-                        config.Action = "Open Trade";
+                        config.Action = localizer["Open Trade"];
                         config.ActionColor = Color.Primary;
                         config.Onclick = snackbar =>
                         {
@@ -186,7 +187,7 @@
                 {
                     Snackbar.Add($"{fx.UserName} send you a file: {fx.FileName}", Severity.Normal, config =>
                     {
-                        config.Action = "Open Trade";
+                        config.Action = localizer["Open Trade"];
                         config.ActionColor = Color.Primary;
                         config.Onclick = snackbar =>
                         {
@@ -205,15 +206,15 @@
 
                 var title = a.Mode switch
                 {
-                    PinnedMode.Action => "Take Action: ",
-                    PinnedMode.Wait => "Await: ",
+                    PinnedMode.Action => localizer["Take Action:"],
+                    PinnedMode.Wait => localizer["Await:"],
                     PinnedMode.Notify => "",
                     _ => "",
                 };
 
                 Snackbar.Add($"{title}{a.Text}", Severity.Normal, config =>
                 {
-                    config.Action = "Open Trade";
+                    config.Action = localizer["Open Trade"];
                     config.ActionColor = Color.Primary;
                     config.Onclick = snackbar =>
                     {
@@ -231,29 +232,29 @@
 
                     if (Navigation.Uri.Contains("/wallet"))
                     {
-                        Snackbar.Add($"Incoming transfer from: {achgevt.PeerAccountId.Shorten()}", Severity.Success);
+                        Snackbar.Add(localizer["Incoming transfer from: {0}", achgevt.PeerAccountId.Shorten()], Severity.Success);
                     }
                     else
                     {
-                        Snackbar.Add($"Incoming transfer from: {achgevt.PeerAccountId.Shorten()}", Severity.Success, config =>
-                    {
-                        config.Action = "Open Wallet";
-                        config.ActionColor = Color.Primary;
-                        config.Onclick = snackbar =>
+                        Snackbar.Add(localizer["Incoming transfer from: {0}", achgevt.PeerAccountId.Shorten()], Severity.Success, config =>
                         {
-                            GoWallet();
-                            return Task.CompletedTask;
-                        };
-                    });
+                            config.Action = localizer["Open Wallet"];
+                            config.ActionColor = Color.Primary;
+                            config.Onclick = snackbar =>
+                            {
+                                GoWallet();
+                                return Task.CompletedTask;
+                            };
+                        });
                     }
                 }
                 else if (achgevt.ChangeType == AccountChangeTypes.SendReceived)
                 {
-                    Snackbar.Add($"Your send to: {achgevt.PeerAccountId.Shorten()} is received.", Severity.Success);
+                    Snackbar.Add(localizer["Your send to: {0} is received.", achgevt.PeerAccountId.Shorten()], Severity.Success);
                 }
                 else if (achgevt.ChangeType == AccountChangeTypes.Contract)
                 {
-                    Snackbar.Add($"Your contract {achgevt.PeerAccountId.Shorten()} is changed.", Severity.Success);
+                    Snackbar.Add(localizer["Your contract {0} is changed.", achgevt.PeerAccountId.Shorten()], Severity.Success);
                 }
             });
 

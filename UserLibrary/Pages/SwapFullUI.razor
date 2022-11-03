@@ -2,10 +2,14 @@
 @page "/swap"
 
 <MudTabs Elevation="2" Rounded="true" Centered="true" Color="Color.Secondary">
-    <MudTabPanel Text="Swap">
+    <MudTabPanel Text=@localizer["Swap"]>
         <div class="pad mag"><Swap /></div>
     </MudTabPanel>
-    <MudTabPanel Text="Pool">
+    <MudTabPanel Text=@localizer["Pool"]>
         <div class="pad mag"><Pool /></div>
     </MudTabPanel>
 </MudTabs>
+
+@code{
+    [Inject] IStringLocalizer<SwapFullUI>? localizer { get; set; }
+}

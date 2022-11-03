@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="ipt">
-            <div title="Estimated total value. Only for reference.">@value1</div>
+            <div title=@localizer["Estimated total value. Only for reference."]>@value1</div>
             @if (walletState.Value.wallet != null)
             {
                 <div>
@@ -66,7 +66,7 @@
             @if (walletState.Value.wallet != null)
             {
                 <div>
-                    Balance: @($"{balance2:N4}")
+                    @localizer["Balance:"] @($"{balance2:N4}")
                 </div>
             }
         </div>
@@ -78,7 +78,7 @@
                 <MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true"
                        Color="Color.Primary" Size="Size.Large" class="rounded-pill">
                     <MudIcon Icon="@Icons.Filled.LockOpen" Title="Unlock" />
-                    Open Wallet
+                    @localizer["Open Wallet"]
                 </MudButton>
             </a>
         }
@@ -90,12 +90,12 @@
                 @if (swapping)
                 {
                     <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                    <MudText Class="ms-2">Processing</MudText>
+                    <MudText Class="ms-2">@localizer["Processing"]</MudText>
                 }
                 else
                 {
                     <MudIcon Icon="@Icons.Filled.SwapCalls" Title="Swap" />
-                    <MudText>Swap</MudText>
+                    <MudText>@localizer["Swap"]</MudText>
                 }
             </MudButton>
         }
@@ -119,52 +119,52 @@
             </TitleContent>
             <ChildContent>
                 <div style="font-size: smaller; padding: 15px;">
-                    <div class="ipt" title="Price queried from CoinGecko. Only for reference.">
-                        <div>LYR external price</div>
+                <div class="ipt" title=@localizer["Price queried from CoinGecko. Only for reference."]>
+                    <div>@localizer["LYR external price"]</div>
                         <div>$ @lyrprice</div>
                     </div>
-                    <div class="ipt" title="Price calculated from liquidate pool. Only for reference.">
-                        <div>LYR internal price</div>
+                <div class="ipt" title=@localizer["Price calculated from liquidate pool. Only for reference."]>
+                    <div>@localizer["LYR internal price"]</div>
                         <div>$ @lyrintprice</div>
                     </div>
                     <MudDivider Class="ma-2" />
                     @if (haspoolinfo)
                     {
                         <div class="ipt">
-                            <div>Token Pair</div>
+                            <div>@localizer["Token Pair"]</div>
                             <div>@pairinfo</div>
                         </div>
                         @if (poollatest != null && amount1 != 0)
                         {
                             <div class="ipt">
-                                <div>Estimated ratio</div>
+                            <div>@localizer["Estimated ratio"]</div>
                                 <div>@calprice</div>
                             </div>
                             <div class="ipt">
-                                <div>You will sell</div>
+                            <div>@localizer["You will sell"]</div>
                                 <div>@calsell</div>
                             </div>
                             <div class="ipt">
-                                <div>You will get</div>
+                            <div>@localizer["You will get"]</div>
                                 <div>@calget</div>
                             </div>
                             <div class="ipt">
-                                <div>Price Impact</div>
+                            <div>@localizer["Price Impact"]</div>
                                 <div>@calimpact</div>
                             </div>
                             <div class="ipt">
-                                <div>Pool Fee</div>
+                            <div>@localizer["Pool Fee"]</div>
                                 <div>@calprofee</div>
                             </div>
                             <div class="ipt">
-                                <div>Network Fee</div>
+                            <div>@localizer["Network Fee"]</div>
                                 <div>@calnodfee</div>
                             </div>
                         }
                         else
                         {
                             <div class="d-flex justify-center">
-                                <div>Please change swap amount</div>
+                            <div>@localizer["Please change swap amount"]</div>
                             </div>
                         }
                     }
@@ -173,19 +173,19 @@
                     {
                         <MudDivider Class="ma-2" />
                         <div class="iptct">
-                            <div>Total Liquidate</div>
+                        <div>@localizer["Total Liquidate"]</div>
                             <div>@pairliquid</div>
                         </div>
 
                         <div class="ipt">
-                            <div>Your Share</div>
+                        <div>@localizer["Your Share"]</div>
                             <div>@pairshare</div>
                         </div>
                     }
                     else
                     {
                         <div>
-                            <div style="align-content:center;">Please select a token pair.</div>
+                        <div style="align-content:center;">@localizer["Please select a token pair."]</div>
                         </div>
                     }
 
@@ -206,13 +206,12 @@
 
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
+    [Inject] IStringLocalizer<Swap>? localizer { get; set; }
     double intervalBeforeMsgClose = 2000;
 
     bool busy, updating;
 
-    RenderFragment expandTitle =
-    @<div>Please chose what to swap.</div>
-    ;
+    RenderFragment expandTitle;
     RenderFragment value1, value2;
 
     decimal lyrprice, lyrintprice;   // int price: internal price calculated by pool
@@ -404,16 +403,16 @@
 
         if (result.Successful())
         {
-            Snackbar.Add("Token Swap Success! Waiting for pool updating...", Severity.Success);
+            Snackbar.Add(localizer["Token Swap Success! Waiting for pool updating..."], Severity.Success);
             await Task.Delay(3000);
 
-            Snackbar.Add("Refresh pool and wallet...", Severity.Info);
+            Snackbar.Add(localizer["Refresh pool and wallet..."], Severity.Info);
             await walletState.Value.wallet.SyncAsync(null);
 
             var existspool = await lyraApi.GetPoolAsync(selectedTicker1.dbname, selectedTicker2.dbname);
             if (existspool.Successful())
             {
-                Snackbar.Add("Updated.", Severity.Success);
+                Snackbar.Add(localizer["Updated."], Severity.Success);
 
                 poollatest = existspool.GetBlock() as TransactionBlock;
                 token0 = existspool.Token0;
@@ -422,7 +421,7 @@
             }
             else
             {
-                Snackbar.Add($" Pool refresh failed: {existspool.ResultCode.Humanize()}", Severity.Error);
+                Snackbar.Add(localizer["Pool refresh failed: {0}", existspool.ResultCode.Humanize()], Severity.Error);
             }
 
             updateBtn1();
@@ -431,7 +430,7 @@
             swapping = false;
         }
         else
-            Snackbar.Add($"Error Swap Token: {result.ResultCode.Humanize()}", Severity.Error);
+            Snackbar.Add(localizer["Error Swap Token: {0}", result.ResultCode.Humanize()], Severity.Error);
 
         swapping = false;
         busy = false;
@@ -450,7 +449,7 @@
     ;
 
             price = swapcal.Price;
-            var pricestr = $"{Math.Round(price, 8)} {selectedTicker1} per {selectedTicker2}";
+            var pricestr = $"{Math.Round(price, 8)} {selectedTicker1} " + localizer["per"] + $" {selectedTicker2}";
             calprice =
     @<div>@pricestr</div>
     ;
@@ -549,7 +548,7 @@
         
         if (!haspoolinfo || amount1 == 0)
             expandTitle =
-    @<div>Please chose what to swap.</div>
+    @<div>@localizer["Please chose what to swap."]</div>
     ;
         else
             expandTitle = calprice;
@@ -617,7 +616,7 @@
     {
         if(firstRender)
         {
-            Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Swap" });
+            Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = localizer["Lyra Swap"] });
 
             SubscribeToAction<MarketUpdated>(
                 async (e) =>
@@ -643,7 +642,11 @@
         if (firstRender && !init)
         {
             init = true;
-            Snackbar.Add($"Initialize Swap App... ", Severity.Info);
+            Snackbar.Add(localizer["Initialize Swap App..."], Severity.Info);
+
+            expandTitle =
+    @<div>@localizer["Please chose what to swap."]</div>
+        ;
 
             try
             {
@@ -651,11 +654,11 @@
                     await walletState.Value.wallet.SyncAsync(null);
                 await OpenSwapUI();
 
-                Snackbar.Add($"Swap App is ready. ", Severity.Success);
+                Snackbar.Add(localizer["Swap App is ready."], Severity.Success);
             }
             catch (Exception ex)
             {
-                Snackbar.Add($"Init refresh failed: {ex.Message}", Severity.Error);
+                Snackbar.Add(localizer["Init refresh failed: {0}", ex.Message], Severity.Error);
             }
 
             StateHasChanged();

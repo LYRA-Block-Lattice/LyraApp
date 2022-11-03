@@ -6,8 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <Platforms>AnyCPU;x86</Platforms>
-	<AssemblyVersion>1.2.9.111</AssemblyVersion>
-	<PackageVersion>1.2.9.111</PackageVersion>
+	<AssemblyVersion>1.2.9.128</AssemblyVersion>
+	<PackageVersion>1.2.9.128</PackageVersion>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -44,6 +44,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Resources\Components.Staking.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Components.Staking.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Resources\Components.Staking.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Components.Staking.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
 	  <EmbeddedResource Update="Resources\Pages.Entry.resx">
 	    <Generator></Generator>
 	  </EmbeddedResource>

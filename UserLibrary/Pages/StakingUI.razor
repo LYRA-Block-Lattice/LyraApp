@@ -10,7 +10,7 @@
     <a href="/wallet">
             <MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true" Color="Color.Primary" class="rounded-pill">
             <MudIcon Icon="@Icons.Filled.LockOpen" />
-            Open Wallet
+                @localizer["Open Wallet"]
         </MudButton>
     </a>
 }
@@ -23,7 +23,7 @@ else
     else
     {
         Dispatcher.Dispatch(new WebWalletStakingAction { wallet = walletState.Value.wallet });
-        <p>Refreshing...</p>
+            <p>@localizer["Refreshing..."]</p>
     }
 }
 
@@ -36,13 +36,15 @@ else
     [Inject]
     private IDispatcher Dispatcher { get; set; }
 
+    [Inject] IStringLocalizer<StakingUI>? localizer { get; set; }
+
     protected override void OnInitialized()
     {
        SubscribeToAction<WebWalletResultAction>(a =>
             {
                 StateHasChanged();
             });
-        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra Staking" });
+        Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = localizer["Lyra Staking"] });
         base.OnInitialized();
     }
    

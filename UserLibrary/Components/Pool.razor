@@ -18,10 +18,10 @@
         <div style="padding: 14px; width: 370px">
             <MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true" Color="Color.Primary" 
                 OnClick="@(async ()=>{ await OpenAddLiquidityUI(); })">
-                Add Liquidity
+                @localizer["Add Liquidity"]
             </MudButton>
             <div class="mag">
-                <div>Your Liquidity</div>
+                <div>@localizer["My Liquidity"]</div>
                 <div>(TBA)</div>
             </div>
             
@@ -32,13 +32,13 @@
     {
         <div style="padding: 14px; width: 370px; display: flex; justify-content:left; align-items:center;">
             <MudIconButton OnClick="@BackEntry" Icon="@Icons.Filled.KeyboardBackspace" Color="Color.Primary" aria-label="Back" />
-            &nbsp;Add Liquidity
+            &nbsp;@localizer["Add Liquidity"]
         </div>
         <div>
             <table class="swt">
                 <tr>
-                    <td>Input</td>
-                    <td>Balance: @($"{balance1:N8}")</td>
+                    <td>@localizer["Input"]</td>
+                    <td>@localizer["Balance:"] @($"{balance1:N8}")</td>
                 </tr>
                 <tr>
                     <td>
@@ -58,8 +58,8 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td>Input</td>
-                    <td>Balance: @($"{balance2:N8}")</td>
+                    <td>@localizer["Input"]</td>
+                    <td>@localizer["Balance:"] @($"{balance2:N8}")</td>
                 </tr>
                 <tr>
                     <td>
@@ -81,11 +81,11 @@
                         <td>@pairinfo</td>
                         </tr>*@
                     <tr>
-                        <td>Pool Liquidate</td>
+                        <td>@localizer["Pool Liquidate"]</td>
                         <td>@pairliquid</td>
                     </tr>
                     <tr>
-                        <td>Your Share</td>
+                        <td>@localizer["My Share"]</td>
                         <td>@pairshare</td>
                     </tr>
                     <tr>
@@ -95,7 +95,7 @@
                                 <a href="/wallet">
                                     <MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true" class="rounded-pill"
                                 Color="Color.Primary">
-                                        Open Wallet to Create a Pool
+                                        @localizer["Open Wallet to Create a Pool"]
                                     </MudButton>
                                 </a>
                             }
@@ -107,11 +107,11 @@
                                     @if (adding)
                                     {
                                         <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
-                                        <MudText Class="ms-2">Processing</MudText>
+                                        <MudText Class="ms-2">@localizer["Processing"]</MudText>
                                     }
                                     else
                                     {
-                                        <MudText>Add Liquidate</MudText>
+                                        <MudText>@localizer["Add Liquidate"]</MudText>
                                     }                                    
                                 </MudButton>
                             }
@@ -129,7 +129,7 @@
                                 <MudDivider>Or</MudDivider>
                                 <MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true" class="rounded-pill"
                             Color="Color.Primary" OnClick="@(async ()=>{ await PoolWithdraw(); })">
-                                    Remove All My Share
+                                    @localizer["Remove All My Share"]
                                 </MudButton>
                             </td>
                         </tr>
@@ -138,7 +138,7 @@
                 else
                 {
                     <tr>
-                        <td colspan="2">No pool for selected pair.</td>
+                        <td colspan="2">@localizer["No pool for selected pair."]</td>
                     </tr>
                     <tr>
                         <td colspan="2" style="padding: 14px">
@@ -147,7 +147,7 @@
                                 <a href="/wallet">
                                     <MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true" class="rounded-pill"
                                 Color="Color.Primary">
-                                        Open Wallet to Create a Pool
+                                        @localizer["Open Wallet to Create a Pool"]
                                     </MudButton>
                                 </a>
                             }
@@ -155,7 +155,7 @@
                             {
                                 <MudButton Variant="MudBlazor.Variant.Filled" FullWidth="true" Disabled="@(!clenabled)" class="rounded-pill"
                             Color="Color.Primary" OnClick="@(async ()=>{ await CreateLiquidity(); })">
-                                    Create Liquidity Pool
+                                    @localizer["Create Liquidity Pool"]
                                 </MudButton>
                             }
                         </td>
@@ -180,6 +180,8 @@
 
     [Inject] ISnackbar Snackbar { get; set; }
     [Inject] ILyraAPI lyraApi { get; set; }
+    [Inject] IStringLocalizer<Pool>? localizer { get; set; }
+
     double intervalBeforeMsgClose = 2000;
 
     enum UI { Entry, Adding }
@@ -281,31 +283,31 @@
     {
         try
         {
-            Snackbar.Add($"Removing liquidate ...", Severity.Info);
+            Snackbar.Add(localizer["Removing liquidate ..."], Severity.Info);
             var result = await walletState.Value.wallet.RemoveLiquidateFromPoolAsync(selectedTicker1.dbname, selectedTicker2.dbname);
             if (result.Successful())
             {
-                Snackbar.Add($"Remove liquidate success.", Severity.Success);
+                Snackbar.Add(localizer["Remove liquidate success."], Severity.Success);
 
                 await Task.Delay(2000);
-                Snackbar.Add($"Updating pool...", Severity.Info);
+                Snackbar.Add(localizer["Updating pool..."], Severity.Info);
 
                 updateBtn1(amount1);
                 await Task.Delay(2000);
 
-                Snackbar.Add($"Updating balance...", Severity.Info);
+                Snackbar.Add(localizer["Updating balance..."], Severity.Info);
                 await walletState.Value.wallet.SyncAsync(null);
                 UpdateBalance();
-                Snackbar.Add($"Success.", Severity.Info);
+                Snackbar.Add(localizer["Success."], Severity.Info);
             }
             else
             {
-                Snackbar.Add($"Failed remove liquidate. {result.ResultCode.Humanize()}", Severity.Error);
+                Snackbar.Add(localizer["Failed remove liquidate. {0}", result.ResultCode.Humanize()], Severity.Error);
             }
         }
         catch (Exception ex)
         {
-            Snackbar.Add($"Unexpected Error: {ex}", Severity.Error);
+            Snackbar.Add(localizer["Unexpected Error: {0}", ex], Severity.Error);
         }
     }
 
@@ -315,31 +317,31 @@
         {
             adding = true;
             await InvokeAsync(StateHasChanged);
-            Snackbar.Add($"Adding liquidate...");
+            Snackbar.Add(localizer["Adding liquidate..."]);
 
             var result = await walletState.Value.wallet.AddLiquidateToPoolAsync(selectedTicker1.dbname, amount1, selectedTicker2.dbname, amount2);
             if (result.Successful())
             {
-                Snackbar.Add($"Add liquidate success.", Severity.Success);
+                Snackbar.Add(localizer["Add liquidate success."], Severity.Success);
                 await Task.Delay(3000);
 
-                Snackbar.Add($"Updating pool...");
+                Snackbar.Add(localizer["Updating pool..."]);
                 updateBtn1(amount1);
 
-                Snackbar.Add($"Updating balance...");
+                Snackbar.Add(localizer["Updating balance..."]);
                 await walletState.Value.wallet.SyncAsync(null);
                 UpdateBalance();
 
-                Snackbar.Add($"Finished successfully.", Severity.Success);
+                Snackbar.Add(localizer["Finished successfully."], Severity.Success);
             }
             else
             {
-                Snackbar.Add($"Failed add liquidate. {result.ResultCode.Humanize()}", Severity.Error);
+                Snackbar.Add(localizer["Failed add liquidate. {0}", result.ResultCode.Humanize()], Severity.Error);
             }
         }
         catch (Exception ex)
         {
-            Snackbar.Add($"Unexpected Error: {ex}", Severity.Error);
+            Snackbar.Add(localizer["Unexpected Error: {0}", ex], Severity.Error);
         }
         finally
         {
@@ -354,13 +356,13 @@
         if (poolCreateResult.Successful())
         {
             await Task.Delay(2000);
-            Snackbar.Add($"Waiting for pool be created...", Severity.Success);
+            Snackbar.Add(localizer["Waiting for pool be created..."], Severity.Success);
             await Task.Delay(3000);
             await PoolDeposit();
         }
         else
         {
-            Snackbar.Add($"Pool created failed. {poolCreateResult.ResultCode.Humanize()}", Severity.Error);
+            Snackbar.Add(localizer["Pool created failed. {0}", poolCreateResult.ResultCode.Humanize()], Severity.Error);
         }
 
     }
@@ -479,17 +481,17 @@
                 {
                     canremove = false;
                     pairshare =
-    @<div>No Share in Pool</div>
+    @<div>@localizer["No Share in Pool"]</div>
     ;
                 }
             }
             else
             {
                 pairliquid =
-    @<div>No Liquidate in Pool</div>
+    @<div>@localizer["No Liquidate in Pool"]</div>
     ;
                 pairshare =
-    @<div>No Share in Pool</div>
+    @<div>@localizer["No Share in Pool"]</div>
     ;
             }
 
@@ -498,7 +500,7 @@
         {
             havepool = false;
             pairinfo =
-    @<div>Pool Not Exists.</div>
+    @<div>@localizer["Pool Not Exists."]</div>
     ;
         }
 
