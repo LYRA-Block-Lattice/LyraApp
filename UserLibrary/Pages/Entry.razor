@@ -4,7 +4,6 @@
 
 <div class="mag">
 
-
     <MudGrid>
         @foreach (var kvp in Apps)
         {
@@ -22,13 +21,12 @@
         }
 
              <MudItem xs="4">
-                 <a href="https://lyra.live">
+                 <a href="/nft">
                 <MudPaper Class="d-flex align-center justify-center mud-width-full py-8 rounded-xl"
                           Style="@($"color:{Theme.Palette.Primary}; background:{Theme.Palette.GrayLighter};")">
 
                     <div class="progicon align-center">
-                        <svg t="1639844582429" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2070" width="64" height="64"><path d="M512 85.333333a362.666667 362.666667 0 0 1 362.666667 362.666667c0 277.333333-234.666667 512-362.666667 512s-362.666667-234.666667-362.666667-512A362.666667 362.666667 0 0 1 512 85.333333z m0 85.333334a277.333333 277.333333 0 0 0-277.333333 277.333333c0 204.544 177.706667 426.666667 277.333333 426.666667s277.333333-222.122667 277.333333-426.666667A277.333333 277.333333 0 0 0 512 170.666667z m234.666667 298.666666c6.826667 0 13.610667 0.341333 20.266666 1.066667a192 192 0 0 1-211.2 211.2A192 192 0 0 1 746.666667 469.333333z m-469.333334 0a192 192 0 0 1 190.933334 212.266667 192 192 0 0 1-211.2-211.2C263.68 469.674667 270.506667 469.333333 277.333333 469.333333z" p-id="2071" fill="@($"{Theme.Palette.Primary}")"></path></svg>
-                        <div>@localizer["Lyra Site"]</div>
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="64" height="64" viewBox="0 0 64 64" xml:space="preserve"><defs /><g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)"><path fill="@($"{Theme.Palette.Primary}")" d="M11.25 22.5c-0.301 0 -0.603 -0.078 -0.872 -0.233L2.145 17.514c-0.538 -0.31 -0.872 -0.889 -0.872 -1.51V6.497c0 -0.621 0.334 -1.2 0.872 -1.51L10.378 0.233c0.538 -0.31 1.206 -0.311 1.744 0L20.355 4.986c0.538 0.31 0.872 0.889 0.872 1.51v9.507c0 0.621 -0.334 1.2 -0.872 1.51L12.122 22.267C11.853 22.422 11.552 22.5 11.25 22.5zM11.25 1.5c-0.042 0 -0.084 0.011 -0.122 0.033L2.895 6.285c-0.075 0.043 -0.122 0.124 -0.122 0.211v9.507c0 0.087 0.047 0.168 0.122 0.211l8.233 4.754c0.075 0.043 0.169 0.043 0.244 0L19.605 16.215c0.075 -0.043 0.122 -0.124 0.122 -0.211V6.497c0 -0.087 -0.047 -0.168 -0.121 -0.211L11.372 1.532C11.334 1.51 11.292 1.5 11.25 1.5z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" /><path fill="@($"{Theme.Palette.Primary}")" d="M8.03 14.616c-0.255 0 -0.498 -0.13 -0.637 -0.354l-1.859 -2.996v2.6c0 0.414 -0.336 0.75 -0.75 0.75c-0.414 0 -0.75 -0.336 -0.75 -0.75V8.634c0 -0.335 0.222 -0.629 0.544 -0.721c0.323 -0.091 0.666 0.041 0.843 0.326l1.859 2.996V8.634c0 -0.414 0.336 -0.75 0.75 -0.75c0.414 0 0.75 0.336 0.75 0.75v5.231c0 0.335 -0.222 0.629 -0.544 0.721C8.168 14.606 8.099 14.616 8.03 14.616z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" /><path fill="@($"{Theme.Palette.Primary}")" d="M10.559 14.616c-0.414 0 -0.75 -0.336 -0.75 -0.75V8.634c0 -0.414 0.336 -0.75 0.75 -0.75h2.08c0.414 0 0.75 0.336 0.75 0.75s-0.336 0.75 -0.75 0.75h-1.33v4.481C11.309 14.28 10.973 14.616 10.559 14.616z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" /><path fill="@($"{Theme.Palette.Primary}")" d="M12.639 12h-2.08c-0.414 0 -0.75 -0.336 -0.75 -0.75c0 -0.414 0.336 -0.75 0.75 -0.75h2.08c0.414 0 0.75 0.336 0.75 0.75C13.389 11.664 13.053 12 12.639 12z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" /><path fill="@($"{Theme.Palette.Primary}")" d="M17.716 9.384H14.743c-0.414 0 -0.75 -0.336 -0.75 -0.75s0.336 -0.75 0.75 -0.75h2.973c0.414 0 0.75 0.336 0.75 0.75S18.131 9.384 17.716 9.384z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" /><path fill="@($"{Theme.Palette.Primary}")" d="M16.23 14.616c-0.414 0 -0.75 -0.336 -0.75 -0.75V8.634c0 -0.414 0.336 -0.75 0.75 -0.75c0.414 0 0.75 0.336 0.75 0.75v5.231C16.98 14.28 16.644 14.616 16.23 14.616z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" /></g></svg>                        <div>@localizer["NFT"]</div>
                     </div>
                 </MudPaper>
                 </a>
@@ -92,9 +90,9 @@
     {
         if (firstRender)
         {
-            Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = "Lyra" });
+            Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = localizer["Lyra Crypto Portal"] });
 
-            // store ref like if any
+            // store ref link if any
             if(!string.IsNullOrWhiteSpace(reftag))
             {
                 await localStorage.SetItemAsync("ref", reftag);

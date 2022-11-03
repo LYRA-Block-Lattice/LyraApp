@@ -34,7 +34,7 @@
 @if (walletState.Value.wallet != null)
 {
     <MudTabs @ref="tabs" Elevation="4" Rounded="true" Centered="true" Color="Color.Secondary">
-        <MudTabPanel Text=@localizer["Home"]>
+        <MudTabPanel Text=@localizer["Tokens"]>
             @if(walletState.Value.PendingRecv)
             {
                 <MudButton Variant="MudBlazor.Variant.Outlined" Disabled="@busy" Color="Color.Success" OnClick="@Refresh" FullWidth>

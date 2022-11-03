@@ -126,9 +126,6 @@
   <data name="Destination Wallet Address" xml:space="preserve">
     <value>目标钱包地址</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>主页</value>
-  </data>
   <data name="Lyra Wallet" xml:space="preserve">
     <value>Lyra 钱包</value>
   </data>
@@ -158,6 +155,9 @@
   </data>
   <data name="Token Name" xml:space="preserve">
     <value>通证名称</value>
+  </data>
+  <data name="Tokens" xml:space="preserve">
+    <value>通证</value>
   </data>
   <data name="Unable to refresh balance: {0}." xml:space="preserve">
     <value>无法更新余额： {0}</value>

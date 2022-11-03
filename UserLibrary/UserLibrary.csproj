@@ -6,8 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <Platforms>AnyCPU;x86</Platforms>
-	<AssemblyVersion>1.2.9.128</AssemblyVersion>
-	<PackageVersion>1.2.9.128</PackageVersion>
+	<AssemblyVersion>1.2.9.155</AssemblyVersion>
+	<PackageVersion>1.2.9.155</PackageVersion>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -29,6 +29,7 @@
     <PackageReference Include="MongoDB.Bson" Version="2.18.0" />
     <PackageReference Include="MudBlazor" Version="6.0.17" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="OpenSeaClient" Version="1.0.9" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     <PackageReference Include="Radzen.Blazor" Version="4.1.15" />
   </ItemGroup>

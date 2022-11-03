@@ -1,0 +1,75 @@
+﻿@page "/nft"
+@using OpenSeaClient
+
+<div class="mag">
+@if (assetsList.Count == 0)
+{
+    <div style="z-index: 5;" class="spinner"></div>
+}
+else
+{	
+	<div>TBA</div>
+	<div>
+	@foreach (var ast in assetsList)
+	{
+			<img width="128" height="128" src="@ast.ImagePreviewUrl" />
+	}
+	</div>
+}
+</div>
+
+@code {
+
+	List<Asset> assetsList = new List<Asset>();
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			await Load();
+			StateHasChanged();
+		}
+
+		await base.OnAfterRenderAsync(firstRender);
+	}
+
+	async Task Load()
+	{
+        var client = new OpenSeaHttpClient(apiKey: "");
+
+		var queryParams = new GetAssetsQueryParams
+		{
+			CollectionSlug = "bear-friends",
+		};
+		var count = 0;
+		var limit = 50;
+		var it = 0;		
+
+		do
+		{
+			queryParams.Offset = limit * it;
+			queryParams.Limit = limit;
+
+			var assets = await client.GetAssetsAsync(queryParams);
+
+			if (assets != null)
+			{
+				if (assets.Count > 0)
+				{
+					assetsList.AddRange(assets);
+				}
+			}
+			else
+			{
+				break;
+			}
+
+			await Task.Delay(1000);
+		}
+		while (count == 50);
+
+		//assetsList.Dump();
+
+
+    }
+}
