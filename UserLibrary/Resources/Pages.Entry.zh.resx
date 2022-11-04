@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Block Explorer" xml:space="preserve">
-    <value>区块链浏览器</value>
+    <value>区块浏览器</value>
   </data>
   <data name="contacts" xml:space="preserve">
     <value>联系人</value>
@@ -127,7 +127,7 @@
     <value>自治组织</value>
   </data>
   <data name="dex" xml:space="preserve">
-    <value>跨链传送</value>
+    <value>跨链钱包</value>
   </data>
   <data name="Lyra Crypto Portal" xml:space="preserve">
     <value>来啊币世界门户</value>
