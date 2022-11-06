@@ -64,8 +64,7 @@
                                     <h4>@kvp.Key.Replace("tether/", "$")</h4>
                                 </CardHeaderContent>
                                 <CardHeaderActions>
-                                    <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary"
-                                   OnClick="@(async ()=>{ await SendX(kvp.Key); })">@localizer["Send"]</MudButton>
+                                    <MudIconButton OnClick="@(async ()=>{ await SendX(kvp.Key); })" Icon="@Icons.Material.Outlined.Outbound" aria-label="share" Size="Size.Small"></MudIconButton>
                                 </CardHeaderActions>
                             </MudCardHeader>
                             <MudCardContent>
@@ -104,7 +103,7 @@
                         <MudCardContent>
                             <div style="height: 100%; display: flex; align-items: center; justify-content: center">
                                 <a href="mint">
-                                    <MudFab Color="Color.Secondary" Icon="@Icons.Material.Filled.Add" Size="Size.Small" IconSize="Size.Large" aria-label="add" />
+                                    <MudFab Color="Color.Tertiary" Icon="@Icons.Material.Filled.Add" Size="Size.Small" IconSize="Size.Large" aria-label="add" />
                                 </a>
                             </div>
                         </MudCardContent>

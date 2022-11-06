@@ -39,11 +39,17 @@
             </p>
             <p>@localizer["Current wallet's balance is:"] @walletState.Value.balanceString</p>
 
-            <p>@localizer["Current voting for:"] @walletState.Value.wallet.VoteFor</p>
 
             <p>
-                <MudTextField T="string" Label=@localizer["Vote For Address"] @bind-Value="@voteAddr" />
+                <div>@localizer["Current voting for:"] @walletState.Value.wallet.VoteFor</div>
+                <div>
+                    <MudTextField T="string" Label=@localizer["Vote For Address"] @bind-Value="@voteAddr" />
+                </div>
+                <div>
+                    &nbsp;<MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="SaveSettings">@localizer["Save"]</MudButton>
+                </div>
             </p>
+
             <div>
                 <p style="color: red">@localizer["Please backup private key properly if you want to open this wallet again."]</p>
             </div>
@@ -73,7 +79,6 @@
                     }
                         </pre>
             }
-            &nbsp;<MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="SaveSettings">@localizer["Save"]</MudButton>
             &nbsp;<a href="/backup"><MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">@localizer["Backup Wallet"]</MudButton></a>
 
             &nbsp;<MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="CloseWallet">@localizer["Close Wallet"]</MudButton>
@@ -88,6 +93,23 @@
     <MudDivider Style="margin: 30px" />
     <div style="font-size: xx-small">
         <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="CheckUpdate">@localizer["Check New Version"]</MudButton>
+    </div>
+
+    <MudDivider Style="margin: 30px" />
+    <div style="font-size: xx-small">
+                <div>
+            <MudTextField T="string" Label=@localizer["API Key for NFT.Storage"] @bind-Value="@nftapikey" />
+                </div>
+                <div>
+            &nbsp;<MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" @onclick="@(async () => await SaveNftApiKey())">@localizer["Save"]</MudButton>
+            &nbsp;            
+            <a href="https://nft.storage/">
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">
+                    @localizer["Get One"]
+                </MudButton>
+                </a>
+
+        </div>
     </div>
 
     <MudDivider Style="margin: 30px" />
@@ -118,17 +140,35 @@
     [Inject] DealerConnMgr connMgr { get; set; }
 
     [Inject] IStringLocalizer<Settings> localizer { get; set; }
+    [Inject] ILocalStorageService localStorage { get; set; }
 
     string voteAddr, altDisplay;
     string bexpurl;
     bool fetching;
     List<string> txs;
+    string nftapikey;
+    string keyName = "nftstorageapikey";
 
     protected override void OnInitialized()
     {
         Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = localizer["App Settings"] });
         bexpurl = Configuration["network"] == "mainnet" ? "https://nebula.lyra.live" : "https://nebulatestnet.lyra.live";
         base.OnInitialized();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            nftapikey = await localStorage.GetItemAsync<string>(keyName);
+            StateHasChanged();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task SaveNftApiKey()
+    {
+        await localStorage.SetItemAsync(keyName, nftapikey);
     }
 
     private void ToggleKey(MouseEventArgs e)

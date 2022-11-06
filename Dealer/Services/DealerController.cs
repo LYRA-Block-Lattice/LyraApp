@@ -167,30 +167,32 @@ namespace Dealer.Server.Services
                 if (!Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature))
                     return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
 
-                // validate verify code
-                var acac = new AcademyClient(_config["network"]);
-                var input = $"{_myDealerID}:{email}:{lsb.GetBlock().Hash}";
-                var dealerSign = Signatures.GetSignature(_config["DealerKey"], input, _myDealerID);
-                var retJson = await acac.GetCodeForEmailAsync(_myDealerID, email, dealerSign);
-                dynamic evc = JObject.Parse(retJson);
+                if (_config["network"] != "devnet")
+                {
+                    // validate verify code
+                    var acac = new AcademyClient(_config["network"]);
+                    var input = $"{_myDealerID}:{email}:{lsb.GetBlock().Hash}";
+                    var dealerSign = Signatures.GetSignature(_config["DealerKey"], input, _myDealerID);
+                    var retJson = await acac.GetCodeForEmailAsync(_myDealerID, email, dealerSign);
+                    dynamic evc = JObject.Parse(retJson);
 
-                if (evc.msg != "success")
-                    _logger.LogError($"RegisterAsync GetCodeForEmailAsync Error: {evc.msg}");
+                    if (evc.msg != "success")
+                        _logger.LogError($"RegisterAsync GetCodeForEmailAsync Error: {evc.msg}");
 
-                int emlcode;
-                if (evc.msg != "success" || evc.code == 0)
-                    return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidVerificationCode };
-                else
-                    emlcode = evc.code;
+                    int emlcode;
+                    if (evc.msg != "success" || evc.code == 0)
+                        return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidVerificationCode };
+                    else
+                        emlcode = evc.code;
 
-                int tgcode;
-                var tchat = await _db.GetTGChatByUserIDAsync(telegramID.Trim('@').Trim());
-                if (tchat == null || tchat.VerifyCode == 0)
-                    return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidVerificationCode };
+                    int tgcode;
+                    var tchat = await _db.GetTGChatByUserIDAsync(telegramID.Trim('@').Trim());
+                    if (tchat == null || tchat.VerifyCode == 0)
+                        return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidVerificationCode };
 
-                if (emlcode.ToString() != ec || tchat.VerifyCode.ToString() != tc)
-                    return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidVerificationCode };
-
+                    if (emlcode.ToString() != ec || tchat.VerifyCode.ToString() != tc)
+                        return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidVerificationCode };
+                }
                 var user = new LyraUser
                 {
                     UserName = userName,

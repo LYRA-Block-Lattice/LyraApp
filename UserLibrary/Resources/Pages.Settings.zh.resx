@@ -156,6 +156,9 @@
   <data name="Genesis" xml:space="preserve">
     <value>创世</value>
   </data>
+  <data name="Get One" xml:space="preserve">
+    <value>去取一个</value>
+  </data>
   <data name="In Transactions:" xml:space="preserve">
     <value>于交易中：</value>
   </data>
