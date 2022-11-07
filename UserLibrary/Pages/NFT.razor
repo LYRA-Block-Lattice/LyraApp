@@ -8,12 +8,26 @@
 @inject NavigationManager Navigation
 @inject IDialogService DialogService
 
-	@if (walletState.Value.wallet == null)
-	{
-		<div class="mag">
+@if (string.IsNullOrWhiteSpace(apiKey))
+{
+	<div class="mag">
+		<pre>
+			Mint NFT howto:
+
+			goto <a href="https://nft.storage/">https://nft.storage/</a> to create an account;
+			in NFT Storage site create api key <a href="https://nft.storage/manage/">https://nft.storage/manage/</a>;
+			goto Lyra App -> Settings, input your NFT Storage API key and save.
+			goto Lyra App -> NFT -> Mint to mint your NFT.
+			goto Lyra App -> Wallet to show your NFT.
+				</pre>
+	</div>
+}
+else if (walletState.Value.wallet == null)
+{
+	<div class="mag">
 		<a href="/wallet"><MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">Open Wallet</MudButton></a>
-		</div>
-	}
+	</div>
+}
 	else
 	{
 		<MudTabs Elevation="4" Rounded="true" Centered="true" Color="Color.Secondary">
@@ -97,10 +111,14 @@
 			try
 			{
 				apiKey = await localStorage.GetItemAsync<string>(keyName);
-				nftclient = new NFTStorageClient();
-				nftclient.SetApiToken(apiKey);
 
-				await LoadIpfs();
+				if(!string.IsNullOrWhiteSpace(apiKey))
+				{
+					nftclient = new NFTStorageClient();
+					nftclient.SetApiToken(apiKey);
+
+					await LoadIpfs();
+				}
 			}
 			catch(Exception ex)
 			{

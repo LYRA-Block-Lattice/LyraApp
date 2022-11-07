@@ -117,13 +117,13 @@ namespace UserLibrary.Data
     public class NFTStorageClient : WebApiClientBase
     {
         // nft.storage API endpoint
-        private static readonly string nftStorageApiUrl = "https://api.nft.storage/";
+        private readonly string nftStorageApiUrl = "https://api.nft.storage/";
 
         // HTTP client to communicate with nft.storage
-        private static readonly HttpClient nftClient = new HttpClient();
+        private readonly HttpClient nftClient = new HttpClient();
 
         // http client to communicate with IPFS API
-        private static readonly HttpClient ipfsClient = new HttpClient();
+        private readonly HttpClient ipfsClient = new HttpClient();
 
         // nft.storage API key
         public string apiToken;
