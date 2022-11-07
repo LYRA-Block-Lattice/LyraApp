@@ -182,13 +182,16 @@ namespace UserLibrary.Data
         private async Task<string> Upload(string uri, string pathFile)
         {
             byte[] bytes = System.IO.File.ReadAllBytes(pathFile);
+            return await Upload(uri, bytes);
+        }
+
+        private async Task<string> Upload(string uri, byte[] bytes)
+        {
             try
             {
                 using (var content = new ByteArrayContent(bytes))
                 {
                     content.Headers.ContentType = new MediaTypeHeaderValue("*/*");
-
-                    nftClient.Timeout = new TimeSpan(1, 0, 0);// 1 hour should be enough probably
 
                     //Send it
                     //print("Uploading...");
@@ -260,6 +263,7 @@ namespace UserLibrary.Data
                 nftClient.DefaultRequestHeaders.Remove("Authorization");
             }
             nftClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + apiToken);
+            nftClient.Timeout = new TimeSpan(1, 0, 0);// 1 hour should be enough probably
         }
 
         /**
@@ -339,6 +343,14 @@ namespace UserLibrary.Data
         {
             string requestUri = nftStorageApiUrl + "/upload";
             string rawResponse = await Upload(requestUri, path);
+            NFTStorageUploadResponse parsedResponse = JsonConvert.DeserializeObject<NFTStorageUploadResponse>(rawResponse);
+            return parsedResponse;
+        }
+
+        public async Task<NFTStorageUploadResponse> UploadDataFromBufferHttpClient(byte[] bytes)
+        {
+            string requestUri = nftStorageApiUrl + "/upload";
+            string rawResponse = await Upload(requestUri, bytes);
             NFTStorageUploadResponse parsedResponse = JsonConvert.DeserializeObject<NFTStorageUploadResponse>(rawResponse);
             return parsedResponse;
         }

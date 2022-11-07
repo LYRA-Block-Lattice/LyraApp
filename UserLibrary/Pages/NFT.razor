@@ -17,19 +17,30 @@
 	else
 	{
 		<MudTabs Elevation="4" Rounded="true" Centered="true" Color="Color.Secondary">
-			<MudTabPanel Text=@localizer["My NFT"]>
+@*			<MudTabPanel Text=@localizer["My NFT"]>
 				<div class="mag">
 					<h3>list my nft here</h3>
 				</div>
-			</MudTabPanel>
+			</MudTabPanel>*@
 
-			<MudTabPanel Text=@localizer["Mint"]>
+			<MudTabPanel Text=@localizer["Mint a NFT"]>
 				<div class="mag">
+					<div>
+						<InputFile id="fileInput112" OnChange="UploadFiles" hidden multiple accept=".jpg, .jpeg, .png" />
+
+						<MudButton HtmlTag="label"
+							   Variant="MudBlazor.Variant.Filled"
+							   StartIcon="@Icons.Filled.Image"
+							   for="fileInput112">
+							Upload image
+						</MudButton>
+					</div>
+
 					<table class="table">
 						<thead>
 							<tr>
 								<th>@localizer["Date"]</th>
-							<th>@localizer["CID"]</th>
+							@*<th>@localizer["CID"]</th>*@
 							<th>@localizer["Size"]</th>
 							<th>@localizer["Preview"]</th>
 							<th></th>
@@ -41,7 +52,7 @@
 							var url = $"https://{file.cid}.ipfs.nftstorage.link/";
 								<tr>
 									<td>@file.created</td>
-									<td>@file.cid</td>
+									@*<td>@file.cid</td>*@
 								<td>@file.size</td>
 								<td>
 									<img width="128" height="128" src="@url" />
@@ -77,12 +88,18 @@
 
 	NFTStorageNFTObject[]? nsfiles;
 
+	NFTStorageClient nftclient;
+
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
 			try
 			{
+				apiKey = await localStorage.GetItemAsync<string>(keyName);
+				nftclient = new NFTStorageClient();
+				nftclient.SetApiToken(apiKey);
+
 				await LoadIpfs();
 			}
 			catch(Exception ex)
@@ -93,6 +110,37 @@
 		}
 
 		await base.OnAfterRenderAsync(firstRender);
+	}
+
+	private async Task UploadFiles(InputFileChangeEventArgs e)
+	{
+		var entries = e.GetMultipleFiles();
+		foreach (var f in entries)
+		{
+			// upload file
+			using var s = f.OpenReadStream(maxAllowedSize: 50000000);
+			using var ms = new MemoryStream();
+
+			await s.CopyToAsync(ms);
+
+			var bytes = ms.ToArray();
+			ms.Close();			
+			s.Close();
+
+			var upret = await nftclient.UploadDataFromBufferHttpClient(bytes);
+			if(upret.ok)
+			{
+				Snackbar.Add($"File {f.Name} uploaded OK.", Severity.Success);
+			}
+			else
+			{
+				Snackbar.Add($"File {f.Name} failed to upload: {upret.error}", Severity.Success);
+			}
+		}
+
+		await LoadIpfs();
+		StateHasChanged();
+		await Task.Delay(1);
 	}
 
 	public async Task OpenMintNew(string ipfscid, string imgurl)
@@ -169,12 +217,7 @@
 
 	async Task LoadIpfs()
 	{
-		// first check api key exists
-		apiKey = await localStorage.GetItemAsync<string>(keyName);
-
-		var client = new NFTStorageClient();
-		client.SetApiToken(apiKey);
-		var files = await client.ListFiles();
+		var files = await nftclient.ListFiles();
 		if (files.ok)
 			nsfiles = files.value;
 		else
