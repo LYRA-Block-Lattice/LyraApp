@@ -12,6 +12,7 @@ using LyraWebPWA;
 using UserLibrary.Data;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.Services.AddHttpClient();
 
 builder.Services.AddLocalization(options =>
 {

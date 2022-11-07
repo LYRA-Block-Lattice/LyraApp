@@ -37,7 +37,7 @@ namespace UserLibrary.Data
         public string pieceCid;
         public string status;
         public string statusText;
-        public int chainDealID;
+        public int? chainDealID;
         public string dealActivation;
         public string dealExpiration;
     }

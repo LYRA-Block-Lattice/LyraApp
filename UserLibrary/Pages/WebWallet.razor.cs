@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using Fluxor;
 using Lyra.Core.API;
+using Lyra.Core.Blocks;
 using Lyra.Data.Crypto;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -12,8 +13,12 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using UserLibrary.Components;
 using UserLibrary.Data;
 
@@ -35,27 +40,37 @@ namespace UserLibrary.Pages
         [Inject] ILocalStorageService localStorage { get; set; }
         [Inject] NebulaConsts _consts { get; set; }
         [Inject] IStringLocalizer<WebWallet> localizer { get; set; }
+        [Inject] HttpClient http { get; set; }
 
         [Parameter]
         public string action { get; set; }
         [Parameter]
         public string target { get; set; }
 
-        MudTabs tabs;
+        MudTabs? tabs;
 
-        bool busy, busysend;
-
-        // for send
-        public string dstAddr { get; set; }
-        public string tokenName { get; set; }
-        public decimal amount { get; set; }
-
-        public List<ContactItem> contacts { get; set; }
+        bool busy;
 
         // for settings
         public string voteAddr { get; set; }
 
         public string altDisplay { get; set; }
+
+        record nftdesc
+        {
+            public TokenGenesisBlock gen;
+            public string metaurl;
+            public string name;
+            public string desc;
+            public nftmeta meta;
+        }
+        record nftmeta
+        {
+            public string name;
+            public string description;
+            public string image;
+        }
+        Dictionary<string, nftdesc> NFTImages = new Dictionary<string, nftdesc>();
 
         protected override void OnInitialized()
         {
@@ -76,16 +91,13 @@ namespace UserLibrary.Pages
                     Navigation.NavigateTo("login");
                 }
 
-                if (action == "send" && target != null)
-                {
-                    dstAddr = target;
-                    tabs.ActivatePanel(1);
-                }
+                //if (action == "send" && target != null)
+                //{
+                //    dstAddr = target;
+                //    tabs.ActivatePanel(1);
+                //}
 
                 Dispatcher.Dispatch(new WebWalletChangeTitleAction { title = localizer["Lyra Wallet"] });
-
-                var storStr = await localStorage.GetItemAsync<string>(_consts.ContactStorName) ?? "[]";
-                contacts = JsonConvert.DeserializeObject<List<ContactItem>>(storStr);
 
                 Refresh();
             }
@@ -95,6 +107,46 @@ namespace UserLibrary.Pages
             }
 
             await base.OnAfterRenderAsync(firstRender);
+        }
+
+        private async Task LoadNFTImages()
+        {
+            WebClient wc = null;
+            foreach (var kvp in walletState.Value.wallet.GetLastSyncBlock().Balances)
+            {
+                if (!kvp.Key.StartsWith("nft/") || NFTImages.ContainsKey(kvp.Key))
+                    continue;
+
+                try
+                {
+                    var secs = kvp.Key.Split("#"); // make sure no serial number
+                    var nftgenret = await lyraClient.GetTokenGenesisBlockAsync("a", secs[0], "b");
+                    if (nftgenret.Successful())
+                    {
+                        var gb = nftgenret.GetBlock() as TokenGenesisBlock;
+                        var nft = new nftdesc
+                        {
+                            gen = gb,
+                            name = gb.Custom1,
+                            desc = gb.Description,
+                            metaurl = $"{gb.Custom2}" + (secs.Length == 2 ? $"/{secs[1]}" : ""),    // ticker use #, but the url use /
+                        };
+
+                        if (wc == null)
+                            wc = new WebClient();
+                        var json = await wc.DownloadStringTaskAsync(new Uri(nft.metaurl));
+                        nft.meta = JsonConvert.DeserializeObject<nftmeta>(json);
+                        NFTImages.Add(kvp.Key, nft);
+
+                        StateHasChanged();
+                        await Task.Delay(1);
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Snackbar.Add($"Error fetch metadat for nft: {kvp.Key}", Severity.Error);
+                }
+            }
         }
 
         private void WalletChanged(object sender, WebWalletState wallet)
@@ -109,64 +161,6 @@ namespace UserLibrary.Pages
             }            
         }
 
-        private async Task SendTokenAsync()
-        {
-            busysend = true;
-            Snackbar.Add(localizer["Refresh balance..."]);
-            StateHasChanged();
-
-            try
-            {
-                var result = await walletState.Value.wallet.SyncAsync(null);
-                if (result != Lyra.Core.Blocks.APIResultCodes.Success)
-                {
-                    Snackbar.Add(localizer["Unable to refresh balance: {0}. Abort send.", result], Severity.Error);
-                    busysend = false;
-                    StateHasChanged();
-                    return;
-                }
-
-                var oldbalance = walletState.Value.wallet.GetLastSyncBlock().Balances.ToDecimalDict();
-
-                Snackbar.Add(localizer["Current balance is {0} {1}", oldbalance[tokenName], tokenName]);
-                Snackbar.Add(localizer["Sending {0} {1}", amount, tokenName]);
-
-                var result2 = await walletState.Value.wallet.SendAsync(amount, dstAddr, tokenName);
-                if (!result2.Successful())
-                {
-                    Snackbar.Add(localizer["Unable to send token: {0}.", result2.ResultCode], Severity.Error);
-                    busysend = false;
-                    StateHasChanged();
-                    return;
-                }
-
-                Snackbar.Add(localizer["Seccess send {0} {1}.", amount, tokenName], Severity.Success);
-                Snackbar.Add(localizer["Refresh balance..."]);
-                var result3 = await walletState.Value.wallet.SyncAsync(null);
-                if (result3 != Lyra.Core.Blocks.APIResultCodes.Success)
-                {
-                    Snackbar.Add(localizer["Unable to refresh balance: {0}.", result3], Severity.Error);
-                    busysend = false;
-                    StateHasChanged();
-                    return;
-                }
-
-                var newbalance = walletState.Value.wallet.GetLastSyncBlock().Balances.ToDecimalDict();
-                var changed = oldbalance[tokenName] - newbalance[tokenName];
-                Snackbar.Add(localizer["The latest balance is {0} {1} Changed: -{2} {1}", newbalance[tokenName], tokenName, changed]);
-                busysend = false;
-                StateHasChanged();
-            }
-            catch(Exception ex)
-            {
-                Snackbar.Add(localizer["Unexpected Error: {0}.", ex.Message], Severity.Error);
-                busysend = false;
-                StateHasChanged();
-            }
-
-            Dispatcher.Dispatch(new WebWalletRefreshBalanceAction { wallet = walletState.Value.wallet });
-        }
-
         private Task OnSelectedTabChanged(string name)
         {
             if (name == "free")
@@ -178,9 +172,8 @@ namespace UserLibrary.Pages
                 });
             }
 
-            if (name == "send")
+            if (name == "NFT")
             {
-                dstAddr = target;
                 tabs.ActivatePanel(1);
             }
 
@@ -188,8 +181,7 @@ namespace UserLibrary.Pages
         }
 
         public WebWallet()
-        {
-            tokenName = "LYR";
+        {            
             altDisplay = "************";
         }
 
@@ -211,13 +203,7 @@ namespace UserLibrary.Pages
 
         private async Task SendX(string name)
         {
-            tokenName = name;
-            tabs.ActivatePanel(1);
-        }
-
-        void OnContact(ContactItem value)
-        {
-            dstAddr = value.address;
+            Navigation.NavigateTo($"/send?token={HttpUtility.UrlEncode(name)}");
         }
 
         private void Return(MouseEventArgs e)

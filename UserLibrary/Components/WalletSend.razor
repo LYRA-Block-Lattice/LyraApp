@@ -1,7 +1,138 @@
-﻿@namespace UserLibrary.Components
+﻿@page "/send"
+@using Fluxor
+@using Nebula.Store.WebWalletUseCase
+@using Newtonsoft.Json
 
-<h3>WalletSend</h3>
+<div class="mag">
+    <MudGrid>
+        <MudItem xs="12">
+            <MudTextField T="string" Label=@localizer["Destination Wallet Address"] @bind-Value="@dstAddr" />
+            <a href="/scan">
+                <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">@localizer["Scan QR-Code"]</MudButton>
+            </a>
+            <RadzenDropDown AllowClear="true" TValue="ContactItem" Class="w-100"
+                            Data=@contacts Change=@(args => OnContact(args as ContactItem)) />
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField T="string" Label=@localizer["Token Name"] @bind-Value="@tokenName" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudNumericField T="decimal" Label=@localizer["Amount"] @bind-Value="@amount" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudButton Variant="MudBlazor.Variant.Filled" Disabled="@busysend" Color="Color.Primary" OnClick="@(async () => await SendTokenAsync())">
+                @if (busysend)
+                {
+                    <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">@localizer["Processing"]</MudText>
+                }
+                else
+                {
+                    <MudText>@localizer["Send Token"]</MudText>
+                }
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+
+</div>
 
 @code {
+    [Inject] IStringLocalizer<TopBarClient>? localizer { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
+    [Inject] IState<WebWalletState> walletState { get; set; }
+    [Inject] IDispatcher Dispatcher { get; set; }
+    [Inject] ILocalStorageService localStorage { get; set; }
+    [Inject] NebulaConsts _consts { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "token")]
+    public string tokenName { get; set; } = "LYR";
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "dst")]
+    public string dstAddr { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "amount")]
+    public decimal amount { get; set; }
+
+    public List<ContactItem> contacts { get; set; }
+
+    bool busysend;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            var storStr = await localStorage.GetItemAsync<string>(_consts.ContactStorName) ?? "[]";
+            contacts = JsonConvert.DeserializeObject<List<ContactItem>>(storStr);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+
+    void OnContact(ContactItem value)
+    {
+        dstAddr = value.address;
+    }
+
+
+    private async Task SendTokenAsync()
+    {
+        busysend = true;
+        Snackbar.Add(localizer["Refresh balance..."]);
+        StateHasChanged();
+
+        try
+        {
+            var result = await walletState.Value.wallet.SyncAsync(null);
+            if (result != Lyra.Core.Blocks.APIResultCodes.Success)
+            {
+                Snackbar.Add(localizer["Unable to refresh balance: {0}. Abort send.", result], Severity.Error);
+                busysend = false;
+                StateHasChanged();
+                return;
+            }
+
+            var oldbalance = walletState.Value.wallet.GetLastSyncBlock().Balances.ToDecimalDict();
+
+            Snackbar.Add(localizer["Current balance is {0} {1}", oldbalance[tokenName], tokenName]);
+            Snackbar.Add(localizer["Sending {0} {1}", amount, tokenName]);
+
+            var result2 = await walletState.Value.wallet.SendAsync(amount, dstAddr, tokenName);
+            if (!result2.Successful())
+            {
+                Snackbar.Add(localizer["Unable to send token: {0}.", result2.ResultCode], Severity.Error);
+                busysend = false;
+                StateHasChanged();
+                return;
+            }
+
+            Snackbar.Add(localizer["Seccess send {0} {1}.", amount, tokenName], Severity.Success);
+            Snackbar.Add(localizer["Refresh balance..."]);
+            var result3 = await walletState.Value.wallet.SyncAsync(null);
+            if (result3 != Lyra.Core.Blocks.APIResultCodes.Success)
+            {
+                Snackbar.Add(localizer["Unable to refresh balance: {0}.", result3], Severity.Error);
+                busysend = false;
+                StateHasChanged();
+                return;
+            }
+
+            var newbalance = walletState.Value.wallet.GetLastSyncBlock().Balances.ToDecimalDict();
+            var changed = oldbalance[tokenName] - newbalance[tokenName];
+            Snackbar.Add(localizer["The latest balance is {0} {1} Changed: -{2} {1}", newbalance[tokenName], tokenName, changed]);
+            busysend = false;
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(localizer["Unexpected Error: {0}.", ex.Message], Severity.Error);
+            busysend = false;
+            StateHasChanged();
+        }
+
+        Dispatcher.Dispatch(new WebWalletRefreshBalanceAction { wallet = walletState.Value.wallet });
+    }
 
 }

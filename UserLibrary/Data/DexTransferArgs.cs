@@ -31,4 +31,10 @@ namespace UserLibrary.Data
         public decimal min { get; set; }
         public decimal max { get; set; }
     }
+
+    public class NFTMintNewDialogArgs
+    {
+        public string name { get; set; } = null!;
+        public string desc { get; set; } = null!;
+    }
 }

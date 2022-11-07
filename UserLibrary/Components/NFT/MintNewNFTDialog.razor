@@ -1,0 +1,41 @@
+﻿@inject IDialogService dialogService
+
+<MudDialog>
+    <DialogContent>
+        <RadzenCard>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Name your NFT:</RadzenText>
+            <RadzenTextBox @bind-Value="@args.name" Placeholder="" Class="w-100" />
+
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Describe your NFT:</RadzenText>
+            <RadzenTextArea @bind-Value="@args.desc" Placeholder="" Class="w-100" />
+        </RadzenCard>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Variant="MudBlazor.Variant.Filled" OnClick="Submit">Mint</MudButton>
+    </DialogActions>
+</MudDialog>
+
+<div class="container-fluid">
+    <div class="row px-3">
+        <div class="col-md-6 col-lg-4 p-3">
+        </div>
+        <div class="col-md-6 col-lg-4 p-3">
+            <RadzenCard>
+                <div>
+                    <img src="@imgurl" width="128" height="128" />
+                </div>
+            </RadzenCard>
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public string? imgurl { get; set; }
+    [Parameter] public NFTMintNewDialogArgs? args { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+}

@@ -5,6 +5,8 @@
 @using Nebula.Store.WebWalletUseCase
 @using Newtonsoft.Json.Linq
 @using OpenSeaClient
+@inject NavigationManager Navigation
+@inject IDialogService DialogService
 
 	@if (walletState.Value.wallet == null)
 	{
@@ -45,7 +47,7 @@
 									<img width="128" height="128" src="@url" />
 								</td>
 								<td>
-									<MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">
+									<MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async () => await OpenMintNew(file.cid, url))">
 										@localizer["Mint as NFT"]
 									</MudButton>
 								</td>
@@ -79,13 +81,45 @@
 	{
 		if (firstRender)
 		{
-			await LoadIpfs();
+			try
+			{
+				await LoadIpfs();
+			}
+			catch(Exception ex)
+			{
+				Snackbar.Add($"Unable to LoadIpfs: {ex.Message}", Severity.Error);
+			}
 			StateHasChanged();
 		}
 
 		await base.OnAfterRenderAsync(firstRender);
 	}
 
+	public async Task OpenMintNew(string ipfscid, string imgurl)
+	{
+		var args = new NFTMintNewDialogArgs
+		{
+			name = "My cool NFT",
+			desc = "Describe my NFT here"
+		};
+		var parameters = new DialogParameters { 
+			["imgurl"] = imgurl,
+			["args"] = args
+		};
+
+		var dialog = DialogService.Show<Components.NFT.MintNewNFTDialog>($"Mint a new NFT", parameters);
+		var result = await dialog.Result;
+
+		if (!result.Cancelled)
+		{
+			//Snackbar.Add($"Your will mint NFT name: {args.name} and desc: {args.desc}", Severity.Success);
+			await Mint(args.name, args.desc, ipfscid);
+		}
+    }
+
+	// meta: one nft one meta
+	// NFT genesis: one genesis multiple nft/meta
+	// let's begin with the simplest.
 	async Task Mint(string name, string desc, string ipfscid)
 	{
 		var lsb = await lyraApi.GetLastServiceBlockAsync();
@@ -96,16 +130,41 @@
 		var ret = await acac.CreateMetaAsync(wallet.AccountId, signatures,
 			name, desc, ipfscid);
 		dynamic qs = JObject.Parse(ret);
-		if(qs.ok)
+		if(qs.ok == "true")
 		{
-			var url = qs.value as string;
+			Snackbar.Add($"Metadata created.", Severity.Success);
+
+			var url = qs.value.ToString();
 
 			// then we can submit a NFT genesis block.
+			var crret = await wallet.CreateNFTAsync(name, desc, 1, url);
+			if(crret.Successful())
+			{
+				Snackbar.Add(localizer["NFT was minted successfully."], Severity.Success, config =>
+				{
+					config.Action = localizer["Open Wallet"];
+					config.ActionColor = Color.Primary;
+					config.Onclick = snackbar =>
+					{
+						Help();
+						return Task.CompletedTask;
+					};
+				});
+			}
+			else
+			{
+				Snackbar.Add(localizer["Failed to mint NFT: {0}", crret.ResultMessage], Severity.Error);
+			}
 		}
 		else
 		{
 			Snackbar.Add($"Unable to upload metadata: {qs.error}", Severity.Error);
 		}
+	}
+
+	private void Help()
+	{
+		Navigation.NavigateTo($"/wallet");
 	}
 
 	async Task LoadIpfs()

@@ -26,7 +26,7 @@
 @using UserLibrary.Components
 @using UserLibrary.Data
 
-@if (walletState.Value.IsLoading || busy || busysend)
+@if (walletState.Value.IsLoading || busy)
 {
     <div style="z-index: 5;" class="spinner"></div>
 }
@@ -58,19 +58,22 @@
                 {
                     @foreach (var kvp in walletState.Value.wallet.GetLastSyncBlock().Balances)
                     {
-                        <MudCard Style="min-width: 200px;" Elevation="8">
-                            <MudCardHeader>
+                        if (!kvp.Key.StartsWith("nft/"))
+                        {
+                            <MudCard Style="min-width: 200px;" Elevation="8">
+                                <MudCardHeader>
                                 <CardHeaderContent>
                                     <h4>@kvp.Key.Replace("tether/", "$")</h4>
                                 </CardHeaderContent>
                                 <CardHeaderActions>
                                     <MudIconButton OnClick="@(async ()=>{ await SendX(kvp.Key); })" Icon="@Icons.Material.Outlined.Outbound" aria-label="share" Size="Size.Small"></MudIconButton>
                                 </CardHeaderActions>
-                            </MudCardHeader>
-                            <MudCardContent>
-                                <div>@($"{kvp.Value.ToBalanceDecimal():N4}")</div>
-                            </MudCardContent>
-                        </MudCard>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <div>@($"{kvp.Value.ToBalanceDecimal():N4}")</div>
+                                </MudCardContent>
+                            </MudCard>
+                        }
                     }
                 }
                 else
@@ -112,40 +115,47 @@
 
         </MudTabPanel>
 
-        <MudTabPanel Text=@localizer["Send"]>
-            <div class="mag">
-                <MudGrid>
-                    <MudItem xs="12">
-                        <MudTextField T="string" Label=@localizer["Destination Wallet Address"] @bind-Value="@dstAddr" />
-                        <a href="/scan">
-                            <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary">@localizer["Scan QR-Code"]</MudButton>
-                        </a>
-                        <RadzenDropDown AllowClear="true" TValue="ContactItem" Class="w-100" 
-                            Data=@contacts Change=@(args => OnContact(args as ContactItem)) />
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudTextField T="string" Label=@localizer["Token Name"] @bind-Value="@tokenName" />
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudNumericField T="decimal" Label=@localizer["Amount"] @bind-Value="@amount" />
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudButton Variant="MudBlazor.Variant.Filled" Disabled="@busysend" Color="Color.Primary" OnClick="@(async () => await SendTokenAsync())">
-                    @if (busysend)
+        <MudTabPanel Text=@localizer["NFT"] OnClick="@LoadNFTImages">
+            <div class="cet">
+                @if (walletState.Value.wallet.GetLastSyncBlock() != null)
+                {
+                    @foreach (var kvp in walletState.Value.wallet.GetLastSyncBlock().Balances)
                     {
-                        <MudProgressCircular Color="Color.Secondary" Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                                <MudText Class="ms-2">@localizer["Processing"]</MudText>
+                        if (kvp.Key.StartsWith("nft/"))
+                        {
+                            <MudCard Style="min-width: 200px;" Elevation="8">
+                                <MudCardHeader>
+                                <CardHeaderContent>
+                                    @if(NFTImages.ContainsKey(kvp.Key))
+                                    {
+                                            var dsc = NFTImages[kvp.Key];
+                                            var imgsrc = dsc.meta.image;
+                                            if(imgsrc.StartsWith("ipfs://"))
+                                            {
+                                                var tag = imgsrc.Replace("ipfs://", "");
+                                                imgsrc = $"https://{tag}.ipfs.nftstorage.link/";
+                                            }
+                                            <h4>@dsc.name</h4>
+                                            <p>@dsc.desc</p>
+                                            <p><img src="@imgsrc" width="128" height="128" /></p>
+                                    }
+                                    else
+                                    {
+                                        <h4>@kvp.Key</h4>
+                                    }                                    
+                                </CardHeaderContent>
+                                <CardHeaderActions>
+                                    <MudIconButton OnClick="@(async ()=>{ await SendX(kvp.Key); })" Icon="@Icons.Material.Outlined.Outbound" aria-label="share" Size="Size.Small"></MudIconButton>
+                                </CardHeaderActions>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <p></p>
+                                </MudCardContent>
+                            </MudCard>
+                        }
                     }
-                    else
-                    {
-                                <MudText>@localizer["Send Token"]</MudText>
-                    }
-                </MudButton>
-                    </MudItem>
-                </MudGrid>
-                
+                }
             </div>
-
         </MudTabPanel>
 
         @if (!string.IsNullOrWhiteSpace(Configuration["faucetPvk"]) && Configuration["network"] != "mainnet" && walletState.Value.wallet.BaseBalance == 0m && !walletState.Value.freeTokenSent) //&& walletState.Value.freeTokenTimes < 3

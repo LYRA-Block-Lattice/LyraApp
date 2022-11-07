@@ -17,6 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddCors();
+builder.Services.AddHttpClient();
 
 builder.Services.AddLocalization(options =>
 {
