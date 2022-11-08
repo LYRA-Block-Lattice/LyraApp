@@ -111,7 +111,6 @@ namespace UserLibrary.Pages
 
         private async Task LoadNFTImages()
         {
-            WebClient wc = null;
             foreach (var kvp in walletState.Value.wallet.GetLastSyncBlock().Balances)
             {
                 if (!kvp.Key.StartsWith("nft/") || NFTImages.ContainsKey(kvp.Key))
@@ -132,9 +131,8 @@ namespace UserLibrary.Pages
                             metaurl = $"{gb.Custom2}" + (secs.Length == 2 ? $"/{secs[1]}" : ""),    // ticker use #, but the url use /
                         };
 
-                        if (wc == null)
-                            wc = new WebClient();
-                        var json = await wc.DownloadStringTaskAsync(new Uri(nft.metaurl));
+                        var json = await http.GetStringAsync(nft.metaurl);
+                        Console.WriteLine($"meta json for {kvp.Key} is {json}");
                         nft.meta = JsonConvert.DeserializeObject<nftmeta>(json);
                         NFTImages.Add(kvp.Key, nft);
 
@@ -144,7 +142,8 @@ namespace UserLibrary.Pages
                 }
                 catch(Exception ex)
                 {
-                    Snackbar.Add($"Error fetch metadat for nft: {kvp.Key}", Severity.Error);
+                    Console.WriteLine("Error fetch metadat: " + ex.ToString());
+                    Snackbar.Add($"Error fetch metadat for nft: {kvp.Key} for error: {ex.Message}", Severity.Error);
                 }
             }
         }

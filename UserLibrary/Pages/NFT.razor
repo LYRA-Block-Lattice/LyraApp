@@ -69,7 +69,7 @@ else if (walletState.Value.wallet == null)
 									@*<td>@file.cid</td>*@
 								<td>@file.size</td>
 								<td>
-									<img width="128" height="128" src="@url" />
+									<img class="simg" src="@url" />
 								</td>
 								<td>
 									<MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary" OnClick="@(async () => await OpenMintNew(file.cid, url))">

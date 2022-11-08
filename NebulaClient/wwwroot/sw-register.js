@@ -26,6 +26,8 @@ if ('serviceWorker' in navigator) {
         // register the service worker from the file specified
         const registration = await navigator.serviceWorker.register('/service-worker.js', { updateViaCache: 'none' });
 
+        window.reg = registration; // call update manually later
+
         // ensure the case when the updatefound event was missed is also handled
         // by re-invoking the prompt when there's a waiting Service Worker
         if (registration.waiting) {

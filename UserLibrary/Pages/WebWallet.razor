@@ -130,14 +130,14 @@
                                     {
                                             var dsc = NFTImages[kvp.Key];
                                             var imgsrc = dsc.meta.image;
-                                            if(imgsrc.StartsWith("ipfs://"))
+                                            if(imgsrc != null && imgsrc.StartsWith("ipfs://"))
                                             {
                                                 var tag = imgsrc.Replace("ipfs://", "");
                                                 imgsrc = $"https://{tag}.ipfs.nftstorage.link/";
                                             }
                                             <h4>@dsc.name</h4>
                                             <p>@dsc.desc</p>
-                                            <p><img src="@imgsrc" width="128" height="128" /></p>
+                                            <p><img class="simg" src="@imgsrc" /></p>
                                     }
                                     else
                                     {

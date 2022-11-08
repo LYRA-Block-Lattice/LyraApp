@@ -4,8 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	<AssemblyVersion>1.3.0.8</AssemblyVersion>
-	<PackageVersion>1.3.0.8</PackageVersion>
+	<AssemblyVersion>1.3.0.23</AssemblyVersion>
+	<PackageVersion>1.3.0.23</PackageVersion>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -20,7 +20,7 @@
 		<PackageReference Include="MudBlazor" Version="6.0.17" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
-		<PackageReference Include="Radzen.Blazor" Version="4.1.15" />
+		<PackageReference Include="Radzen.Blazor" Version="4.2.3" />
 	</ItemGroup>
 
 	<ItemGroup>
