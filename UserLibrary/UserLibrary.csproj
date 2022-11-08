@@ -6,8 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <Platforms>AnyCPU;x86</Platforms>
-	<AssemblyVersion>1.3.0.53</AssemblyVersion>
-	<PackageVersion>1.3.0.53</PackageVersion>
+	<AssemblyVersion>1.3.0.66</AssemblyVersion>
+	<PackageVersion>1.3.0.66</PackageVersion>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -57,6 +57,8 @@
 	</ItemGroup>
 
 	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+		<Exec Command="npm install" WorkingDirectory="NpmJS" />
+		<Exec Command="npm run build" WorkingDirectory="NpmJS" />
 		<Exec Command="powershell.exe -ExecutionPolicy Bypass -NoProfile -NonInteractive -File ..\BuidTasks\Set-VersionTask.ps1  -projectFile $(ProjectPath) -assemblyVersion =.=.=.+ -fileVersion =.=.=.+ -packageVersion =.=.=.+" />
 	</Target>
 	

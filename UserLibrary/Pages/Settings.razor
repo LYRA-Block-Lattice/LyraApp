@@ -275,7 +275,8 @@
 
                 if (verb > myver)
                 {
-                    msg = localizer["Found new version {0}, my version {1}", verb, myver];
+                    msg = localizer["Found new version {0}, my version {1}. OK to update.", verb, myver];
+                    await JS.InvokeVoidAsync("reg.update");
                 }
                 else
                 {

@@ -64,7 +64,7 @@ namespace Dealer.Server.Services
         {
             var brief = new DealerBrief
             {
-                Version = this.GetType().Assembly.GetName().Version.ToString(),
+                Version = typeof(NebulaConsts).Assembly.GetName().Version.ToString(),
                 AccountId = _myDealerID,
                 TelegramBotUsername = _keeper.BotUserName
             };
