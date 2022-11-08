@@ -275,8 +275,8 @@
 
                 if (verb > myver)
                 {
-                    msg = localizer["Found new version {0}, my version {1}. OK to update.", verb, myver];
-                    await JS.InvokeVoidAsync("reg.update");
+                    msg = localizer["Found new version {0}, my version {1}.", verb, myver];
+                    await ManualUpgrade();                    
                 }
                 else
                 {
@@ -294,5 +294,19 @@
         }
         Console.WriteLine(msg);
         await JS.InvokeVoidAsync("alert", msg);
+    }
+
+    private async Task ManualUpgrade()
+    {
+        var isWebAssembly = JS is IJSInProcessRuntime;
+
+        if (isWebAssembly)
+        {
+            await JS.InvokeVoidAsync("reg.update");
+        }
+        else
+        {
+            
+        }
     }
 }
