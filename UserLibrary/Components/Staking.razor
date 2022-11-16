@@ -4,6 +4,7 @@
 @using Lyra.Core.Accounts
 @using Lyra.Core.Blocks
 @using Lyra.Data.Blocks
+@using Lyra.Data.Shared;
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.Extensions.Configuration
 @using Microsoft.JSInterop
@@ -12,7 +13,7 @@
 
 <MudTabs SelectedTab="@selectedTab1">
     <MudTabPanel Text=@localizer["Staking Accounts"]>
-        <table class="table">
+        <table class="fancytable">
             <thead>
                 <tr>
                     <th>@localizer["Name"]</th>
@@ -42,7 +43,9 @@
                         <td>@walletState.Value.stkRewards[(stk as TransactionBlock).AccountID]</td>
                         <td>@((stk as IStaking).Start)</td>
                         <td>@((stk as IStaking).Days)</td>
-                        <td>@((stk as IStaking).Voting)</td>
+                        <td>
+                            <a target="_blank" href="@bexpurl/showblock/@((stk as IStaking).Voting)">@((stk as IStaking).Voting.Shorten())</a>
+                            </td>
                         <td>
                             <MudButton Variant="MudBlazor.Variant.Filled" Color="Color.Primary"
                                    OnClick="@(async (e) => await AddStkAsync(e, (stk as TransactionBlock).AccountID))">@localizer["Add Staking"]</MudButton>
@@ -56,7 +59,7 @@
         </table>
     </MudTabPanel>
     <MudTabPanel Text=@localizer["Profiting Accounts"]>
-        <table class="table">
+        <table class="fancytable">
             <thead>
                 <tr>
                     <th>@localizer["Name"]</th>
@@ -199,6 +202,14 @@
     public string pftType { get; set; } = "Node";
     public string pftShare { get; set; }
     public string pftSeats { get; set; }
+
+    string bexpurl;
+
+    protected override void OnInitialized()
+    {
+        bexpurl = Configuration["network"] == "mainnet" ? "https://nebula.lyra.live" : "https://nebulatestnet.lyra.live";
+        base.OnInitialized();
+    }
 
     private async Task AddStkAsync(MouseEventArgs e, string stkid)
     {

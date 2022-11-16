@@ -4,8 +4,8 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <Platforms>AnyCPU</Platforms>
-	<AssemblyVersion>1.3.0.176</AssemblyVersion>
-	<PackageVersion>1.3.0.176</PackageVersion>
+	<AssemblyVersion>1.3.0.183</AssemblyVersion>
+	<PackageVersion>1.3.0.183</PackageVersion>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
