@@ -47,14 +47,19 @@
 
             if(walletState?.Value.wallet != null && localStorage != null)
             {
-                var wcjson = await localStorage.GetItemAsync<string>(_consts?.NebulaStorName);
-                var wc = new WalletContainer(wcjson);
-                var meta = wc.Get(walletState.Value.wallet.AccountName);
+                try
+                {
+                    var wcjson = await localStorage.GetItemAsync<string>(_consts?.NebulaStorName);
 
-                Dispatcher?.Dispatch(new WebWalletBackupAction
-                    {
-                        IsBackuped = meta.Backup
-                    });       
+                    var wc = new WalletContainer(wcjson);
+                    var meta = wc.Get(walletState.Value.wallet.AccountName);
+
+                    Dispatcher?.Dispatch(new WebWalletBackupAction
+                        {
+                            IsBackuped = meta.Backup
+                        });
+                }
+                catch{}
             }     
         }
         await base.OnAfterRenderAsync(firstRender);
