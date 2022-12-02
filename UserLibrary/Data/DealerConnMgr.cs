@@ -170,7 +170,7 @@ namespace UserLibrary.Data
             }
         }
 
-        public bool IsConnected => _conns[_priceFeeder].State == HubConnectionState.Connected;
+        public bool IsConnected => _conns.ContainsKey(_priceFeeder) && _conns[_priceFeeder].State == HubConnectionState.Connected;
 
         public async ValueTask DisposeAsync()
         {

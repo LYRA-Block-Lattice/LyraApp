@@ -294,7 +294,7 @@ namespace Dealer.Server.Services
                         var dealerAbi = new Wallet.LyraContractABI
                         {
                             svcReq = BrokerActions.BRK_DLR_CREATE,
-                            targetAccountId = PoolFactoryBlock.FactoryAccount,
+                            targetAccountId = LyraGlobal.GUILDACCOUNTID,
                             amounts = new Dictionary<string, decimal>
                         {
                             { LyraGlobal.OFFICIALTICKERCODE, 1 },
