@@ -109,6 +109,11 @@ namespace UserLibrary.Pages
             await base.OnAfterRenderAsync(firstRender);
         }
 
+        private async Task LoadTOTs()
+        {
+
+        }
+
         private async Task LoadNFTImages()
         {
             foreach (var kvp in walletState.Value.wallet.GetLastSyncBlock().Balances)

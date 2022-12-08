@@ -58,7 +58,7 @@
                 {
                     @foreach (var kvp in walletState.Value.wallet.GetLastSyncBlock().Balances)
                     {
-                        if (!kvp.Key.StartsWith("nft/"))
+                        if (!kvp.Key.StartsWith("nft/") && !kvp.Key.StartsWith("tot/"))
                         {
                             <MudCard Style="min-width: 200px;" Elevation="8">
                                 <MudCardHeader>
@@ -155,6 +155,12 @@
                         }
                     }
                 }
+            </div>
+        </MudTabPanel>
+
+        <MudTabPanel Text=@localizer["TOT"] OnClick="@LoadTOTs">
+            <div class="cet">
+                <h3>All TOTs goes here.</h3>
             </div>
         </MudTabPanel>
 

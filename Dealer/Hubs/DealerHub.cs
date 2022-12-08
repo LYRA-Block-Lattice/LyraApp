@@ -4,6 +4,7 @@ using Lyra.Core.Blocks;
 using Lyra.Data.API;
 using Lyra.Data.API.Identity;
 using Lyra.Data.API.WorkFlow;
+using Lyra.Data.API.WorkFlow.UniMarket;
 using Lyra.Data.Crypto;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
@@ -228,29 +229,29 @@ namespace Dealer.Server.Hubs
         #region OTC state changes
         private async Task CommandFiatReceived(ChatMessage msg)
         {
-            var lastStatus = OTCTradeStatus.FiatSent;
-            for (var i = 0; i < 50; i++) // TODO: create a better solution
-            {
-                var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IOtcTrade>();
-                if (tradeblk.OTStatus == lastStatus)
-                {
-                    await Task.Delay(100);
-                    continue;
-                }
+            //var lastStatus = UniTradeStatus.FiatSent;
+            //for (var i = 0; i < 50; i++) // TODO: create a better solution
+            //{
+            //    var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IUniTrade>();
+            //    if (tradeblk.UTStatus == lastStatus)
+            //    {
+            //        await Task.Delay(100);
+            //        continue;
+            //    }
 
-                await CommandStatus(msg);
+            //    await CommandStatus(msg);
 
-                var room = await _db.GetRoomByTradeAsync(msg.TradeId);
-                foreach (var user in room.Members)
-                    await ChatServer.PinMessageAsync(_db, Clients, tradeblk, user.AccountId);
+            //    var room = await _db.GetRoomByTradeAsync(msg.TradeId);
+            //    foreach (var user in room.Members)
+            //        await ChatServer.PinMessageAsync(_db, Clients, tradeblk, user.AccountId);
 
-                if(tradeblk.OTStatus == OTCTradeStatus.FiatReceived)
-                {
-                    lastStatus = OTCTradeStatus.FiatReceived;
-                    continue;
-                }
-                return;
-            }
+            //    if(tradeblk.UTStatus == UniTradeStatus.FiatReceived)
+            //    {
+            //        lastStatus = UniTradeStatus.FiatReceived;
+            //        continue;
+            //    }
+            //    return;
+            //}
 
             var text = $"Dealer can't confirm FiaT send. Please try again.";
             await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
@@ -260,8 +261,8 @@ namespace Dealer.Server.Hubs
         {
             for(var i = 0; i < 50; i++)
             {
-                var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IOtcTrade>();
-                if(tradeblk.OTStatus == OTCTradeStatus.Open)
+                var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IUniTrade>();
+                if(tradeblk.UTStatus == UniTradeStatus.Open)
                 {
                     await Task.Delay(100);
                     continue;
@@ -282,20 +283,20 @@ namespace Dealer.Server.Hubs
 
         private async Task CommandStatus(ChatMessage msg)
         {
-            var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IOtcTrade>();
-            var fiat = $"{tradeblk.Trade.fiat} {tradeblk.Trade.price * tradeblk.Trade.amount:N2}";
-            var next = tradeblk.OTStatus switch
+            var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IUniTrade>();
+            var fiat = $"{tradeblk.Trade.biding} {tradeblk.Trade.price * tradeblk.Trade.amount:N2}";
+            var next = tradeblk.UTStatus switch
             {
-                OTCTradeStatus.Open => $"Buyer send {fiat} to seller",
-                OTCTradeStatus.FiatSent => $"Seller confirm receive of payment {fiat}",
-                OTCTradeStatus.FiatReceived => $"Contract to release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer",
-                OTCTradeStatus.CryptoReleased => "None",
-                OTCTradeStatus.Closed => "Trade closed. Nothing to do",
-                OTCTradeStatus.Canceled => "Trade canceled. Nothing to do",
-                OTCTradeStatus.Dispute => "Arbitration",
+                UniTradeStatus.Open => $"Buyer send {fiat} to seller",
+                UniTradeStatus.Processing => $"Processing payment in progress",
+                //UniTradeStatus.FiatReceived => $"Contract to release Crypto {tradeblk.Trade.amount} {tradeblk.Trade.crypto} to buyer",
+                //UniTradeStatus.CryptoReleased => "None",
+                UniTradeStatus.Closed => "Trade closed. Nothing to do",
+                UniTradeStatus.Canceled => "Trade canceled. Nothing to do",
+                UniTradeStatus.Dispute => "Arbitration",
                 _ => throw new NotImplementedException(),
             };
-            var text = $"Current status of trade: {tradeblk.OTStatus}. Next step: {next}";
+            var text = $"Current status of trade: {tradeblk.UTStatus}. Next step: {next}";
 
             await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
         }
@@ -303,7 +304,7 @@ namespace Dealer.Server.Hubs
         // print peer info
         private async Task CommandInfo(ChatMessage msg)
         {
-            var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IOtcTrade>();
+            var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IUniTrade>();
             var text = $"Trade ID: {(tradeblk as TransactionBlock).AccountID}";
 
             await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
@@ -314,8 +315,8 @@ namespace Dealer.Server.Hubs
         {
             for (var i = 0; i < 50; i++)
             {
-                var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IOtcTrade>();
-                if (tradeblk.OTStatus != OTCTradeStatus.Canceled)
+                var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IUniTrade>();
+                if (tradeblk.UTStatus != UniTradeStatus.Canceled)
                 {
                     await Task.Delay(100);
                     continue;
@@ -406,7 +407,7 @@ namespace Dealer.Server.Hubs
             {
                 // check if the client belongs to the room
                 // account id should be either buyer or seller
-                var tradeblk = (await _lyraApi.GetLastBlockAsync(req.TradeID)).As<IOtcTrade>();
+                var tradeblk = (await _lyraApi.GetLastBlockAsync(req.TradeID)).As<IUniTrade>();
 
                 if (tradeblk?.OwnerAccountId == req.UserAccountID
                     || tradeblk?.Trade.orderOwnerId == req.UserAccountID)
@@ -536,9 +537,9 @@ namespace Dealer.Server.Hubs
         //        _ => TimeSpan.Zero,
         //    };
 
-        //    var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IOtcTrade>();
-        //    if (tradeblk.OTStatus == OTCTradeStatus.Dispute ||
-        //        tradeblk.OTStatus == OTCTradeStatus.DisputeClosed)
+        //    var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IUniTrade>();
+        //    if (tradeblk.UTStatus == UniTradeStatus.Dispute ||
+        //        tradeblk.UTStatus == UniTradeStatus.DisputeClosed)
         //    {
         //        await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, "Inappropriate");
         //        return;

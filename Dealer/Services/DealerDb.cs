@@ -10,6 +10,7 @@ using Lyra.Data.API.WorkFlow;
 using Lyra.Data.API.ODR;
 using Lyra.Data.API;
 using Lyra.Core.Blocks;
+using Lyra.Data.API.WorkFlow.UniMarket;
 
 namespace Dealer.Server.Services
 {
@@ -185,17 +186,17 @@ namespace Dealer.Server.Services
         public async Task CreateRoomAsync(TxRoom newUser) =>
             await _txRoomsCollection.InsertOneAsync(newUser);
 
-        public async Task<TxRoom?> CreateRoomAsync(IOtcTrade trade)
+        public async Task<TxRoom?> CreateRoomAsync(IUniTrade trade)
         {
-            var seller = await GetUserByAccountIdAsync(trade.Trade.dir == TradeDirection.Buy ? trade.Trade.orderOwnerId : trade.OwnerAccountId);
-            var buyer = await GetUserByAccountIdAsync(trade.Trade.dir == TradeDirection.Sell ? trade.Trade.orderOwnerId : trade.OwnerAccountId);
+            var seller = await GetUserByAccountIdAsync(trade.Trade.orderOwnerId);
+            var buyer = await GetUserByAccountIdAsync(trade.OwnerAccountId);
 
             if (seller != null && buyer != null)
             {
                 var crroom = new TxRoom
                 {
                     TradeId = trade.AccountID,
-                    Dir = trade.Trade.dir,
+                    Dir = TradeDirection.Sell,
                     Members = new[] { seller.User, buyer.User },
                     TimeStamp = DateTime.UtcNow,
                     DisputeLevel = DisputeLevels.None,
@@ -275,7 +276,7 @@ namespace Dealer.Server.Services
         #endregion
 
         #region ODR Negociation Rounds
-        public async Task<TradeBrief> GetTradeBriefImplAsync(IOtcTrade trade, string? accountId, bool showRealName)
+        public async Task<TradeBrief> GetTradeBriefImplAsync(IUniTrade trade, string? accountId, bool showRealName)
         {
             ArgumentNullException.ThrowIfNull(trade);
             var tradeId = trade.AccountID;
@@ -339,13 +340,13 @@ namespace Dealer.Server.Services
             }
 
             // construct roles
-            var seller = trade.Trade.dir == TradeDirection.Buy ? trade.Trade.orderOwnerId : trade.OwnerAccountId;
-            var buyer = trade.Trade.dir == TradeDirection.Sell ? trade.Trade.orderOwnerId : trade.OwnerAccountId;
+            var seller = trade.Trade.orderOwnerId;
+            var buyer = trade.OwnerAccountId;
             var level = room?.DisputeLevel ?? DisputeLevels.None;
             var brief = new TradeBrief
             {
                 TradeId = tradeId,
-                Direction = trade.Trade.dir,
+                Direction = TradeDirection.Sell,
                 Members = new string[] { seller, buyer }.ToList(),
                 Names = new List<string>(),
                 RegTimes = new List<DateTime>(),
@@ -353,7 +354,7 @@ namespace Dealer.Server.Services
 
                 // if no chat in 10 minutes after trade creation
                 // or if peer request cancel also
-                IsCancellable = trade.OTStatus == OTCTradeStatus.Open ? room.IsCancelable || icStart : false,
+                IsCancellable = trade.UTStatus == UniTradeStatus.Open ? room.IsCancelable || icStart : false,
                 Resolutions = new List<ResolutionContainer>(),
             };
             brief.SetDisputeHistory(room?.DisputeHistory ?? new List<DisputeCase?>());

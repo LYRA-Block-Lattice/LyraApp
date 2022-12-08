@@ -26,6 +26,7 @@ using static MudBlazor.CategoryTypes;
 using MailKit.Net.Smtp;
 using Lyra.Core.Accounts;
 using Newtonsoft.Json.Linq;
+using Lyra.Data.API.WorkFlow.UniMarket;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -332,7 +333,7 @@ namespace Dealer.Server.Services
             if (tosret.Successful())
             {
                 var allblks = tosret.GetBlocks("orders");
-                var odrs = allblks.Cast<IOtcOrder>()
+                var odrs = allblks.Cast<IUniOrder>()
                     //.Where(a => a.Order.dealerId == _myDealerID)
                     .ToList();
                 var daos = tosret.GetBlocks("daos").Cast<IDao>().ToList();
@@ -365,7 +366,7 @@ namespace Dealer.Server.Services
             var lsb = await _client.GetLastServiceBlockAsync();
             var showRealName = Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature);
 
-            var trade = (await _client.GetLastBlockAsync(tradeId)).As<IOtcTrade>();
+            var trade = (await _client.GetLastBlockAsync(tradeId)).As<IUniTrade>();
             if (trade == null)
                 return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.NotFound };
 
@@ -388,8 +389,8 @@ namespace Dealer.Server.Services
                 {
                     // then authorize the comment
                     // fill the index fields
-                    var tradeblk = (await _client.GetLastBlockAsync(cfg.TradeId)).As<IOtcTrade>();
-                    var orderblk = (await _client.GetLastBlockAsync(tradeblk.Trade.orderId)).As<IOtcOrder>();
+                    var tradeblk = (await _client.GetLastBlockAsync(cfg.TradeId)).As<IUniTrade>();
+                    var orderblk = (await _client.GetLastBlockAsync(tradeblk.Trade.orderId)).As<IUniOrder>();
                     if (tradeblk != null && orderblk != null)
                     {
                         var brief = await _db.GetTradeBriefImplAsync(tradeblk, cfg.ByAccountId, true);
@@ -454,7 +455,7 @@ namespace Dealer.Server.Services
         {
             if (complaint != null && complaint.VerifySignature(complaint.ownerId))
             {
-                var tradeblk = (await _client.GetLastBlockAsync(complaint.tradeId)).As<IOtcTrade>();
+                var tradeblk = (await _client.GetLastBlockAsync(complaint.tradeId)).As<IUniTrade>();
                 if (tradeblk == null)
                     return new APIResult { ResultCode = APIResultCodes.BlockNotFound };
 
@@ -470,8 +471,8 @@ namespace Dealer.Server.Services
                 }
 
                 // complain level by level
-                if (complaint.level == DisputeLevels.Peer && (tradeblk.OTStatus == OTCTradeStatus.Dispute ||
-                    tradeblk.OTStatus == OTCTradeStatus.DisputeClosed))
+                if (complaint.level == DisputeLevels.Peer && (tradeblk.UTStatus == UniTradeStatus.Dispute ||
+                    tradeblk.UTStatus == UniTradeStatus.DisputeClosed))
                 {
                     return new APIResult
                     {
@@ -510,8 +511,8 @@ namespace Dealer.Server.Services
                 }
 
                 if (complaint.level == DisputeLevels.DAO
-                    && tradeblk.OTStatus != OTCTradeStatus.Dispute
-                    && tradeblk.OTStatus != OTCTradeStatus.DisputeClosed)
+                    && tradeblk.UTStatus != UniTradeStatus.Dispute
+                    && tradeblk.UTStatus != UniTradeStatus.DisputeClosed)
                 {
                     // change state of trade
                     var ret = await _keeper.DealerWallet.OTCTradeRaiseDisputeAsync(tradeblk.AccountID);
@@ -575,7 +576,7 @@ namespace Dealer.Server.Services
         {
             if (reply != null && reply.VerifySignature(reply.ownerId))
             {
-                var tradeblk = (await _client.GetLastBlockAsync(reply.tradeId)).As<IOtcTrade>();
+                var tradeblk = (await _client.GetLastBlockAsync(reply.tradeId)).As<IUniTrade>();
                 if (tradeblk == null)
                     return new APIResult { ResultCode = APIResultCodes.BlockNotFound };
 
@@ -726,7 +727,7 @@ namespace Dealer.Server.Services
             if (resolution != null && resolution.VerifySignature(resolution.Creator))
             {
                 // verify the trade
-                var trade = (await _client.GetLastBlockAsync(resolution.TradeId)).As<IOtcTrade>();
+                var trade = (await _client.GetLastBlockAsync(resolution.TradeId)).As<IUniTrade>();
                 if (trade == null)
                     return new APIResult { ResultCode = APIResultCodes.NotFound };
 
@@ -812,7 +813,7 @@ namespace Dealer.Server.Services
                 return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
 
             // verify the trade
-            var trade = (await _client.GetLastBlockAsync(reply.tradeId)).As<IOtcTrade>();
+            var trade = (await _client.GetLastBlockAsync(reply.tradeId)).As<IUniTrade>();
             if (trade == null)
                 return new APIResult { ResultCode = APIResultCodes.NotFound };
 
@@ -880,7 +881,7 @@ namespace Dealer.Server.Services
             return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Success };
         }
 
-        private async Task NotifyTradeesInRoomAsync(TxRoom room, IOtcTrade trade)
+        private async Task NotifyTradeesInRoomAsync(TxRoom room, IUniTrade trade)
         {
             foreach (var act in room.Members)
                 await ChatServer.PinMessageAsync(_db, _hub.Clients, trade, act.AccountId);

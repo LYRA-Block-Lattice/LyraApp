@@ -1,5 +1,6 @@
 ﻿@page "/nft"
 @using Fluxor
+@using Lyra.Data.API.WorkFlow.UniMarket;
 @using Lyra.Data.Crypto
 @using Microsoft.Extensions.Configuration
 @using Nebula.Store.WebWalletUseCase
@@ -194,7 +195,7 @@ else if (walletState.Value.wallet == null)
 		var wallet = walletState.Value.wallet;
 		var input = $"{wallet.AccountId}:{lsb.GetBlock().Hash}:{ipfscid}";
 		var signatures = Signatures.GetSignature(wallet.PrivateKey, input, wallet.AccountId);
-		var ret = await acac.CreateMetaAsync(wallet.AccountId, signatures,
+		var ret = await acac.CreateNFTMetaAsync(wallet.AccountId, signatures,
 			name, desc, ipfscid);
 		dynamic qs = JObject.Parse(ret);
 		if(qs.ok == "true")
