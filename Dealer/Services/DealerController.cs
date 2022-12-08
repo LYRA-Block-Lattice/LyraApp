@@ -94,7 +94,7 @@ namespace Dealer.Server.Services
             if (user == null)
                 return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.NotFound };
 
-            var ret = await _client.GetOtcTradeStatsForUsersAsync(
+            var ret = await _client.GetUniTradeStatsForUsersAsync(
                 new TradeStatsReq { AccountIDs = new List<string> { accountId } }
                 );
 
@@ -366,7 +366,8 @@ namespace Dealer.Server.Services
             var lsb = await _client.GetLastServiceBlockAsync();
             var showRealName = Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, accountId, signature);
 
-            var trade = (await _client.GetLastBlockAsync(tradeId)).As<IUniTrade>();
+            var tradret = await _client.GetLastBlockAsync(tradeId);
+            var trade = tradret.As<IUniTrade>();
             if (trade == null)
                 return new SimpleJsonAPIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.NotFound };
 
@@ -515,7 +516,7 @@ namespace Dealer.Server.Services
                     && tradeblk.UTStatus != UniTradeStatus.DisputeClosed)
                 {
                     // change state of trade
-                    var ret = await _keeper.DealerWallet.OTCTradeRaiseDisputeAsync(tradeblk.AccountID);
+                    var ret = await _keeper.DealerWallet.UniTradeRaiseDisputeAsync(tradeblk.AccountID);
                     if (!ret.Successful())
                     {
                         return new APIResult
@@ -672,7 +673,7 @@ namespace Dealer.Server.Services
                         await _db.UpdateRoomAsync(room.Id, room);
 
                         // dealer cancel the trade
-                        var ret = await _keeper.DealerWallet.CancelOTCTradeAsync(tradeblk.Trade.daoId, tradeblk.Trade.orderId, tradeblk.AccountID);
+                        var ret = await _keeper.DealerWallet.CancelUniTradeAsync(tradeblk.Trade.daoId, tradeblk.Trade.orderId, tradeblk.AccountID);
                         if (!ret.Successful())
                         {
                             return new APIResult

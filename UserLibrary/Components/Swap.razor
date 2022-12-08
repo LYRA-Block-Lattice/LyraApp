@@ -353,7 +353,7 @@
             decimal val2 = 0;
             if (selectedTicker2.dbname == "LYR")
                 val2 = lyrintprice;
-            else if (selectedTicker2.dbname.StartsWith("tether/"))
+            else if (selectedTicker2.dbname.StartsWith("tether/") && hotData.Value.MarketPrices != null)
             {
                 val2 = hotData.Value.MarketPrices[selectedTicker2.dbname.Replace("tether/", "")];
             }

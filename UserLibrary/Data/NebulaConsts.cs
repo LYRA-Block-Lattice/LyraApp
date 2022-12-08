@@ -30,7 +30,7 @@ namespace UserLibrary.Data
             },
             "devnet" => new[]
                 {
-                "L9vh5kuijpaDiqYAaHoV6EejAL3qUXF15JrSR1LvHien3h4fHR3B9p65ubF9AgQnnMzUxdLbDTPtjwpbxB5SPPtSaF4wMr",
+                "LACRviH1gA4Zhwk2UkGdtBG5Z9TMSqSwJiij3yMvdL3ERWb5sUNLrRtRiw4ZjGbwRtiBYbGFexLsSAWL77ePD8nctuKfY5",
                 "L9ZapWEuzZH9nqD6qYEyTYsGKRa3Rif9foEMLC7VNaWcqRQQX41HLdXev6V5TR4ZMWoSWCSTz9pEHh4U8gG1H6HruyC5sC"
                 //"LEn8GndA1k4QJQ7jNp6Nm71DuQCnZLcCuTZcqSBaA8KS1Jm8RPixwrK79814gcGRXDW1Cf7Vh9fcyqah39ZDBPhtrgq2ew"
                 },
