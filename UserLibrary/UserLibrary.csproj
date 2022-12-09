@@ -4,8 +4,8 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <Platforms>AnyCPU</Platforms>
-	<AssemblyVersion>1.3.2.273</AssemblyVersion>
-	<PackageVersion>1.3.2.273</PackageVersion>
+	<AssemblyVersion>1.3.2.285</AssemblyVersion>
+	<PackageVersion>1.3.2.285</PackageVersion>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\MyFeature\Pages\" />
+    <Folder Include="V2\Components\" />
   </ItemGroup>
 
   <ItemGroup>

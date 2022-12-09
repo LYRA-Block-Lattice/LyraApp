@@ -7,6 +7,8 @@
 @using Newtonsoft.Json
 @using UserLibrary.Data
 @using UserLibrary.Store.NotificationUseCase
+@using Radzen
+@using Radzen.Blazor
 
 @inherits FluxorComponent
 @if (cfg == null)
@@ -61,8 +63,8 @@ else if (order == null)
                     <MudItem xs="12">
                         Quantity<br />
                         <RadzenNumeric TValue="decimal" Class="w-100" Name="amount" @bind-Value=@cfg.amount Change="@CalCollat" /> <br />
-                        <RadzenNumericRangeValidator Component="amount" Min="0.0001m" Max="@maxsell" Text="@($"Quantity should be between 0.0001 and {maxsell}")" Popup=false Style="position: absolute" />
-                    </MudItem>
+@*                        <RadzenNumericRangeValidator Component="amount" Min="0.0001m" Max="@maxsell" Text="@($"Quantity should be between 0.0001 and {maxsell}")" Popup=false Style="position: absolute" />
+*@                    </MudItem>
                 </MudItem>
                 <MudItem xs="12">
                     Fiat currency<br />
@@ -82,26 +84,26 @@ else if (order == null)
                 <MudItem xs="12">
                     @action price<br />
                     <RadzenNumeric TValue="decimal" Class="w-100" Name="price" @bind-Value=@cfg.price Change="@CalCollat" /><br />
-                    <RadzenNumericRangeValidator Component="price" Min="0.0001m" Max="1000000000000m" Text="Price should be between 0.0001 and 1000000000000" Popup=false Style="position: absolute" />
-                    Market Price: @selCryptoMarketPrice @cfg.fiat <br />
+@*                    <RadzenNumericRangeValidator Component="price" Min="0.0001m" Max="1000000000000m" Text="Price should be between 0.0001 and 1000000000000" Popup=false Style="position: absolute" />
+*@                    Market Price: @selCryptoMarketPrice @cfg.fiat <br />
                     Total: @total @cfg.fiat
                 </MudItem>
                 <MudItem xs="12">
                     Min Payment<br />
                     <RadzenNumeric TValue="decimal" Class="w-80" Name="limitMin" @bind-Value=@cfg.limitMin Change="@CalCollat" /> @cfg.fiat <br />
-                    <RadzenNumericRangeValidator Component="limitMin" Min="0.0001m" Max="@cfg.limitMax" Text="@($"Limit should be between 0.0001 and {cfg.price * cfg.amount}")" Popup=false Style="position: absolute" />
-                </MudItem>
+@*                    <RadzenNumericRangeValidator Component="limitMin" Min="0.0001m" Max="@cfg.limitMax" Text="@($"Limit should be between 0.0001 and {cfg.price * cfg.amount}")" Popup=false Style="position: absolute" />
+*@                </MudItem>
                 <MudItem xs="12">
                     Max Payment<br />
                     <RadzenNumeric TValue="decimal" Class="w-80" Name="limitMax" @bind-Value=@cfg.limitMax Change="@CalCollat" /> @cfg.fiat <br />
-                    <RadzenNumericRangeValidator Component="limitMax" Min="@cfg.limitMin" Max="@(cfg.price * cfg.amount)" Text="@($"Limit should be between 0.0001 and {cfg.price * cfg.amount}")" Popup=false Style="position: absolute" />
-                </MudItem>
+@*                    <RadzenNumericRangeValidator Component="limitMax" Min="@cfg.limitMin" Max="@(cfg.price * cfg.amount)" Text="@($"Limit should be between 0.0001 and {cfg.price * cfg.amount}")" Popup=false Style="position: absolute" />
+*@                </MudItem>
                 <MudItem xs="12">
                     Collateral<br />
                     <RadzenNumeric TValue="decimal" Class="w-100" Name="collateral" @bind-Value=@cfg.collateral Change="@CalCollat2" /> <br />
                     <br />
-                    <RadzenNumericRangeValidator Component="collateral" Min="@mincollt" Max="@(walletState.Value.wallet.BaseBalance)" Text="@($"Limit should be between 0.0001 and {cfg.price * cfg.amount}")" Popup=false Style="position: absolute" />
-                    Worth: @coltworth @cfg.fiat<br />
+@*                    <RadzenNumericRangeValidator Component="collateral" Min="@mincollt" Max="@(walletState.Value.wallet.BaseBalance)" Text="@($"Limit should be between 0.0001 and {cfg.price * cfg.amount}")" Popup=false Style="position: absolute" />
+*@                    Worth: @coltworth @cfg.fiat<br />
                     Ratio: @(coltrito * 100) % <br />
                     @if (dao != null)
                     {
