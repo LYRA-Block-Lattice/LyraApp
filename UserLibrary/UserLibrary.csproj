@@ -4,25 +4,15 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <Platforms>AnyCPU</Platforms>
-	<AssemblyVersion>1.3.2.299</AssemblyVersion>
-	<PackageVersion>1.3.2.299</PackageVersion>
+	<AssemblyVersion>1.3.2.307</AssemblyVersion>
+	<PackageVersion>1.3.2.307</PackageVersion>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<PackageOutputPath>C:\working\lyra-tools\UserLibrary</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="NpmJS\package-lock.json" />
-    <Content Remove="NpmJS\package.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Areas\MyFeature\Pages\" />
     <Folder Include="V2\Components\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="NpmJS\package-lock.json" />
-    <None Include="NpmJS\package.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,21 +44,7 @@
 		<SupportedPlatform Include="browser" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <EmbeddedResource Update="Resources\Components.Staking.zh.resx">
-	    <Generator></Generator>
-	  </EmbeddedResource>
-	  <EmbeddedResource Update="Resources\Pages.Entry.resx">
-	    <Generator></Generator>
-	  </EmbeddedResource>
-	  <EmbeddedResource Update="Resources\Pages.OTC.MyOrders.zh.resx">
-	    <Generator></Generator>
-	  </EmbeddedResource>
-	</ItemGroup>
-
 	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-		<Exec Command="npm install" WorkingDirectory="NpmJS" />
-		<Exec Command="npm run build" WorkingDirectory="NpmJS" />
 		<Exec Command="powershell.exe -ExecutionPolicy Bypass -NoProfile -NonInteractive -File ..\BuidTasks\Set-VersionTask.ps1  -projectFile $(ProjectPath) -assemblyVersion =.=.=.+ -fileVersion =.=.=.+ -packageVersion =.=.=.+" />
 	</Target>
 	
