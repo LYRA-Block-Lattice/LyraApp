@@ -1,17 +1,18 @@
 ﻿@page "/"
+@inject IJSRuntime JsWindow;
 
-<MudGrid Spacing="@spacing" Justify="Justify.Center">
-    <MudItem>
-        <MudPaper Height="140px" Width="140px" />
-    </MudItem>
-    <MudItem>
-        <MudPaper Height="140px" Width="140px" />
-    </MudItem>
-    <MudItem>
-        <MudPaper Height="140px" Width="140px" />
-    </MudItem>
-</MudGrid>
+<div @ref="_react" />
 
 @code {
-    public int spacing { get; set; } = 2;
+    private ElementReference _react;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JsWindow.InvokeVoidAsync("bruic.openwallet", _react);
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
 }
