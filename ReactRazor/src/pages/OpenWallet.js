@@ -26,6 +26,9 @@ const OpenWallet = () => {
     const onSignUpClick = (0, react_2.useCallback)(() => {
         navigate("/create-wallet");
     }, [navigate]);
+    const onOpenWallet = (0, react_2.useCallback)(() => {
+        alert("call me!");
+    }, []);
     return (react_1.default.createElement("div", { className: "open-wallet" },
         react_1.default.createElement("b", { className: "sign-in1" }, "Open Wallet"),
         react_1.default.createElement("img", { className: "illus5-copy-icon", alt: "", src: "_content/ReactRazor/imgs/illus5-copy.svg" }),
@@ -39,7 +42,7 @@ const OpenWallet = () => {
                     react_1.default.createElement(material_1.IconButton, { "aria-label": "toggle password visibility" },
                         react_1.default.createElement(material_1.Icon, null, "visibility")))),
             }, label: "Password", placeholder: "Placeholder", size: "medium", margin: "none", required: true }),
-        react_1.default.createElement("button", { className: "button-shape-21" },
+        react_1.default.createElement("button", { className: "button-shape-21", onClick: onOpenWallet },
             react_1.default.createElement("div", { className: "button-shape1" }),
             react_1.default.createElement("div", { className: "label1" }, "Sign In")),
         react_1.default.createElement("div", { className: "frame-div" },

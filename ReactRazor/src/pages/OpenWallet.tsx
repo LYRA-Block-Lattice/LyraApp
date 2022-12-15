@@ -44,6 +44,10 @@ const OpenWallet: FunctionComponent = () => {
     navigate("/create-wallet");
   }, [navigate]);
 
+    const onOpenWallet = useCallback(() => {
+        alert("call me!");
+    }, []);
+
   return (
     <div className="open-wallet">
       <b className="sign-in1">Open Wallet</b>
@@ -99,7 +103,7 @@ const OpenWallet: FunctionComponent = () => {
         margin="none"
         required
       />
-      <button className="button-shape-21">
+          <button className="button-shape-21" onClick={onOpenWallet}>
         <div className="button-shape1" />
         <div className="label1">Sign In</div>
       </button>

@@ -7,7 +7,7 @@ module.exports = {
     devtool: "source-map",
     mode: "development",
     output: {
-        filename: "app.js",
+        filename: "rbapp.js",
         path: path.resolve(__dirname, "./wwwroot/scripts"),
         library: "bruic",
     },

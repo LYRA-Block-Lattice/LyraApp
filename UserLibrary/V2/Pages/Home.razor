@@ -1,5 +1,4 @@
 ﻿@page "/"
-@page "/create-wallet"
 @inject IJSRuntime JsWindow;
 
 <div @ref="_react" />
@@ -17,19 +16,19 @@
         return base.OnInitializedAsync();
     }
 
-    protected override Task OnParametersSetAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        return base.OnParametersSetAsync();
+        await base.OnParametersSetAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (true)
         {
-            await JsWindow.InvokeVoidAsync("loadScript", "_content/ReactRazor/scripts/app.js");
+            await JsWindow.InvokeVoidAsync("loadScript", "_content/ReactRazor/scripts/rbapp.js");
             //await JsWindow.InvokeVoidAsync("bruic.openwallet", _react);
         }
 
-        //await base.OnAfterRenderAsync(firstRender);
+        await base.OnAfterRenderAsync(firstRender);
     }
 }
