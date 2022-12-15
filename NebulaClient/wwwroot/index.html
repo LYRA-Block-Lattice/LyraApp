@@ -13,21 +13,7 @@
     <link href="css/app.css" rel="stylesheet" />
     <link href="LyraWebPWA.styles.css" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
-    <script type="text/javascript">
-        window.updateScroll = function (element) {
-            element.scrollTop = element.scrollHeight;
-        }
-        window.clipboardCopy = {
-            copyText: function (text) {
-                navigator.clipboard.writeText(text).then(function () {
-                    alert("Copied to clipboard!");
-                })
-                    .catch(function (error) {
-                        alert(error);
-                    });
-            }
-        };
-    </script>
+    <script type="text/javascript" src="/js/util.js"></script>
     
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
@@ -51,7 +37,6 @@
     <script src="_content/BlazorZXingJs/zxingjs-0.18.2/umd/index.min.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="_content/UserLibrary/UserLibrary.min.js"></script>
-
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="sw-register.js"></script>
 </body>

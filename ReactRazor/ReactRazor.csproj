@@ -1,15 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<TypeScriptCompile Remove="node_modules\**" />
@@ -44,7 +40,9 @@
 		<TypeScriptESModuleInterop>True</TypeScriptESModuleInterop>
 		<TypeScriptAllowSyntheticDefaultImports>True</TypeScriptAllowSyntheticDefaultImports>
 	</PropertyGroup>
-
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
 	<Target Name="npm restore" BeforeTargets="BeforeBuild">
 		<Exec Command="npm install" />
 	</Target>
