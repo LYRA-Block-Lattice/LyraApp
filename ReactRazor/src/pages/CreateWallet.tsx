@@ -19,7 +19,7 @@ const CreateWallet: FunctionComponent = () => {
   }, [navigate]);
 
   return (
-    <div className="create-wallet">
+    <div className="createwallet">
       <b className="sign-up">Create Wallet</b>
       <TextField
         className="box-2-copy"

@@ -10,3 +10,8 @@ from
 src="../asserts/
 to
 src="_content/ReactRazor/asserts/
+
+run
+
+.\node_modules\.bin\replace-in-file /src=\"..\/asserts\//g src=\"_content/ReactRazor/asserts/ .\src\components\**.tsx --isRegex --verbose
+.\node_modules\.bin\replace-in-file /src=\"..\/asserts\//g src=\"_content/ReactRazor/asserts/ .\src\pages\**.tsx --isRegex --verbose

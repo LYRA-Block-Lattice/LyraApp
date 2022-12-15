@@ -1,0 +1,28 @@
+.pxl-20210309-203454756-1-icon {
+  position: absolute;
+  top: 106px;
+  left: 97px;
+  border-radius: var(--br-sm);
+  width: 192px;
+  height: 192px;
+  object-fit: cover;
+}
+.should-not-see-me {
+  position: absolute;
+  top: 314px;
+  left: 143px;
+  display: inline-block;
+  width: 101px;
+  height: 18px;
+}
+.empty {
+  position: relative;
+  background-color: var(--color-white);
+  width: 100%;
+  height: 399px;
+  overflow: hidden;
+  text-align: left;
+  font-size: var(--caption-size);
+  color: var(--color-black);
+  font-family: var(--font-myriad-pro);
+}

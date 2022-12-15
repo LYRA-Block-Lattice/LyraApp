@@ -28,6 +28,10 @@ body {
   --color-gray-300: rgba(255, 255, 255, 0.95);
   --color-coral: #fa7268;
   --color-turquoise-100: #00bece;
+  --color-black: #000;
+
+  /* Gaps */
+  --gap-md: 12px;
 
   /* Paddings */
   --padding-md: 16px;

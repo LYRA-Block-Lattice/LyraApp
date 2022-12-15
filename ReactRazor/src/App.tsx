@@ -4,7 +4,8 @@ import {
   useNavigationType,
   useLocation,
 } from "react-router-dom";
-import HomePage from "./pages/HomePage";
+import Empty from "./pages/Empty";
+import Market from "./pages/Market";
 import CreateWallet from "./pages/CreateWallet";
 import OpenWallet from "./pages/OpenWallet";
 import { useEffect } from "react";
@@ -27,6 +28,10 @@ function App() {
     //TODO: Update meta titles and descriptions below
     switch (pathname) {
       case "/":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/market":
         title = "";
         metaDescription = "";
         break;
@@ -56,7 +61,9 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<Empty />} />
+
+      <Route path="/market" element={<Market />} />
 
       <Route path="/create-wallet" element={<CreateWallet />} />
 

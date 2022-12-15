@@ -44,7 +44,7 @@ const OpenWallet: FunctionComponent = () => {
   }, [navigate]);
 
   return (
-    <div className="open-wallet">
+    <div className="openwallet">
       <b className="sign-in1">Open Wallet</b>
       <img
         className="illus5-copy-icon"
@@ -106,7 +106,7 @@ const OpenWallet: FunctionComponent = () => {
         <div className="button-shape1" />
         <div className="label1">Sign In</div>
       </button>
-      <div className="frame-div1">
+      <div className="frame-div2">
         <button className="sign-up1" onClick={onSignUpClick}>
           Sign Up
         </button>
