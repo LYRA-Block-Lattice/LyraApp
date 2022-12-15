@@ -1,0 +1,30 @@
+﻿@page "/v2"
+@inject IJSRuntime JS;
+
+<a href="/market">market</a> &nbsp;
+<a href="/open-wallet">open wallet</a> &nbsp;
+<a href="/create-wallet">create wallet</a> &nbsp;
+
+<div id="root"></div>
+
+@code {
+    //private IJSInProcessObjectReference module;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (true)
+        {
+            try
+            {
+                await JS.InvokeVoidAsync("loadScript", "_content/ReactRazor/static/js/main.js");
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error loadScript: {ex.Message}");
+            }
+            //await JS.InvokeVoidAsync("bruic.openwallet", _react);
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}

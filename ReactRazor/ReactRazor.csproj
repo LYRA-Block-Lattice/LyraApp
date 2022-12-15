@@ -13,6 +13,13 @@
 	<ItemGroup>
 	  <Folder Include="wwwroot\" />
 	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Components" Version="7.0.1" />
+	  <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.1" />
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+	  <PackageReference Include="Microsoft.JSInterop" Version="7.0.1" />
+	</ItemGroup>
 	<Target Name="npm restore" BeforeTargets="BeforeBuild">
 		<Exec Command="npm install" />
 	</Target>

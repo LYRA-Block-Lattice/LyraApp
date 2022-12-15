@@ -1,0 +1,15 @@
+﻿@page "/"
+@inject IJSRuntime JsWindow;
+@inject NavigationManager Navigation
+
+@code {
+    protected override void OnAfterRender(bool firstRender)
+    {
+        Navigation.NavigateTo("/market");
+        base.OnAfterRender(firstRender);
+    }
+}
+
+
+
+
