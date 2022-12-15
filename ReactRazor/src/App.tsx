@@ -1,13 +1,13 @@
-import React from 'react'
 import {
   Routes,
   Route,
   useNavigationType,
   useLocation,
 } from "react-router-dom";
-import OpenWallet from "./pages/OpenWallet";
+import HomePage from "./pages/HomePage";
 import CreateWallet from "./pages/CreateWallet";
-import { useEffect } from "react";
+import OpenWallet from "./pages/OpenWallet";
+import React, { useEffect } from "react";
 
 function App() {
   const action = useNavigationType();
@@ -26,11 +26,15 @@ function App() {
 
     //TODO: Update meta titles and descriptions below
     switch (pathname) {
-        case "/open-wallet":
+      case "/":
         title = "";
         metaDescription = "";
         break;
       case "/create-wallet":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/open-wallet":
         title = "";
         metaDescription = "";
         break;
@@ -52,9 +56,11 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/open-wallet" element={<OpenWallet />} />
+      <Route path="/" element={<HomePage />} />
 
       <Route path="/create-wallet" element={<CreateWallet />} />
+
+      <Route path="/open-wallet" element={<OpenWallet />} />
     </Routes>
   );
 }

@@ -1,5 +1,4 @@
-import React from 'react'
-import { FunctionComponent, useState, useCallback } from "react";
+import React, { FunctionComponent, useState, useCallback } from "react";
 import {
   Button,
   Menu,
@@ -44,14 +43,10 @@ const OpenWallet: FunctionComponent = () => {
     navigate("/create-wallet");
   }, [navigate]);
 
-    const onOpenWallet = useCallback(() => {
-        alert("call me!");
-    }, []);
-
   return (
     <div className="open-wallet">
       <b className="sign-in1">Open Wallet</b>
-          <img className="illus5-copy-icon" alt="" src="_content/ReactRazor/imgs/illus5-copy.svg" />
+      <img className="illus5-copy-icon" alt="" src="_content/ReactRazor/imgs/illus5-copy.svg" />
       <div>
         <Button
           id="button-Select Wallet"
@@ -103,11 +98,11 @@ const OpenWallet: FunctionComponent = () => {
         margin="none"
         required
       />
-          <button className="button-shape-21" onClick={onOpenWallet}>
+      <button className="button-shape-21">
         <div className="button-shape1" />
         <div className="label1">Sign In</div>
       </button>
-      <div className="frame-div">
+      <div className="frame-div1">
         <button className="sign-up1" onClick={onSignUpClick}>
           Sign Up
         </button>

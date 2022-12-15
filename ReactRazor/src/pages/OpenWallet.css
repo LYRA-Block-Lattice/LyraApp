@@ -23,7 +23,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: var(--br-md);
+  border-radius: var(--br-lg);
   background-color: var(--color-coral);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
@@ -66,14 +66,14 @@
 .sign-up1 {
   font-size: var(--body-s-size);
   font-weight: 600;
-  color: #7f8592;
+  color: var(--color-gray-1);
 }
 .forgot-password-copy-2 {
   font-size: var(--caption-size);
   font-weight: 500;
   color: rgba(127, 133, 146, 0.5);
 }
-.frame-div,
+.frame-div1,
 .open-wallet {
   overflow: hidden;
   display: flex;
@@ -81,7 +81,7 @@
   align-items: center;
   justify-content: center;
 }
-.frame-div {
+.frame-div1 {
   flex-direction: row;
   padding: 12px 40px;
   gap: 82px;
