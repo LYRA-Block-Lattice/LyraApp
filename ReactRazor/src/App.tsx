@@ -7,7 +7,7 @@ import {
 import HomePage from "./pages/HomePage";
 import CreateWallet from "./pages/CreateWallet";
 import OpenWallet from "./pages/OpenWallet";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 function App() {
   const action = useNavigationType();

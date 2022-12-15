@@ -1,17 +1,12 @@
-﻿replace when copy Locofy export files:
+﻿
+import Locofy source:
+
+1, copy all src,public
+2, replace string in all .tsx
+
+replace when copy Locofy export files:
 
 from
-import { FunctionComponent
+src="../asserts/
 to
-import React, { FunctionComponent
-
-from
-import { useEffect } from "react";
-to
-import React, { useEffect } from "react";
-
-
-from
-src="../
-to
-src="_content/ReactRazor/imgs/
+src="_content/ReactRazor/asserts/

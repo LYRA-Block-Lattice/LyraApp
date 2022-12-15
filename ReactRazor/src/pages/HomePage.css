@@ -3,23 +3,19 @@
 .fill-6-icon,
 .group-icon {
   position: absolute;
-  max-width: 100%;
-  overflow: hidden;
-  max-height: 100%;
-  mix-blend-mode: normal;
-}
-.group-icon {
   height: 78.89%;
   width: 99.75%;
   top: 11.06%;
   right: 0;
   bottom: 10.05%;
   left: 0.25%;
+  max-width: 100%;
+  overflow: hidden;
+  max-height: 100%;
   opacity: 0.08;
+  mix-blend-mode: normal;
 }
-.fill-1-icon {
-  opacity: 0.3;
-}
+.fill-1-icon,
 .fill-3-icon,
 .fill-6-icon {
   height: 4.61%;
@@ -30,6 +26,7 @@
   left: 74.57%;
   opacity: 0.3;
 }
+.fill-1-icon,
 .fill-6-icon {
   height: 5.11%;
   top: 15.28%;
@@ -74,7 +71,8 @@
   opacity: 0.16;
   mix-blend-mode: normal;
 }
-.group-icon1 {
+.group-icon1,
+.group-icon2 {
   height: 19.81%;
   width: 10.79%;
   top: 63.35%;
@@ -793,25 +791,25 @@
   width: 164px;
   height: 226px;
 }
-.frame-icon2 {
-  top: 82px;
-  left: 57px;
-}
 .frame-icon2,
 .frame-icon3,
 .frame-icon4,
 .frame-icon5 {
   position: absolute;
+  top: 82px;
+  left: 57px;
   width: 84px;
   height: 84px;
   overflow: hidden;
 }
-.frame-icon3 {
+.frame-icon3,
+.frame-icon4,
+.frame-icon5 {
   top: 324px;
   left: 240px;
 }
-.frame-icon4 {
-  top: 324px;
+.frame-icon4,
+.frame-icon5 {
   left: 57px;
 }
 .frame-icon5 {

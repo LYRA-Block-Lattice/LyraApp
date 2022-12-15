@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useCallback } from "react";
+import { FunctionComponent, useState, useCallback } from "react";
 import {
   Button,
   Menu,
@@ -46,7 +46,11 @@ const OpenWallet: FunctionComponent = () => {
   return (
     <div className="open-wallet">
       <b className="sign-in1">Open Wallet</b>
-      <img className="illus5-copy-icon" alt="" src="_content/ReactRazor/imgs/illus5-copy.svg" />
+      <img
+        className="illus5-copy-icon"
+        alt=""
+        src="_content/ReactRazor/asserts/illus5-copy.svg"
+      />
       <div>
         <Button
           id="button-Select Wallet"

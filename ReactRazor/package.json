@@ -13,6 +13,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.2.1",
+    "renamer": "^4.0.0",
+    "replace-in-file": "^6.3.5",
     "source-map-loader": "^4.0.1",
     "style-loader": "^3.3.1",
     "typescript": "^4.5.4",
@@ -22,7 +24,27 @@
   },
   "scripts": {
     "pack": "webpack",
-    "clean": "del-cli wwwroot/scripts/* node_modules"
+    "clean": "del-cli wwwroot/scripts/* node_modules",
+    "build": "react-scripts build && npm run build-rename",
+    "build-rename": "npm run build-rename-js && npm run build-rename-css && npm run build-fix-references",
+    "build-rename-js": "renamer --find \"/main\\.[^\\.]+\\./i\" --replace \"main.\" wwwroot\\static\\js\\*",
+    "build-rename-css": "renamer --find \"/main\\.[^\\.]+\\./i\" --replace \"main.\" wwwroot\\static\\css\\*",
+    "build-fix-references": "npm run build-fix-sourcemap && npm run build-fix-index && npm run build-fix-serviceworker && npm run build-fix-assetmanifest",
+    "build-fix-sourcemap": "npm run build-fix-sourcemap-js && npm run build-fix-sourcemap-css",
+    "build-fix-sourcemap-js": "replace-in-file \"/sourceMappingURL=main\\.[^\\.]+\\.js\\.map/i\" \"sourceMappingURL=main.js.map\" wwwroot/static/js/main.js --isRegex",
+    "build-fix-sourcemap-css": "replace-in-file \"/sourceMappingURL=main\\.[^\\.]+\\.css\\.map/i\" \"sourceMappingURL=main.css.map\" wwwroot/static/css/main.css --isRegex",
+    "build-fix-index": "npm run build-fix-index-js && npm run build-fix-index-css",
+    "build-fix-index-js": "replace-in-file \"/main\\.[^\\.]+\\.js/i\" \"main.js?v=%npm_package_version%\" wwwroot/index.html --isRegex",
+    "build-fix-index-css": "replace-in-file \"/main\\.[^\\.]+\\.css/i\" \"main.css?v=%npm_package_version%\" wwwroot/index.html --isRegex",
+    "build-fix-serviceworker": "npm run build-fix-serviceworker-js && npm run build-fix-serviceworker-css",
+    "build-fix-serviceworker-js": "replace-in-file \"/main\\.[^\\.]+\\.js/i\" \"main.js\" wwwroot/service-worker.js --isRegex",
+    "build-fix-serviceworker-css": "replace-in-file \"/main\\.[^\\.]+\\.css/i\" \"main.css\" wwwroot/service-worker.js --isRegex",
+    "build-fix-assetmanifest": "npm run build-fix-assetmanifest-js && npm run build-fix-assetmanifest-css && npm run build-fix-assetmanifest-js-map && npm run build-fix-assetmanifest-css-map",
+    "build-fix-assetmanifest-js": "replace-in-file \"/main\\.[^\\.]+\\.js/i\" \"main.js\" wwwroot/asset-manifest.json --isRegex",
+    "build-fix-assetmanifest-css": "replace-in-file \"/main\\.[^\\.]+\\.css/i\" \"main.css\" wwwroot/asset-manifest.json --isRegex",
+    "build-fix-assetmanifest-js-map": "replace-in-file \"/main\\.[^\\.]+\\.js\\.map/i\" \"main.js.map\" wwwroot/asset-manifest.json --isRegex",
+    "build-fix-assetmanifest-css-map": "replace-in-file \"/main\\.[^\\.]+\\.css\\.map/i\" \"main.css.map\" wwwroot/asset-manifest.json --isRegex"
+
   },
   "eslintConfig": {},
   "browserslist": {
@@ -36,5 +58,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "dependencies": {
+    "react-scripts": "^5.0.1"
   }
 }
