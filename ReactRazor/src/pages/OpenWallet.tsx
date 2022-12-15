@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useCallback } from "react";
+import { FunctionComponent, useState, useCallback, SetStateAction } from "react";
 import {
   Button,
   Menu,
@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import "./OpenWallet.css";
 
 const OpenWallet: FunctionComponent = () => {
+    const [pwd, setPwd] = useState<string>("");
   const [
     dropdownButtonSimpleTextOAnchorEl,
     setDropdownButtonSimpleTextOAnchorEl,
@@ -42,6 +43,18 @@ const OpenWallet: FunctionComponent = () => {
   const onSignUpClick = useCallback(() => {
     navigate("/create-wallet");
   }, [navigate]);
+
+    
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPwd(event.target.value);
+    };
+
+    const onOpenWallet = useCallback(() => {
+        DotNet.invokeMethodAsync<string>("ReactRazor", "OpenIt", "default wallet", pwd)
+            .then(data => {
+                alert("DotNet reply: " + data);
+            });
+    }, []);
 
   return (
     <div className="openwallet">
@@ -81,7 +94,7 @@ const OpenWallet: FunctionComponent = () => {
           </MenuItem>
         </Menu>
       </div>
-      <TextField
+          <TextField
         className="box-22"
         sx={{ width: 330 }}
         color="primary"
@@ -100,9 +113,11 @@ const OpenWallet: FunctionComponent = () => {
         placeholder="Placeholder"
         size="medium"
         margin="none"
-        required
-      />
-      <button className="button-shape-21">
+              required
+              value={pwd}
+              onChange={handleChange}
+          />
+          <button className="button-shape-21" onClick={onOpenWallet}>
         <div className="button-shape1" />
         <div className="label1">Sign In</div>
       </button>

@@ -1,0 +1,12 @@
+﻿@page "/open-wallet"
+<Home></Home>
+
+@code{
+
+    [JSInvokable("OpenIt")]
+    public static Task<string> OpenIt(string name, string password)
+    {
+        return Task.FromResult($"wanna open wallet {name} with password {password}?");
+    }
+
+}

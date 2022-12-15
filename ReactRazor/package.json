@@ -44,7 +44,6 @@
     "build-fix-assetmanifest-css": "replace-in-file \"/main\\.[^\\.]+\\.css/i\" \"main.css\" wwwroot/asset-manifest.json --isRegex",
     "build-fix-assetmanifest-js-map": "replace-in-file \"/main\\.[^\\.]+\\.js\\.map/i\" \"main.js.map\" wwwroot/asset-manifest.json --isRegex",
     "build-fix-assetmanifest-css-map": "replace-in-file \"/main\\.[^\\.]+\\.css\\.map/i\" \"main.css.map\" wwwroot/asset-manifest.json --isRegex"
-
   },
   "eslintConfig": {},
   "browserslist": {
@@ -60,6 +59,7 @@
     ]
   },
   "dependencies": {
+    "@types/blazor__javascript-interop": "^3.1.2",
     "react-scripts": "^5.0.1"
   }
 }
