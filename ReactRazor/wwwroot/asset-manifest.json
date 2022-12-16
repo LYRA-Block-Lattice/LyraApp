@@ -4,12 +4,12 @@
     "main.js": "/static/js/main.js",
     "static/js/915.5df0f571.chunk.js": "/static/js/915.5df0f571.chunk.js",
     "index.html": "/index.html",
-    "main.css.map": "/static/css/main.ec4667c4.css.map",
-    "main.js.map": "/static/js/main.b5e01242.js.map",
+    "main.css.map": "/static/css/main.22109033.css.map",
+    "main.js.map": "/static/js/main.caa85995.js.map",
     "915.5df0f571.chunk.js.map": "/static/js/915.5df0f571.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.ec4667c4.css",
-    "static/js/main.b5e01242.js"
+    "static/css/main.22109033.css",
+    "static/js/main.caa85995.js"
   ]
 }

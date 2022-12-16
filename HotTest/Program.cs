@@ -33,7 +33,8 @@ builder.Services.AddScoped<ILyraAPI>(a => LyraRestClient.Create(networkid, Envir
 
 var currentAssembly = typeof(Program).Assembly;
 var libAssembly = typeof(UserLibrary.Data.WalletView).Assembly;
-builder.Services.AddFluxor(options => options.ScanAssemblies(libAssembly, currentAssembly));
+var blAssembly = typeof(BusinessLayer.ReactProxy).Assembly;
+builder.Services.AddFluxor(options => options.ScanAssemblies(blAssembly, libAssembly, currentAssembly));
 
 builder.Services.AddMudServices(config =>
 {

@@ -41,7 +41,7 @@ const OpenWallet: FunctionComponent = () => {
   };
 
     const onOpenWallet = useCallback(() => {
-        DotNet.invokeMethodAsync<string>("UserLibrary", "OpenIt", "default wallet", inputRef.current!.value)
+        DotNet.invokeMethodAsync<string>("BusinessLayer", "OpenIt", "default wallet", inputRef.current!.value)
             .then(data => {
                 alert("DotNet reply: " + data);
             });

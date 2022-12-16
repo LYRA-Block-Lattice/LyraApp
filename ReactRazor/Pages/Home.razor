@@ -1,4 +1,7 @@
 ﻿@page "/v2"
+@using Fluxor;
+@using Nebula.Store.WebWalletUseCase;
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 @inject IJSRuntime JS;
 
 <a href="/market">market</a> &nbsp;
@@ -8,7 +11,11 @@
 <div id="root"></div>
 
 @code {
-    //private IJSInProcessObjectReference module;
+    [Inject]
+    private IState<WebWalletState> walletState { get; set; }
+
+    [Inject]
+    private IDispatcher Dispatcher { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

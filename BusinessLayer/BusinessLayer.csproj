@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
+    <PackageReference Include="Converto" Version="6.0.0" />
+    <PackageReference Include="Fluxor" Version="5.7.0" />
+    <PackageReference Include="Humanizer" Version="2.14.1" />
+    <PackageReference Include="Lyra.Data" Version="3.6.3.1" />
+    <PackageReference Include="Microsoft.JSInterop" Version="7.0.1" />
+  </ItemGroup>
+
+</Project>
