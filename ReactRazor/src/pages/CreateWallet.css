@@ -18,7 +18,7 @@
   bottom: 0;
   left: 0;
   border-radius: var(--br-lg);
-  background-color: var(--color-coral);
+  background-color: var(--color-brown-100);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 .label {
@@ -60,7 +60,7 @@
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 600;
-  color: var(--color-black);
+  color: var(--color-gray-400);
   display: inline-block;
 }
 .createwallet {
@@ -76,5 +76,5 @@
   justify-content: center;
   gap: 28px;
   font-size: var(--large-title-size);
-  color: var(--color-coral);
+  color: var(--color-brown-100);
 }

@@ -6,8 +6,10 @@ import {
 } from "react-router-dom";
 import Empty from "./pages/Empty";
 import Market from "./pages/Market";
+import OldV1UI from "./pages/OldV1UI";
 import CreateWallet from "./pages/CreateWallet";
 import OpenWallet from "./pages/OpenWallet";
+import Market1 from "./pages/Market1";
 import { useEffect } from "react";
 
 function App() {
@@ -35,11 +37,19 @@ function App() {
         title = "";
         metaDescription = "";
         break;
+      case "/oldv1ui":
+        title = "";
+        metaDescription = "";
+        break;
       case "/create-wallet":
         title = "";
         metaDescription = "";
         break;
       case "/open-wallet":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/market1":
         title = "";
         metaDescription = "";
         break;
@@ -65,9 +75,13 @@ function App() {
 
       <Route path="/market" element={<Market />} />
 
+      <Route path="/oldv1ui" element={<OldV1UI />} />
+
       <Route path="/create-wallet" element={<CreateWallet />} />
 
       <Route path="/open-wallet" element={<OpenWallet />} />
+
+      <Route path="/market1" element={<Market1 />} />
     </Routes>
   );
 }

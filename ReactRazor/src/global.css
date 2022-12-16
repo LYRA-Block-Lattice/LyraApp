@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Myriad+Pro:wght@400&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@300;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@300;400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
@@ -15,24 +15,28 @@ body {
 
   /* font sizes */
   --font-size-4xs: 10px;
-  --font-size-3xs: 11px;
+  --other-11-size: 11px;
   --caption-size: 12px;
-  --other-m-size: 13px;
+  --font-size-xs: 13px;
   --font-size-sm: 14px;
   --body-s-size: 15px;
   --headline-s-size: 17px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
   --large-title-size: 34px;
 
   /* Colors */
   --color-white: #fff;
-  --color-gray-100: #b5b5b5;
-  --color-gray-1: #7f8592;
-  --color-black: #1b2749;
-  --color-gray-400: rgba(255, 255, 255, 0.95);
-  --color-coral: #fa7268;
+  --color-gray-100: #b6e0ff;
+  --color-gray-200: #b5b5b5;
+  --color-gray-300: #7f8592;
+  --color-gray-400: #1b2749;
+  --color-gray-500: rgba(255, 255, 255, 0.95);
+  --color-brown-100: #fa7268;
   --color-turquoise-100: #00bece;
 
   /* Gaps */
+  --gap-0: 0px;
   --gap-md: 12px;
 
   /* Paddings */
@@ -44,7 +48,4 @@ body {
   --br-sm: 4px;
   --br-md: 8px;
   --br-lg: 25px;
-
-  /* Effects */
-  --effect: 0px 4px 23px rgba(0, 0, 0, 0.12);
 }
