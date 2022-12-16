@@ -82,7 +82,7 @@ const OpenWallet: FunctionComponent = () => {
         </Menu>
       </div>
       <TextField
-        className="box-22"
+         className="box-22"
         sx={{ width: 330 }}
         color="primary"
         variant="standard"
