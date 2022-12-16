@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useCallback, SetStateAction } from "react";
+import { FunctionComponent, useRef, useState, useCallback, SetStateAction } from "react";
 import {
   Button,
   Menu,
@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import "./OpenWallet.css";
 
 const OpenWallet: FunctionComponent = () => {
+    const inputRef = useRef<HTMLInputElement>(null);
     const [pwd, setPwd] = useState<string>("");
   const [
     dropdownButtonSimpleTextOAnchorEl,
@@ -50,7 +51,7 @@ const OpenWallet: FunctionComponent = () => {
     };
 
     const onOpenWallet = useCallback(() => {
-        DotNet.invokeMethodAsync<string>("ReactRazor", "OpenIt", "default wallet", pwd)
+        DotNet.invokeMethodAsync<string>("UserLibrary", "OpenIt", "default wallet", inputRef.current!.value)
             .then(data => {
                 alert("DotNet reply: " + data);
             });
@@ -95,6 +96,7 @@ const OpenWallet: FunctionComponent = () => {
         </Menu>
       </div>
           <TextField
+              inputRef={inputRef}
         className="box-22"
         sx={{ width: 330 }}
         color="primary"
