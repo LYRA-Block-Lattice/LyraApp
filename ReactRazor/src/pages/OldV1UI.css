@@ -1,0 +1,15 @@
+.image-1-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 623px;
+  height: 1007px;
+  object-fit: cover;
+}
+.oldv1ui {
+  position: relative;
+  background-color: var(--color-white);
+  width: 100%;
+  height: 995px;
+  overflow: hidden;
+}

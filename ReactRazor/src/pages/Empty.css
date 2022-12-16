@@ -9,10 +9,10 @@
 }
 .should-not-see-me {
   position: absolute;
-  top: 314px;
-  left: 143px;
+  top: 317px;
+  left: 134px;
   display: inline-block;
-  width: 101px;
+  width: 119px;
   height: 18px;
 }
 .empty {
