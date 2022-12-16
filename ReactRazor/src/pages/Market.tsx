@@ -5,31 +5,33 @@ const Market: FunctionComponent = () => {
   return (
     <div className="market">
       <div className="bannersection">
-        <div className="illuscard-3-copy">
-          <div className="rectangle" />
-          <div className="rectangle-copy" />
-          <img
-            className="mask-group-icon"
-            alt=""
-            src="_content/ReactRazor/asserts/mask-group.svg"
-          />
-          <img className="group-icon" alt="" src="_content/ReactRazor/asserts/group.svg" />
-          <div className="wallet-no">NFT</div>
-          <div className="div">2</div>
-          <div className="div1">120,000 LYR</div>
-          <div className="usd-wallet">My Primary Account</div>
-          <div className="rectangle1" />
-          <div className="rectangle2" />
-          <div className="cen-wallet-copy">
-            <span className="lyra-walle">Lyra walle</span>t
+        <div className="frame-div">
+          <div className="illuscard-3-copy">
+            <div className="rectangle" />
+            <div className="rectangle-copy" />
+            <img
+              className="mask-group-icon"
+              alt=""
+              src="_content/ReactRazor/asserts/mask-group.svg"
+            />
+            <img className="group-icon" alt="" src="_content/ReactRazor/asserts/group.svg" />
+            <div className="wallet-no">NFT</div>
+            <div className="div">2</div>
+            <div className="div1">120,000 LYR</div>
+            <div className="usd-wallet">My Primary Account</div>
+            <div className="rectangle1" />
+            <div className="rectangle2" />
+            <div className="cen-wallet-copy">
+              <span className="lyra-walle">Lyra walle</span>t
+            </div>
           </div>
+          <div className="wallet-no1">Trade</div>
+          <div className="div2">0</div>
+          <div className="wallet-no2">Orders</div>
+          <div className="div3">1</div>
+          <div className="wallet-no3">TFT</div>
+          <div className="div4">3</div>
         </div>
-        <div className="wallet-no1">Trade</div>
-        <div className="div2">0</div>
-        <div className="wallet-no2">Orders</div>
-        <div className="div3">1</div>
-        <div className="wallet-no3">TFT</div>
-        <div className="div4">3</div>
         <div className="illuscard-3-copy1">
           <div className="rectangle" />
           <div className="rectangle-copy" />
@@ -52,7 +54,7 @@ const Market: FunctionComponent = () => {
       </div>
       <div className="cataloguesection">
         <b className="catalogue">Catalogue</b>
-        <div className="frame-div">
+        <div className="frame-div1">
           <div className="living-room">
             <div className="nathan-fertig-249917-unsplash">
               <div className="mask" />
@@ -154,7 +156,7 @@ const Market: FunctionComponent = () => {
         <div className="auto-added-frame">
           <b className="catalogue">Best seller</b>
         </div>
-        <div className="frame-div1">
+        <div className="frame-div2">
           <div className="card-e-commerce-1">
             <div className="rectangle-copy-3" />
             <b className="pattern-armchair">Pattern armchair</b>

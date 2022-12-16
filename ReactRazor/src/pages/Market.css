@@ -106,28 +106,28 @@
 }
 .illuscard-3-copy {
   position: absolute;
-  top: 36px;
-  left: 42px;
+  top: 0;
+  left: 0;
   width: 317px;
   height: 207px;
 }
 .div2,
 .wallet-no1 {
   position: absolute;
-  top: calc(50% + 23px);
-  left: 36.83%;
+  top: calc(50% + 23.5px);
+  left: 64.35%;
   font-weight: 300;
   display: inline-block;
 }
 .div2 {
-  top: calc(50% + 43px);
+  top: calc(50% + 43.5px);
   font-size: var(--font-size-sm);
   letter-spacing: 3.5px;
   font-weight: 600;
 }
 .wallet-no2 {
-  top: calc(50% + 23px);
-  left: 27.69%;
+  top: calc(50% + 23.5px);
+  left: 45.11%;
   font-weight: 300;
 }
 .div3,
@@ -138,30 +138,34 @@
   display: inline-block;
 }
 .div3 {
-  top: calc(50% + 43px);
-  left: 27.69%;
+  top: calc(50% + 43.5px);
+  left: 45.11%;
   font-size: var(--font-size-sm);
   letter-spacing: 3.5px;
   font-weight: 600;
 }
 .div4,
 .wallet-no3 {
-  top: calc(50% + 23px);
-  left: 20.51%;
+  top: calc(50% + 23.5px);
+  left: 29.97%;
   font-weight: 300;
 }
 .div4 {
-  top: calc(50% + 43px);
+  top: calc(50% + 43.5px);
   font-size: var(--font-size-sm);
   letter-spacing: 3.5px;
   font-weight: 600;
 }
+.frame-div,
 .illuscard-3-copy1 {
   position: absolute;
   top: 36px;
-  left: 397px;
+  left: 42px;
   width: 317px;
   height: 207px;
+}
+.illuscard-3-copy1 {
+  left: 397px;
 }
 .bannersection {
   align-self: stretch;
@@ -286,7 +290,7 @@
 .mask9 {
   background-color: rgba(250, 114, 104, 0.67);
 }
-.frame-div {
+.frame-div1 {
   width: 580px;
   height: 131px;
   flex-shrink: 0;
@@ -301,7 +305,7 @@
   color: var(--color-white);
 }
 .cataloguesection,
-.frame-div,
+.frame-div1,
 .rectangle6 {
   background-color: var(--color-white);
 }
@@ -764,7 +768,7 @@
   height: 226px;
   flex-shrink: 0;
 }
-.frame-div1 {
+.frame-div2 {
   position: absolute;
   top: 40px;
   left: 16px;
