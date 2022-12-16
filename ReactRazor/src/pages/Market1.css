@@ -861,7 +861,7 @@
   justify-content: center;
   gap: var(--gap-0);
   text-align: left;
-  font-size: var(--font-size-xs);
+  font-size: var(--regular-body-size);
   color: var(--color-gray-400);
   font-family: var(--caption);
 }

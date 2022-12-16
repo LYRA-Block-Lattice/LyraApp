@@ -23,6 +23,6 @@
   overflow: hidden;
   text-align: left;
   font-size: var(--caption-size);
-  color: #000;
+  color: var(--black-000000100);
   font-family: var(--font-myriad-pro);
 }

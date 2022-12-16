@@ -94,7 +94,88 @@ const Market: FunctionComponent = () => {
           <img className="group-icon1" alt="" src="_content/ReactRazor/asserts/group3.svg" />
         </div>
       </div>
-      <iframe className="cataloguesection" frameBorder="0" allowFullScreen />
+      <div className="cataloguesection">
+        <div className="home-icon-component">
+          <img
+            className="home-icon-ranking"
+            alt=""
+            src="_content/ReactRazor/asserts/home--icon--ranking.svg"
+          />
+          <div className="otc-trade">OTC Trade</div>
+        </div>
+        <div className="home-icon-component">
+          <img
+            className="home-icon-ranking"
+            alt=""
+            src="_content/ReactRazor/asserts/home--icon--interlocution.svg"
+          />
+          <div className="otc-trade">Swap</div>
+        </div>
+        <div className="home-icon-component">
+          <img
+            className="home-icon-ranking"
+            alt=""
+            src="_content/ReactRazor/asserts/home--icon--surrounding.svg"
+          />
+          <div className="otc-trade">Shopping</div>
+        </div>
+        <div className="home-icon-component">
+          <img
+            className="home-icon-ranking"
+            alt=""
+            src="_content/ReactRazor/asserts/home--icon--ranking1.svg"
+          />
+          <div className="otc-trade">Staking</div>
+        </div>
+        <div className="home-icon-component">
+          <img
+            className="home-icon-ranking"
+            alt=""
+            src="_content/ReactRazor/asserts/home--icon--interlocution1.svg"
+          />
+          <div className="otc-trade">DEX</div>
+        </div>
+        <div className="home-icon-component">
+          <img
+            className="home-icon-ranking"
+            alt=""
+            src="_content/ReactRazor/asserts/home--icon--surrounding1.svg"
+          />
+          <div className="otc-trade">DAO</div>
+        </div>
+        <div className="home-icon-component">
+          <img
+            className="home-icon-ranking"
+            alt=""
+            src="_content/ReactRazor/asserts/home--icon--ranking2.svg"
+          />
+          <div className="otc-trade">Investement</div>
+        </div>
+        <div className="home-icon-component">
+          <img
+            className="home-icon-ranking"
+            alt=""
+            src="_content/ReactRazor/asserts/home--icon--interlocution2.svg"
+          />
+          <div className="otc-trade">NFT</div>
+        </div>
+        <div className="home-icon-component">
+          <img
+            className="home-icon-ranking"
+            alt=""
+            src="_content/ReactRazor/asserts/home--icon--interlocution3.svg"
+          />
+          <div className="otc-trade">Mint</div>
+        </div>
+        <div className="home-icon-component">
+          <img
+            className="home-icon-ranking"
+            alt=""
+            src="_content/ReactRazor/asserts/home--icon--surrounding2.svg"
+          />
+          <div className="otc-trade">Contact</div>
+        </div>
+      </div>
       <div className="lasttransactions">
         <div className="recent-transaction">Recent transaction</div>
         <div className="frame-div4">
