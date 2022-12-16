@@ -1,0 +1,2 @@
+call .\node_modules\.bin\replace-in-file /src=\"..\/asserts\//g src=\"_content/ReactRazor/asserts/ .\src\components\**.tsx --isRegex --verbose
+call .\node_modules\.bin\replace-in-file /src=\"..\/asserts\//g src=\"_content/ReactRazor/asserts/ .\src\pages\**.tsx --isRegex --verbose
