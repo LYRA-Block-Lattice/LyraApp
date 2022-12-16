@@ -1,4 +1,4 @@
-import { FunctionComponent, useState, useCallback } from "react";
+import { FunctionComponent, useRef, useState, useCallback } from "react";
 import {
   Button,
   Menu,
@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import "./OpenWallet.css";
 
 const OpenWallet: FunctionComponent = () => {
+    const inputRef = useRef<HTMLInputElement>(null);
   const [
     dropdownButtonSimpleTextOAnchorEl,
     setDropdownButtonSimpleTextOAnchorEl,
@@ -38,6 +39,13 @@ const OpenWallet: FunctionComponent = () => {
   const handleDropdownButtonSimpleTextOClose = () => {
     setDropdownButtonSimpleTextOAnchorEl(null);
   };
+
+    const onOpenWallet = useCallback(() => {
+        DotNet.invokeMethodAsync<string>("UserLibrary", "OpenIt", "default wallet", inputRef.current!.value)
+            .then(data => {
+                alert("DotNet reply: " + data);
+            });
+    }, []);
 
   const onSignUpClick = useCallback(() => {
     navigate("/create-wallet");
@@ -81,7 +89,8 @@ const OpenWallet: FunctionComponent = () => {
           </MenuItem>
         </Menu>
       </div>
-      <TextField
+        <TextField
+         inputRef={inputRef}
          className="box-22"
         sx={{ width: 330 }}
         color="primary"
@@ -102,7 +111,7 @@ const OpenWallet: FunctionComponent = () => {
         margin="none"
         required
       />
-      <button className="button-shape-21">
+        <button className="button-shape-21" onClick={onOpenWallet}>
         <div className="button-shape1" />
         <div className="label1">Sign In</div>
       </button>
