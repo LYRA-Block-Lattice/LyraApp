@@ -9,9 +9,9 @@ body {
 }
 :root {
   /* fonts */
+  --font-myriad-pro: "Myriad Pro";
   --caption: "SF Pro Display";
   --font-sf-pro-text: "SF Pro Text";
-  --font-myriad-pro: "Myriad Pro";
 
   /* font sizes */
   --font-size-2xs: 11px;
@@ -23,17 +23,18 @@ body {
 
   /* Colors */
   --color-white: #fff;
+  --color-black: #000;
   --color-gray-1: #7f8592;
   --color-black: #1b2749;
   --color-gray-300: rgba(255, 255, 255, 0.95);
   --color-coral: #fa7268;
   --color-turquoise-100: #00bece;
-  --color-black: #000;
 
   /* Gaps */
   --gap-md: 12px;
 
   /* Paddings */
+  --padding-sm: 10px;
   --padding-md: 16px;
 
   /* border radiuses */

@@ -73,7 +73,7 @@
   font-weight: 500;
   color: rgba(127, 133, 146, 0.5);
 }
-.frame-div2,
+.frame-div3,
 .openwallet {
   overflow: hidden;
   display: flex;
@@ -81,7 +81,7 @@
   align-items: center;
   justify-content: center;
 }
-.frame-div2 {
+.frame-div3 {
   flex-direction: row;
   padding: 12px 40px;
   gap: 82px;

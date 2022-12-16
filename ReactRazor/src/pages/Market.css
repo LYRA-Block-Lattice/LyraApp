@@ -617,17 +617,20 @@
   flex-shrink: 0;
   overflow: hidden;
 }
-.best-seller {
+.auto-added-frame {
   position: absolute;
   top: 7px;
   left: 16px;
-  font-size: var(--body-s-size);
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  display: inline-block;
+  width: 570px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
   text-align: left;
+  font-size: var(--body-s-size);
 }
-.rectangle-copy-31 {
+.rectangle-copy-3 {
   position: absolute;
   height: 100%;
   width: 100%;
@@ -705,11 +708,6 @@
   left: 55.13%;
   color: var(--color-gray-1);
 }
-.group-div6,
-.iconglyphstar2 {
-  position: absolute;
-  overflow: hidden;
-}
 .iconglyphstar2 {
   height: 88.89%;
   width: 20.51%;
@@ -720,6 +718,12 @@
   max-width: 100%;
   max-height: 100%;
 }
+.frame-icon2,
+.group-div6,
+.iconglyphstar2 {
+  position: absolute;
+  overflow: hidden;
+}
 .group-div6 {
   height: 7.96%;
   width: 47.56%;
@@ -728,108 +732,98 @@
   bottom: 14.16%;
   left: 26.22%;
 }
-.rectangle-copy-3 {
-  position: absolute;
-  top: 41px;
-  left: 16px;
-  width: 164px;
-  height: 226px;
-}
-.div14,
-.pattern-armchair1 {
-  position: absolute;
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  display: inline-block;
-}
-.pattern-armchair1 {
-  top: calc(50% + 41px);
-  left: 25%;
-  font-size: var(--body-s-size);
-}
-.div14 {
-  top: calc(50% - 9px);
-  left: 44.92%;
-  font-weight: 500;
-}
-.rectangle-copy-5 {
-  position: absolute;
-  top: 283px;
-  left: 16px;
-  width: 164px;
-  height: 226px;
-}
-.div17 {
-  position: absolute;
-  top: calc(50% - 9px);
-  left: 41.53%;
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  font-weight: 500;
-  display: inline-block;
-}
-.rectangle-copy-4 {
-  position: absolute;
-  top: 41px;
-  left: 195px;
-  width: 164px;
-  height: 226px;
-}
-.div22,
-.pattern-armchair3 {
-  position: absolute;
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  display: inline-block;
-}
-.pattern-armchair3 {
-  top: calc(50% + 41px);
-  left: 27.44%;
-  font-size: var(--body-s-size);
-}
-.div22 {
-  top: calc(50% - 9px);
-  left: 56.41%;
-  font-weight: 500;
-  color: var(--color-gray-1);
-}
-.rectangle-copy-6 {
-  position: absolute;
-  top: 283px;
-  left: 195px;
-  width: 164px;
-  height: 226px;
-}
-.frame-icon2,
-.frame-icon3,
-.frame-icon4,
-.frame-icon5 {
-  position: absolute;
-  top: 82px;
-  left: 57px;
+.frame-icon2 {
+  top: 44px;
+  left: 41px;
   width: 84px;
   height: 84px;
+}
+.card-e-commerce-1 {
+  position: relative;
+  width: 164px;
+  height: 226px;
+  flex-shrink: 0;
+}
+.frame-div2 {
+  position: absolute;
+  top: 40px;
+  left: 16px;
   overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  padding: var(--padding-sm);
+  box-sizing: border-box;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
-.frame-icon3,
-.frame-icon4,
-.frame-icon5 {
-  top: 324px;
-  left: 240px;
+.div14,
+.div15,
+.div16,
+.pattern-armchair1 {
+  position: absolute;
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  display: inline-block;
 }
-.frame-icon4,
-.frame-icon5 {
-  left: 57px;
+.pattern-armchair1 {
+  width: 73.17%;
+  top: calc(50% + 41px);
+  left: 13.41%;
+  font-size: var(--body-s-size);
 }
-.frame-icon5 {
-  top: 82px;
-  left: 240px;
+.div14,
+.div15,
+.div16 {
+  width: 55.93%;
+  top: calc(50% - 9px);
+  left: 43.22%;
+  font-weight: 500;
+}
+.div15,
+.div16 {
+  width: 26.92%;
+  left: 25.64%;
+}
+.div16 {
+  width: 44.87%;
+  left: 55.13%;
+  color: var(--color-gray-1);
+}
+.card-e-commerce-11 {
+  position: absolute;
+  height: 38.57%;
+  width: 27.24%;
+  top: 8.53%;
+  right: 39.64%;
+  bottom: 52.9%;
+  left: 33.12%;
+}
+.rectangle-copy-32 {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: -1.33%;
+  right: 0;
+  bottom: 1.33%;
+  left: 0;
+  border-radius: var(--br-md);
+  background-color: var(--color-white);
+  box-shadow: var(--effect);
+}
+.card-e-commerce-2 {
+  position: absolute;
+  height: 38.57%;
+  width: 27.24%;
+  top: 9.04%;
+  right: 3.99%;
+  bottom: 52.39%;
+  left: 68.77%;
 }
 .bestsellersection {
   align-self: stretch;
   position: relative;
   background-color: var(--color-white);
-  height: 521px;
+  height: 586px;
   flex-shrink: 0;
   overflow: hidden;
   text-align: center;

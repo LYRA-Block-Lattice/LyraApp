@@ -1,4 +1,4 @@
-import { FunctionComponent, useRef, useState, useCallback, SetStateAction } from "react";
+import { FunctionComponent, useState, useCallback } from "react";
 import {
   Button,
   Menu,
@@ -13,8 +13,6 @@ import { useNavigate } from "react-router-dom";
 import "./OpenWallet.css";
 
 const OpenWallet: FunctionComponent = () => {
-    const inputRef = useRef<HTMLInputElement>(null);
-    const [pwd, setPwd] = useState<string>("");
   const [
     dropdownButtonSimpleTextOAnchorEl,
     setDropdownButtonSimpleTextOAnchorEl,
@@ -45,25 +43,13 @@ const OpenWallet: FunctionComponent = () => {
     navigate("/create-wallet");
   }, [navigate]);
 
-    
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPwd(event.target.value);
-    };
-
-    const onOpenWallet = useCallback(() => {
-        DotNet.invokeMethodAsync<string>("UserLibrary", "OpenIt", "default wallet", inputRef.current!.value)
-            .then(data => {
-                alert("DotNet reply: " + data);
-            });
-    }, []);
-
   return (
     <div className="openwallet">
       <b className="sign-in1">Open Wallet</b>
       <img
         className="illus5-copy-icon"
         alt=""
-        src="_content/ReactRazor/asserts/illus5-copy.svg"
+        src="../asserts/illus5-copy.svg"
       />
       <div>
         <Button
@@ -95,8 +81,7 @@ const OpenWallet: FunctionComponent = () => {
           </MenuItem>
         </Menu>
       </div>
-          <TextField
-              inputRef={inputRef}
+      <TextField
         className="box-22"
         sx={{ width: 330 }}
         color="primary"
@@ -115,15 +100,13 @@ const OpenWallet: FunctionComponent = () => {
         placeholder="Placeholder"
         size="medium"
         margin="none"
-              required
-              value={pwd}
-              onChange={handleChange}
-          />
-          <button className="button-shape-21" onClick={onOpenWallet}>
+        required
+      />
+      <button className="button-shape-21">
         <div className="button-shape1" />
         <div className="label1">Sign In</div>
       </button>
-      <div className="frame-div2">
+      <div className="frame-div3">
         <button className="sign-up1" onClick={onSignUpClick}>
           Sign Up
         </button>

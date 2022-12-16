@@ -24,7 +24,7 @@
     height: 50.625vw !important;
   }
   .matterhorn-popup {
-    padding: 10px;
+    padding: var(--padding-sm);
     box-sizing: border-box;
   }
 }
