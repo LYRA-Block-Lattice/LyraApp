@@ -1,4 +1,5 @@
-﻿using CoinGecko.Clients;
+﻿using BusinessLayer.Lib;
+using CoinGecko.Clients;
 using CoinGecko.Entities.Response.ExchangeRates;
 using CoinGecko.Entities.Response.Simple;
 using CoinGecko.Interfaces;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BusinessLayer.Lib;
 using Lyra.Core.API;
 using Lyra.Core.Blocks;
 using MongoDB.Bson;

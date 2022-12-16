@@ -10,9 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UserLibrary.Data;
+using BusinessLayer.Lib;
 
-namespace UserLibrary.Store.NotificationUseCase
+namespace BusinessLayer.Store.NotificationUseCase
 {
     [FeatureState]
     public class HotDataState

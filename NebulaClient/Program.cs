@@ -10,6 +10,7 @@ using MudBlazor;
 using MudBlazor.Services;
 using LyraWebPWA;
 using UserLibrary.Data;
+using BusinessLayer.Lib;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.AddHttpClient();

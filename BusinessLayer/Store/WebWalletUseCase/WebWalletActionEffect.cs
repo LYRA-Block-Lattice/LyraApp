@@ -15,6 +15,7 @@ using Blazored.LocalStorage;
 using Lyra.Data.Blocks;
 using Humanizer;
 using Lyra.Data.API.WorkFlow;
+using BusinessLayer.Lib;
 
 namespace Nebula.Store.WebWalletUseCase
 {
