@@ -3,12 +3,14 @@ import {
   Route,
   useNavigationType,
   useLocation,
+  Navigate,
 } from "react-router-dom";
 import Empty from "./pages/Empty";
 import Market from "./pages/Market";
 import OldV1UI from "./pages/OldV1UI";
 import CreateWallet from "./pages/CreateWallet";
 import OpenWallet from "./pages/OpenWallet";
+import RedirBlazor from "./pages/RedirBlazor";
 import { useEffect } from "react";
 
 function App() {
@@ -75,6 +77,8 @@ function App() {
       <Route path="/create-wallet" element={<CreateWallet />} />
 
       <Route path="/open-wallet" element={<OpenWallet />} />
+
+      <Route path="/redir/:id" element={<RedirBlazor />} />
     </Routes>
   );
 }

@@ -14,5 +14,11 @@ namespace BusinessLayer
         {
             return Task.FromResult($"wanna open wallet {name} with password {password}?");
         }
+
+        [JSInvokable("Redir")]
+        public static Task<string> Redir(string path)
+        {
+            return Task.FromResult($"wanna redirect to Blazor url /{path}?");
+        }
     }
 }
