@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using BusinessLayer;
 using BusinessLayer.Lib;
 using Fluxor;
 using Lyra.Core.API;
@@ -68,6 +69,7 @@ builder.Services.AddTransient<NebulaConsts>();
 //});
 
 builder.Services.AddSingleton<DealerConnMgr>();
+builder.Services.AddTransient<ReactProxy>();
 
 var app = builder.Build();
 

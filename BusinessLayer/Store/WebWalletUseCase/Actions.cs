@@ -219,4 +219,9 @@ namespace Nebula.Store.WebWalletUseCase
     {
         public Dictionary<string, decimal> Prices { get; set; } = null!;
     }
+
+    public class RedirectUrlAction
+    {
+        public string Url { get; set; }
+    }
 }

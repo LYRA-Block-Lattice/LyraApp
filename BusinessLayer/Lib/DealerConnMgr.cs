@@ -22,6 +22,7 @@ namespace BusinessLayer.Lib
 
         IConfiguration _config;
         NebulaConsts _consts;
+        ReactProxy _proxy;
 
         private static bool _started = false;
 
@@ -57,7 +58,7 @@ namespace BusinessLayer.Lib
         public async Task SwitchDealerAsync(Dictionary<string, Uri> dealers, string priceFeederID)
         {
             _priceFeeder = priceFeederID;
-            foreach(var conn in _conns.Values)
+            foreach(var conn in _conns.Values.ToArray())
             {
                 if (conn.State == HubConnectionState.Connected)
                 {

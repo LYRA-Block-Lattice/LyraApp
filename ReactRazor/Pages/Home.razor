@@ -3,6 +3,7 @@
 @using Nebula.Store.WebWalletUseCase;
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 @inject IJSRuntime JS;
+@inject NavigationManager navigator;
 
 <a href="/market">market</a> &nbsp;
 <a href="/open-wallet">open wallet</a> &nbsp;
@@ -18,6 +19,14 @@
     [Inject]
     private IDispatcher Dispatcher { get; set; }
 
+    private DotNetObjectReference<Home>? objRef;
+
+    protected override void OnInitialized()
+    {
+        objRef = DotNetObjectReference.Create(this);
+        base.OnInitialized();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (true)
@@ -25,6 +34,7 @@
             try
             {
                 await JS.InvokeVoidAsync("loadScript", "_content/ReactRazor/static/js/main.js");
+                await JS.InvokeAsync<string>("lyraSetProxy", objRef);
             }
             catch(Exception ex)
             {
@@ -34,5 +44,12 @@
         }
 
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    [JSInvokable("Redir")]
+    public Task<string> Redir(string path)
+    {
+        navigator.NavigateTo($"/{path}");
+        return Task.FromResult($"wanna redirect to Blazor url /{path}?");
     }
 }

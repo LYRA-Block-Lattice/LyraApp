@@ -11,6 +11,7 @@ using MudBlazor.Services;
 using LyraWebPWA;
 using UserLibrary.Data;
 using BusinessLayer.Lib;
+using BusinessLayer;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.AddHttpClient();
@@ -68,5 +69,6 @@ builder.Services.AddTransient<NebulaConsts>();
 //});
 
 builder.Services.AddSingleton<DealerConnMgr>();
+builder.Services.AddTransient<ReactProxy>();
 
 await builder.Build().RunAsync();

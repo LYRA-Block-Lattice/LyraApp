@@ -13,6 +13,13 @@ import OpenWallet from "./pages/OpenWallet";
 import RedirBlazor from "./pages/RedirBlazor";
 import { useEffect } from "react";
 
+interface customWindow extends Window {
+    lyraSetProxy?: any;
+    lyraProxy?: any;
+}
+
+declare const window: customWindow;
+
 function App() {
   const action = useNavigationType();
   const location = useLocation();
@@ -69,6 +76,10 @@ function App() {
       }
     }
   }, [pathname]);
+
+  window.lyraSetProxy = (dotnetHelper) => {
+    window.lyraProxy = dotnetHelper;
+  };
 
   return (
     <Routes>

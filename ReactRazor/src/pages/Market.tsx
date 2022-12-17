@@ -6,11 +6,11 @@ const Market: FunctionComponent = () => {
   const navigate = useNavigate();
 
   const onOTCTradeClick = useCallback(() => {
-    navigate("/redir");
+    navigate("/redir/otc");
   }, [navigate]);
 
   const onSwapClick = useCallback(() => {
-    navigate("/redir");
+    navigate("/redir/swap");
   }, [navigate]);
 
   return (
