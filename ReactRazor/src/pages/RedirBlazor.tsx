@@ -5,14 +5,14 @@ const RedirBlazor = (props) => {
     let { id } = useParams(); 
     useEffect(() => {
         console.log(`Redirect to blazor route /${id}`);
-        DotNet.invokeMethodAsync<string>("BusinessLayer", "Redir", `${id}`)
-            .then(data => {
-                alert("DotNet reply: " + data);
-    }, []);
+        DotNet.invokeMethodAsync<string>("BusinessLayer", "Redir", `${id}`);
+    });
 
     return (
-        <div>Redirecting to Blazor...</div>
+        <div>
+            Redirecting to Blazor...
+        </div>
     );
-}
+};
 
 export default RedirBlazor;
