@@ -269,6 +269,20 @@
   overflow: hidden;
 }
 .otc-trade {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: var(--color-white);
+  align-self: stretch;
+  width: 83px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-0);
+}
+.ranking {
   position: relative;
   font-size: var(--regular-body-size);
   line-height: 18px;
@@ -277,30 +291,18 @@
   text-align: left;
   display: inline-block;
 }
-.cataloguesection,
-.home-icon-component {
+.cataloguesection {
   align-self: stretch;
   background-color: var(--color-white);
+  height: 87px;
   flex-shrink: 0;
   display: flex;
-  gap: var(--gap-0);
-}
-.home-icon-component {
-  cursor: pointer;
-  border: 0;
-  padding: 0;
-  width: 83px;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.cataloguesection {
-  height: 87px;
   flex-direction: row;
   padding: 0 var(--padding-md);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
+  gap: var(--gap-0);
 }
 .buy-tv-at-sony-store,
 .div15,
