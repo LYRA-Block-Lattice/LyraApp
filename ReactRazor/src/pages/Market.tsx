@@ -103,78 +103,78 @@ const Market: FunctionComponent = () => {
           />
           <div className="otc-trade">OTC Trade</div>
         </div>
-        <div className="home-icon-component">
+        <button className="home-icon-component1">
           <img
             className="home-icon-ranking"
             alt=""
             src="_content/ReactRazor/asserts/home--icon--interlocution.svg"
           />
-          <div className="otc-trade">Swap</div>
-        </div>
-        <div className="home-icon-component">
+          <div className="ranking">Swap</div>
+        </button>
+        <button className="home-icon-component1">
           <img
             className="home-icon-ranking"
             alt=""
             src="_content/ReactRazor/asserts/home--icon--surrounding.svg"
           />
-          <div className="otc-trade">Shopping</div>
-        </div>
-        <div className="home-icon-component">
+          <div className="ranking">Shopping</div>
+        </button>
+        <button className="home-icon-component1">
           <img
             className="home-icon-ranking"
             alt=""
             src="_content/ReactRazor/asserts/home--icon--ranking1.svg"
           />
-          <div className="otc-trade">Staking</div>
-        </div>
-        <div className="home-icon-component">
+          <div className="ranking">Staking</div>
+        </button>
+        <button className="home-icon-component1">
           <img
             className="home-icon-ranking"
             alt=""
             src="_content/ReactRazor/asserts/home--icon--interlocution1.svg"
           />
-          <div className="otc-trade">DEX</div>
-        </div>
-        <div className="home-icon-component">
+          <div className="ranking">DEX</div>
+        </button>
+        <button className="home-icon-component1">
           <img
             className="home-icon-ranking"
             alt=""
             src="_content/ReactRazor/asserts/home--icon--surrounding1.svg"
           />
-          <div className="otc-trade">DAO</div>
-        </div>
-        <div className="home-icon-component">
+          <div className="ranking">DAO</div>
+        </button>
+        <button className="home-icon-component1">
           <img
             className="home-icon-ranking"
             alt=""
             src="_content/ReactRazor/asserts/home--icon--ranking2.svg"
           />
-          <div className="otc-trade">Investement</div>
-        </div>
-        <div className="home-icon-component">
+          <div className="ranking">Investement</div>
+        </button>
+        <button className="home-icon-component1">
           <img
             className="home-icon-ranking"
             alt=""
             src="_content/ReactRazor/asserts/home--icon--interlocution2.svg"
           />
-          <div className="otc-trade">NFT</div>
-        </div>
-        <div className="home-icon-component">
+          <div className="ranking">NFT</div>
+        </button>
+        <button className="home-icon-component1">
           <img
             className="home-icon-ranking"
             alt=""
             src="_content/ReactRazor/asserts/home--icon--interlocution3.svg"
           />
-          <div className="otc-trade">Mint</div>
-        </div>
-        <div className="home-icon-component">
+          <div className="ranking">Mint</div>
+        </button>
+        <button className="home-icon-component1">
           <img
             className="home-icon-ranking"
             alt=""
             src="_content/ReactRazor/asserts/home--icon--surrounding2.svg"
           />
-          <div className="otc-trade">Contact</div>
-        </div>
+          <div className="ranking">Contact</div>
+        </button>
       </div>
       <div className="lasttransactions">
         <div className="recent-transaction">Recent transaction</div>

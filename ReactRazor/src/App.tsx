@@ -9,7 +9,6 @@ import Market from "./pages/Market";
 import OldV1UI from "./pages/OldV1UI";
 import CreateWallet from "./pages/CreateWallet";
 import OpenWallet from "./pages/OpenWallet";
-import Market1 from "./pages/Market1";
 import { useEffect } from "react";
 
 function App() {
@@ -49,10 +48,6 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/market1":
-        title = "";
-        metaDescription = "";
-        break;
     }
 
     if (title) {
@@ -80,8 +75,6 @@ function App() {
       <Route path="/create-wallet" element={<CreateWallet />} />
 
       <Route path="/open-wallet" element={<OpenWallet />} />
-
-      <Route path="/market1" element={<Market1 />} />
     </Routes>
   );
 }
