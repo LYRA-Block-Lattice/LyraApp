@@ -92,6 +92,8 @@ function App() {
 
       <Route path="/iphone-14-1" element={<IPhone141 />} />
 
+      <Route path="/market" element={<Market />} />
+
       <Route path="/oldv1ui" element={<OldV1UI />} />
 
       <Route path="/create-wallet" element={<CreateWallet />} />
