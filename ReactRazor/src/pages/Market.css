@@ -1,21 +1,3 @@
-.rectangle-copy {
-  position: absolute;
-  height: 6.45%;
-  width: 1.26%;
-  top: 90.86%;
-  right: 94.95%;
-  bottom: 2.69%;
-  left: 3.79%;
-  border-radius: var(--br-xs);
-  background-color: var(--color-white);
-}
-.group-icon {
-  position: relative;
-  width: 741px;
-  height: 401px;
-  flex-shrink: 0;
-  z-index: 0;
-}
 .usd-wallet {
   cursor: pointer;
   border: 0;
@@ -228,8 +210,8 @@
   border: 0;
   padding: 0;
   background-color: transparent;
-  top: 18px;
-  right: 102.22px;
+  top: 24px;
+  right: 42.22px;
   width: 56.78px;
   height: 56.78px;
   flex-shrink: 0;
@@ -237,14 +219,14 @@
   z-index: 5;
 }
 .cen-wallet-copy {
-  width: 23.24%;
+  width: 23.35%;
   top: calc(50% + 43.5px);
   left: 1.88%;
   font-size: 6px;
   letter-spacing: 4.47px;
   line-height: 13px;
   display: inline-block;
-  height: 17.43px;
+  height: 17.35px;
   transform: rotate(-90deg);
   transform-origin: 0 0;
   z-index: 6;
@@ -268,90 +250,56 @@
   bottom: 10.09%;
   z-index: 8;
 }
-.mask-group {
-  position: absolute;
-  top: 0;
-  left: -1px;
-  border-radius: 10px;
-  background-color: var(--black-000000100);
-  width: 426px;
-  height: 249px;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: var(--gap-md);
-}
+.mask-group,
 .walletcard {
-  position: absolute;
-  margin: 0 !important;
-  top: 36px;
-  left: 37px;
-  width: 425px;
-  height: 246px;
-  flex-shrink: 0;
-  z-index: 0;
-}
-.bannersection,
-.market1 {
-  align-self: stretch;
   display: flex;
-  align-items: flex-start;
-}
-.bannersection {
-  background-color: var(--color-white);
-  height: 317px;
-  flex-shrink: 0;
   flex-direction: row;
-  padding: 36px 42px;
-  box-sizing: border-box;
-  justify-content: center;
-  position: relative;
 }
-.market1 {
-  flex-direction: column;
-  justify-content: flex-start;
-  color: var(--color-white);
-  font-family: var(--font-sf-pro-text);
-}
-.home-icon-surrounding {
-  position: relative;
-  width: 40px;
-  height: 40px;
+.mask-group {
+  border-radius: var(--br-lg);
+  background-color: var(--black-000000100);
+  width: 424px;
+  height: 247px;
   flex-shrink: 0;
-  overflow: hidden;
-}
-.ranking {
+  align-items: flex-start;
+  justify-content: flex-start;
   position: relative;
-  font-size: var(--regular-body-size);
-  line-height: 18px;
-  font-family: var(--caption);
-  color: var(--black-000000100);
-  text-align: left;
-  display: inline-block;
-}
-.frame-div2,
-.home-icon-component {
-  background-color: var(--color-white);
-  display: flex;
   gap: var(--gap-0);
 }
-.home-icon-component {
-  cursor: pointer;
-  border: 0;
-  padding: 0;
-  width: 78px;
-  height: 78px;
-  flex-shrink: 0;
-  flex-direction: column;
+.walletcard {
+  flex: 1;
   align-items: center;
   justify-content: center;
 }
-.frame-div2 {
+.bannersection,
+.frame-div2,
+.iconssection {
+  align-self: stretch;
+  display: flex;
+  justify-content: flex-start;
+}
+.bannersection {
+  background-color: var(--color-white);
+  height: 282px;
+  flex-shrink: 0;
   overflow: hidden;
   flex-direction: row;
+  align-items: center;
+  color: var(--color-white);
+  font-family: var(--font-sf-pro-text);
+}
+.frame-div2,
+.iconssection {
   align-items: flex-start;
-  justify-content: flex-start;
+}
+.frame-div2 {
+  background-color: var(--color-white);
+  overflow: hidden;
+  flex-direction: row;
+  gap: var(--gap-0);
+}
+.iconssection {
+  flex-direction: column;
 }
 .buy-tv-at-sony-store,
 .div4,
@@ -423,7 +371,7 @@
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: var(--gap-md);
+  gap: 10px;
   z-index: 1;
   color: var(--color-gray-1);
 }
@@ -778,7 +726,7 @@
   height: 337px;
   flex-shrink: 0;
   overflow: hidden;
-  font-size: var(--regular-body-size);
+  font-size: var(--other-m-size);
 }
 .market {
   position: relative;
