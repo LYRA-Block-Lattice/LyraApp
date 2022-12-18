@@ -106,7 +106,7 @@ const OpenWallet: FunctionComponent = () => {
         <div className="button-shape1" />
         <div className="label1">Sign In</div>
       </button>
-      <div className="frame-div4">
+      <div className="frame-div2">
         <button className="sign-up1" onClick={onSignUpClick}>
           Sign Up
         </button>

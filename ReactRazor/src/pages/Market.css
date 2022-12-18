@@ -1,4 +1,4 @@
-.usd-wallet {
+.wallet-name-label {
   cursor: pointer;
   border: 0;
   padding: 0;
@@ -10,19 +10,19 @@
   font-size: var(--font-size-2xl);
   font-weight: 700;
   font-family: var(--font-sf-pro-text);
-  color: var(--color-white);
+  color: var(--color-white1);
   text-align: left;
   display: inline-block;
   z-index: 1;
 }
 .span1 {
-  font-size: var(--body-s-size);
+  font-size: var(--body-b1-size);
 }
 .span {
   font-size: var(--font-size-2xs);
-  color: var(--color-gray-100);
+  color: var(--color-gray-200);
 }
-.div {
+.basebalance {
   position: absolute;
   margin: 0 !important;
   top: 75px;
@@ -32,12 +32,29 @@
   text-shadow: 0 2px 3px rgba(0, 0, 0, 0.24);
   z-index: 2;
 }
-.div1 {
+.span2 {
+  font-size: var(--font-size-3xl);
+}
+.aux-balance {
+  position: absolute;
+  margin: 0 !important;
+  top: 115px;
+  left: 49px;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+  display: inline-block;
+  width: 152.68px;
+  flex-shrink: 0;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.24);
+  z-index: 3;
+  font-size: var(--body-b1-size);
+}
+.div {
   position: relative;
   letter-spacing: 3.5px;
   display: none;
 }
-.frame-div1 {
+.token-catalog {
   position: absolute;
   top: 3px;
   left: 4px;
@@ -49,21 +66,17 @@
   align-items: flex-start;
   justify-content: flex-start;
   font-size: 14px;
-  color: var(--color-white);
+  color: var(--color-white1);
 }
-.wallet-no {
+.trades-count,
+.trades-label {
+  position: absolute;
   width: 14.87%;
   top: calc(50% - 22.5px);
   left: 83.5%;
-}
-.button,
-.button1,
-.wallet-no,
-.wallet-no1 {
-  position: absolute;
   display: inline-block;
 }
-.button {
+.trades-count {
   cursor: pointer;
   border: 0;
   padding: 0;
@@ -75,43 +88,45 @@
   letter-spacing: 3.5px;
   font-weight: 600;
   font-family: var(--font-sf-pro-text);
-  color: var(--color-white);
+  color: var(--color-white1);
   text-align: left;
 }
-.button1,
-.wallet-no1 {
+.orders-count,
+.orders-label {
+  position: absolute;
   width: 17.84%;
   top: calc(50% - 22.5px);
   left: 51.85%;
+  display: inline-block;
 }
-.button1 {
+.orders-count {
   cursor: pointer;
   border: 0;
   padding: 0;
   background-color: transparent;
   width: 4.25%;
-  top: calc(50% - 2.5px);
+  top: calc(50% - 1.5px);
   left: 58.59%;
   font-size: var(--font-size-2xl);
   letter-spacing: 3.5px;
   font-weight: 600;
   font-family: var(--font-sf-pro-text);
-  color: var(--color-white);
+  color: var(--color-white1);
   text-align: left;
 }
-.wallet-no2 {
+.tft-label {
   width: 10.2%;
   top: calc(50% - 22.5px);
   left: 27.95%;
 }
-.button2,
-.button3,
-.wallet-no2,
-.wallet-no3 {
+.nft-count,
+.nft-label,
+.tft-count,
+.tft-label {
   position: absolute;
   display: inline-block;
 }
-.button2 {
+.tft-count {
   cursor: pointer;
   border: 0;
   padding: 0;
@@ -123,16 +138,16 @@
   letter-spacing: 3.5px;
   font-weight: 600;
   font-family: var(--font-sf-pro-text);
-  color: var(--color-white);
+  color: var(--color-white1);
   text-align: left;
 }
-.button3,
-.wallet-no3 {
+.nft-count,
+.nft-label {
   width: 10.62%;
   top: calc(50% - 22.5px);
   left: 3.37%;
 }
-.button3 {
+.nft-count {
   cursor: pointer;
   border: 0;
   padding: 0;
@@ -144,44 +159,27 @@
   letter-spacing: 3.5px;
   font-weight: 600;
   font-family: var(--font-sf-pro-text);
-  color: var(--color-white);
+  color: var(--color-white1);
   text-align: left;
 }
-.frame-div {
+.token-lists {
   position: absolute;
   margin: 0 !important;
-  bottom: 6px;
-  left: 49px;
+  bottom: 10.5px;
+  left: 41px;
   width: 261px;
   height: 63px;
   flex-shrink: 0;
   overflow: hidden;
-  z-index: 3;
-  font-size: var(--caption-size);
-  color: var(--color-gray-100);
-}
-.span2 {
-  font-size: var(--font-size-3xl);
-}
-.div2 {
-  position: absolute;
-  margin: 0 !important;
-  top: 115px;
-  left: 49px;
-  letter-spacing: 0.3px;
-  font-weight: 600;
-  display: inline-block;
-  width: 152.68px;
-  flex-shrink: 0;
-  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.24);
   z-index: 4;
-  font-size: var(--body-s-size);
+  font-size: var(--caption1-size);
+  color: var(--color-gray-200);
 }
 .rectangle-copy-3 {
   cursor: pointer;
   border: 0;
   padding: 0;
-  background-color: #dfe0e5;
+  background-color: var(--color-gray-100);
   position: absolute;
   height: 100%;
   width: 100%;
@@ -189,7 +187,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: 32.5px;
+  border-radius: var(--br-2xl);
   opacity: 0.5;
   mix-blend-mode: normal;
 }
@@ -200,12 +198,12 @@
   width: 29px;
   height: 29px;
 }
-.cen-wallet-copy,
-.group {
+.qrcode-button,
+.wallet-decoration {
   position: absolute;
   margin: 0 !important;
 }
-.group {
+.qrcode-button {
   cursor: pointer;
   border: 0;
   padding: 0;
@@ -218,7 +216,7 @@
   overflow: hidden;
   z-index: 5;
 }
-.cen-wallet-copy {
+.wallet-decoration {
   width: 23.35%;
   top: calc(50% + 43.5px);
   left: 1.88%;
@@ -241,8 +239,8 @@
   right: 95.92%;
   bottom: 83.59%;
   left: 2.82%;
-  border-radius: var(--br-xs);
-  background-color: var(--color-white);
+  border-radius: var(--br-2xs);
+  background-color: var(--color-white1);
   z-index: 7;
 }
 .rectangle1 {
@@ -250,50 +248,76 @@
   bottom: 10.09%;
   z-index: 8;
 }
-.mask-group,
-.walletcard {
-  display: flex;
-  flex-direction: row;
-}
 .mask-group {
-  border-radius: var(--br-lg);
+  border-radius: var(--br-md);
   background-color: var(--black-000000100);
   width: 424px;
   height: 247px;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
   position: relative;
   gap: var(--gap-0);
 }
+.bannersection,
+.walletcard {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 .walletcard {
   flex: 1;
-  align-items: center;
   justify-content: center;
 }
-.bannersection,
-.frame-div2,
-.iconssection {
-  align-self: stretch;
-  display: flex;
-  justify-content: flex-start;
-}
 .bannersection {
-  background-color: var(--color-white);
+  align-self: stretch;
+  background-color: var(--color-white1);
   height: 282px;
   flex-shrink: 0;
   overflow: hidden;
-  flex-direction: row;
-  align-items: center;
-  color: var(--color-white);
+  justify-content: flex-start;
+  color: var(--color-white1);
   font-family: var(--font-sf-pro-text);
 }
-.frame-div2,
-.iconssection {
-  align-items: flex-start;
+.home-icon-interlocution {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  overflow: hidden;
 }
-.frame-div2 {
-  background-color: var(--color-white);
+.ranking {
+  position: relative;
+  font-size: var(--regular-body-size);
+  line-height: 18px;
+  font-family: var(--caption1);
+  color: var(--black-000000100);
+  text-align: left;
+  display: inline-block;
+}
+.swap-button {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: var(--color-white1);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-0);
+}
+.frame-div,
+.iconssection {
+  align-self: stretch;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.frame-div {
+  background-color: var(--color-white1);
   overflow: hidden;
   flex-direction: row;
   gap: var(--gap-0);
@@ -302,49 +326,45 @@
   flex-direction: column;
 }
 .buy-tv-at-sony-store,
-.div4,
+.div2,
 .recent-transaction {
   position: absolute;
   letter-spacing: 0.41px;
+  font-weight: 600;
   display: inline-block;
 }
 .recent-transaction {
   margin: 0 !important;
   top: 12px;
   left: 16px;
-  font-size: var(--headline-s-size);
   line-height: 22px;
-  font-weight: 600;
   z-index: 0;
 }
 .buy-tv-at-sony-store,
-.div4 {
-  left: 0;
-}
-.buy-tv-at-sony-store {
+.div2 {
   top: calc(50% - 23.75px);
+  left: 0;
   line-height: 18px;
-  font-weight: 600;
-  color: var(--color-black);
 }
-.div4 {
+.div2 {
   top: calc(50% - 1.75px);
   font-size: var(--other-11-size);
   line-height: 13px;
   font-weight: 500;
+  color: var(--color-gray-11);
 }
-.div5,
+.b,
 .path-icon {
   position: absolute;
   right: 0;
 }
-.div5 {
+.b {
   top: calc(50% - 23.75px);
   letter-spacing: 0.41px;
   line-height: 18px;
-  font-weight: 600;
-  text-align: right;
   display: inline-block;
+  color: #55b944;
+  text-align: right;
 }
 .path-icon {
   height: 2.13%;
@@ -356,44 +376,90 @@
   overflow: hidden;
   max-height: 100%;
 }
+.div1 {
+  align-self: stretch;
+  position: relative;
+  height: 55.5px;
+  flex-shrink: 0;
+  z-index: 0;
+}
+.div4 {
+  position: absolute;
+  top: calc(50% - 23.75px);
+  right: 0;
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 600;
+  color: #d15252;
+  text-align: right;
+  display: inline-block;
+}
 .copy {
   align-self: stretch;
   position: relative;
   height: 55.5px;
   flex-shrink: 0;
+  z-index: 1;
 }
-.frame-div3 {
+.div5,
+.div6 {
+  position: absolute;
+  margin: 0 !important;
+  right: 10px;
+  bottom: 20px;
+  font-size: var(--caption1-size);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  color: var(--black-000000100);
+  text-align: right;
+  display: inline-block;
+  z-index: 2;
+}
+.div6 {
+  bottom: 87px;
+  z-index: 3;
+}
+.frame-div1,
+.more {
+  font-size: var(--body-b1-size);
+}
+.frame-div1 {
   align-self: stretch;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 24px var(--padding-sm) var(--padding-sm);
+  padding: 30px var(--padding-sm) var(--padding-sm);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
+  position: relative;
   gap: 10px;
   z-index: 1;
-  color: var(--color-gray-1);
 }
 .more {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
   position: absolute;
   margin: 0 !important;
   top: 16px;
   right: 19px;
   letter-spacing: 0.41px;
   line-height: 18px;
-  display: inline-block;
+  font-weight: 700;
+  font-family: var(--caption1);
   color: var(--color-coral);
   text-align: right;
+  display: inline-block;
   z-index: 2;
 }
 .lasttransactions,
 .rectangle2 {
-  background-color: var(--color-white);
+  background-color: var(--color-white1);
 }
 .lasttransactions {
   align-self: stretch;
-  height: 190px;
+  height: 180px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -403,7 +469,7 @@
   justify-content: flex-start;
   position: relative;
   gap: 3px;
-  font-size: var(--body-s-size);
+  font-size: var(--headline-s1-size);
 }
 .rectangle2 {
   position: absolute;
@@ -413,11 +479,11 @@
   right: 4.27%;
   bottom: 47.38%;
   left: 4.27%;
-  border-radius: var(--br-md);
-  box-shadow: var(--effect);
+  border-radius: var(--br-sm);
+  box-shadow: var(--effect1);
 }
+.div7,
 .div8,
-.div9,
 .yellow-sofa {
   position: absolute;
   line-height: 18px;
@@ -427,21 +493,21 @@
   width: 21.6%;
   top: calc(50% - 99.5px);
   left: 57.33%;
-  font-size: var(--body-s-size);
+  font-size: var(--body-b1-size);
   letter-spacing: 0.41px;
 }
-.div8,
-.div9 {
+.div7,
+.div8 {
   font-weight: 500;
 }
-.div8 {
+.div7 {
   width: 9.07%;
   top: calc(50% - 49.5px);
   left: 76.8%;
   letter-spacing: 0.41px;
   color: var(--color-coral);
 }
-.div9 {
+.div8 {
   width: 68.25%;
   top: calc(50% - 9.33px);
   left: 31.75%;
@@ -469,11 +535,11 @@
   bottom: 59.69%;
   left: 57.33%;
   overflow: hidden;
-  color: var(--color-gray-1);
+  color: var(--color-gray-11);
   font-family: var(--font-sf-pro-text);
 }
 .div10,
-.div11 {
+.div9 {
   position: absolute;
   width: 5.6%;
   top: calc(50% - 73.5px);
@@ -484,10 +550,10 @@
   text-align: center;
   display: inline-block;
 }
-.div11 {
+.div10 {
   width: 9.33%;
   left: 68.8%;
-  color: var(--color-gray-1);
+  color: var(--color-gray-11);
 }
 .iconglyphstar {
   position: absolute;
@@ -541,10 +607,10 @@
   right: 0;
   bottom: 14.29%;
   left: 0;
-  border-radius: 0 var(--br-sm) var(--br-sm) 0;
+  border-radius: 0 var(--br-xs) var(--br-xs) 0;
   background-color: var(--color-turquoise);
 }
-.div12 {
+.div11 {
   position: absolute;
   width: 75%;
   top: calc(50% - 7.89px);
@@ -565,7 +631,7 @@
   overflow: hidden;
   text-align: center;
   font-size: var(--other-11-size);
-  color: var(--color-white);
+  color: var(--color-white1);
   font-family: var(--font-sf-pro-text);
 }
 .rectangle4 {
@@ -576,13 +642,13 @@
   right: 4.27%;
   bottom: 4.31%;
   left: 4.27%;
-  border-radius: var(--br-md);
-  background-color: var(--color-white);
-  box-shadow: var(--effect);
+  border-radius: var(--br-sm);
+  background-color: var(--color-white1);
+  box-shadow: var(--effect1);
 }
 .blue-sofa,
-.div13,
-.div14 {
+.div12,
+.div13 {
   position: absolute;
   line-height: 18px;
   display: inline-block;
@@ -591,21 +657,21 @@
   width: 17.6%;
   top: calc(50% + 40.5px);
   left: 57.33%;
-  font-size: var(--body-s-size);
+  font-size: var(--body-b1-size);
   letter-spacing: 0.41px;
 }
-.div13,
-.div14 {
+.div12,
+.div13 {
   font-weight: 500;
 }
-.div13 {
+.div12 {
   width: 8.8%;
   top: calc(50% + 90.5px);
   left: 76.8%;
   letter-spacing: 0.41px;
   color: var(--color-coral);
 }
-.div14 {
+.div13 {
   width: 69.84%;
   top: calc(50% - 9.33px);
   left: 31.75%;
@@ -621,11 +687,11 @@
   bottom: 16.62%;
   left: 57.33%;
   overflow: hidden;
-  color: var(--color-gray-1);
+  color: var(--color-gray-11);
   font-family: var(--font-sf-pro-text);
 }
-.div15,
-.div16 {
+.div14,
+.div15 {
   position: absolute;
   width: 5.6%;
   top: calc(50% + 66.5px);
@@ -636,10 +702,10 @@
   text-align: center;
   display: inline-block;
 }
-.div16 {
+.div15 {
   width: 9.33%;
   left: 68.8%;
-  color: var(--color-gray-1);
+  color: var(--color-gray-11);
 }
 .iconglyphstar1 {
   position: absolute;
@@ -687,14 +753,14 @@
   overflow: hidden;
   text-align: center;
   font-size: var(--other-11-size);
-  color: var(--color-white);
+  color: var(--color-white1);
   font-family: var(--font-sf-pro-text);
 }
 .deal-of-the-day,
 .see-all {
   position: absolute;
   top: 13px;
-  font-size: var(--body-s-size);
+  font-size: var(--body-b1-size);
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
@@ -722,11 +788,11 @@
 .dealsection {
   align-self: stretch;
   position: relative;
-  background-color: var(--color-white);
+  background-color: var(--color-white1);
   height: 337px;
   flex-shrink: 0;
   overflow: hidden;
-  font-size: var(--other-m-size);
+  font-size: var(--regular-body-size);
 }
 .market {
   position: relative;
@@ -738,6 +804,6 @@
   gap: var(--gap-0);
   text-align: left;
   font-size: var(--font-size-3xl);
-  color: var(--color-black);
-  font-family: var(--caption);
+  color: var(--color-black1);
+  font-family: var(--caption1);
 }
