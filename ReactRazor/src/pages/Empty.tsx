@@ -7,7 +7,7 @@ const Empty: FunctionComponent = () => {
       <img
         className="pxl-20210309-203454756-1-icon"
         alt=""
-        src="_content/ReactRazor/asserts/pxl-20210309-203454756-1@2x.png"
+        src="../asserts/pxl-20210309-203454756-1@2x.png"
       />
       <div className="should-not-see-me">Should not see me</div>
     </div>

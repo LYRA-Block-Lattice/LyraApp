@@ -49,7 +49,7 @@ const OpenWallet: FunctionComponent = () => {
       <img
         className="illus5-copy-icon"
         alt=""
-        src="_content/ReactRazor/asserts/illus5-copy.svg"
+        src="../asserts/illus5-copy.svg"
       />
       <div>
         <Button
@@ -106,7 +106,7 @@ const OpenWallet: FunctionComponent = () => {
         <div className="button-shape1" />
         <div className="label1">Sign In</div>
       </button>
-      <div className="frame-div6">
+      <div className="frame-div4">
         <button className="sign-up1" onClick={onSignUpClick}>
           Sign Up
         </button>
