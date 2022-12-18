@@ -70,10 +70,7 @@ const OpenWallet: FunctionComponent = () => {
         console.log("index changed to " + dropdownButtonSimpleTextOSelectedIndex);
         console.log("selected name is " + wnames[dropdownButtonSimpleTextOSelectedIndex]);
 
-        window.lyraProxy.invokeMethodAsync("OpenWallet", wnames[dropdownButtonSimpleTextOSelectedIndex], inputRef.current!.value)
-            .then(data => {
-                alert("DotNet reply: " + data);
-            });
+        window.lyraProxy.invokeMethodAsync("OpenWallet", wnames[dropdownButtonSimpleTextOSelectedIndex], inputRef.current!.value);
     }, [wnames, dropdownButtonSimpleTextOSelectedIndex]);
 
   const onSignUpClick = useCallback(() => {

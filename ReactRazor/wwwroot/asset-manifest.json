@@ -5,11 +5,11 @@
     "static/js/915.5df0f571.chunk.js": "/static/js/915.5df0f571.chunk.js",
     "index.html": "/index.html",
     "main.css.map": "/static/css/main.6b9e1d63.css.map",
-    "main.js.map": "/static/js/main.585c767f.js.map",
+    "main.js.map": "/static/js/main.30a2a56b.js.map",
     "915.5df0f571.chunk.js.map": "/static/js/915.5df0f571.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.6b9e1d63.css",
-    "static/js/main.585c767f.js"
+    "static/js/main.30a2a56b.js"
   ]
 }

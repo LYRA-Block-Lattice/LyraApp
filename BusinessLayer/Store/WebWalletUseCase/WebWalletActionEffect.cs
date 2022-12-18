@@ -238,7 +238,17 @@ namespace Nebula.Store.WebWalletUseCase
             try
             {
 				var wcjson = await _localStorage.GetItemAsync<string>(action.store);
+				if(string.IsNullOrWhiteSpace(wcjson))
+				{
+					throw new FileNotFoundException();
+				}
+
 				var wc = new WalletContainer(wcjson);
+
+				if(!wc.Names.Contains(action.name))
+				{
+					throw new FileNotFoundException();
+				}
 
 				var wltdat = wc.Get(action.name);
 				var buff = wltdat.Data;
@@ -255,12 +265,20 @@ namespace Nebula.Store.WebWalletUseCase
                     IsBackuped = wltdat.Backup
                 });
             }
-			catch(Exception ex)
+            catch (FileNotFoundException ex)
+            {
+                logger.LogError($"IN HandleOpen: {ex}");
+                dispatcher.Dispatch(new WalletErrorResultAction
+                {
+                    error = $"Wallet not found"
+                });
+            }
+            catch (Exception ex)
             {
 				logger.LogError($"IN HandleOpen: {ex}");
 				dispatcher.Dispatch(new WalletErrorResultAction
 				{
-					error = $"Unable to open wallet: {ex.Message}"
+					error = $"Wrong password"
 				});
 			}			
 		}

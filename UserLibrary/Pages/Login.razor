@@ -51,6 +51,13 @@ else
         {
             Navigation.NavigateTo("wallet", false, true);
         }       
+        else
+        {
+            // we use the new v2 UI
+            // check login state
+
+            Navigation.NavigateTo("/open-wallet", false, true);
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

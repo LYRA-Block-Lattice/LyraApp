@@ -163,6 +163,11 @@
                 await WalletChanged(null, null);
             });
 
+        SubscribeToAction<WalletErrorResultAction>(a =>
+        {
+            Snackbar.Add(a.error, Severity.Error);
+        });
+
         SubscribeToAction<RespContainer>(ax =>
             {
                 if (Navigation.Uri.Contains("/dealer/room"))
@@ -399,6 +404,12 @@
                         UserAccountID = wlt.AccountId,
                         Signature = Signatures.GetSignature(wlt.PrivateKey, lsb.GetBlock().Hash, wlt.AccountId),
                     });
+            }
+
+            // if page is open-wallet, navigate to wallet view
+            if(Navigation.Uri.EndsWith("/open-wallet"))
+            {
+                Navigation.NavigateTo("/wallet");
             }
 
             await InvokeAsync(() => StateHasChanged());

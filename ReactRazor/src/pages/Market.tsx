@@ -6,7 +6,7 @@ const Market: FunctionComponent = () => {
   const navigate = useNavigate();
 
   const onUSDWalletClick = useCallback(() => {
-    navigate("/redir");
+    navigate("/redir/wallet");
   }, [navigate]);
 
   const onButtonClick = useCallback(() => {
