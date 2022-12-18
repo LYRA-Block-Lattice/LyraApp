@@ -48,7 +48,7 @@ const Market: FunctionComponent = () => {
           <div className="walletcard">
             <div className="rectangle-copy" />
             <div className="mask-group">
-              <img className="group-icon" alt="" src="../asserts/group.svg" />
+              <img className="group-icon" alt="" src="_content/ReactRazor/asserts/group.svg" />
               <button className="usd-wallet" onClick={onUSDWalletClick}>
                 My Primary Account
               </button>
@@ -99,7 +99,7 @@ const Market: FunctionComponent = () => {
                 <img
                   className="iconglyphbuy-copy-21"
                   alt=""
-                  src="../asserts/iconglyphbuy-copy-21.svg"
+                  src="_content/ReactRazor/asserts/iconglyphbuy-copy-21.svg"
                 />
               </button>
               <div className="cen-wallet-copy">LYRA WALLET</div>
@@ -114,7 +114,7 @@ const Market: FunctionComponent = () => {
           <img
             className="home-icon-surrounding"
             alt=""
-            src="../asserts/home--icon--surrounding.svg"
+            src="_content/ReactRazor/asserts/home--icon--surrounding.svg"
           />
           <div className="ranking">DAO</div>
         </button>
@@ -122,7 +122,7 @@ const Market: FunctionComponent = () => {
           <img
             className="home-icon-surrounding"
             alt=""
-            src="../asserts/home--icon--ranking.svg"
+            src="_content/ReactRazor/asserts/home--icon--ranking.svg"
           />
           <div className="ranking">OTC Trade</div>
         </button>
@@ -130,7 +130,7 @@ const Market: FunctionComponent = () => {
           <img
             className="home-icon-surrounding"
             alt=""
-            src="../asserts/home--icon--ranking1.svg"
+            src="_content/ReactRazor/asserts/home--icon--ranking1.svg"
           />
           <div className="ranking">Investement</div>
         </button>
@@ -138,7 +138,7 @@ const Market: FunctionComponent = () => {
           <img
             className="home-icon-surrounding"
             alt=""
-            src="../asserts/home--icon--interlocution.svg"
+            src="_content/ReactRazor/asserts/home--icon--interlocution.svg"
           />
           <div className="ranking">Swap</div>
         </button>
@@ -146,7 +146,7 @@ const Market: FunctionComponent = () => {
           <img
             className="home-icon-surrounding"
             alt=""
-            src="../asserts/home--icon--interlocution1.svg"
+            src="_content/ReactRazor/asserts/home--icon--interlocution1.svg"
           />
           <div className="ranking">DEX</div>
         </button>
@@ -154,7 +154,7 @@ const Market: FunctionComponent = () => {
           <img
             className="home-icon-surrounding"
             alt=""
-            src="../asserts/home--icon--interlocution2.svg"
+            src="_content/ReactRazor/asserts/home--icon--interlocution2.svg"
           />
           <div className="ranking">NFT</div>
         </button>
@@ -162,7 +162,7 @@ const Market: FunctionComponent = () => {
           <img
             className="home-icon-surrounding"
             alt=""
-            src="../asserts/home--icon--interlocution3.svg"
+            src="_content/ReactRazor/asserts/home--icon--interlocution3.svg"
           />
           <div className="ranking">Mint</div>
         </button>
@@ -170,7 +170,7 @@ const Market: FunctionComponent = () => {
           <img
             className="home-icon-surrounding"
             alt=""
-            src="../asserts/home--icon--ranking2.svg"
+            src="_content/ReactRazor/asserts/home--icon--ranking2.svg"
           />
           <div className="ranking">Staking</div>
         </button>
@@ -182,13 +182,13 @@ const Market: FunctionComponent = () => {
             <div className="buy-tv-at-sony-store">Recharge money</div>
             <div className="div4">From Harry James</div>
             <div className="div5">+ $1000</div>
-            <img className="path-icon" alt="" src="../asserts/path.svg" />
+            <img className="path-icon" alt="" src="_content/ReactRazor/asserts/path.svg" />
           </div>
           <div className="copy">
             <div className="buy-tv-at-sony-store">Pay electric bill</div>
             <div className="div4">From USD wallet</div>
             <div className="div5">- $100</div>
-            <img className="path-icon" alt="" src="../asserts/path1.svg" />
+            <img className="path-icon" alt="" src="_content/ReactRazor/asserts/path1.svg" />
           </div>
         </div>
         <b className="more">More</b>
@@ -202,7 +202,7 @@ const Market: FunctionComponent = () => {
           <img
             className="iconglyphstar-copy-2"
             alt=""
-            src="../asserts/iconglyphstar-copy-2.svg"
+            src="_content/ReactRazor/asserts/iconglyphstar-copy-2.svg"
           />
         </div>
         <div className="div10">4.8</div>
@@ -210,16 +210,16 @@ const Market: FunctionComponent = () => {
         <img
           className="iconglyphstar"
           alt=""
-          src="../asserts/iconglyphstar.svg"
+          src="_content/ReactRazor/asserts/iconglyphstar.svg"
         />
         <div className="end-in-12001">End in 1:20:01</div>
         <img
           className="iconglyphstar-copy"
           alt=""
-          src="../asserts/iconglyphstar-copy.svg"
+          src="_content/ReactRazor/asserts/iconglyphstar-copy.svg"
         />
         <div className="group-div1">
-          <img className="path-5-icon" alt="" src="../asserts/path-5.svg" />
+          <img className="path-5-icon" alt="" src="_content/ReactRazor/asserts/path-5.svg" />
           <div className="rectangle3" />
           <div className="div12">50%</div>
         </div>
@@ -231,7 +231,7 @@ const Market: FunctionComponent = () => {
           <img
             className="iconglyphstar-copy-2"
             alt=""
-            src="../asserts/iconglyphstar-copy-21.svg"
+            src="_content/ReactRazor/asserts/iconglyphstar-copy-21.svg"
           />
         </div>
         <div className="div15">4.8</div>
@@ -239,23 +239,23 @@ const Market: FunctionComponent = () => {
         <img
           className="iconglyphstar1"
           alt=""
-          src="../asserts/iconglyphstar1.svg"
+          src="_content/ReactRazor/asserts/iconglyphstar1.svg"
         />
         <div className="end-in-120011">End in 1:20:01</div>
         <img
           className="iconglyphstar-copy1"
           alt=""
-          src="../asserts/iconglyphstar-copy1.svg"
+          src="_content/ReactRazor/asserts/iconglyphstar-copy1.svg"
         />
         <div className="group-div3">
-          <img className="path-5-icon" alt="" src="../asserts/path-51.svg" />
+          <img className="path-5-icon" alt="" src="_content/ReactRazor/asserts/path-51.svg" />
           <div className="rectangle3" />
           <div className="div12">50%</div>
         </div>
         <b className="deal-of-the-day">Deal of the day</b>
         <b className="see-all">See all</b>
-        <img className="frame-icon" alt="" src="../asserts/frame.svg" />
-        <img className="frame-icon1" alt="" src="../asserts/frame1.svg" />
+        <img className="frame-icon" alt="" src="_content/ReactRazor/asserts/frame.svg" />
+        <img className="frame-icon1" alt="" src="_content/ReactRazor/asserts/frame1.svg" />
       </div>
     </div>
   );
