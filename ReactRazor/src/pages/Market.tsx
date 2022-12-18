@@ -103,35 +103,35 @@ const Market: FunctionComponent = () => {
       <div className="iconssection">
         <div className="frame-div2">
           <NavigationIcon
-            homeIconSurrounding="../asserts/home--icon--surrounding.svg"
+            homeIconSurrounding="_content/ReactRazor/asserts/home--icon--surrounding.svg"
             ranking="DAO"
           />
           <NavigationIcon
-            homeIconSurrounding="../asserts/home--icon--interlocution.svg"
+            homeIconSurrounding="_content/ReactRazor/asserts/home--icon--interlocution.svg"
             ranking="OTC"
           />
           <NavigationIcon
-            homeIconSurrounding="../asserts/home--icon--interlocution1.svg"
+            homeIconSurrounding="_content/ReactRazor/asserts/home--icon--interlocution1.svg"
             ranking="Invest"
           />
           <NavigationIcon
-            homeIconSurrounding="../asserts/home--icon--interlocution2.svg"
+            homeIconSurrounding="_content/ReactRazor/asserts/home--icon--interlocution2.svg"
             ranking="Swap"
           />
           <NavigationIcon
-            homeIconSurrounding="../asserts/home--icon--interlocution3.svg"
+            homeIconSurrounding="_content/ReactRazor/asserts/home--icon--interlocution3.svg"
             ranking="DEX"
           />
           <NavigationIcon
-            homeIconSurrounding="../asserts/home--icon--interlocution4.svg"
+            homeIconSurrounding="_content/ReactRazor/asserts/home--icon--interlocution4.svg"
             ranking="NFT"
           />
           <NavigationIcon
-            homeIconSurrounding="../asserts/home--icon--interlocution5.svg"
+            homeIconSurrounding="_content/ReactRazor/asserts/home--icon--interlocution5.svg"
             ranking="Mint"
           />
           <NavigationIcon
-            homeIconSurrounding="../asserts/home--icon--ranking.svg"
+            homeIconSurrounding="_content/ReactRazor/asserts/home--icon--ranking.svg"
             ranking="Staking"
           />
         </div>
