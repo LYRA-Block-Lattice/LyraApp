@@ -1,0 +1,51 @@
+.buy-tv-at-sony-store,
+.div22 {
+  position: absolute;
+  top: calc(50% - 23.75px);
+  left: 0;
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 600;
+  display: inline-block;
+}
+.div22 {
+  top: calc(50% - 1.75px);
+  font-size: var(--other-11-size);
+  line-height: 13px;
+  font-weight: 500;
+  color: var(--color-gray-11);
+}
+.b,
+.path-icon3 {
+  position: absolute;
+  right: 0;
+}
+.b {
+  top: calc(50% - 23.75px);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  display: inline-block;
+  color: var(--color-green);
+  text-align: right;
+}
+.path-icon3 {
+  height: 2.13%;
+  width: 100%;
+  top: 99.1%;
+  bottom: -1.23%;
+  left: 0;
+  max-width: 100%;
+  overflow: hidden;
+  max-height: 100%;
+}
+.div21 {
+  align-self: stretch;
+  position: relative;
+  height: 55.5px;
+  flex-shrink: 0;
+  z-index: 0;
+  text-align: left;
+  font-size: var(--body-s-size);
+  color: var(--color-black1);
+  font-family: var(--caption1);
+}

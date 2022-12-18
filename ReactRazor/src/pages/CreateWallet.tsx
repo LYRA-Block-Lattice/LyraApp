@@ -14,7 +14,7 @@ import "./CreateWallet.css";
 const CreateWallet: FunctionComponent = () => {
   const navigate = useNavigate();
 
-  const onSignInClick = useCallback(() => {
+  const onOpenWalletLinkClick = useCallback(() => {
     navigate("/open-wallet");
   }, [navigate]);
 
@@ -22,7 +22,7 @@ const CreateWallet: FunctionComponent = () => {
     <div className="createwallet">
       <b className="sign-up">Create Wallet</b>
       <TextField
-        className="box-2-copy"
+        className="wallet-name"
         sx={{ width: 343 }}
         color="primary"
         variant="standard"
@@ -34,7 +34,7 @@ const CreateWallet: FunctionComponent = () => {
         required
       />
       <TextField
-        className="box-2-copy"
+        className="wallet-name"
         sx={{ width: 343 }}
         color="primary"
         variant="standard"
@@ -55,7 +55,7 @@ const CreateWallet: FunctionComponent = () => {
         required
       />
       <TextField
-        className="box-2-copy"
+        className="wallet-name"
         sx={{ width: 343 }}
         color="primary"
         variant="standard"
@@ -81,7 +81,7 @@ const CreateWallet: FunctionComponent = () => {
         control={<Checkbox color="primary" size="medium" />}
       />
       <TextField
-        className="box-2-copy"
+        className="wallet-name"
         sx={{ width: 343 }}
         color="primary"
         variant="standard"
@@ -91,12 +91,12 @@ const CreateWallet: FunctionComponent = () => {
         size="medium"
         margin="none"
       />
-      <button className="button-shape-2">
+      <button className="create-wallet">
         <div className="button-shape" />
-        <div className="label">Sign Up</div>
+        <div className="createlabel">Create</div>
       </button>
-      <button className="sign-in" onClick={onSignInClick}>
-        Sign In
+      <button className="open-wallet-link" onClick={onOpenWalletLinkClick}>
+        Open Wallet
       </button>
     </div>
   );

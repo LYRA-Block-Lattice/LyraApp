@@ -1,4 +1,4 @@
-.sign-in1 {
+.sign-in {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 41px;
@@ -10,7 +10,7 @@
   height: 252px;
   flex-shrink: 0;
 }
-.box-22 {
+.password {
   border: 0;
   background-color: transparent;
   position: relative;
@@ -27,7 +27,7 @@
   background-color: var(--color-coral);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
-.label1 {
+.label {
   position: absolute;
   width: 90.67%;
   top: calc(50% - 11px);
@@ -41,8 +41,8 @@
   text-align: center;
   display: inline-block;
 }
-.button-shape-21,
 .forgot-password-copy-2,
+.open-wallet-button,
 .sign-up1 {
   cursor: pointer;
   border: 0;
@@ -50,7 +50,7 @@
   background-color: transparent;
   position: relative;
 }
-.button-shape-21 {
+.open-wallet-button {
   width: 164px;
   height: 50px;
   flex-shrink: 0;
@@ -64,7 +64,7 @@
   display: inline-block;
 }
 .sign-up1 {
-  font-size: var(--body-b1-size);
+  font-size: var(--body-s-size);
   font-weight: 600;
   color: var(--color-gray-11);
 }
@@ -73,7 +73,7 @@
   font-weight: 500;
   color: rgba(127, 133, 146, 0.5);
 }
-.frame-div2,
+.frame-div3,
 .openwallet {
   overflow: hidden;
   display: flex;
@@ -81,7 +81,7 @@
   align-items: center;
   justify-content: center;
 }
-.frame-div2 {
+.frame-div3 {
   flex-direction: row;
   padding: 12px 40px;
   gap: 82px;

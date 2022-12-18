@@ -4,7 +4,7 @@
   line-height: 41px;
   display: inline-block;
 }
-.box-2-copy {
+.wallet-name {
   border: 0;
   background-color: transparent;
   position: relative;
@@ -21,7 +21,7 @@
   background-color: var(--color-coral);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
-.label {
+.createlabel {
   position: absolute;
   width: 90.67%;
   top: calc(50% - 11px);
@@ -35,7 +35,7 @@
   text-align: center;
   display: inline-block;
 }
-.button-shape-2 {
+.create-wallet {
   cursor: pointer;
   border: 0;
   padding: 0;
@@ -46,17 +46,17 @@
   flex-shrink: 0;
 }
 .createwallet,
-.sign-in {
+.open-wallet-link {
   position: relative;
   text-align: center;
   font-family: var(--caption1);
 }
-.sign-in {
+.open-wallet-link {
   cursor: pointer;
   border: 0;
   padding: 0;
   background-color: transparent;
-  font-size: var(--body-b1-size);
+  font-size: var(--body-s-size);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 600;
