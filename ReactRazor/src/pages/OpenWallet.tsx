@@ -23,18 +23,11 @@ const OpenWallet: FunctionComponent = () => {
     const inputRef = useRef<HTMLInputElement>(null);
     const selRef = useRef<HTMLInputElement>(null);
     const [wnames, setwnames] = useState([]);
-    const [
-        dropdownButtonSimpleTextOAnchorEl,
-        setDropdownButtonSimpleTextOAnchorEl,
-    ] = useState<HTMLElement | null>(null);
-    const [
-        dropdownButtonSimpleTextOSelectedIndex,
-        setDropdownButtonSimpleTextOSelectedIndex,
-    ] = useState<number>(0);
+
   const [selectedWalletNameAnchorEl, setSelectedWalletNameAnchorEl] =
     useState<HTMLElement | null>(null);
   const [selectedWalletNameSelectedIndex, setSelectedWalletNameSelectedIndex] =
-    useState<number>(-1);
+    useState<number>(0);
 
     async function getWalletName() {
         let wnames = await window.lyraProxy.invokeMethodAsync("GetWalletNames");
@@ -47,9 +40,9 @@ const OpenWallet: FunctionComponent = () => {
 
     useEffect(() => {
         console.log("names is " + wnames);
-        console.log("index changed to " + dropdownButtonSimpleTextOSelectedIndex);
-        console.log("selected name is " + wnames[dropdownButtonSimpleTextOSelectedIndex]);
-    }, [dropdownButtonSimpleTextOSelectedIndex]);
+        console.log("index changed to " + selectedWalletNameSelectedIndex);
+        console.log("selected name is " + wnames[selectedWalletNameSelectedIndex]);
+    }, [selectedWalletNameSelectedIndex]);
 
   const navigate = useNavigate();
   const selectedWalletNameOpen = Boolean(selectedWalletNameAnchorEl);
@@ -58,10 +51,7 @@ const OpenWallet: FunctionComponent = () => {
   ) => {
     setSelectedWalletNameAnchorEl(event.currentTarget);
   };
-    const handleDropdownButtonSimpleTextOMenuItemClick = (event: React.MouseEvent<HTMLElement>,
-        index: number) => {
-        setDropdownButtonSimpleTextOSelectedIndex(index);
-        setDropdownButtonSimpleTextOAnchorEl(null);
+
   const handleSelectedWalletNameMenuItemClick = (index: number) => {
     setSelectedWalletNameSelectedIndex(index);
     setSelectedWalletNameAnchorEl(null);
@@ -72,11 +62,11 @@ const OpenWallet: FunctionComponent = () => {
 
     const onOpenWallet = useCallback(() => {
         console.log("names is " + wnames);
-        console.log("index changed to " + dropdownButtonSimpleTextOSelectedIndex);
-        console.log("selected name is " + wnames[dropdownButtonSimpleTextOSelectedIndex]);
+        console.log("index changed to " + selectedWalletNameSelectedIndex);
+        console.log("selected name is " + wnames[selectedWalletNameSelectedIndex]);
 
-        window.lyraProxy.invokeMethodAsync("OpenWallet", wnames[dropdownButtonSimpleTextOSelectedIndex], inputRef.current!.value);
-    }, [wnames, dropdownButtonSimpleTextOSelectedIndex]);
+        window.lyraProxy.invokeMethodAsync("OpenWallet", wnames[selectedWalletNameSelectedIndex], inputRef.current!.value);
+    }, [wnames, selectedWalletNameSelectedIndex]);
 
   const onSignUpClick = useCallback(() => {
     navigate("/create-wallet");
@@ -99,34 +89,18 @@ const OpenWallet: FunctionComponent = () => {
           onClick={handleSelectedWalletNameClick}
           color="primary"
               >
-                  {wnames[dropdownButtonSimpleTextOSelectedIndex]}
+                  {wnames[selectedWalletNameSelectedIndex]}
         </Button>
         <Menu
           anchorEl={selectedWalletNameAnchorEl}
           open={selectedWalletNameOpen}
           onClose={handleSelectedWalletNameClose}
-        >
-          <MenuItem
-            selected={selectedWalletNameSelectedIndex === 0}
-            onClick={() => handleSelectedWalletNameMenuItemClick(0)}
-          >
-            wallet a
-          </MenuItem>
-          <MenuItem
-            selected={selectedWalletNameSelectedIndex === 1}
-            onClick={() => handleSelectedWalletNameMenuItemClick(1)}
-          >
-            walle b
-          </MenuItem>
-          anchorEl={dropdownButtonSimpleTextOAnchorEl}
-          open={dropdownButtonSimpleTextOOpen}
-          onClose={handleDropdownButtonSimpleTextOClose}
               >
                   {wnames.map((name, index) => (
                       <MenuItem
                           key={name}
-                          selected={index === dropdownButtonSimpleTextOSelectedIndex}
-                          onClick={(event) => handleDropdownButtonSimpleTextOMenuItemClick(event, index)}
+                          selected={index === selectedWalletNameSelectedIndex}
+                          onClick={(event) => handleSelectedWalletNameMenuItemClick(index)}
                       >
                           {name}
                       </MenuItem>
@@ -135,9 +109,7 @@ const OpenWallet: FunctionComponent = () => {
       </div>
       <TextField
         className="password"
-        <TextField
-         inputRef={inputRef}
-         className="box-22"
+        inputRef={inputRef}
         sx={{ width: 330 }}
         color="primary"
         variant="standard"
@@ -157,8 +129,7 @@ const OpenWallet: FunctionComponent = () => {
         margin="none"
         required
       />
-      <button className="open-wallet-button">
-        <button className="button-shape-21" onClick={onOpenWallet}>
+        <button className="open-wallet-button" onClick={onOpenWallet}>
         <div className="button-shape1" />
         <div className="label">Open</div>
       </button>

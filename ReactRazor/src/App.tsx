@@ -92,15 +92,15 @@ function App() {
 
       <Route path="/transactionhistory" element={<TransactionHistory />} />
 
-      <Route path="/redir" element={<Redir />} />
+      <Route path="/redir/:id" element={<RedirBlazor />} />
+
+      <Route path="/market" element={<Market />} />
 
       <Route path="/oldv1ui" element={<OldV1UI />} />
 
       <Route path="/create-wallet" element={<CreateWallet />} />
 
-      <Route path="/open-wallet" element={<OpenWallet />} />
-
-      <Route path="/redir/:id" element={<RedirBlazor />} />
+      <Route path="/open-wallet" element={<OpenWallet />} />      
     </Routes>
   );
 }

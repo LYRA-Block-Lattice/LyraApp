@@ -9,23 +9,23 @@ const Market: FunctionComponent = () => {
   const navigate = useNavigate();
 
   const onWalletNameLabelClick = useCallback(() => {
-    navigate("/redir");
+    navigate("/redir/wallet");
   }, [navigate]);
 
   const onTradesCountClick = useCallback(() => {
-    navigate("/redir");
+    navigate("/redir/trades");
   }, [navigate]);
 
   const onOrdersCountClick = useCallback(() => {
-    navigate("/redir");
+    navigate("/redir/orders");
   }, [navigate]);
 
   const onTFTCountClick = useCallback(() => {
-    navigate("/redir");
+    navigate("/redir/tft");
   }, [navigate]);
 
   const onNFTCountClick = useCallback(() => {
-    navigate("/redir");
+    navigate("/redir/nft");
   }, [navigate]);
 
   const onRectangleCopy3Click = useCallback(() => {
