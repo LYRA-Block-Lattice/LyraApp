@@ -1,6 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Myriad+Pro:wght@400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Myriad+Pro:wght@400&display=swap");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
 body {
@@ -9,33 +9,33 @@ body {
 }
 :root {
   /* fonts */
-  --font-myriad-pro: "Myriad Pro";
   --caption: "SF Pro Display";
   --font-sf-pro-text: "SF Pro Text";
+  --font-myriad-pro: "Myriad Pro";
 
   /* font sizes */
-  --font-size-4xs: 10px;
+  --font-size-2xs: 10px;
   --other-11-size: 11px;
   --caption-size: 12px;
   --regular-body-size: 13px;
-  --font-size-sm: 14px;
   --body-s-size: 15px;
   --headline-s-size: 17px;
-  --font-size-xl: 20px;
-  --font-size-2xl: 24px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
   --large-title-size: 34px;
 
   /* Colors */
   --color-white: #fff;
-  --black-000000100: #000;
+  --color-coral: #fa7268;
   --color-gray-100: #b6e0ff;
   --color-gray-1: #7f8592;
   --color-black: #1b2749;
-  --color-coral: #fa7268;
   --color-turquoise: #00bece;
+  --black-000000100: #000;
 
   /* Gaps */
   --gap-0: 0px;
+  --gap-md: 10px;
 
   /* Paddings */
   --padding-sm: 10px;
