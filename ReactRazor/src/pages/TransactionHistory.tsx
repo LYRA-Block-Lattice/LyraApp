@@ -18,8 +18,8 @@ const TransactionHistory: FunctionComponent = () => {
         />
       </div>
       <div className="group">
-        <div className="rectangle" />
-        <div className="div">$200</div>
+        <div className="rectangle6" />
+        <div className="div13">$200</div>
         <img
           className="iconglyphstar-copy-4"
           alt=""
@@ -28,8 +28,8 @@ const TransactionHistory: FunctionComponent = () => {
       </div>
       <div className="group-4-copy">
         <div className="group1">
-          <div className="rectangle1" />
-          <div className="div1">9/10/2018</div>
+          <div className="rectangle7" />
+          <div className="div14">9/10/2018</div>
           <img
             className="iconglyphstar-copy-41"
             alt=""
@@ -51,38 +51,38 @@ const TransactionHistory: FunctionComponent = () => {
         <img className="iconback1" alt="" src="_content/ReactRazor/asserts/iconback1.svg" />
         <b className="large-title">Transaction history</b>
       </div>
-      <div className="frame-div">
+      <div className="frame-div2">
         <div className="receivedetailcard">
-          <div className="rectangle2" />
+          <div className="rectangle8" />
           <div className="group3">
             <b className="transfer-money">Receive</b>
             <div className="to-harry-james">From: Harry James</div>
           </div>
-          <div className="group-div">
+          <div className="group-div4">
             <div className="successful">Successful</div>
             <img
-              className="iconglyphstar"
+              className="iconglyphstar2"
               alt=""
-              src="_content/ReactRazor/asserts/iconglyphstar.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar2.svg"
             />
           </div>
-          <div className="group-div1">
-            <div className="div2">09/10/2018</div>
+          <div className="group-div5">
+            <div className="div15">09/10/2018</div>
             <img
-              className="iconglyphstar-copy"
+              className="iconglyphstar-copy2"
               alt=""
-              src="_content/ReactRazor/asserts/iconglyphstar-copy.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar-copy2.svg"
             />
           </div>
-          <div className="group-div2">
-            <div className="div3">$200</div>
+          <div className="group-div6">
+            <div className="div16">$200</div>
             <img
-              className="iconglyphstar-copy-2"
+              className="iconglyphstar-copy-22"
               alt=""
-              src="_content/ReactRazor/asserts/iconglyphstar-copy-2.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar-copy-22.svg"
             />
           </div>
-          <img className="path-icon" alt="" src="_content/ReactRazor/asserts/path.svg" />
+          <img className="path-icon" alt="" src="_content/ReactRazor/asserts/path2.svg" />
           <img
             className="receive-icon"
             alt=""
@@ -90,69 +90,69 @@ const TransactionHistory: FunctionComponent = () => {
           />
         </div>
         <div className="receivedetailcard">
-          <div className="rectangle2" />
+          <div className="rectangle8" />
           <div className="group3">
             <b className="transfer-money">Send</b>
             <div className="to-harry-james">To: Harry James</div>
           </div>
-          <div className="group-div">
+          <div className="group-div4">
             <div className="successful">Successful</div>
             <img
-              className="iconglyphstar"
+              className="iconglyphstar2"
               alt=""
-              src="_content/ReactRazor/asserts/iconglyphstar.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar2.svg"
             />
           </div>
-          <div className="group-div1">
-            <div className="div2">09/10/2018</div>
+          <div className="group-div5">
+            <div className="div15">09/10/2018</div>
             <img
-              className="iconglyphstar-copy"
+              className="iconglyphstar-copy2"
               alt=""
-              src="_content/ReactRazor/asserts/iconglyphstar-copy.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar-copy2.svg"
             />
           </div>
-          <div className="group-div2">
-            <div className="div3">$200</div>
+          <div className="group-div6">
+            <div className="div16">$200</div>
             <img
-              className="iconglyphstar-copy-2"
-              alt=""
-              src="_content/ReactRazor/asserts/iconglyphstar-copy-2.svg"
-            />
-          </div>
-          <img className="path-icon" alt="" src="_content/ReactRazor/asserts/path.svg" />
-          <img className="group-icon1" alt="" src="_content/ReactRazor/asserts/group-4.svg" />
-        </div>
-        <div className="receivedetailcard">
-          <div className="rectangle2" />
-          <div className="group3">
-            <b className="transfer-money">Receive</b>
-            <div className="to-harry-james">From: Harry James</div>
-          </div>
-          <div className="group-div">
-            <div className="successful">Successful</div>
-            <img
-              className="iconglyphstar"
-              alt=""
-              src="_content/ReactRazor/asserts/iconglyphstar.svg"
-            />
-          </div>
-          <div className="group-div1">
-            <div className="div2">09/10/2018</div>
-            <img
-              className="iconglyphstar-copy"
-              alt=""
-              src="_content/ReactRazor/asserts/iconglyphstar-copy.svg"
-            />
-          </div>
-          <div className="group-div2">
-            <div className="div3">$200</div>
-            <img
-              className="iconglyphstar-copy-2"
+              className="iconglyphstar-copy-22"
               alt=""
               src="_content/ReactRazor/asserts/iconglyphstar-copy-22.svg"
             />
           </div>
-          <img className="path-icon" alt="" src="_content/ReactRazor/asserts/path.svg" />
+          <img className="path-icon" alt="" src="_content/ReactRazor/asserts/path2.svg" />
+          <img className="group-icon1" alt="" src="_content/ReactRazor/asserts/group-4.svg" />
+        </div>
+        <div className="receivedetailcard">
+          <div className="rectangle8" />
+          <div className="group3">
+            <b className="transfer-money">Receive</b>
+            <div className="to-harry-james">From: Harry James</div>
+          </div>
+          <div className="group-div4">
+            <div className="successful">Successful</div>
+            <img
+              className="iconglyphstar2"
+              alt=""
+              src="_content/ReactRazor/asserts/iconglyphstar2.svg"
+            />
+          </div>
+          <div className="group-div5">
+            <div className="div15">09/10/2018</div>
+            <img
+              className="iconglyphstar-copy2"
+              alt=""
+              src="_content/ReactRazor/asserts/iconglyphstar-copy2.svg"
+            />
+          </div>
+          <div className="group-div6">
+            <div className="div16">$200</div>
+            <img
+              className="iconglyphstar-copy-22"
+              alt=""
+              src="_content/ReactRazor/asserts/iconglyphstar-copy-24.svg"
+            />
+          </div>
+          <img className="path-icon" alt="" src="_content/ReactRazor/asserts/path2.svg" />
           <img
             className="receive-icon"
             alt=""

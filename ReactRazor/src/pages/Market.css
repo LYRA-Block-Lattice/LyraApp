@@ -16,7 +16,7 @@
   z-index: 1;
 }
 .span1 {
-  font-size: var(--body-s-size);
+  font-size: var(--body-b1-size);
 }
 .span {
   font-size: var(--font-size-2xs);
@@ -47,9 +47,9 @@
   flex-shrink: 0;
   text-shadow: 0 2px 3px rgba(0, 0, 0, 0.24);
   z-index: 3;
-  font-size: var(--body-s-size);
+  font-size: var(--body-b1-size);
 }
-.div8 {
+.div {
   position: relative;
   letter-spacing: 3.5px;
   display: none;
@@ -175,7 +175,7 @@
   font-size: var(--caption1-size);
   color: var(--color-gray-200);
 }
-.rectangle-copy-32 {
+.qrcode-button-round {
   position: absolute;
   height: 100%;
   width: 100%;
@@ -189,7 +189,7 @@
   mix-blend-mode: normal;
   cursor: pointer;
 }
-.iconglyphbuy-copy-21 {
+.qrcode-icon {
   position: absolute;
   top: 14.33px;
   right: 14.07px;
@@ -202,16 +202,13 @@
   margin: 0 !important;
 }
 .qrcode-button {
-  cursor: pointer;
-  border: 0;
-  padding: 0;
-  background-color: transparent;
   top: 24px;
   right: 42.22px;
   width: 56.78px;
   height: 56.78px;
   flex-shrink: 0;
   overflow: hidden;
+  cursor: pointer;
   z-index: 5;
 }
 .wallet-decoration {
@@ -227,8 +224,8 @@
   transform-origin: 0 0;
   z-index: 6;
 }
-.rectangle5,
-.rectangle6 {
+.rectangle,
+.rectangle1 {
   position: absolute;
   margin: 0 !important;
   height: 6.37%;
@@ -241,7 +238,7 @@
   background-color: var(--color-white1);
   z-index: 7;
 }
-.rectangle6 {
+.rectangle1 {
   top: 83.53%;
   bottom: 10.09%;
   z-index: 8;
@@ -268,7 +265,7 @@
   justify-content: center;
 }
 .bannersection,
-.frame-div1,
+.frame-div,
 .iconssection {
   align-self: stretch;
   display: flex;
@@ -284,11 +281,11 @@
   color: var(--color-white1);
   font-family: var(--font-sf-pro-text);
 }
-.frame-div1,
+.frame-div,
 .iconssection {
   align-items: flex-start;
 }
-.frame-div1 {
+.frame-div {
   background-color: var(--color-white1);
   overflow: hidden;
   flex-direction: row;
@@ -297,8 +294,8 @@
 .iconssection {
   flex-direction: column;
 }
-.div10,
-.div9,
+.div1,
+.div2,
 .recent-transaction {
   position: absolute;
   margin: 0 !important;
@@ -312,18 +309,18 @@
   font-weight: 600;
   z-index: 0;
 }
-.div10,
-.div9 {
+.div1,
+.div2 {
   right: 10px;
   bottom: 20px;
   line-height: 18px;
   z-index: 2;
 }
-.div10 {
+.div2 {
   bottom: 87px;
   z-index: 3;
 }
-.frame-div2 {
+.frame-div1 {
   align-self: stretch;
   display: flex;
   flex-direction: column;
@@ -347,7 +344,7 @@
   margin: 0 !important;
   top: 16px;
   right: 19px;
-  font-size: var(--body-s-size);
+  font-size: var(--body-b1-size);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 700;
@@ -358,7 +355,7 @@
   z-index: 2;
 }
 .lasttransactions,
-.rectangle7 {
+.rectangle2 {
   background-color: var(--color-white1);
 }
 .lasttransactions {
@@ -375,7 +372,7 @@
   gap: 3px;
   font-size: var(--headline-s1-size);
 }
-.rectangle7 {
+.rectangle2 {
   position: absolute;
   height: 38.15%;
   width: 91.47%;
@@ -386,8 +383,8 @@
   border-radius: var(--br-sm);
   box-shadow: var(--effect);
 }
-.div11,
-.div12,
+.div3,
+.div4,
 .yellow-sofa {
   position: absolute;
   line-height: 18px;
@@ -397,28 +394,28 @@
   width: 21.6%;
   top: calc(50% - 99.5px);
   left: 57.33%;
-  font-size: var(--body-s-size);
+  font-size: var(--body-b1-size);
   letter-spacing: 0.41px;
 }
-.div11,
-.div12 {
+.div3,
+.div4 {
   font-weight: 500;
 }
-.div11 {
+.div3 {
   width: 9.07%;
   top: calc(50% - 49.5px);
   left: 76.8%;
   letter-spacing: 0.41px;
   color: var(--color-coral);
 }
-.div12 {
+.div4 {
   width: 68.25%;
   top: calc(50% - 9.33px);
   left: 31.75%;
   text-decoration: line-through;
   letter-spacing: -0.08px;
 }
-.iconglyphstar-copy-23 {
+.iconglyphstar-copy-2 {
   position: absolute;
   height: 88.89%;
   width: 25.4%;
@@ -430,7 +427,7 @@
   overflow: hidden;
   max-height: 100%;
 }
-.group-div9 {
+.group-div {
   position: absolute;
   height: 5.54%;
   width: 16.8%;
@@ -442,8 +439,8 @@
   color: var(--color-gray-11);
   font-family: var(--font-sf-pro-text);
 }
-.div13,
-.div14 {
+.div5,
+.div6 {
   position: absolute;
   width: 5.6%;
   top: calc(50% - 73.5px);
@@ -454,12 +451,12 @@
   text-align: center;
   display: inline-block;
 }
-.div14 {
+.div6 {
   width: 9.33%;
   left: 68.8%;
   color: var(--color-gray-11);
 }
-.iconglyphstar3 {
+.iconglyphstar {
   position: absolute;
   height: 4.92%;
   width: 4.27%;
@@ -482,7 +479,7 @@
   color: var(--color-coral);
   display: inline-block;
 }
-.iconglyphstar-copy3,
+.iconglyphstar-copy,
 .path-5-icon {
   position: absolute;
   height: 4.92%;
@@ -503,7 +500,7 @@
   bottom: 0;
   left: 0;
 }
-.rectangle8 {
+.rectangle3 {
   position: absolute;
   height: 85.71%;
   width: 100%;
@@ -514,7 +511,7 @@
   border-radius: 0 var(--br-xs) var(--br-xs) 0;
   background-color: var(--color-turquoise);
 }
-.div15 {
+.div7 {
   position: absolute;
   width: 75%;
   top: calc(50% - 7.89px);
@@ -524,7 +521,7 @@
   font-weight: 500;
   display: inline-block;
 }
-.group-div10 {
+.group-div1 {
   position: absolute;
   height: 6.46%;
   width: 8.53%;
@@ -538,7 +535,7 @@
   color: var(--color-white1);
   font-family: var(--font-sf-pro-text);
 }
-.rectangle9 {
+.rectangle4 {
   position: absolute;
   height: 38.15%;
   width: 91.47%;
@@ -551,8 +548,8 @@
   box-shadow: var(--effect);
 }
 .blue-sofa,
-.div16,
-.div17 {
+.div8,
+.div9 {
   position: absolute;
   line-height: 18px;
   display: inline-block;
@@ -561,28 +558,28 @@
   width: 17.6%;
   top: calc(50% + 40.5px);
   left: 57.33%;
-  font-size: var(--body-s-size);
+  font-size: var(--body-b1-size);
   letter-spacing: 0.41px;
 }
-.div16,
-.div17 {
+.div8,
+.div9 {
   font-weight: 500;
 }
-.div16 {
+.div8 {
   width: 8.8%;
   top: calc(50% + 90.5px);
   left: 76.8%;
   letter-spacing: 0.41px;
   color: var(--color-coral);
 }
-.div17 {
+.div9 {
   width: 69.84%;
   top: calc(50% - 9.33px);
   left: 31.75%;
   text-decoration: line-through;
   letter-spacing: -0.08px;
 }
-.group-div11 {
+.group-div2 {
   position: absolute;
   height: 5.54%;
   width: 16.8%;
@@ -594,8 +591,8 @@
   color: var(--color-gray-11);
   font-family: var(--font-sf-pro-text);
 }
-.div18,
-.div19 {
+.div10,
+.div11 {
   position: absolute;
   width: 5.6%;
   top: calc(50% + 66.5px);
@@ -606,12 +603,12 @@
   text-align: center;
   display: inline-block;
 }
-.div19 {
+.div11 {
   width: 9.33%;
   left: 68.8%;
   color: var(--color-gray-11);
 }
-.iconglyphstar4 {
+.iconglyphstar1 {
   position: absolute;
   height: 4.92%;
   width: 4.27%;
@@ -634,7 +631,7 @@
   color: var(--color-coral);
   display: inline-block;
 }
-.iconglyphstar-copy4 {
+.iconglyphstar-copy1 {
   position: absolute;
   height: 4.92%;
   width: 4.27%;
@@ -646,7 +643,7 @@
   overflow: hidden;
   max-height: 100%;
 }
-.group-div12 {
+.group-div3 {
   position: absolute;
   height: 6.46%;
   width: 8.53%;
@@ -664,7 +661,7 @@
 .see-all {
   position: absolute;
   top: 13px;
-  font-size: var(--body-s-size);
+  font-size: var(--body-b1-size);
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
