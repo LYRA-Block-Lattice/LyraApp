@@ -64,7 +64,7 @@
   display: inline-block;
 }
 .sign-up1 {
-  font-size: var(--body-s-size);
+  font-size: var(--body-b1-size);
   font-weight: 600;
   color: var(--color-gray-11);
 }

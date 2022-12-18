@@ -28,11 +28,11 @@ const Market: FunctionComponent = () => {
     navigate("/redir");
   }, [navigate]);
 
-  const onRectangleCopy3Click = useCallback(() => {
+  const onQRCodeButtonRoundClick = useCallback(() => {
     navigate("/redir");
   }, [navigate]);
 
-  const onQRCodeButtonClick = useCallback(() => {
+  const onQRCodeButtonContainerClick = useCallback(() => {
     navigate("/redir");
   }, [navigate]);
 
@@ -72,7 +72,7 @@ const Market: FunctionComponent = () => {
             </div>
             <div className="token-lists">
               <div className="token-catalog">
-                <div className="div8">2</div>
+                <div className="div">2</div>
               </div>
               <b className="trades-label">Trade</b>
               <button className="trades-count" onClick={onTradesCountClick}>
@@ -91,25 +91,28 @@ const Market: FunctionComponent = () => {
                 12
               </button>
             </div>
-            <button className="qrcode-button" onClick={onQRCodeButtonClick}>
+            <div
+              className="qrcode-button"
+              onClick={onQRCodeButtonContainerClick}
+            >
               <div
-                className="rectangle-copy-32"
-                onClick={onRectangleCopy3Click}
+                className="qrcode-button-round"
+                onClick={onQRCodeButtonRoundClick}
               />
               <img
-                className="iconglyphbuy-copy-21"
+                className="qrcode-icon"
                 alt=""
-                src="_content/ReactRazor/asserts/iconglyphbuy-copy-21.svg"
+                src="_content/ReactRazor/asserts/qrcode-icon.svg"
               />
-            </button>
+            </div>
             <div className="wallet-decoration">LYRA WALLET</div>
-            <div className="rectangle5" />
-            <div className="rectangle6" />
+            <div className="rectangle" />
+            <div className="rectangle1" />
           </div>
         </div>
       </div>
       <div className="iconssection">
-        <div className="frame-div1">
+        <div className="frame-div">
           <EntryButton
             homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution.svg"
             ranking="DAO"
@@ -146,12 +149,12 @@ const Market: FunctionComponent = () => {
       </div>
       <div className="lasttransactions">
         <div className="recent-transaction">Recent transaction</div>
-        <div className="frame-div2">
+        <div className="frame-div1">
           <TxInfoBar
             buyTVAtSonyStore="Receive"
             component="From Harry James"
             component1="+ 1000 LYR"
-            path="_content/ReactRazor/asserts/path3.svg"
+            path="path3.svg"
           />
           <TxInfoBar
             componentZIndex="1"
@@ -160,73 +163,73 @@ const Market: FunctionComponent = () => {
             component1="- 100 LYR"
             componentColor="#d15252"
             componentFontWeight="600"
-            path="_content/ReactRazor/asserts/path4.svg"
+            path="path4.svg"
           />
-          <div className="div9">10 Min ago</div>
-          <div className="div10">10 Min ago</div>
+          <div className="div1">10 Min ago</div>
+          <div className="div2">10 Min ago</div>
         </div>
         <button className="more" onClick={onMoreClick}>
           More
         </button>
       </div>
       <div className="dealsection">
-        <div className="rectangle7" />
+        <div className="rectangle2" />
         <b className="yellow-sofa">Yellow sofa</b>
-        <div className="div11">{`$600 `}</div>
-        <div className="group-div9">
-          <div className="div12">$1.200</div>
+        <div className="div3">{`$600 `}</div>
+        <div className="group-div">
+          <div className="div4">$1.200</div>
           <img
-            className="iconglyphstar-copy-23"
+            className="iconglyphstar-copy-2"
             alt=""
-            src="_content/ReactRazor/asserts/iconglyphstar-copy-23.svg"
+            src="_content/ReactRazor/asserts/iconglyphstar-copy-2.svg"
           />
         </div>
-        <div className="div13">4.8</div>
-        <div className="div14">(849)</div>
+        <div className="div5">4.8</div>
+        <div className="div6">(849)</div>
         <img
-          className="iconglyphstar3"
+          className="iconglyphstar"
           alt=""
-          src="_content/ReactRazor/asserts/iconglyphstar3.svg"
+          src="_content/ReactRazor/asserts/iconglyphstar.svg"
         />
         <div className="end-in-12001">End in 1:20:01</div>
         <img
-          className="iconglyphstar-copy3"
+          className="iconglyphstar-copy"
           alt=""
-          src="_content/ReactRazor/asserts/iconglyphstar-copy3.svg"
+          src="_content/ReactRazor/asserts/iconglyphstar-copy.svg"
         />
-        <div className="group-div10">
+        <div className="group-div1">
           <img className="path-5-icon" alt="" src="_content/ReactRazor/asserts/path-5.svg" />
-          <div className="rectangle8" />
-          <div className="div15">50%</div>
+          <div className="rectangle3" />
+          <div className="div7">50%</div>
         </div>
-        <div className="rectangle9" />
+        <div className="rectangle4" />
         <b className="blue-sofa">Blue sofa</b>
-        <div className="div16">{`$750 `}</div>
-        <div className="group-div11">
-          <div className="div17">$1.500</div>
+        <div className="div8">{`$750 `}</div>
+        <div className="group-div2">
+          <div className="div9">$1.500</div>
           <img
-            className="iconglyphstar-copy-23"
+            className="iconglyphstar-copy-2"
             alt=""
-            src="_content/ReactRazor/asserts/iconglyphstar-copy-24.svg"
+            src="_content/ReactRazor/asserts/iconglyphstar-copy-21.svg"
           />
         </div>
-        <div className="div18">4.8</div>
-        <div className="div19">(849)</div>
+        <div className="div10">4.8</div>
+        <div className="div11">(849)</div>
         <img
-          className="iconglyphstar4"
+          className="iconglyphstar1"
           alt=""
-          src="_content/ReactRazor/asserts/iconglyphstar4.svg"
+          src="_content/ReactRazor/asserts/iconglyphstar1.svg"
         />
         <div className="end-in-120011">End in 1:20:01</div>
         <img
-          className="iconglyphstar-copy4"
+          className="iconglyphstar-copy1"
           alt=""
-          src="_content/ReactRazor/asserts/iconglyphstar-copy4.svg"
+          src="_content/ReactRazor/asserts/iconglyphstar-copy1.svg"
         />
-        <div className="group-div12">
+        <div className="group-div3">
           <img className="path-5-icon" alt="" src="_content/ReactRazor/asserts/path-51.svg" />
-          <div className="rectangle8" />
-          <div className="div15">50%</div>
+          <div className="rectangle3" />
+          <div className="div7">50%</div>
         </div>
         <b className="deal-of-the-day">Deal of the day</b>
         <b className="see-all">See all</b>
