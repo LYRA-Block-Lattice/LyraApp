@@ -1,4 +1,5 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import "./NavigationIcon.css";
 
 type NavigationIconType = {
@@ -10,10 +11,20 @@ const NavigationIcon: FunctionComponent<NavigationIconType> = ({
   homeIconSurrounding,
   ranking,
 }) => {
+  const navigate = useNavigate();
+
+  const onDaoButtonClick = useCallback(() => {
+    navigate("/redir");
+  }, [navigate]);
+
   return (
-    <button className="home-icon-component">
-      <img className="home-icon-surrounding" alt="" src={homeIconSurrounding} />
-      <div className="ranking">{ranking}</div>
+    <button className="dao-button" onClick={onDaoButtonClick}>
+      <img
+        className="home-icon-interlocution2"
+        alt=""
+        src={homeIconSurrounding}
+      />
+      <div className="ranking2">{ranking}</div>
     </button>
   );
 };
