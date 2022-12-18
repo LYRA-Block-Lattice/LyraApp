@@ -5,8 +5,9 @@ import {
   useLocation,
 } from "react-router-dom";
 import Empty from "./pages/Empty";
-import Market from "./pages/Market";
+import IPhone141 from "./pages/IPhone141";
 import Redir from "./pages/Redir";
+import Market from "./pages/Market";
 import OldV1UI from "./pages/OldV1UI";
 import CreateWallet from "./pages/CreateWallet";
 import OpenWallet from "./pages/OpenWallet";
@@ -33,11 +34,15 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/market":
+      case "/iphone-14-1":
         title = "";
         metaDescription = "";
         break;
       case "/redir":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/market":
         title = "";
         metaDescription = "";
         break;
@@ -73,9 +78,11 @@ function App() {
     <Routes>
       <Route path="/" element={<Empty />} />
 
-      <Route path="/market" element={<Market />} />
+      <Route path="/iphone-14-1" element={<IPhone141 />} />
 
       <Route path="/redir" element={<Redir />} />
+
+      <Route path="/market" element={<Market />} />
 
       <Route path="/oldv1ui" element={<OldV1UI />} />
 
