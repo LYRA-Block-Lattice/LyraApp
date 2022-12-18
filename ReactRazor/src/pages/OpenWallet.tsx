@@ -1,4 +1,4 @@
-import { FunctionComponent, useRef, useState, useCallback } from "react";
+import { FunctionComponent, useRef, useState, useEffect, useCallback } from "react";
 import {
   Button,
   Menu,
@@ -12,16 +12,40 @@ import {
 import { useNavigate } from "react-router-dom";
 import "./OpenWallet.css";
 
+interface customWindow extends Window {
+    lyraSetProxy?: any;
+    lyraProxy?: any;
+}
+
+declare const window: customWindow;
+
 const OpenWallet: FunctionComponent = () => {
     const inputRef = useRef<HTMLInputElement>(null);
-  const [
-    dropdownButtonSimpleTextOAnchorEl,
-    setDropdownButtonSimpleTextOAnchorEl,
-  ] = useState<HTMLElement | null>(null);
-  const [
-    dropdownButtonSimpleTextOSelectedIndex,
-    setDropdownButtonSimpleTextOSelectedIndex,
-  ] = useState<number>(-1);
+    const selRef = useRef<HTMLInputElement>(null);
+    const [wnames, setwnames] = useState([]);
+    const [
+        dropdownButtonSimpleTextOAnchorEl,
+        setDropdownButtonSimpleTextOAnchorEl,
+    ] = useState<HTMLElement | null>(null);
+    const [
+        dropdownButtonSimpleTextOSelectedIndex,
+        setDropdownButtonSimpleTextOSelectedIndex,
+    ] = useState<number>(0);
+
+    async function getWalletName() {
+        let wnames = await window.lyraProxy.invokeMethodAsync("GetWalletNames");
+        setwnames(wnames);
+    }
+
+    useEffect(() => {
+        getWalletName();
+    }, [wnames]);
+
+    useEffect(() => {
+        console.log("names is " + wnames);
+        console.log("index changed to " + dropdownButtonSimpleTextOSelectedIndex);
+        console.log("selected name is " + wnames[dropdownButtonSimpleTextOSelectedIndex]);
+    }, [dropdownButtonSimpleTextOSelectedIndex]);
 
   const navigate = useNavigate();
   const dropdownButtonSimpleTextOOpen = Boolean(
@@ -32,20 +56,25 @@ const OpenWallet: FunctionComponent = () => {
   ) => {
     setDropdownButtonSimpleTextOAnchorEl(event.currentTarget);
   };
-  const handleDropdownButtonSimpleTextOMenuItemClick = (index: number) => {
-    setDropdownButtonSimpleTextOSelectedIndex(index);
-    setDropdownButtonSimpleTextOAnchorEl(null);
+    const handleDropdownButtonSimpleTextOMenuItemClick = (event: React.MouseEvent<HTMLElement>,
+        index: number) => {
+        setDropdownButtonSimpleTextOSelectedIndex(index);
+        setDropdownButtonSimpleTextOAnchorEl(null);
   };
   const handleDropdownButtonSimpleTextOClose = () => {
     setDropdownButtonSimpleTextOAnchorEl(null);
   };
 
     const onOpenWallet = useCallback(() => {
-        DotNet.invokeMethodAsync<string>("BusinessLayer", "OpenIt", "default wallet", inputRef.current!.value)
+        console.log("names is " + wnames);
+        console.log("index changed to " + dropdownButtonSimpleTextOSelectedIndex);
+        console.log("selected name is " + wnames[dropdownButtonSimpleTextOSelectedIndex]);
+
+        window.lyraProxy.invokeMethodAsync("OpenWallet", wnames[dropdownButtonSimpleTextOSelectedIndex], inputRef.current!.value)
             .then(data => {
                 alert("DotNet reply: " + data);
             });
-    }, []);
+    }, [wnames, dropdownButtonSimpleTextOSelectedIndex]);
 
   const onSignUpClick = useCallback(() => {
     navigate("/create-wallet");
@@ -60,33 +89,30 @@ const OpenWallet: FunctionComponent = () => {
         src="_content/ReactRazor/asserts/illus5-copy.svg"
       />
       <div>
-        <Button
+        <Button          
           id="button-Select Wallet"
           aria-controls="menu-Select Wallet"
           aria-haspopup="true"
           aria-expanded={dropdownButtonSimpleTextOOpen ? "true" : undefined}
           onClick={handleDropdownButtonSimpleTextOClick}
           color="primary"
-        >
-          Select Wallet
+              >
+                  {wnames[dropdownButtonSimpleTextOSelectedIndex]}
         </Button>
         <Menu
           anchorEl={dropdownButtonSimpleTextOAnchorEl}
           open={dropdownButtonSimpleTextOOpen}
           onClose={handleDropdownButtonSimpleTextOClose}
-        >
-          <MenuItem
-            selected={dropdownButtonSimpleTextOSelectedIndex === 0}
-            onClick={() => handleDropdownButtonSimpleTextOMenuItemClick(0)}
-          >
-            wallet a
-          </MenuItem>
-          <MenuItem
-            selected={dropdownButtonSimpleTextOSelectedIndex === 1}
-            onClick={() => handleDropdownButtonSimpleTextOMenuItemClick(1)}
-          >
-            walle b
-          </MenuItem>
+              >
+                  {wnames.map((name, index) => (
+                      <MenuItem
+                          key={name}
+                          selected={index === dropdownButtonSimpleTextOSelectedIndex}
+                          onClick={(event) => handleDropdownButtonSimpleTextOMenuItemClick(event, index)}
+                      >
+                          {name}
+                      </MenuItem>
+                  ))}
         </Menu>
       </div>
         <TextField
