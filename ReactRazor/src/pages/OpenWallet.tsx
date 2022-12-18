@@ -13,30 +13,24 @@ import { useNavigate } from "react-router-dom";
 import "./OpenWallet.css";
 
 const OpenWallet: FunctionComponent = () => {
-  const [
-    dropdownButtonSimpleTextOAnchorEl,
-    setDropdownButtonSimpleTextOAnchorEl,
-  ] = useState<HTMLElement | null>(null);
-  const [
-    dropdownButtonSimpleTextOSelectedIndex,
-    setDropdownButtonSimpleTextOSelectedIndex,
-  ] = useState<number>(-1);
+  const [selectedWalletNameAnchorEl, setSelectedWalletNameAnchorEl] =
+    useState<HTMLElement | null>(null);
+  const [selectedWalletNameSelectedIndex, setSelectedWalletNameSelectedIndex] =
+    useState<number>(-1);
 
   const navigate = useNavigate();
-  const dropdownButtonSimpleTextOOpen = Boolean(
-    dropdownButtonSimpleTextOAnchorEl
-  );
-  const handleDropdownButtonSimpleTextOClick = (
+  const selectedWalletNameOpen = Boolean(selectedWalletNameAnchorEl);
+  const handleSelectedWalletNameClick = (
     event: React.MouseEvent<HTMLElement>
   ) => {
-    setDropdownButtonSimpleTextOAnchorEl(event.currentTarget);
+    setSelectedWalletNameAnchorEl(event.currentTarget);
   };
-  const handleDropdownButtonSimpleTextOMenuItemClick = (index: number) => {
-    setDropdownButtonSimpleTextOSelectedIndex(index);
-    setDropdownButtonSimpleTextOAnchorEl(null);
+  const handleSelectedWalletNameMenuItemClick = (index: number) => {
+    setSelectedWalletNameSelectedIndex(index);
+    setSelectedWalletNameAnchorEl(null);
   };
-  const handleDropdownButtonSimpleTextOClose = () => {
-    setDropdownButtonSimpleTextOAnchorEl(null);
+  const handleSelectedWalletNameClose = () => {
+    setSelectedWalletNameAnchorEl(null);
   };
 
   const onSignUpClick = useCallback(() => {
@@ -45,7 +39,7 @@ const OpenWallet: FunctionComponent = () => {
 
   return (
     <div className="openwallet">
-      <b className="sign-in1">Open Wallet</b>
+      <b className="sign-in">Open Wallet</b>
       <img
         className="illus5-copy-icon"
         alt=""
@@ -56,33 +50,33 @@ const OpenWallet: FunctionComponent = () => {
           id="button-Select Wallet"
           aria-controls="menu-Select Wallet"
           aria-haspopup="true"
-          aria-expanded={dropdownButtonSimpleTextOOpen ? "true" : undefined}
-          onClick={handleDropdownButtonSimpleTextOClick}
+          aria-expanded={selectedWalletNameOpen ? "true" : undefined}
+          onClick={handleSelectedWalletNameClick}
           color="primary"
         >
           Select Wallet
         </Button>
         <Menu
-          anchorEl={dropdownButtonSimpleTextOAnchorEl}
-          open={dropdownButtonSimpleTextOOpen}
-          onClose={handleDropdownButtonSimpleTextOClose}
+          anchorEl={selectedWalletNameAnchorEl}
+          open={selectedWalletNameOpen}
+          onClose={handleSelectedWalletNameClose}
         >
           <MenuItem
-            selected={dropdownButtonSimpleTextOSelectedIndex === 0}
-            onClick={() => handleDropdownButtonSimpleTextOMenuItemClick(0)}
+            selected={selectedWalletNameSelectedIndex === 0}
+            onClick={() => handleSelectedWalletNameMenuItemClick(0)}
           >
             wallet a
           </MenuItem>
           <MenuItem
-            selected={dropdownButtonSimpleTextOSelectedIndex === 1}
-            onClick={() => handleDropdownButtonSimpleTextOMenuItemClick(1)}
+            selected={selectedWalletNameSelectedIndex === 1}
+            onClick={() => handleSelectedWalletNameMenuItemClick(1)}
           >
             walle b
           </MenuItem>
         </Menu>
       </div>
       <TextField
-        className="box-22"
+        className="password"
         sx={{ width: 330 }}
         color="primary"
         variant="standard"
@@ -102,13 +96,13 @@ const OpenWallet: FunctionComponent = () => {
         margin="none"
         required
       />
-      <button className="button-shape-21">
+      <button className="open-wallet-button">
         <div className="button-shape1" />
-        <div className="label1">Sign In</div>
+        <div className="label">Open</div>
       </button>
-      <div className="frame-div2">
+      <div className="frame-div3">
         <button className="sign-up1" onClick={onSignUpClick}>
-          Sign Up
+          Create Wallet
         </button>
         <button className="forgot-password-copy-2">Forgot password?</button>
       </div>

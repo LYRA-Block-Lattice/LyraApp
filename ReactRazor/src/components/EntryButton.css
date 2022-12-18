@@ -1,0 +1,28 @@
+.home-icon-interlocution {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.ranking {
+  position: relative;
+  font-size: var(--other-m1-size);
+  line-height: 18px;
+  font-family: var(--caption1);
+  color: var(--black-000000100);
+  text-align: left;
+  display: inline-block;
+}
+.dao-button {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: var(--color-white1);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-0);
+}

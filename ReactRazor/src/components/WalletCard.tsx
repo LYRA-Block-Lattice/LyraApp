@@ -3,7 +3,7 @@ import "./WalletCard.css";
 
 const WalletCard: FunctionComponent = () => {
   return (
-    <div className="frame-div3">
+    <div className="frame-div4">
       <img className="maps-icon" alt="" src="_content/ReactRazor/asserts/maps.svg" />
     </div>
   );
