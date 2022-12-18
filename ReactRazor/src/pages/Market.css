@@ -176,10 +176,6 @@
   color: var(--color-gray-200);
 }
 .rectangle-copy-32 {
-  cursor: pointer;
-  border: 0;
-  padding: 0;
-  background-color: var(--color-gray-100);
   position: absolute;
   height: 100%;
   width: 100%;
@@ -188,8 +184,10 @@
   bottom: 0;
   left: 0;
   border-radius: var(--br-2xl);
+  background-color: var(--color-gray-100);
   opacity: 0.5;
   mix-blend-mode: normal;
+  cursor: pointer;
 }
 .iconglyphbuy-copy-21 {
   position: absolute;
