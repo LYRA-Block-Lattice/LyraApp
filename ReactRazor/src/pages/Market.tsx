@@ -92,7 +92,7 @@ const Market: FunctionComponent = () => {
               </button>
             </div>
             <button className="qrcode-button" onClick={onQRCodeButtonClick}>
-              <button
+              <div
                 className="rectangle-copy-32"
                 onClick={onRectangleCopy3Click}
               />

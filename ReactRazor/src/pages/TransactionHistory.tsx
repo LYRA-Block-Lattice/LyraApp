@@ -100,7 +100,7 @@ const TransactionHistory: FunctionComponent = () => {
             <img
               className="iconglyphstar"
               alt=""
-              src="_content/ReactRazor/asserts/iconglyphstar1.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar.svg"
             />
           </div>
           <div className="group-div1">
@@ -116,7 +116,7 @@ const TransactionHistory: FunctionComponent = () => {
             <img
               className="iconglyphstar-copy-2"
               alt=""
-              src="_content/ReactRazor/asserts/iconglyphstar-copy-21.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar-copy-2.svg"
             />
           </div>
           <img className="path-icon" alt="" src="_content/ReactRazor/asserts/path.svg" />
@@ -133,7 +133,7 @@ const TransactionHistory: FunctionComponent = () => {
             <img
               className="iconglyphstar"
               alt=""
-              src="_content/ReactRazor/asserts/iconglyphstar2.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar.svg"
             />
           </div>
           <div className="group-div1">
