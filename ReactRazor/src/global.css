@@ -18,27 +18,28 @@ body {
   --other-11-size: 11px;
   --caption1-size: 12px;
   --other-m1-size: 13px;
-  --body-b1-size: 15px;
+  --body-s-size: 15px;
+  --font-size-xl: 16px;
   --headline-s1-size: 17px;
-  --font-size-2xl: 20px;
   --font-size-3xl: 24px;
   --large-title1-size: 34px;
 
   /* Colors */
   --color-white1: #fff;
   --black-000000100: #000;
-  --color-coral: #fa7268;
   --color-gray-100: #dfe0e5;
   --color-gray-200: #b6e0ff;
   --color-gray-11: #7f8592;
   --color-black1: #1b2749;
   --color-no: rgba(216, 216, 216, 0);
+  --color-coral: #fa7268;
   --color-turquoise: #00bece;
   --color-green: #55b944;
 
   /* Gaps */
   --gap-0: 0px;
   --gap-md: 10px;
+  --gap-lg: 39px;
 
   /* Paddings */
   --padding-sm: 10px;

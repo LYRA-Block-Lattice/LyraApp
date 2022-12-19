@@ -64,7 +64,7 @@
   display: inline-block;
 }
 .sign-up1 {
-  font-size: var(--body-b1-size);
+  font-size: var(--body-s-size);
   font-weight: 600;
   color: var(--color-gray-11);
 }
@@ -93,7 +93,7 @@
   height: 817px;
   flex-direction: column;
   padding: 14px var(--padding-md);
-  gap: 39px;
+  gap: var(--gap-lg);
   text-align: center;
   font-size: var(--large-title1-size);
   color: var(--color-coral);
