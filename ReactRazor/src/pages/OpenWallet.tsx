@@ -133,7 +133,7 @@ const OpenWallet: FunctionComponent = () => {
         <div className="button-shape1" />
         <div className="label">Open</div>
       </button>
-      <div className="frame-div3">
+      <div className="frame-div18">
         <button className="sign-up1" onClick={onSignUpClick}>
           Create Wallet
         </button>

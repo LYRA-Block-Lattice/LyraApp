@@ -24,6 +24,10 @@ const Market: FunctionComponent = () => {
     navigate("/redir");
   }, [navigate]);
 
+  const onGroupButtonClick = useCallback(() => {
+    navigate("/viewordersform");
+  }, [navigate]);
+
   const onTradesCountClick = useCallback(() => {
     navigate("/redir");
   }, [navigate]);
@@ -83,13 +87,13 @@ const Market: FunctionComponent = () => {
                   3
                 </button>
               </div>
-              <div className="group-div11">
+              <button className="group-button" onClick={onGroupButtonClick}>
                 <b className="orders-label">Selling</b>
                 <button className="orders-count" onClick={onOrdersCountClick}>
                   0
                 </button>
-              </div>
-              <div className="group-div12">
+              </button>
+              <div className="group-div11">
                 <b className="nft-label">Buying</b>
                 <button className="trades-count" onClick={onTradesCountClick}>
                   0
@@ -117,7 +121,7 @@ const Market: FunctionComponent = () => {
         </div>
       </div>
       <div className="iconssection">
-        <div className="frame-div1">
+        <div className="frame-div16">
           <EntryButton
             homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution.svg"
             ranking="DAO"
@@ -154,7 +158,7 @@ const Market: FunctionComponent = () => {
       </div>
       <div className="lasttransactions">
         <div className="recent-transaction">Recent transaction</div>
-        <div className="frame-div2">
+        <div className="frame-div17">
           <TxInfoBar
             buyTVAtSonyStore="Receive"
             component="From Harry James"
@@ -170,8 +174,8 @@ const Market: FunctionComponent = () => {
             componentFontWeight="600"
             path="_content/ReactRazor/asserts/path4.svg"
           />
-          <div className="div8">10 Min ago</div>
-          <div className="div9">10 Min ago</div>
+          <div className="div11">10 Min ago</div>
+          <div className="div12">10 Min ago</div>
         </div>
         <button className="more" onClick={onMoreClick}>
           More
@@ -180,17 +184,17 @@ const Market: FunctionComponent = () => {
       <div className="dealsection">
         <div className="rectangle7" />
         <b className="yellow-sofa">Yellow sofa</b>
-        <div className="div10">{`$600 `}</div>
-        <div className="group-div13">
-          <div className="div11">$1.200</div>
+        <div className="div13">{`$600 `}</div>
+        <div className="group-div12">
+          <div className="div14">$1.200</div>
           <img
             className="iconglyphstar-copy-23"
             alt=""
             src="_content/ReactRazor/asserts/iconglyphstar-copy-23.svg"
           />
         </div>
-        <div className="div12">4.8</div>
-        <div className="div13">(849)</div>
+        <div className="div15">4.8</div>
+        <div className="div16">(849)</div>
         <img
           className="iconglyphstar3"
           alt=""
@@ -202,24 +206,24 @@ const Market: FunctionComponent = () => {
           alt=""
           src="_content/ReactRazor/asserts/iconglyphstar-copy3.svg"
         />
-        <div className="group-div14">
+        <div className="group-div13">
           <img className="path-5-icon" alt="" src="_content/ReactRazor/asserts/path-5.svg" />
           <div className="rectangle8" />
-          <div className="div14">New</div>
+          <div className="div17">New</div>
         </div>
         <div className="rectangle9" />
         <b className="blue-sofa">Blue sofa</b>
-        <div className="div15">{`$750 `}</div>
-        <div className="group-div15">
-          <div className="div16">$1.500</div>
+        <div className="div18">{`$750 `}</div>
+        <div className="group-div14">
+          <div className="div19">$1.500</div>
           <img
             className="iconglyphstar-copy-23"
             alt=""
             src="_content/ReactRazor/asserts/iconglyphstar-copy-24.svg"
           />
         </div>
-        <div className="div17">4.8</div>
-        <div className="div18">(849)</div>
+        <div className="div20">4.8</div>
+        <div className="div21">(849)</div>
         <img
           className="iconglyphstar4"
           alt=""
@@ -231,10 +235,10 @@ const Market: FunctionComponent = () => {
           alt=""
           src="_content/ReactRazor/asserts/iconglyphstar-copy4.svg"
         />
-        <div className="group-div16">
+        <div className="group-div15">
           <img className="path-5-icon" alt="" src="_content/ReactRazor/asserts/path-51.svg" />
           <div className="rectangle8" />
-          <div className="div14">New</div>
+          <div className="div17">New</div>
         </div>
         <b className="deal-of-the-day">Deal of the day</b>
         <b className="see-all">See all</b>

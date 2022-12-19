@@ -4,7 +4,7 @@
   height: 378.54px;
   flex-shrink: 0;
 }
-.frame-div4 {
+.frame-div19 {
   border-radius: var(--br-md);
   background: radial-gradient(50% 50%at 50% 50%, #b3efe1, #0051ed);
   width: 423px;
@@ -12,7 +12,7 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-sm);
+  padding: var(--padding-xs);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;

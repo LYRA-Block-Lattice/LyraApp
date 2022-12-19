@@ -1,0 +1,94 @@
+.success {
+  position: absolute;
+  top: calc(50% - 280.5px);
+  left: calc(50% - 148.5px);
+  font-size: var(--font-size-3xl);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 500;
+  text-align: left;
+  display: inline-block;
+  width: 296px;
+}
+.illus8-icon {
+  position: absolute;
+  height: 34.89%;
+  width: 63.58%;
+  top: 20.2%;
+  right: 18.21%;
+  bottom: 44.91%;
+  left: 18.21%;
+  max-width: 100%;
+  overflow: hidden;
+  max-height: 100%;
+}
+.you-order-tx-hash-is {
+  top: 360px;
+  left: 22px;
+  width: 292px;
+}
+.blvm6g1jjkwuz8ocens7fuuswjqdr3,
+.view-on-block-explorer,
+.you-order-tx-hash-is {
+  position: absolute;
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  display: inline-block;
+}
+.view-on-block-explorer {
+  text-decoration: underline;
+  top: 412px;
+  left: 22px;
+  color: inherit;
+  width: 292px;
+}
+.blvm6g1jjkwuz8ocens7fuuswjqdr3 {
+  top: 386px;
+  left: 14px;
+  font-size: var(--caption1-size);
+  font-weight: 100;
+}
+.rectangle-div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: var(--br-sm);
+  background-color: var(--color-gray-200);
+  width: 209px;
+  height: 33px;
+}
+.view-my-orders {
+  position: absolute;
+  top: 8px;
+  left: 52px;
+  font-size: var(--body-s-size);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 500;
+  font-family: var(--caption1);
+  color: var(--black-000000100);
+  text-align: center;
+  display: inline-block;
+}
+.view-my-orders-button {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  position: absolute;
+  top: 529px;
+  left: 73px;
+  width: 209px;
+  height: 33px;
+}
+.createordersuccessform {
+  position: relative;
+  background-color: var(--color-white1);
+  width: 100%;
+  height: 599px;
+  overflow: hidden;
+  text-align: center;
+  font-size: var(--font-size-sm);
+  color: var(--black-000000100);
+  font-family: var(--caption1);
+}
