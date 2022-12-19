@@ -13,9 +13,9 @@ const EntryButton: FunctionComponent<EntryButtonType> = ({
 }) => {
   const navigate = useNavigate();
 
-  const onDaoButtonClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
+    const onDaoButtonClick = useCallback(() => {
+        navigate("/redir/" + ranking);
+  }, [navigate, ranking]);
 
   return (
     <button className="dao-button" onClick={onDaoButtonClick}>
