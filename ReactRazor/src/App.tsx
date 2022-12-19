@@ -182,6 +182,8 @@ function App() {
 
       <Route path="/redir/:id" element={<RedirBlazor />} />
 
+      <Route path="/market" element={<Market />} />
+
       <Route path="/create-wallet" element={<CreateWallet />} />
 
       <Route path="/open-wallet" element={<OpenWallet />} />      
