@@ -1,5 +1,5 @@
 .buy-tv-at-sony-store,
-.div22 {
+.div21 {
   position: absolute;
   top: calc(50% - 23.75px);
   left: 0;
@@ -8,7 +8,7 @@
   font-weight: 600;
   display: inline-block;
 }
-.div22 {
+.div21 {
   top: calc(50% - 1.75px);
   font-size: var(--other-11-size);
   line-height: 13px;
@@ -38,14 +38,14 @@
   overflow: hidden;
   max-height: 100%;
 }
-.div21 {
+.div20 {
   align-self: stretch;
   position: relative;
   height: 55.5px;
   flex-shrink: 0;
   z-index: 0;
   text-align: left;
-  font-size: var(--body-b1-size);
+  font-size: var(--body-s-size);
   color: var(--color-black1);
   font-family: var(--caption1);
 }

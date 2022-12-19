@@ -12,7 +12,11 @@ const Market: FunctionComponent = () => {
     navigate("/redir");
   }, [navigate]);
 
-  const onTradesCountClick = useCallback(() => {
+  const onNFTCountClick = useCallback(() => {
+    navigate("/redir");
+  }, [navigate]);
+
+  const onTOTCountClick = useCallback(() => {
     navigate("/redir");
   }, [navigate]);
 
@@ -20,11 +24,7 @@ const Market: FunctionComponent = () => {
     navigate("/redir");
   }, [navigate]);
 
-  const onTFTCountClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
-
-  const onNFTCountClick = useCallback(() => {
+  const onTradesCountClick = useCallback(() => {
     navigate("/redir");
   }, [navigate]);
 
@@ -71,25 +71,30 @@ const Market: FunctionComponent = () => {
               <span className="span">USDT</span>
             </div>
             <div className="token-lists">
-              <div className="token-catalog">
-                <div className="div">2</div>
+              <div className="group-div9">
+                <b className="nft-label">NFT</b>
+                <button className="nft-count" onClick={onNFTCountClick}>
+                  12
+                </button>
               </div>
-              <b className="trades-label">Trade</b>
-              <button className="trades-count" onClick={onTradesCountClick}>
-                0
-              </button>
-              <b className="orders-label">Orders</b>
-              <button className="orders-count" onClick={onOrdersCountClick}>
-                0
-              </button>
-              <b className="tft-label">TFT</b>
-              <button className="tft-count" onClick={onTFTCountClick}>
-                3
-              </button>
-              <b className="nft-label">NFT</b>
-              <button className="nft-count" onClick={onNFTCountClick}>
-                12
-              </button>
+              <div className="group-div10">
+                <b className="nft-label">TOT</b>
+                <button className="tot-count" onClick={onTOTCountClick}>
+                  3
+                </button>
+              </div>
+              <div className="group-div11">
+                <b className="orders-label">Selling</b>
+                <button className="orders-count" onClick={onOrdersCountClick}>
+                  0
+                </button>
+              </div>
+              <div className="group-div12">
+                <b className="nft-label">Buying</b>
+                <button className="trades-count" onClick={onTradesCountClick}>
+                  0
+                </button>
+              </div>
             </div>
             <div
               className="qrcode-button"
@@ -106,13 +111,13 @@ const Market: FunctionComponent = () => {
               />
             </div>
             <div className="wallet-decoration">LYRA WALLET</div>
-            <div className="rectangle" />
-            <div className="rectangle1" />
+            <div className="rectangle5" />
+            <div className="rectangle6" />
           </div>
         </div>
       </div>
       <div className="iconssection">
-        <div className="frame-div">
+        <div className="frame-div1">
           <EntryButton
             homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution.svg"
             ranking="DAO"
@@ -149,12 +154,12 @@ const Market: FunctionComponent = () => {
       </div>
       <div className="lasttransactions">
         <div className="recent-transaction">Recent transaction</div>
-        <div className="frame-div1">
+        <div className="frame-div2">
           <TxInfoBar
             buyTVAtSonyStore="Receive"
             component="From Harry James"
             component1="+ 1000 LYR"
-            path="path3.svg"
+            path="_content/ReactRazor/asserts/path3.svg"
           />
           <TxInfoBar
             componentZIndex="1"
@@ -163,73 +168,73 @@ const Market: FunctionComponent = () => {
             component1="- 100 LYR"
             componentColor="#d15252"
             componentFontWeight="600"
-            path="path4.svg"
+            path="_content/ReactRazor/asserts/path4.svg"
           />
-          <div className="div1">10 Min ago</div>
-          <div className="div2">10 Min ago</div>
+          <div className="div8">10 Min ago</div>
+          <div className="div9">10 Min ago</div>
         </div>
         <button className="more" onClick={onMoreClick}>
           More
         </button>
       </div>
       <div className="dealsection">
-        <div className="rectangle2" />
+        <div className="rectangle7" />
         <b className="yellow-sofa">Yellow sofa</b>
-        <div className="div3">{`$600 `}</div>
-        <div className="group-div">
-          <div className="div4">$1.200</div>
+        <div className="div10">{`$600 `}</div>
+        <div className="group-div13">
+          <div className="div11">$1.200</div>
           <img
-            className="iconglyphstar-copy-2"
+            className="iconglyphstar-copy-23"
             alt=""
-            src="_content/ReactRazor/asserts/iconglyphstar-copy-2.svg"
+            src="_content/ReactRazor/asserts/iconglyphstar-copy-23.svg"
           />
         </div>
-        <div className="div5">4.8</div>
-        <div className="div6">(849)</div>
+        <div className="div12">4.8</div>
+        <div className="div13">(849)</div>
         <img
-          className="iconglyphstar"
+          className="iconglyphstar3"
           alt=""
-          src="_content/ReactRazor/asserts/iconglyphstar.svg"
+          src="_content/ReactRazor/asserts/iconglyphstar3.svg"
         />
         <div className="end-in-12001">End in 1:20:01</div>
         <img
-          className="iconglyphstar-copy"
+          className="iconglyphstar-copy3"
           alt=""
-          src="_content/ReactRazor/asserts/iconglyphstar-copy.svg"
+          src="_content/ReactRazor/asserts/iconglyphstar-copy3.svg"
         />
-        <div className="group-div1">
+        <div className="group-div14">
           <img className="path-5-icon" alt="" src="_content/ReactRazor/asserts/path-5.svg" />
-          <div className="rectangle3" />
-          <div className="div7">50%</div>
+          <div className="rectangle8" />
+          <div className="div14">New</div>
         </div>
-        <div className="rectangle4" />
+        <div className="rectangle9" />
         <b className="blue-sofa">Blue sofa</b>
-        <div className="div8">{`$750 `}</div>
-        <div className="group-div2">
-          <div className="div9">$1.500</div>
+        <div className="div15">{`$750 `}</div>
+        <div className="group-div15">
+          <div className="div16">$1.500</div>
           <img
-            className="iconglyphstar-copy-2"
+            className="iconglyphstar-copy-23"
             alt=""
-            src="_content/ReactRazor/asserts/iconglyphstar-copy-21.svg"
+            src="_content/ReactRazor/asserts/iconglyphstar-copy-24.svg"
           />
         </div>
-        <div className="div10">4.8</div>
-        <div className="div11">(849)</div>
+        <div className="div17">4.8</div>
+        <div className="div18">(849)</div>
         <img
-          className="iconglyphstar1"
+          className="iconglyphstar4"
           alt=""
-          src="_content/ReactRazor/asserts/iconglyphstar1.svg"
+          src="_content/ReactRazor/asserts/iconglyphstar4.svg"
         />
         <div className="end-in-120011">End in 1:20:01</div>
         <img
-          className="iconglyphstar-copy1"
+          className="iconglyphstar-copy4"
           alt=""
-          src="_content/ReactRazor/asserts/iconglyphstar-copy1.svg"
+          src="_content/ReactRazor/asserts/iconglyphstar-copy4.svg"
         />
-        <div className="group-div3">
+        <div className="group-div16">
           <img className="path-5-icon" alt="" src="_content/ReactRazor/asserts/path-51.svg" />
-          <div className="rectangle3" />
-          <div className="div7">50%</div>
+          <div className="rectangle8" />
+          <div className="div14">New</div>
         </div>
         <b className="deal-of-the-day">Deal of the day</b>
         <b className="see-all">See all</b>

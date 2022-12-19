@@ -37,9 +37,9 @@ const TxInfoBar: FunctionComponent<TxInfoBarType> = ({
   }, [componentColor, componentFontWeight]);
 
   return (
-    <div className="div21" style={divStyle}>
+    <div className="div20" style={divStyle}>
       <div className="buy-tv-at-sony-store">{buyTVAtSonyStore}</div>
-      <div className="div22">{component}</div>
+      <div className="div21">{component}</div>
       <b className="b" style={bStyle}>
         {component1}
       </b>
