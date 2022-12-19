@@ -73,7 +73,7 @@
   font-weight: 500;
   color: rgba(127, 133, 146, 0.5);
 }
-.frame-div3,
+.frame-div18,
 .openwallet {
   overflow: hidden;
   display: flex;
@@ -81,7 +81,7 @@
   align-items: center;
   justify-content: center;
 }
-.frame-div3 {
+.frame-div18 {
   flex-direction: row;
   padding: 12px 40px;
   gap: 82px;
@@ -92,8 +92,8 @@
   width: 100%;
   height: 817px;
   flex-direction: column;
-  padding: 14px var(--padding-md);
-  gap: var(--gap-lg);
+  padding: 14px var(--padding-sm);
+  gap: var(--gap-xl);
   text-align: center;
   font-size: var(--large-title1-size);
   color: var(--color-coral);

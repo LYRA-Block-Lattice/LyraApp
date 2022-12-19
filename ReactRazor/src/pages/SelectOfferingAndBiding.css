@@ -1,0 +1,178 @@
+.buyer-should-pay-me-by,
+.i-want-to-sell-token {
+  position: absolute;
+  top: calc(50% - 280.5px);
+  left: calc(50% - 165.5px);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 500;
+  display: inline-block;
+  width: 331px;
+}
+.buyer-should-pay-me-by {
+  top: calc(50% - 38.5px);
+}
+.rectangle-div4 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: var(--br-sm);
+  background-color: var(--color-gray-200);
+  width: 209px;
+  height: 33px;
+}
+.select-for-sell {
+  position: absolute;
+  top: 8px;
+  left: 58px;
+  font-size: var(--body-s-size);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 500;
+  font-family: var(--caption1);
+  color: var(--black-000000100);
+  text-align: center;
+  display: inline-block;
+}
+.select-token-button {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  position: absolute;
+  top: 67px;
+  left: 64px;
+  width: 209px;
+  height: 33px;
+}
+.select-payment-token {
+  position: absolute;
+  top: 8px;
+  left: 30px;
+  font-size: var(--body-s-size);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 500;
+  font-family: var(--caption1);
+  color: var(--black-000000100);
+  text-align: center;
+  display: inline-block;
+}
+.select-token-button1 {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  position: absolute;
+  top: 309px;
+  left: 64px;
+  width: 209px;
+  height: 33px;
+}
+.mint-for-sell {
+  position: absolute;
+  top: 8px;
+  left: 65px;
+  font-size: var(--body-s-size);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 500;
+  font-family: var(--caption1);
+  color: var(--black-000000100);
+  text-align: center;
+  display: inline-block;
+}
+.mint-token-button1 {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  position: absolute;
+  top: 126px;
+  left: 63px;
+  width: 209px;
+  height: 33px;
+}
+.specify-payment-token {
+  position: absolute;
+  top: 8px;
+  left: 26px;
+  font-size: var(--body-s-size);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 500;
+  font-family: var(--caption1);
+  color: var(--black-000000100);
+  text-align: center;
+  display: inline-block;
+}
+.mint-token-button2 {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  position: absolute;
+  top: 368px;
+  left: 63px;
+  width: 209px;
+  height: 33px;
+}
+.or1 {
+  position: absolute;
+  top: 104px;
+  left: 153px;
+  font-weight: 500;
+  width: 31px;
+}
+.next-step,
+.or1,
+.or2 {
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  display: inline-block;
+}
+.or2 {
+  position: absolute;
+  top: 346px;
+  left: 153px;
+  font-weight: 500;
+  width: 31px;
+}
+.next-step {
+  position: relative;
+  font-size: var(--font-size-2xl);
+  font-family: var(--caption1);
+  color: var(--color-white1);
+  text-align: center;
+  width: 188px;
+  flex-shrink: 0;
+}
+.prepare-sell-order-button1 {
+  cursor: pointer;
+  border: 1px solid var(--black-000000100);
+  padding: var(--padding-xs);
+  background-color: var(--color-gray-500);
+  position: absolute;
+  top: 530px;
+  left: 72px;
+  border-radius: var(--br-md);
+  box-sizing: border-box;
+  width: 208px;
+  height: 41px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.selectofferingandbiding {
+  position: relative;
+  background-color: var(--color-white1);
+  width: 100%;
+  height: 599px;
+  overflow: hidden;
+  text-align: center;
+  font-size: var(--body-s-size);
+  color: var(--black-000000100);
+  font-family: var(--caption1);
+}

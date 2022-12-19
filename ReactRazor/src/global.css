@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Myriad+Pro:wght@400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@100;400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
 body {
@@ -14,13 +14,15 @@ body {
   --font-sf-pro-text: "SF Pro Text";
 
   /* font sizes */
-  --font-size-2xs: 10px;
+  --font-size-4xs: 10px;
   --other-11-size: 11px;
   --caption1-size: 12px;
   --other-m1-size: 13px;
+  --font-size-sm: 14px;
   --body-s-size: 15px;
-  --font-size-xl: 16px;
+  --font-size-lg: 16px;
   --headline-s1-size: 17px;
+  --font-size-2xl: 20px;
   --font-size-3xl: 24px;
   --large-title1-size: 34px;
 
@@ -28,26 +30,40 @@ body {
   --color-white1: #fff;
   --black-000000100: #000;
   --color-gray-100: #dfe0e5;
-  --color-gray-200: #b6e0ff;
+  --color-gray-200: #d9d9d9;
+  --color-gray-300: #b6e0ff;
   --color-gray-11: #7f8592;
+  --color-gray-500: #484848;
   --color-black1: #1b2749;
   --color-no: rgba(216, 216, 216, 0);
+  --color-beige: #f6ffde;
+  --color-green-100: #71e57d;
+  --color-green-200: #55b944;
   --color-coral: #fa7268;
-  --color-turquoise: #00bece;
-  --color-green: #55b944;
+  --color-subbrand: #00bece;
+  --color-indigo: #4e5ac3;
+  --color-orange: #ffac00;
 
   /* Gaps */
   --gap-0: 0px;
+  --gap-xs: 1px;
+  --gap-sm: 3px;
   --gap-md: 10px;
-  --gap-lg: 39px;
+  --gap-lg: 14px;
+  --gap-xl: 39px;
 
   /* Paddings */
-  --padding-sm: 10px;
-  --padding-md: 16px;
+  --padding-2xs: 2px;
+  --padding-xs: 10px;
+  --padding-sm: 16px;
+  --padding-md: 19px;
+  --padding-lg: 25px;
+  --padding-xl: 32px;
 
   /* border radiuses */
-  --br-2xs: 2.5px;
-  --br-xs: 4px;
+  --br-3xs: 2.5px;
+  --br-2xs: 4px;
+  --br-xs: 5px;
   --br-sm: 8px;
   --br-md: 10px;
   --br-lg: 21px;
