@@ -7,18 +7,12 @@ const PreviewSellOrderForm: FunctionComponent = () => {
   const navigate = useNavigate();
 
   const onPrepareSellOrderButtonClick = useCallback(() => {
-    navigate("/viewordersform");
+    navigate("/createordersuccessform");
   }, [navigate]);
 
   return (
     <div className="previewsellorderform">
       <div className="preview-sell-order">Preview Sell Order</div>
-      <button
-        className="prepare-sell-order-button"
-        onClick={onPrepareSellOrderButtonClick}
-      >
-        <b className="place-order">Place Order</b>
-      </button>
       <div className="ill-sell-count-type-of-t">
         <p className="ill-sell-count">I’ll sell (count) (type) of (token).</p>
         <p className="ill-sell-count">
@@ -43,6 +37,12 @@ Bank of America
           <Checkbox color="primary" defaultChecked required size="medium" />
         }
       />
+      <button
+        className="prepare-sell-order-button3"
+        onClick={onPrepareSellOrderButtonClick}
+      >
+        <div className="primary-button">Place Order</div>
+      </button>
     </div>
   );
 };

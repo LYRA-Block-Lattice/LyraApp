@@ -1,11 +1,18 @@
-.pxl-20210309-203454756-1-icon {
+.pxl-20210309-203454756-1 {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
   position: absolute;
-  top: 106px;
-  left: 97px;
+  top: 110px;
+  left: 103px;
   border-radius: var(--br-2xs);
-  width: 192px;
-  height: 192px;
-  object-fit: cover;
+  width: 180px;
+  height: 180px;
+  background-image: url(_content/ReactRazor/asserts/pxl202103092034547561@3x.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top;
 }
 .should-not-see-me {
   position: absolute;

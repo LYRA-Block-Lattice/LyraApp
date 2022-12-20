@@ -24,14 +24,15 @@ const PriceAndCollateralForm: FunctionComponent = () => {
     setSelectToken1AnchorEl(null);
   };
 
-  const onReviewOrderButtonClick = useCallback(() => {
+  const onPrepareSellOrderButtonClick = useCallback(() => {
     navigate("/previewsellorderform");
   }, [navigate]);
 
   return (
     <div className="priceandcollateralform">
       <div className="price-and-collateral">Price and Collateral</div>
-      <div className="select-token">
+      <div className="offering-for-biding">1 [offering] for [biding]:</div>
+      <div>
         <Button
           sx={{ width: 301 }}
           id="button-Token Name"
@@ -49,7 +50,8 @@ const PriceAndCollateralForm: FunctionComponent = () => {
           onClose={handleSelectTokenClose}
         />
       </div>
-      <div className="select-token1">
+      <div className="offering-for-biding">Collateral (in LYR):</div>
+      <div>
         <Button
           sx={{ width: 301 }}
           id="button-Token Name"
@@ -67,16 +69,12 @@ const PriceAndCollateralForm: FunctionComponent = () => {
           onClose={handleSelectToken1Close}
         />
       </div>
-      <div className="offering-for-biding">1 [offering] for [biding]:</div>
-      <div className="collateral-in-lyr">Collateral (in LYR):</div>
-      <div className="collateral-worth-in-usd-103">
-        Collateral worth in USD: $103
-      </div>
+      <div className="offering-for-biding">Collateral worth in USD: $103</div>
       <button
-        className="review-order-button"
-        onClick={onReviewOrderButtonClick}
+        className="prepare-sell-order-button7"
+        onClick={onPrepareSellOrderButtonClick}
       >
-        <b className="review-the-order">Review the Order</b>
+        <div className="primary-button1">Review the Order</div>
       </button>
     </div>
   );

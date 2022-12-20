@@ -1,12 +1,10 @@
-import { FunctionComponent, useState, useCallback } from "react";
+import { FunctionComponent, useState } from "react";
 import { Button, Menu, MenuItem } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import "./SelectTokenNameForm.css";
 
 const SelectTokenNameForm: FunctionComponent = () => {
   const [selectTokenAnchorEl, setSelectTokenAnchorEl] =
     useState<HTMLElement | null>(null);
-  const navigate = useNavigate();
   const selectTokenOpen = Boolean(selectTokenAnchorEl);
   const handleSelectTokenClick = (event: React.MouseEvent<HTMLElement>) => {
     setSelectTokenAnchorEl(event.currentTarget);
@@ -15,14 +13,10 @@ const SelectTokenNameForm: FunctionComponent = () => {
     setSelectTokenAnchorEl(null);
   };
 
-  const onConfrimSelectTokenButtonClick = useCallback(() => {
-    navigate("/selecttokenfororder");
-  }, [navigate]);
-
   return (
     <form className="selecttokennameform">
-      <div className="select-token2">Select Token</div>
-      <div className="select-token3">
+      <div className="select-token">Select Token</div>
+      <div>
         <Button
           sx={{ width: 301 }}
           id="button-Token Name"
@@ -40,12 +34,8 @@ const SelectTokenNameForm: FunctionComponent = () => {
           onClose={handleSelectTokenClose}
         />
       </div>
-      <button
-        className="confrim-select-token-button"
-        onClick={onConfrimSelectTokenButtonClick}
-      >
-        <div className="rectangle-div2" />
-        <div className="confirm">Confirm</div>
+      <button className="prepare-sell-order-button8">
+        <div className="secondary-button3">Confirm</div>
       </button>
     </form>
   );

@@ -1,18 +1,25 @@
 import { FunctionComponent, useCallback } from "react";
-import { Icon, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "./ViewOrdersForm.css";
 
 const ViewOrdersForm: FunctionComponent = () => {
   const navigate = useNavigate();
 
-  const onNewClick = useCallback(() => {
-    navigate("/selecttokentypetocreateorder");
+  const onPrepareSellOrderButtonClick = useCallback(() => {
+    navigate("/starttocreateorder");
   }, [navigate]);
 
   return (
     <div className="viewordersform">
-      <div className="view-orders">View Orders</div>
+      <div className="frame-div">
+        <div className="view-orders">View Orders</div>
+        <button
+          className="prepare-sell-order-button"
+          onClick={onPrepareSellOrderButtonClick}
+        >
+          <div className="utility-button">New</div>
+        </button>
+      </div>
       <div className="ordercard">
         <div className="great-nft">Great NFT</div>
         <div className="fiat-usd">Fiat USD</div>
@@ -23,7 +30,7 @@ const ViewOrdersForm: FunctionComponent = () => {
         <div className="status">Status</div>
         <div className="price">Price</div>
       </div>
-      <div className="ordercard1">
+      <div className="ordercard">
         <div className="great-nft">Great NFT</div>
         <div className="fiat-usd">Fiat USD</div>
         <div className="open">Open</div>
@@ -33,7 +40,7 @@ const ViewOrdersForm: FunctionComponent = () => {
         <div className="status">Status</div>
         <div className="price">Price</div>
       </div>
-      <div className="ordercard2">
+      <div className="ordercard">
         <div className="great-nft">Great NFT</div>
         <div className="fiat-usd">Fiat USD</div>
         <div className="open">Open</div>
@@ -43,7 +50,6 @@ const ViewOrdersForm: FunctionComponent = () => {
         <div className="status">Status</div>
         <div className="price">Price</div>
       </div>
-      <IconButton className="new" color="primary" onClick={onNewClick} />
     </div>
   );
 };

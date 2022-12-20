@@ -48,7 +48,7 @@ const TransactionHistory: FunctionComponent = () => {
         <img className="iconback1" alt="" />
         <b className="large-title">Transaction history</b>
       </div>
-      <div className="frame-div15">
+      <div className="frame-div3">
         <div className="receivedetailcard">
           <div className="rectangle2" />
           <div className="group3">

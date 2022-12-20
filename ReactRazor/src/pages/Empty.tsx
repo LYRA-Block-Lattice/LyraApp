@@ -1,13 +1,19 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Empty.css";
 
 const Empty: FunctionComponent = () => {
+  const navigate = useNavigate();
+
+  const onPXL202103092034547561Click = useCallback(() => {
+    navigate("/market");
+  }, [navigate]);
+
   return (
     <div className="empty">
-      <img
-        className="pxl-20210309-203454756-1-icon"
-        alt=""
-        src="_content/ReactRazor/asserts/pxl-20210309-203454756-1@2x.png"
+      <button
+        className="pxl-20210309-203454756-1"
+        onClick={onPXL202103092034547561Click}
       />
       <div className="should-not-see-me">Should not see me</div>
     </div>

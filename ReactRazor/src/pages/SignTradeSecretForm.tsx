@@ -5,7 +5,7 @@ import "./SignTradeSecretForm.css";
 const SignTradeSecretForm: FunctionComponent = () => {
   const navigate = useNavigate();
 
-  const onSignTradeSecretButtonClick = useCallback(() => {
+  const onPrepareSellOrderButtonClick = useCallback(() => {
     navigate("/createtotform");
   }, [navigate]);
 
@@ -24,11 +24,10 @@ Bank of America
 1234 1234 1234 1234`}
       />
       <button
-        className="sign-trade-secret-button"
-        onClick={onSignTradeSecretButtonClick}
+        className="prepare-sell-order-button2"
+        onClick={onPrepareSellOrderButtonClick}
       >
-        <div className="frame-div" />
-        <div className="sign-and-return">Sign and return</div>
+        <div className="utility-button1">Sign and return</div>
       </button>
     </div>
   );
