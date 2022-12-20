@@ -14,7 +14,7 @@ const SelectTokenCatalogButton: FunctionComponent<
 > = ({ icbaselineGeneratingToken, token, tokenClicked, disabled }) => {
   const selectTokenButtonStyle: CSS.Properties = useMemo(() => {
     return {
-        backgroundColor: disabled ? "lightgray" : "#424242",
+      backgroundColor: disabled ? "lightgray" : "#424242",
     };
   }, [
     disabled,

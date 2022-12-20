@@ -40,7 +40,6 @@
   position: relative;
   background-color: var(--color-white1);
   width: 100%;
-  height: 380px;
   flex-direction: column;
   padding: var(--padding-md) var(--padding-3xs);
   justify-content: flex-start;
