@@ -5,12 +5,12 @@
     "static/js/915.5df0f571.chunk.js": "/static/js/915.5df0f571.chunk.js",
     "static/media/pxl@3x.png": "/static/media/pxl202103092034547561@3x.8ac2278a1bec86cbf1d0.png",
     "index.html": "/index.html",
-    "main.css.map": "/static/css/main.e253c865.css.map",
-    "main.js.map": "/static/js/main.9def2daa.js.map",
+    "main.css.map": "/static/css/main.0d1b6a3b.css.map",
+    "main.js.map": "/static/js/main.f75474ba.js.map",
     "915.5df0f571.chunk.js.map": "/static/js/915.5df0f571.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e253c865.css",
-    "static/js/main.9def2daa.js"
+    "static/css/main.0d1b6a3b.css",
+    "static/js/main.f75474ba.js"
   ]
 }
