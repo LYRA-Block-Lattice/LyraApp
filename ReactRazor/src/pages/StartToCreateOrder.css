@@ -1,4 +1,4 @@
-.chose-the-catalog-of-token {
+.chose-the-catalog {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
@@ -48,7 +48,7 @@
 .prepare-sell-order-button15 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-3xs);
+  padding: var(--padding-4xs);
   background-color: var(--color-coral);
   border-radius: var(--br-xl);
   width: 208px;
@@ -61,11 +61,11 @@
   position: relative;
   background-color: var(--color-white1);
   width: 100%;
-  height: 665px;
+  height: 692px;
   flex-direction: column;
-  padding: var(--padding-lg) 66px;
+  padding: var(--padding-lg) 66px var(--padding-md);
   justify-content: flex-start;
-  gap: 15px;
+  gap: 21px;
   text-align: left;
   font-size: var(--font-size-3xl);
   color: var(--black-000000100);

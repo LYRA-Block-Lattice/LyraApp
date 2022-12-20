@@ -51,12 +51,13 @@ body {
   --gap-xl: 39px;
 
   /* Paddings */
-  --padding-3xs: 10px;
-  --padding-2xs: 11px;
-  --padding-xs: 14px;
-  --padding-sm: 15px;
-  --padding-md: 16px;
-  --padding-lg: 19px;
+  --padding-4xs: 10px;
+  --padding-3xs: 11px;
+  --padding-2xs: 14px;
+  --padding-xs: 15px;
+  --padding-sm: 16px;
+  --padding-md: 19px;
+  --padding-lg: 20px;
   --padding-xl: 22px;
   --padding-2xl: 25px;
   --padding-3xl: 32px;

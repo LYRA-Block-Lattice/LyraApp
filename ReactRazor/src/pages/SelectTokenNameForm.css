@@ -28,7 +28,7 @@
 .prepare-sell-order-button8 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-3xs);
+  padding: var(--padding-4xs);
   background-color: var(--color-indigo-100);
   border-radius: var(--br-xl);
   width: 171px;
@@ -43,7 +43,7 @@
   width: 100%;
   height: 380px;
   flex-direction: column;
-  padding: var(--padding-lg) var(--padding-xs);
+  padding: var(--padding-md) var(--padding-2xs);
   justify-content: flex-start;
   gap: 26px;
 }

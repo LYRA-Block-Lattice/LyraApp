@@ -16,13 +16,11 @@ const StartToCreateOrder: FunctionComponent = () => {
 
   return (
     <div className="starttocreateorder">
-      <div className="chose-the-catalog-of-token">
-        Chose the catalog of token
-      </div>
+      <div className="chose-the-catalog">Chose the catalog</div>
       <div className="catalog-section">
-        <CatalogSelection iWantTo="Sell" tokenActionClicked={onTokenAction}/>
+        <CatalogSelection iWantTo="I want to sell:" tokenActionClicked={onTokenAction}/>
         <div className="line-div" />
-        <CatalogSelection iWantTo="Buy" tokenActionClicked={onTokenAction}/>
+        <CatalogSelection iWantTo="I want to get:" tokenActionClicked={onTokenAction}/>
       </div>
       <button
         className="prepare-sell-order-button15"

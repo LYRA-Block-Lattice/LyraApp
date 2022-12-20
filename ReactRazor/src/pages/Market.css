@@ -322,7 +322,7 @@
   align-self: stretch;
   display: flex;
   flex-direction: column;
-  padding: 30px var(--padding-3xs) var(--padding-3xs);
+  padding: 30px var(--padding-4xs) var(--padding-4xs);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
@@ -362,7 +362,7 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-sm) var(--padding-md);
+  padding: var(--padding-xs) var(--padding-sm);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;

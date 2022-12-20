@@ -20,7 +20,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-3xs);
+  padding: var(--padding-4xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
@@ -41,7 +41,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-3xs);
+  padding: var(--padding-4xs);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
@@ -60,7 +60,7 @@
 .prepare-sell-order-button4 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-3xs);
+  padding: var(--padding-4xs);
   background-color: var(--color-violet);
   border-radius: var(--br-xl);
   width: 217px;
@@ -103,7 +103,7 @@
 .prepare-sell-order-button5 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-3xs);
+  padding: var(--padding-4xs);
   background-color: var(--color-indigo-100);
   border-radius: var(--br-xl);
   width: 171px;
@@ -118,7 +118,7 @@
   width: 100%;
   height: 530px;
   flex-direction: column;
-  padding: var(--padding-lg) var(--padding-sm);
+  padding: var(--padding-md) var(--padding-xs);
   justify-content: flex-start;
   gap: var(--gap-lg);
 }

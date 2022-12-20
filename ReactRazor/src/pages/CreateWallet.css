@@ -70,7 +70,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-lg) var(--padding-md);
+  padding: var(--padding-md) var(--padding-sm);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
