@@ -1,4 +1,4 @@
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useMemo, LegacyRef } from "react";
 import CSS, { Property } from "csstype";
 import "./SelectTokenCatalogButton.css";
 
@@ -7,11 +7,13 @@ type SelectTokenCatalogButtonType = {
   token?: string;
   tokenClicked: (tokenName: string | undefined) => void;
   disabled: boolean;
+  act?: string;
+  xref: LegacyRef<HTMLButtonElement> | undefined
 };
 
 const SelectTokenCatalogButton: FunctionComponent<
   SelectTokenCatalogButtonType
-> = ({ icbaselineGeneratingToken, token, tokenClicked, disabled }) => {
+> = ({ icbaselineGeneratingToken, token, tokenClicked, disabled, act, xref }) => {
   const selectTokenButtonStyle: CSS.Properties = useMemo(() => {
     return {
       backgroundColor: disabled ? "lightgray" : "#424242",
@@ -23,6 +25,8 @@ const SelectTokenCatalogButton: FunctionComponent<
     <button className="select-token-catalog-button"
       onClick={e => tokenClicked(token)}
       style={selectTokenButtonStyle} 
+      ref={xref}
+      id={`${act}-${token}`}
       >
       <img
         className="icbaseline-generating-tokens-icon"

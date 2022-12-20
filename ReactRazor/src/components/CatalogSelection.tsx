@@ -1,10 +1,10 @@
-import { FunctionComponent, useState, useCallback } from "react";
+import { FunctionComponent, useState, useCallback, useRef, LegacyRef } from "react";
 import SelectTokenCatalogButton from "../components/SelectTokenCatalogButton";
 import "./CatalogSelection.css";
 
 type CatalogSelectionType = {
   iWantTo?: string;
-  tokenActionClicked: (action: string | undefined, tokenName: string | undefined) => void;
+  tokenActionClicked: (action: string | undefined, tokenName: string | undefined, xref: LegacyRef<HTMLButtonElement> | undefined) => void;
 };
 
 const CatalogSelection: FunctionComponent<CatalogSelectionType> = ({
@@ -12,18 +12,18 @@ const CatalogSelection: FunctionComponent<CatalogSelectionType> = ({
   tokenActionClicked
 }) => {
   const [buttons, setButtons] =
-  useState<{tokenName: string; disabled: boolean, icon: string}[]>([
-    {tokenName: "Token", disabled: false, icon: "../asserts/icbaselinegeneratingtokens.svg"},
-    {tokenName: "NFT", disabled: false, icon: "../asserts/mapartgallery.svg"},
-    {tokenName: "Fiat", disabled: false, icon: "../asserts/fluentemojihighcontrastdollarbanknote.svg"},
-    {tokenName: "Goods", disabled: false, icon: "../asserts/mditruckdelivery.svg"},
-    {tokenName: "Service", disabled: false, icon: "../asserts/carbonuserservicedesk.svg"},
+  useState<{xref: LegacyRef<HTMLButtonElement> | undefined; tokenName: string; disabled: boolean, icon: string}[]>([
+    {xref: useRef(null), tokenName: "Token", disabled: false, icon: "../asserts/icbaselinegeneratingtokens.svg"},
+    {xref: useRef(null), tokenName: "NFT", disabled: false, icon: "../asserts/mapartgallery.svg"},
+    {xref: useRef(null), tokenName: "Fiat", disabled: false, icon: "../asserts/fluentemojihighcontrastdollarbanknote.svg"},
+    {xref: useRef(null), tokenName: "Goods", disabled: false, icon: "../asserts/mditruckdelivery.svg"},
+    {xref: useRef(null), tokenName: "Service", disabled: false, icon: "../asserts/carbonuserservicedesk.svg"},
   ]);
 
   const traceToken = useCallback((action: string | undefined, tokenName: string | undefined) => {
+    let ele = buttons.find(a => a.tokenName === tokenName);
     setButtons(prev => 
-      {
-        let ele = prev.find(a => a.tokenName === tokenName);
+      {        
         if(ele?.disabled)
         {
           ele.disabled = false;
@@ -32,7 +32,7 @@ const CatalogSelection: FunctionComponent<CatalogSelectionType> = ({
           .map(a => a.disabled = true);
         return [...prev];
       });      
-      tokenActionClicked(action, tokenName);
+      tokenActionClicked(action, tokenName, ele?.xref);
   }, [buttons]);
 
   return (
@@ -41,10 +41,12 @@ const CatalogSelection: FunctionComponent<CatalogSelectionType> = ({
       <div className="tradecatalog">
         {buttons.map((a, index) => (
             <SelectTokenCatalogButton
+              xref={a.xref}
               icbaselineGeneratingToken={a.icon}                                    
               token={a.tokenName}
               tokenClicked={e => traceToken(iWantTo, e)}
               disabled={a.disabled}
+              act={iWantTo}
             />
           ))}
       </div>
