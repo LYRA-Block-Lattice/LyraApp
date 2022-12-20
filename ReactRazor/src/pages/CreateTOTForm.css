@@ -10,41 +10,27 @@
   display: inline-block;
   width: 296px;
 }
+.tot-description2,
 .tot-name {
   border: 0;
+  font-family: var(--caption1);
   font-size: var(--body-s-size);
   background-color: var(--color-beige);
   border-radius: var(--br-sm);
   width: 301px;
   height: 40px;
+  flex-shrink: 0;
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-4xs);
+  padding: var(--padding-5xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
 }
-.tot-description2,
-.tot-name,
-.utility-button2 {
-  font-family: var(--caption1);
-  flex-shrink: 0;
-}
 .tot-description2 {
-  border: 0;
-  font-size: var(--body-s-size);
-  background-color: var(--color-beige);
-  border-radius: var(--br-sm);
-  width: 301px;
   height: 124px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  padding: var(--padding-4xs);
-  box-sizing: border-box;
   align-items: flex-start;
-  justify-content: flex-start;
 }
 .utility-button2 {
   position: relative;
@@ -52,18 +38,17 @@
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
+  font-family: var(--caption1);
   color: var(--color-white1);
   text-align: center;
   display: inline-block;
-  width: 113px;
 }
 .prepare-sell-order-button4 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs);
-  background-color: var(--color-violet);
+  padding: var(--padding-5xs) var(--padding-sm);
+  background-color: var(--tertiary);
   border-radius: var(--br-xl);
-  width: 217px;
   height: 30px;
   flex-shrink: 0;
   overflow: hidden;
@@ -76,13 +61,15 @@
 .note-i-need-to-send-trade-sec,
 .secondary-button1 {
   position: relative;
-  font-size: var(--font-size-sm);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-family: var(--caption1);
+  display: inline-block;
+}
+.note-i-need-to-send-trade-sec {
+  font-size: var(--font-size-sm);
   color: var(--black-000000100);
   text-align: left;
-  display: inline-block;
   width: 292px;
 }
 .secondary-button1 {
@@ -90,8 +77,6 @@
   font-weight: 500;
   color: var(--color-white1);
   text-align: center;
-  width: 188px;
-  flex-shrink: 0;
 }
 .createtotform,
 .prepare-sell-order-button5 {
@@ -103,10 +88,9 @@
 .prepare-sell-order-button5 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs);
-  background-color: var(--color-indigo-100);
+  padding: var(--padding-5xs) var(--padding-xl);
+  background-color: var(--secondary);
   border-radius: var(--br-xl);
-  width: 171px;
   height: 40px;
   flex-shrink: 0;
   flex-direction: row;
@@ -118,7 +102,7 @@
   width: 100%;
   height: 530px;
   flex-direction: column;
-  padding: var(--padding-md) var(--padding-xs);
+  padding: var(--padding-md) var(--padding-2xs);
   justify-content: flex-start;
   gap: var(--gap-lg);
 }

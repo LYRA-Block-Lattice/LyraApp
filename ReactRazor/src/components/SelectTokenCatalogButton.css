@@ -26,8 +26,8 @@
 .select-token-catalog-button {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-3xl) var(--padding-2xl);
-  background-color: var(--color-indigo-200);
+  padding: var(--padding-4xl) var(--padding-2xl);
+  background-color: var(--text-primary-dark);
   border-radius: var(--br-sm);
   box-shadow: var(--effect);
   width: 100px;

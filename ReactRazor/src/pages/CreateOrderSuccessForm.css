@@ -44,8 +44,6 @@
   font-family: var(--caption1);
   color: var(--color-white1);
   text-align: center;
-  width: 188px;
-  flex-shrink: 0;
 }
 .createordersuccessform,
 .prepare-sell-order-button1 {
@@ -57,10 +55,9 @@
 .prepare-sell-order-button1 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs);
-  background-color: var(--color-indigo-100);
+  padding: var(--padding-5xs) var(--padding-xl);
+  background-color: var(--secondary);
   border-radius: var(--br-xl);
-  width: 171px;
   height: 40px;
   flex-shrink: 0;
   flex-direction: row;
@@ -71,7 +68,7 @@
   background-color: var(--color-white1);
   width: 100%;
   flex-direction: column;
-  padding: var(--padding-md) var(--padding-2xs);
+  padding: var(--padding-md) var(--padding-3xs);
   justify-content: flex-start;
   gap: var(--gap-lg);
   text-align: center;
