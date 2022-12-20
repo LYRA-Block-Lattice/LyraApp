@@ -35,8 +35,6 @@
   color: var(--color-white1);
   text-align: center;
   display: inline-block;
-  width: 188px;
-  flex-shrink: 0;
 }
 .prepare-sell-order-button15,
 .starttocreateorder {
@@ -48,10 +46,9 @@
 .prepare-sell-order-button15 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs);
-  background-color: var(--color-coral);
+  padding: var(--padding-5xs) var(--padding-3xl);
+  background-color: var(--primary);
   border-radius: var(--br-xl);
-  width: 208px;
   height: 50px;
   flex-shrink: 0;
   flex-direction: row;

@@ -5,10 +5,10 @@
   line-height: 18px;
   font-weight: 500;
   display: inline-block;
-  flex-shrink: 0;
 }
 .view-orders {
-  width: 144px;
+  width: 180px;
+  flex-shrink: 0;
   z-index: 0;
 }
 .utility-button {
@@ -16,11 +16,9 @@
   font-family: var(--caption1);
   color: var(--color-white1);
   text-align: center;
-  width: 113px;
 }
 .frame-div,
 .prepare-sell-order-button {
-  flex-shrink: 0;
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
@@ -28,14 +26,13 @@
 .prepare-sell-order-button {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs);
-  background-color: var(--color-violet);
+  padding: var(--padding-5xs) var(--padding-sm);
+  background-color: var(--tertiary);
   margin: 0 !important;
   position: absolute;
   top: 11px;
   left: 213px;
   border-radius: var(--br-xl);
-  width: 42px;
   height: 30px;
   overflow: hidden;
   align-items: center;
@@ -46,7 +43,8 @@
   background-color: var(--color-white1);
   width: 276px;
   height: 52px;
-  padding: var(--padding-md) var(--padding-sm) var(--padding-md)
+  flex-shrink: 0;
+  padding: var(--padding-md) var(--padding-xs) var(--padding-md)
     var(--padding-md);
   align-items: flex-start;
   justify-content: flex-start;
