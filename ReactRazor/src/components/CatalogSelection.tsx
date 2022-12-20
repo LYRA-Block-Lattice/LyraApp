@@ -13,11 +13,11 @@ const CatalogSelection: FunctionComponent<CatalogSelectionType> = ({
 }) => {
   const [buttons, setButtons] =
   useState<{tokenName: string; disabled: boolean, icon: string}[]>([
-    {tokenName: "Token", disabled: false, icon: "../asserts/icbaselinegeneratingtokens.svg"},
-    {tokenName: "NFT", disabled: false, icon: "../asserts/mapartgallery.svg"},
-    {tokenName: "Fiat", disabled: false, icon: "../asserts/fluentemojihighcontrastdollarbanknote.svg"},
-    {tokenName: "Goods", disabled: false, icon: "../asserts/mditruckdelivery.svg"},
-    {tokenName: "Service", disabled: false, icon: "../asserts/carbonuserservicedesk.svg"},
+      { tokenName: "Token", disabled: false, icon: "_content/ReactRazor/asserts/icbaselinegeneratingtokens.svg"},
+      { tokenName: "NFT", disabled: false, icon: "_content/ReactRazor/asserts/mapartgallery.svg"},
+      { tokenName: "Fiat", disabled: false, icon: "_content/ReactRazor/asserts/fluentemojihighcontrastdollarbanknote.svg"},
+      { tokenName: "Goods", disabled: false, icon: "_content/ReactRazor/asserts/mditruckdelivery.svg"},
+      { tokenName: "Service", disabled: false, icon: "_content/ReactRazor/asserts/carbonuserservicedesk.svg"},
   ]);
 
   const traceToken = useCallback((action: string | undefined, tokenName: string | undefined) => {
