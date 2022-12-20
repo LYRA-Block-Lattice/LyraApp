@@ -18,7 +18,7 @@
 .prepare-sell-order-button10 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-3xs);
+  padding: var(--padding-4xs);
   background-color: var(--color-violet);
   border-radius: var(--br-xl);
   width: 146px;
@@ -55,7 +55,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-xl) var(--padding-xs);
+  padding: var(--padding-xl) var(--padding-2xs);
   align-items: center;
   justify-content: flex-start;
   gap: var(--gap-lg);
@@ -73,7 +73,7 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-xl) var(--padding-xs);
+  padding: var(--padding-xl) var(--padding-2xs);
   align-items: center;
   justify-content: flex-start;
   gap: var(--gap-lg);
@@ -101,7 +101,7 @@
 .prepare-sell-order-button14 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-3xs);
+  padding: var(--padding-4xs);
   background-color: var(--color-coral);
   border-radius: var(--br-xl);
   width: 208px;
@@ -116,7 +116,7 @@
   width: 100%;
   height: 614px;
   flex-direction: column;
-  padding: var(--padding-lg) 2px;
+  padding: var(--padding-md) 2px;
   justify-content: flex-start;
   gap: 45px;
   text-align: center;

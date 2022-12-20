@@ -92,7 +92,7 @@
   width: 100%;
   height: 817px;
   flex-direction: column;
-  padding: var(--padding-xs) var(--padding-md);
+  padding: var(--padding-2xs) var(--padding-sm);
   gap: var(--gap-xl);
   text-align: center;
   font-size: var(--large-title1-size);

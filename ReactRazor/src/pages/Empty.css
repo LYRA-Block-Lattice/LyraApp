@@ -9,7 +9,7 @@
   border-radius: var(--br-2xs);
   width: 180px;
   height: 180px;
-  background-image: url(_content/ReactRazor/asserts/pxl202103092034547561@3x.png);
+  background-image: url(../../public/asserts/pxl202103092034547561@3x.png);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: top;
