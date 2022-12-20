@@ -13,11 +13,11 @@ const CatalogSelection: FunctionComponent<CatalogSelectionType> = ({
 }) => {
   const [buttons, setButtons] =
   useState<{xref: LegacyRef<HTMLButtonElement> | undefined; tokenName: string; disabled: boolean, icon: string}[]>([
-    {xref: useRef(null), tokenName: "Token", disabled: false, icon: "../asserts/icbaselinegeneratingtokens.svg"},
-    {xref: useRef(null), tokenName: "NFT", disabled: false, icon: "../asserts/mapartgallery.svg"},
-    {xref: useRef(null), tokenName: "Fiat", disabled: false, icon: "../asserts/fluentemojihighcontrastdollarbanknote.svg"},
-    {xref: useRef(null), tokenName: "Goods", disabled: false, icon: "../asserts/mditruckdelivery.svg"},
-    {xref: useRef(null), tokenName: "Service", disabled: false, icon: "../asserts/carbonuserservicedesk.svg"},
+      { xref: useRef(null), tokenName: "Token", disabled: false, icon: "_content/ReactRazor/asserts/icbaselinegeneratingtokens.svg"},
+      { xref: useRef(null), tokenName: "NFT", disabled: false, icon: "_content/ReactRazor/asserts/mapartgallery.svg"},
+      { xref: useRef(null), tokenName: "Fiat", disabled: false, icon: "_content/ReactRazor/asserts/fluentemojihighcontrastdollarbanknote.svg"},
+      { xref: useRef(null), tokenName: "Goods", disabled: false, icon: "_content/ReactRazor/asserts/mditruckdelivery.svg"},
+      { xref: useRef(null), tokenName: "Service", disabled: false, icon: "_content/ReactRazor/asserts/carbonuserservicedesk.svg"},
   ]);
 
   const traceToken = useCallback((action: string | undefined, tokenName: string | undefined) => {
