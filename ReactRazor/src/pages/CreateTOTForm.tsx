@@ -15,15 +15,14 @@ const CreateTOTForm: FunctionComponent = () => {
     setSelectTypeOfTOTAnchorEl(null);
   };
 
-  const onSignTradeSecretButtonClick = useCallback(() => {
+  const onPrepareSellOrderButtonClick = useCallback(() => {
     navigate("/signtradesecretform");
   }, [navigate]);
 
   return (
     <form className="createtotform">
       <div className="create-tot">Create TOT</div>
-      <input className="tot-name" type="text" placeholder="TOT Name" />
-      <div className="selecttypeoftot">
+      <div>
         <Button
           sx={{ width: 301 }}
           id="button-Select Type of TOT"
@@ -41,27 +40,24 @@ const CreateTOTForm: FunctionComponent = () => {
           onClose={handleSelectTypeOfTOTClose}
         />
       </div>
-      <input className="tot-supply" type="text" placeholder="Total Supply" />
+      <input className="tot-name" type="text" placeholder="TOT Name" />
       <input
         className="tot-description2"
         type="text"
         placeholder="Public Description, seen by everyone"
       />
+      <input className="tot-name" type="text" placeholder="Total Supply" />
       <button
-        className="sign-trade-secret-button1"
-        onClick={onSignTradeSecretButtonClick}
+        className="prepare-sell-order-button4"
+        onClick={onPrepareSellOrderButtonClick}
       >
-        <div className="frame-div1" />
-        <div className="sign-trade-secretoptional">
-          Sign trade secret(Optional)
-        </div>
+        <div className="utility-button2">Sign trade secret</div>
       </button>
       <div className="note-i-need-to-send-trade-sec">
         Note: I need to send trade secret privately to buyer(s).
       </div>
-      <button className="create-tot-button">
-        <div className="rectangle-div1" />
-        <div className="create-tot1">Create TOT</div>
+      <button className="prepare-sell-order-button5">
+        <div className="secondary-button1">Create TOT</div>
       </button>
     </form>
   );

@@ -15,12 +15,14 @@ import PriceAndCollateralForm from "./pages/PriceAndCollateralForm";
 import SelectTokenNameForm from "./pages/SelectTokenNameForm";
 import CreateTokenForm from "./pages/CreateTokenForm";
 import SelectOfferingAndBiding from "./pages/SelectOfferingAndBiding";
-import SelectTokenTypeToCreateOrder from "./pages/SelectTokenTypeToCreateOrder";
+import StartToCreateOrder from "./pages/StartToCreateOrder";
 import TransactionHistory from "./pages/TransactionHistory";
 import Redir from "./pages/Redir";
 import Market from "./pages/Market";
 import CreateWallet from "./pages/CreateWallet";
 import OpenWallet from "./pages/OpenWallet";
+import IconParkSolidworker from "./pages/IconParkSolidworker";
+import OldV1UI from "./pages/OldV1UI";
 import RedirBlazor from "./pages/RedirBlazor";
 import { useEffect } from "react";
 
@@ -80,7 +82,7 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/selecttokenform":
+      case "/selecttokennameform":
         title = "";
         metaDescription = "";
         break;
@@ -92,7 +94,7 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/selecttokentypetocreateorder":
+      case "/starttocreateorder":
         title = "";
         metaDescription = "";
         break;
@@ -113,6 +115,10 @@ function App() {
         metaDescription = "";
         break;
       case "/open-wallet":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/iconparksolidworker":
         title = "";
         metaDescription = "";
         break;
@@ -164,7 +170,7 @@ function App() {
         element={<PriceAndCollateralForm />}
       />
 
-      <Route path="/selecttokenform" element={<SelectTokenNameForm />} />
+      <Route path="/selecttokennameform" element={<SelectTokenNameForm />} />
 
       <Route path="/createtokenform" element={<CreateTokenForm />} />
 
@@ -173,10 +179,7 @@ function App() {
         element={<SelectOfferingAndBiding />}
       />
 
-      <Route
-        path="/selecttokentypetocreateorder"
-        element={<SelectTokenTypeToCreateOrder />}
-      />
+      <Route path="/starttocreateorder" element={<StartToCreateOrder />} />
 
       <Route path="/transactionhistory" element={<TransactionHistory />} />
 
@@ -186,7 +189,11 @@ function App() {
 
       <Route path="/create-wallet" element={<CreateWallet />} />
 
-      <Route path="/open-wallet" element={<OpenWallet />} />      
+      <Route path="/open-wallet" element={<OpenWallet />} />
+
+      <Route path="/iconparksolidworker" element={<IconParkSolidworker />} />
+
+      <Route path="/oldv1ui" element={<OldV1UI />} />
     </Routes>
   );
 }

@@ -1,0 +1,38 @@
+.icbaseline-generating-tokens-icon {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.token {
+  position: relative;
+  font-size: var(--font-size-2xl);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  display: inline-block;
+  font-family: var(--caption1);
+  color: var(--color-white1);
+  text-align: center;
+  width: 90px;
+}
+.frame-div7,
+.select-token-catalog-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.select-token-catalog-button {
+  cursor: pointer;
+  border: 0;
+  padding: var(--padding-3xl) var(--padding-2xl);
+  background-color: var(--color-indigo-200);
+  border-radius: var(--br-sm);
+  box-shadow: var(--effect);
+  width: 100px;
+  height: 90px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  gap: var(--gap-md);
+}

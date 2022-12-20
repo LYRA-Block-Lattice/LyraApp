@@ -1,42 +1,10 @@
-.place-order,
 .preview-sell-order {
+  position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
-  display: inline-block;
-}
-.preview-sell-order {
-  position: absolute;
-  top: calc(50% - 280.5px);
-  left: calc(50% - 148.5px);
   font-weight: 500;
+  display: inline-block;
   width: 296px;
-}
-.place-order {
-  position: relative;
-  font-size: var(--font-size-2xl);
-  font-family: var(--caption1);
-  color: var(--color-white1);
-  text-align: center;
-  width: 188px;
-  flex-shrink: 0;
-}
-.prepare-sell-order-button {
-  cursor: pointer;
-  border: 1px solid var(--black-000000100);
-  padding: var(--padding-xs);
-  background-color: var(--color-gray-500);
-  position: absolute;
-  top: 529px;
-  left: 63px;
-  border-radius: var(--br-md);
-  box-sizing: border-box;
-  width: 208px;
-  height: 41px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
 }
 .ill-sell-count {
   margin-block-start: 0;
@@ -46,9 +14,7 @@
   margin: 0;
 }
 .ill-sell-count-type-of-t {
-  position: absolute;
-  top: 65px;
-  left: 23px;
+  position: relative;
   font-size: var(--font-size-sm);
   letter-spacing: 0.41px;
   line-height: 18px;
@@ -60,31 +26,61 @@
   background-color: var(--color-beige);
   font-family: var(--caption1);
   font-size: var(--body-s-size);
-  position: absolute;
-  top: 153px;
-  left: 18px;
   border-radius: var(--br-sm);
   width: 301px;
   height: 124px;
+  flex-shrink: 0;
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-xs);
+  padding: var(--padding-3xs);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.confirm-before-create-order {
-  position: absolute;
-  top: 473px;
-  left: 33px;
+.confirm-before-create-order,
+.primary-button {
+  position: relative;
+}
+.primary-button {
+  font-size: var(--font-size-2xl);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 500;
+  font-family: var(--caption1);
+  color: var(--color-white1);
+  text-align: center;
+  display: inline-block;
+  width: 188px;
+  flex-shrink: 0;
+}
+.prepare-sell-order-button3,
+.previewsellorderform {
+  overflow: hidden;
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+}
+.prepare-sell-order-button3 {
+  cursor: pointer;
+  border: 0;
+  padding: var(--padding-3xs);
+  background-color: var(--color-coral);
+  border-radius: var(--br-xl);
+  width: 208px;
+  height: 50px;
+  flex-shrink: 0;
+  flex-direction: row;
+  justify-content: center;
 }
 .previewsellorderform {
   position: relative;
   background-color: var(--color-white1);
   width: 100%;
-  height: 599px;
-  overflow: hidden;
+  flex-direction: column;
+  padding: var(--padding-lg) var(--padding-md);
+  justify-content: flex-start;
+  gap: var(--gap-lg);
   text-align: left;
   font-size: var(--font-size-3xl);
   color: var(--black-000000100);
