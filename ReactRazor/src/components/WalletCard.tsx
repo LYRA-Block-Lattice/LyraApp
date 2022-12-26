@@ -39,7 +39,7 @@ const WalletCard: FunctionComponent = () => {
 
   return (
     <div className="maps-parent">
-      <img className="maps-icon" alt="" src="../asserts/maps.svg" />
+      <img className="maps-icon" alt="" src="_content/ReactRazor/asserts/maps.svg" />
       <a className="balance-display-zone">
         <b className="lyrbalance">120,000</b>
         <b className="lyrlabel">LYR</b>
