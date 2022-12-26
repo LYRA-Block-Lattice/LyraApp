@@ -76,7 +76,7 @@ const Market: FunctionComponent = () => {
         <div className="walletcard">
           <div className="mask-group">
             <div className="maps-parent">
-              <img className="maps-icon" alt="" src="../asserts/maps.svg" />
+              <img className="maps-icon" alt="" src="_content/ReactRazor/asserts/maps.svg" />
               <a className="balance-display-zone">
                 <b className="lyrbalance">120,000</b>
                 <b className="lyrlabel">LYR</b>
@@ -139,7 +139,7 @@ const Market: FunctionComponent = () => {
               <img
                 className="qrcode-icon"
                 alt=""
-                src="../asserts/qrcode-icon.svg"
+                src="_content/ReactRazor/asserts/qrcode-icon.svg"
               />
             </div>
             <div className="wallet-decoration">LYRA WALLET</div>
@@ -154,7 +154,7 @@ const Market: FunctionComponent = () => {
             <img
               className="home-icon-interlocution"
               alt=""
-              src="../asserts/home--icon--interlocution.svg"
+              src="_content/ReactRazor/asserts/home--icon--interlocution.svg"
             />
             <div className="ranking">DAO</div>
           </button>
@@ -162,7 +162,7 @@ const Market: FunctionComponent = () => {
             <img
               className="home-icon-interlocution"
               alt=""
-              src="../asserts/home--icon--interlocution1.svg"
+              src="_content/ReactRazor/asserts/home--icon--interlocution1.svg"
             />
             <div className="ranking">OTC</div>
           </button>
@@ -170,7 +170,7 @@ const Market: FunctionComponent = () => {
             <img
               className="home-icon-interlocution"
               alt=""
-              src="../asserts/home--icon--interlocution2.svg"
+              src="_content/ReactRazor/asserts/home--icon--interlocution2.svg"
             />
             <div className="ranking">Invest</div>
           </button>
@@ -178,7 +178,7 @@ const Market: FunctionComponent = () => {
             <img
               className="home-icon-interlocution"
               alt=""
-              src="../asserts/home--icon--interlocution3.svg"
+              src="_content/ReactRazor/asserts/home--icon--interlocution3.svg"
             />
             <div className="ranking">Swap</div>
           </button>
@@ -190,7 +190,7 @@ const Market: FunctionComponent = () => {
             <img
               className="home-icon-interlocution"
               alt=""
-              src="../asserts/home--icon--interlocution4.svg"
+              src="_content/ReactRazor/asserts/home--icon--interlocution4.svg"
             />
             <div className="ranking">DEX</div>
           </button>
@@ -198,7 +198,7 @@ const Market: FunctionComponent = () => {
             <img
               className="home-icon-interlocution"
               alt=""
-              src="../asserts/home--icon--interlocution5.svg"
+              src="_content/ReactRazor/asserts/home--icon--interlocution5.svg"
             />
             <div className="ranking">NFT</div>
           </button>
@@ -206,7 +206,7 @@ const Market: FunctionComponent = () => {
             <img
               className="home-icon-interlocution"
               alt=""
-              src="../asserts/home--icon--interlocution6.svg"
+              src="_content/ReactRazor/asserts/home--icon--interlocution6.svg"
             />
             <div className="ranking">Mint</div>
           </button>
@@ -214,7 +214,7 @@ const Market: FunctionComponent = () => {
             <img
               className="home-icon-interlocution"
               alt=""
-              src="../asserts/home--icon--interlocution7.svg"
+              src="_content/ReactRazor/asserts/home--icon--interlocution7.svg"
             />
             <div className="ranking">Staking</div>
           </button>
@@ -227,7 +227,7 @@ const Market: FunctionComponent = () => {
             buyTVAtSonyStore="Receive"
             component="From Harry James"
             component1="+ 1000 LYR"
-            path="../asserts/path3.svg"
+            path="_content/ReactRazor/asserts/path3.svg"
           />
           <TxInfoBar
             componentWidth="333px"
@@ -236,7 +236,7 @@ const Market: FunctionComponent = () => {
             component1="- 100 LYR"
             componentColor="#d15252"
             componentFontWeight="600"
-            path="../asserts/path4.svg"
+            path="_content/ReactRazor/asserts/path4.svg"
             componentTop="27px"
             componentRight="8px"
           />
