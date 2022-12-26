@@ -51,7 +51,7 @@
   border: 0;
   padding: 0;
   background-color: transparent;
-  top: calc(50% - 22.5px);
+  top: calc(50% - 21px);
   left: 30%;
   font-size: var(--font-size-xl);
   letter-spacing: 3.5px;
@@ -59,12 +59,12 @@
   color: var(--color-white1);
 }
 .nft-label {
-  top: calc(50% + 7.5px);
+  top: calc(50% + 9px);
   left: 32.5%;
   font-size: var(--font-size-4xs);
   color: var(--color-gray-200);
 }
-.nft-count-parent {
+.go-nft-button {
   cursor: pointer;
   border: 0;
   padding: 0;
@@ -74,14 +74,14 @@
   height: 60px;
   flex-shrink: 0;
 }
-.nft-count1,
-.nft-label1 {
+.tot-count,
+.tot-label {
   position: relative;
   display: inline-block;
   font-family: var(--font-sf-pro-text);
   text-align: center;
 }
-.nft-count1 {
+.tot-count {
   cursor: pointer;
   border: 0;
   padding: 0;
@@ -91,11 +91,11 @@
   font-weight: 600;
   color: var(--color-white1);
 }
-.nft-label1 {
+.tot-label {
   font-size: var(--font-size-4xs);
   color: var(--color-gray-200);
 }
-.nft-count-group {
+.go-tot-button {
   cursor: pointer;
   border: 0;
   padding: 0;
@@ -117,13 +117,12 @@
 .token-lists {
   margin: 0 !important;
   position: absolute;
-  top: calc(50% + 51px);
-  left: calc(50% - 102.5px);
-  height: 63px;
+  top: calc(50% + 45px);
+  left: calc(50% - 97.5px);
   overflow: hidden;
   align-items: center;
   justify-content: center;
-  gap: 19px;
+  gap: var(--gap-lg);
   z-index: 2;
 }
 .maps-parent {

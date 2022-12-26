@@ -10,31 +10,31 @@ const Market: FunctionComponent = () => {
     navigate("/redir");
   }, [navigate]);
 
-  const onFrameButtonClick = useCallback(() => {
+  const onGoNFTButtonClick = useCallback(() => {
     navigate("/redir");
   }, [navigate]);
 
-  const onNFTCount1Click = useCallback(() => {
+  const onTOTCountClick = useCallback(() => {
     navigate("/redir");
   }, [navigate]);
 
-  const onFrameButton1Click = useCallback(() => {
+  const onGoTOTButtonClick = useCallback(() => {
     navigate("/redir");
   }, [navigate]);
 
-  const onNFTCount2Click = useCallback(() => {
+  const onSellingCountClick = useCallback(() => {
     navigate("/redir");
   }, [navigate]);
 
-  const onFrameButton2Click = useCallback(() => {
+  const onGoSellingButtonClick = useCallback(() => {
     navigate("/viewordersform");
   }, [navigate]);
 
-  const onNFTCount3Click = useCallback(() => {
+  const onBuyingCountClick = useCallback(() => {
     navigate("/redir");
   }, [navigate]);
 
-  const onFrameButton3Click = useCallback(() => {
+  const onGoBuyingButtonClick = useCallback(() => {
     navigate("/viewtradesform");
   }, [navigate]);
 
@@ -84,41 +84,35 @@ const Market: FunctionComponent = () => {
                 <b className="lyrlabel">USDT</b>
               </a>
               <div className="token-lists">
-                <button
-                  className="nft-count-parent"
-                  onClick={onFrameButtonClick}
-                >
+                <button className="go-nft-button" onClick={onGoNFTButtonClick}>
                   <button className="nft-count" onClick={onNFTCountClick}>
                     12
                   </button>
                   <b className="nft-label">NFT</b>
                 </button>
-                <button
-                  className="nft-count-group"
-                  onClick={onFrameButton1Click}
-                >
-                  <button className="nft-count1" onClick={onNFTCount1Click}>
+                <button className="go-tot-button" onClick={onGoTOTButtonClick}>
+                  <button className="tot-count" onClick={onTOTCountClick}>
                     3
                   </button>
-                  <b className="nft-label1">TOT</b>
+                  <b className="tot-label">TOT</b>
                 </button>
                 <button
-                  className="nft-count-group"
-                  onClick={onFrameButton2Click}
+                  className="go-tot-button"
+                  onClick={onGoSellingButtonClick}
                 >
-                  <button className="nft-count1" onClick={onNFTCount2Click}>
+                  <button className="tot-count" onClick={onSellingCountClick}>
                     0
                   </button>
-                  <b className="nft-label1">Selling</b>
+                  <b className="tot-label">Selling</b>
                 </button>
                 <button
-                  className="nft-count-group"
-                  onClick={onFrameButton3Click}
+                  className="go-tot-button"
+                  onClick={onGoBuyingButtonClick}
                 >
-                  <button className="nft-count1" onClick={onNFTCount3Click}>
+                  <button className="tot-count" onClick={onBuyingCountClick}>
                     0
                   </button>
-                  <b className="nft-label1">Buying</b>
+                  <b className="tot-label">Buying</b>
                 </button>
               </div>
             </div>
