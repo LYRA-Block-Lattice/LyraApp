@@ -7,11 +7,11 @@ const TransactionHistory: FunctionComponent = () => {
       <div className="bars-search-1-copy-5">
         <div className="search-field" />
         <div className="placeholder-label">Search</div>
-        <img className="iconback" alt="" src="../asserts/iconback.svg" />
+        <img className="iconback" alt="" src="_content/ReactRazor/asserts/iconback.svg" />
         <img
           className="group-3-copy"
           alt=""
-          src="../asserts/group-3-copy.svg"
+          src="_content/ReactRazor/asserts/group-3-copy.svg"
         />
       </div>
       <div className="group">
@@ -20,7 +20,7 @@ const TransactionHistory: FunctionComponent = () => {
         <img
           className="iconglyphstar-copy-4"
           alt=""
-          src="../asserts/iconglyphstar-copy-4.svg"
+          src="_content/ReactRazor/asserts/iconglyphstar-copy-4.svg"
         />
       </div>
       <div className="group-4-copy">
@@ -30,14 +30,14 @@ const TransactionHistory: FunctionComponent = () => {
           <img
             className="iconglyphstar-copy-41"
             alt=""
-            src="../asserts/iconglyphstar-copy-41.svg"
+            src="_content/ReactRazor/asserts/iconglyphstar-copy-41.svg"
           />
         </div>
       </div>
       <img
         className="transactionhistory-child"
         alt=""
-        src="../asserts/group-5.svg"
+        src="_content/ReactRazor/asserts/group-5.svg"
       />
       <div className="all-transactions">All transactions</div>
       <div className="bars-navigation-bar-light">
@@ -64,7 +64,7 @@ const TransactionHistory: FunctionComponent = () => {
             <img
               className="iconglyphstar"
               alt=""
-              src="../asserts/iconglyphstar.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar.svg"
             />
           </div>
           <div className="parent">
@@ -72,7 +72,7 @@ const TransactionHistory: FunctionComponent = () => {
             <img
               className="iconglyphstar-copy"
               alt=""
-              src="../asserts/iconglyphstar-copy.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar-copy.svg"
             />
           </div>
           <div className="container">
@@ -80,14 +80,14 @@ const TransactionHistory: FunctionComponent = () => {
             <img
               className="iconglyphstar-copy-2"
               alt=""
-              src="../asserts/iconglyphstar-copy-2.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar-copy-2.svg"
             />
           </div>
-          <img className="path-icon" alt="" src="../asserts/path.svg" />
+          <img className="path-icon" alt="" src="_content/ReactRazor/asserts/path.svg" />
           <img
             className="receive-icon"
             alt=""
-            src="../asserts/receive-icon.svg"
+            src="_content/ReactRazor/asserts/receive-icon.svg"
           />
         </div>
         <div className="receivedetailcard">
@@ -101,7 +101,7 @@ const TransactionHistory: FunctionComponent = () => {
             <img
               className="iconglyphstar"
               alt=""
-              src="../asserts/iconglyphstar.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar.svg"
             />
           </div>
           <div className="parent">
@@ -109,7 +109,7 @@ const TransactionHistory: FunctionComponent = () => {
             <img
               className="iconglyphstar-copy"
               alt=""
-              src="../asserts/iconglyphstar-copy.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar-copy.svg"
             />
           </div>
           <div className="container">
@@ -117,14 +117,14 @@ const TransactionHistory: FunctionComponent = () => {
             <img
               className="iconglyphstar-copy-2"
               alt=""
-              src="../asserts/iconglyphstar-copy-2.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar-copy-2.svg"
             />
           </div>
-          <img className="path-icon" alt="" src="../asserts/path.svg" />
+          <img className="path-icon" alt="" src="_content/ReactRazor/asserts/path.svg" />
           <img
             className="senddetailcard-child"
             alt=""
-            src="../asserts/group-4.svg"
+            src="_content/ReactRazor/asserts/group-4.svg"
           />
         </div>
         <div className="receivedetailcard">
@@ -138,7 +138,7 @@ const TransactionHistory: FunctionComponent = () => {
             <img
               className="iconglyphstar"
               alt=""
-              src="../asserts/iconglyphstar.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar.svg"
             />
           </div>
           <div className="parent">
@@ -146,7 +146,7 @@ const TransactionHistory: FunctionComponent = () => {
             <img
               className="iconglyphstar-copy"
               alt=""
-              src="../asserts/iconglyphstar-copy.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar-copy.svg"
             />
           </div>
           <div className="container">
@@ -154,14 +154,14 @@ const TransactionHistory: FunctionComponent = () => {
             <img
               className="iconglyphstar-copy-2"
               alt=""
-              src="../asserts/iconglyphstar-copy-2.svg"
+              src="_content/ReactRazor/asserts/iconglyphstar-copy-2.svg"
             />
           </div>
-          <img className="path-icon" alt="" src="../asserts/path.svg" />
+          <img className="path-icon" alt="" src="_content/ReactRazor/asserts/path.svg" />
           <img
             className="receive-icon"
             alt=""
-            src="../asserts/receive-icon.svg"
+            src="_content/ReactRazor/asserts/receive-icon.svg"
           />
         </div>
       </div>
