@@ -43,7 +43,7 @@
   position: relative;
 }
 .primary-button {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
@@ -77,9 +77,9 @@
   flex-direction: column;
   padding: var(--padding-md) var(--padding-xs);
   justify-content: flex-start;
-  gap: var(--gap-lg);
+  gap: var(--gap-md);
   text-align: left;
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
   color: var(--black-000000100);
   font-family: var(--caption1);
 }

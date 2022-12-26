@@ -70,9 +70,9 @@
   flex-direction: column;
   padding: var(--padding-md) var(--padding-2xs);
   justify-content: flex-start;
-  gap: var(--gap-lg);
+  gap: var(--gap-md);
   text-align: left;
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
   color: var(--black-000000100);
   font-family: var(--caption1);
 }

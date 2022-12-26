@@ -7,7 +7,7 @@
 }
 .token {
   position: relative;
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
@@ -16,8 +16,8 @@
   text-align: center;
   width: 90px;
 }
-.frame-div7,
-.select-token-catalog-button {
+.select-token-catalog-button,
+.token-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,12 +27,12 @@
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xl) var(--padding-2xl);
-  background-color: var(--text-primary-dark);
+  background-color: var(--tertiary);
   border-radius: var(--br-sm);
-  box-shadow: var(--effect);
+  box-shadow: 0 4px 23px rgba(0, 0, 0, 0.12);
   width: 100px;
   height: 90px;
   flex-shrink: 0;
   box-sizing: border-box;
-  gap: var(--gap-md);
+  gap: var(--gap-sm);
 }

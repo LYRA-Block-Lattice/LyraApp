@@ -2,7 +2,6 @@ import { FunctionComponent, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import WalletCard from "../components/WalletCard";
 import EntryButton from "../components/EntryButton";
-import TxInfoBar from "../components/TxInfoBar";
 import "./Market.css";
 
 const Market: FunctionComponent = () => {
@@ -75,25 +74,28 @@ const Market: FunctionComponent = () => {
               <span className="span">USDT</span>
             </div>
             <div className="token-lists">
-              <div className="group-div9">
+              <div className="nft-label-parent">
                 <b className="nft-label">NFT</b>
                 <button className="nft-count" onClick={onNFTCountClick}>
                   12
                 </button>
               </div>
-              <div className="group-div10">
+              <div className="tot-label-parent">
                 <b className="nft-label">TOT</b>
                 <button className="tot-count" onClick={onTOTCountClick}>
                   3
                 </button>
               </div>
-              <button className="group-button" onClick={onGroupButtonClick}>
+              <button
+                className="orders-label-parent"
+                onClick={onGroupButtonClick}
+              >
                 <b className="orders-label">Selling</b>
                 <button className="orders-count" onClick={onOrdersCountClick}>
                   0
                 </button>
               </button>
-              <div className="group-div11">
+              <div className="trades-label-parent">
                 <b className="nft-label">Buying</b>
                 <button className="trades-count" onClick={onTradesCountClick}>
                   0
@@ -111,7 +113,7 @@ const Market: FunctionComponent = () => {
               <img
                 className="qrcode-icon"
                 alt=""
-                src="_content/ReactRazor/asserts/qrcode-icon.svg"
+                src="../asserts/qrcode-icon.svg"
               />
             </div>
             <div className="wallet-decoration">LYRA WALLET</div>
@@ -121,129 +123,82 @@ const Market: FunctionComponent = () => {
         </div>
       </div>
       <div className="iconssection">
-        <div className="frame-div4">
+        <div className="dao-button-parent">
           <EntryButton
-            homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution.svg"
+            homeIconInterlocution="../asserts/home--icon--interlocution.svg"
             ranking="DAO"
           />
           <EntryButton
-            homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution1.svg"
+            homeIconInterlocution="../asserts/home--icon--interlocution1.svg"
             ranking="OTC"
           />
           <EntryButton
-            homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution2.svg"
+            homeIconInterlocution="../asserts/home--icon--interlocution2.svg"
             ranking="Invest"
           />
           <EntryButton
-            homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution3.svg"
+            homeIconInterlocution="../asserts/home--icon--interlocution3.svg"
             ranking="Swap"
           />
-          <EntryButton
-            homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution4.svg"
-            ranking="DEX"
-          />
-          <EntryButton
-            homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution5.svg"
-            ranking="NFT"
-          />
-          <EntryButton
-            homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution6.svg"
-            ranking="Mint"
-          />
-          <EntryButton
-            homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution7.svg"
-            ranking="Staking"
-          />
+        </div>
+      </div>
+      <div className="iconssection">
+        <div className="dao-button-parent">
+          <button className="dex-button">
+            <img
+              className="home-icon-interlocution"
+              alt=""
+              src="../asserts/home--icon--interlocution4.svg"
+            />
+            <div className="ranking">DEX</div>
+          </button>
+          <button className="dex-button">
+            <img
+              className="home-icon-interlocution"
+              alt=""
+              src="../asserts/home--icon--interlocution5.svg"
+            />
+            <div className="ranking">NFT</div>
+          </button>
+          <button className="dex-button">
+            <img
+              className="home-icon-interlocution"
+              alt=""
+              src="../asserts/home--icon--interlocution6.svg"
+            />
+            <div className="ranking">Mint</div>
+          </button>
+          <button className="dex-button">
+            <img
+              className="home-icon-interlocution"
+              alt=""
+              src="../asserts/home--icon--interlocution7.svg"
+            />
+            <div className="ranking">Staking</div>
+          </button>
         </div>
       </div>
       <div className="lasttransactions">
         <div className="recent-transaction">Recent transaction</div>
-        <div className="frame-div5">
-          <TxInfoBar
-            buyTVAtSonyStore="Receive"
-            component="From Harry James"
-            component1="+ 1000 LYR"
-            path="_content/ReactRazor/asserts/path3.svg"
-          />
-          <TxInfoBar
-            componentZIndex="1"
-            buyTVAtSonyStore="Send"
-            component="From USD wallet"
-            component1="- 100 LYR"
-            componentColor="#d15252"
-            componentFontWeight="600"
-            path="_content/ReactRazor/asserts/path4.svg"
-          />
-          <div className="div11">10 Min ago</div>
-          <div className="div12">10 Min ago</div>
+        <div className="frame-div">
+          <div className="div11">
+            <div className="buy-tv-at-sony-store">Receive</div>
+            <div className="div12">From Harry James</div>
+            <b className="b">+ 1000 LYR</b>
+            <img className="path-icon3" alt="" src="../asserts/path3.svg" />
+            <div className="div13">10 Min ago</div>
+          </div>
+          <div className="copy">
+            <div className="buy-tv-at-sony-store1">Send</div>
+            <div className="div14">From USD wallet</div>
+            <div className="div15">- 100 LYR</div>
+            <img className="path-icon4" alt="" src="../asserts/path4.svg" />
+            <div className="div16">10 Min ago</div>
+          </div>
         </div>
         <button className="more" onClick={onMoreClick}>
           More
         </button>
-      </div>
-      <div className="dealsection">
-        <div className="rectangle7" />
-        <b className="yellow-sofa">Yellow sofa</b>
-        <div className="div13">{`$600 `}</div>
-        <div className="group-div12">
-          <div className="div14">$1.200</div>
-          <img
-            className="iconglyphstar-copy-23"
-            alt=""
-            src="_content/ReactRazor/asserts/iconglyphstar-copy-23.svg"
-          />
-        </div>
-        <div className="div15">4.8</div>
-        <div className="div16">(849)</div>
-        <img
-          className="iconglyphstar3"
-          alt=""
-          src="_content/ReactRazor/asserts/iconglyphstar3.svg"
-        />
-        <div className="end-in-12001">End in 1:20:01</div>
-        <img
-          className="iconglyphstar-copy3"
-          alt=""
-          src="_content/ReactRazor/asserts/iconglyphstar-copy3.svg"
-        />
-        <div className="group-div13">
-          <img className="path-5-icon" alt="" src="_content/ReactRazor/asserts/path-5.svg" />
-          <div className="rectangle8" />
-          <div className="div17">New</div>
-        </div>
-        <div className="rectangle9" />
-        <b className="blue-sofa">Blue sofa</b>
-        <div className="div18">{`$750 `}</div>
-        <div className="group-div14">
-          <div className="div19">$1.500</div>
-          <img
-            className="iconglyphstar-copy-23"
-            alt=""
-            src="_content/ReactRazor/asserts/iconglyphstar-copy-24.svg"
-          />
-        </div>
-        <div className="div20">4.8</div>
-        <div className="div21">(849)</div>
-        <img
-          className="iconglyphstar4"
-          alt=""
-          src="_content/ReactRazor/asserts/iconglyphstar4.svg"
-        />
-        <div className="end-in-120011">End in 1:20:01</div>
-        <img
-          className="iconglyphstar-copy4"
-          alt=""
-          src="_content/ReactRazor/asserts/iconglyphstar-copy4.svg"
-        />
-        <div className="group-div15">
-          <img className="path-5-icon" alt="" src="_content/ReactRazor/asserts/path-51.svg" />
-          <div className="rectangle8" />
-          <div className="div17">New</div>
-        </div>
-        <b className="deal-of-the-day">Deal of the day</b>
-        <b className="see-all">See all</b>
-        <img className="frame-icon" alt="" src="_content/ReactRazor/asserts/frame.svg" />
-        <img className="frame-icon1" alt="" src="_content/ReactRazor/asserts/frame1.svg" />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 .price-and-collateral {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
   font-weight: 500;
   width: 296px;
 }
@@ -15,7 +15,7 @@
   width: 292px;
 }
 .primary-button1 {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   font-weight: 500;
   font-family: var(--caption1);
   color: var(--color-white1);
@@ -46,7 +46,7 @@
   flex-direction: column;
   padding: var(--padding-md) 0;
   justify-content: flex-start;
-  gap: var(--gap-lg);
+  gap: var(--gap-md);
   text-align: left;
   font-size: var(--font-size-sm);
   color: var(--black-000000100);

@@ -17,8 +17,8 @@
   color: var(--color-white1);
   text-align: center;
 }
-.frame-div,
-.prepare-sell-order-button {
+.prepare-sell-order-button,
+.view-orders-parent {
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
@@ -39,7 +39,7 @@
   justify-content: center;
   z-index: 1;
 }
-.frame-div {
+.view-orders-parent {
   background-color: var(--color-white1);
   width: 276px;
   height: 52px;
@@ -51,7 +51,7 @@
   position: relative;
   gap: 114px;
   text-align: left;
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
 }
 .biding,
 .div,

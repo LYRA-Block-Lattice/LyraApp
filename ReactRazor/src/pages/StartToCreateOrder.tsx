@@ -32,13 +32,13 @@ const StartToCreateOrder: FunctionComponent = () => {
 
   return (
     <div className="starttocreateorder">
-      <div className="chose-the-catalog">Chose the catalog</div>
+      <div className="choose-the-catalog">Choose the catalog</div>
       <div className="catalog-section">
       <Xwrapper>
              <Xarrow showXarrow={start != null && end != null} start={`Sell-${start}`} end={`Get-${end}`}/>
         
         <CatalogSelection iWantTo="Sell" tokenActionClicked={onTokenAction}/>
-        <div className="line-div" />
+        <div className="catalog-section-child" />
         <CatalogSelection iWantTo="Get" tokenActionClicked={onTokenAction}/>
         </Xwrapper>
       </div>

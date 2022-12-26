@@ -145,7 +145,7 @@
   font-size: var(--caption1-size);
   color: var(--color-gray-11);
 }
-.group-icon {
+.transactionhistory-child {
   position: absolute;
   top: 177px;
   left: 323px;
@@ -251,7 +251,7 @@
   left: 0;
   border-radius: var(--br-sm);
   background-color: var(--color-white1);
-  box-shadow: var(--effect);
+  box-shadow: 0 4px 23px rgba(0, 0, 0, 0.12);
 }
 .to-harry-james,
 .transfer-money {
@@ -290,12 +290,8 @@
   font-weight: 500;
   display: inline-block;
 }
-.group-div,
 .iconglyphstar {
   position: absolute;
-  overflow: hidden;
-}
-.iconglyphstar {
   height: 88.89%;
   width: 17.78%;
   top: 5.56%;
@@ -303,15 +299,18 @@
   bottom: 5.56%;
   left: 0;
   max-width: 100%;
+  overflow: hidden;
   max-height: 100%;
 }
-.group-div {
+.successful-parent {
+  position: absolute;
   height: 15.79%;
   width: 26.24%;
   top: 70.18%;
   right: 69.1%;
   bottom: 14.04%;
   left: 4.66%;
+  overflow: hidden;
 }
 .div5 {
   position: absolute;
@@ -322,12 +321,8 @@
   font-weight: 500;
   display: inline-block;
 }
-.group-div1,
 .iconglyphstar-copy {
   position: absolute;
-  overflow: hidden;
-}
-.iconglyphstar-copy {
   height: 88.89%;
   width: 17.02%;
   top: 5.56%;
@@ -335,18 +330,23 @@
   bottom: 5.56%;
   left: 0;
   max-width: 100%;
+  overflow: hidden;
   max-height: 100%;
 }
-.group-div1 {
+.div6,
+.parent {
+  position: absolute;
+}
+.parent {
   height: 15.79%;
   width: 27.41%;
   top: 70.18%;
   right: 33.24%;
   bottom: 14.04%;
   left: 39.36%;
+  overflow: hidden;
 }
 .div6 {
-  position: absolute;
   top: calc(50% - 9px);
   left: 39.29%;
   letter-spacing: 0.41px;
@@ -366,7 +366,7 @@
   overflow: hidden;
   max-height: 100%;
 }
-.group-div2,
+.container,
 .path-icon,
 .receive-icon {
   position: absolute;
@@ -403,7 +403,7 @@
   height: 114px;
   flex-shrink: 0;
 }
-.group-icon1 {
+.senddetailcard-child {
   position: absolute;
   height: 31.58%;
   width: 10.37%;
@@ -415,7 +415,7 @@
   overflow: hidden;
   max-height: 100%;
 }
-.frame-div3 {
+.receivedetailcard-parent {
   position: absolute;
   top: 222px;
   left: 16px;
@@ -423,8 +423,8 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: var(--gap-md);
-  font-size: var(--other-m1-size);
+  gap: var(--gap-sm);
+  font-size: var(--regular-body-size);
 }
 .transactionhistory {
   position: relative;

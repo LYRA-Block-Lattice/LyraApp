@@ -20,11 +20,11 @@ const EntryButton: FunctionComponent<EntryButtonType> = ({
   return (
     <button className="dao-button" onClick={onDaoButtonClick}>
       <img
-        className="home-icon-interlocution"
+        className="home-icon-interlocution4"
         alt=""
         src={homeIconInterlocution}
       />
-      <div className="ranking">{ranking}</div>
+      <div className="ranking4">{ranking}</div>
     </button>
   );
 };

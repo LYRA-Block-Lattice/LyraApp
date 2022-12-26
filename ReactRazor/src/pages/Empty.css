@@ -6,7 +6,7 @@
   position: absolute;
   top: 110px;
   left: 103px;
-  border-radius: var(--br-2xs);
+  border-radius: 4px;
   width: 180px;
   height: 180px;
   background-image: url(../../public/asserts/pxl202103092034547561@3x.png);

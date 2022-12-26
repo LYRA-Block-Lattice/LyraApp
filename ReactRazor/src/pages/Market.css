@@ -7,7 +7,7 @@
   margin: 0 !important;
   top: 40px;
   left: 49px;
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   font-family: var(--font-sf-pro-text);
   color: var(--color-white1);
   text-align: left;
@@ -32,7 +32,7 @@
   z-index: 2;
 }
 .span2 {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
 }
 .aux-balance,
 .nft-count,
@@ -73,7 +73,7 @@
   color: var(--color-white1);
   text-align: left;
 }
-.group-div9 {
+.nft-label-parent {
   position: relative;
   width: 30.38px;
   height: 39px;
@@ -96,7 +96,7 @@
   text-align: left;
   display: inline-block;
 }
-.group-div10 {
+.tot-label-parent {
   position: relative;
   width: 29.16px;
   height: 39px;
@@ -123,15 +123,15 @@
   font-weight: 600;
   color: var(--color-white1);
 }
-.group-button,
 .orders-count,
+.orders-label-parent,
 .trades-count {
   cursor: pointer;
   border: 0;
   padding: 0;
   background-color: transparent;
 }
-.group-button {
+.orders-label-parent {
   position: relative;
   width: 51.03px;
   height: 40px;
@@ -150,7 +150,7 @@
   text-align: left;
   display: inline-block;
 }
-.group-div11 {
+.trades-label-parent {
   position: relative;
   width: 54.79px;
   height: 39px;
@@ -168,7 +168,7 @@
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: var(--gap-xl);
+  gap: var(--gap-lg);
   z-index: 4;
   font-size: var(--caption1-size);
   color: var(--color-gray-300);
@@ -232,7 +232,7 @@
   right: 95.92%;
   bottom: 83.59%;
   left: 2.82%;
-  border-radius: var(--br-3xs);
+  border-radius: var(--br-2xs);
   background-color: var(--color-white1);
   z-index: 7;
 }
@@ -263,75 +263,198 @@
   justify-content: center;
 }
 .bannersection,
-.frame-div4,
-.iconssection {
-  align-self: stretch;
+.dao-button-parent {
+  background-color: var(--color-white1);
+  overflow: hidden;
   display: flex;
+  flex-direction: row;
   justify-content: flex-start;
 }
 .bannersection {
-  background-color: var(--color-white1);
+  align-self: stretch;
   height: 282px;
   flex-shrink: 0;
-  overflow: hidden;
-  flex-direction: row;
   align-items: center;
-  color: var(--color-white1);
-  font-family: var(--font-sf-pro-text);
 }
-.frame-div4,
-.iconssection {
+.dao-button-parent {
   align-items: flex-start;
+  gap: var(--gap-xl);
 }
-.frame-div4 {
-  background-color: var(--color-white1);
+.iconssection {
+  height: 58px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.home-icon-interlocution {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
   overflow: hidden;
-  flex-direction: row;
+}
+.ranking {
+  position: relative;
+  font-size: var(--regular-body-size);
+  line-height: 18px;
+  font-family: var(--caption1);
+  color: var(--black-000000100);
+  text-align: left;
+  display: inline-block;
+}
+.dex-button {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: var(--color-white1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: var(--gap-0);
 }
-.iconssection {
-  flex-direction: column;
-}
-.div11,
+.buy-tv-at-sony-store,
 .div12,
 .recent-transaction {
   position: absolute;
-  margin: 0 !important;
   letter-spacing: 0.41px;
+  font-weight: 600;
   display: inline-block;
 }
 .recent-transaction {
+  margin: 0 !important;
   top: 12px;
   left: 16px;
   line-height: 22px;
-  font-weight: 600;
   z-index: 0;
 }
-.div11,
+.buy-tv-at-sony-store,
 .div12 {
-  top: 123px;
-  left: 354px;
+  top: calc(50% - 24px);
+  left: 0;
   line-height: 18px;
-  z-index: 2;
 }
 .div12 {
-  top: 56px;
-  z-index: 3;
+  top: calc(50% - 2px);
+  font-size: var(--other-11-size);
+  line-height: 13px;
+  font-weight: 500;
+  color: var(--color-gray-11);
 }
-.frame-div5 {
+.b,
+.path-icon3 {
+  position: absolute;
+  right: 0;
+}
+.b {
+  top: calc(50% - 24px);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  display: inline-block;
+  color: #55b944;
+  text-align: right;
+}
+.path-icon3 {
+  height: 2.13%;
+  width: 100%;
+  top: 99.11%;
+  bottom: -1.23%;
+  left: 0;
+  max-width: 100%;
+  overflow: hidden;
+  max-height: 100%;
+}
+.div13 {
+  position: absolute;
+  top: 28px;
+  right: 7px;
+  font-size: var(--caption1-size);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  color: var(--black-000000100);
+  text-align: right;
+  display: inline-block;
+}
+.div11 {
   align-self: stretch;
+  position: relative;
+  height: 56px;
+  flex-shrink: 0;
+}
+.buy-tv-at-sony-store1,
+.div14 {
+  position: absolute;
+  top: calc(50% - 23.75px);
+  left: 0;
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 600;
+  display: inline-block;
+}
+.div14 {
+  top: calc(50% - 1.75px);
+  font-size: var(--other-11-size);
+  line-height: 13px;
+  font-weight: 500;
+  color: var(--color-gray-11);
+}
+.div15,
+.path-icon4 {
+  position: absolute;
+  right: 0;
+}
+.div15 {
+  top: calc(50% - 23.75px);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 600;
+  color: #d15252;
+  text-align: right;
+  display: inline-block;
+}
+.path-icon4 {
+  height: 2.13%;
+  width: 100%;
+  top: 99.1%;
+  bottom: -1.23%;
+  left: 0;
+  max-width: 100%;
+  overflow: hidden;
+  max-height: 100%;
+}
+.div16 {
+  position: absolute;
+  top: 27px;
+  right: 8px;
+  font-size: var(--caption1-size);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  color: var(--black-000000100);
+  text-align: right;
+  display: inline-block;
+}
+.copy {
+  align-self: stretch;
+  position: relative;
+  height: 55.5px;
+  flex-shrink: 0;
+}
+.frame-div,
+.more {
+  font-size: var(--body-s-size);
+}
+.frame-div {
+  width: 448px;
   display: flex;
   flex-direction: column;
   padding: 30px var(--padding-5xs) var(--padding-5xs);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
-  position: relative;
-  gap: var(--gap-md);
+  gap: var(--gap-sm);
   z-index: 1;
-  text-align: right;
-  font-size: var(--caption1-size);
-  color: var(--black-000000100);
 }
 .more {
   cursor: pointer;
@@ -341,8 +464,7 @@
   position: absolute;
   margin: 0 !important;
   top: 16px;
-  left: 399px;
-  font-size: var(--body-s-size);
+  right: 17px;
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 700;
@@ -353,312 +475,29 @@
   z-index: 2;
 }
 .lasttransactions,
-.rectangle7 {
-  background-color: var(--color-white1);
-}
-.lasttransactions {
-  align-self: stretch;
-  height: 180px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  padding: var(--padding-2xs) var(--padding-xs);
-  box-sizing: border-box;
-  align-items: flex-start;
-  justify-content: flex-start;
-  position: relative;
-  gap: 3px;
-  font-size: var(--headline-s1-size);
-}
-.rectangle7 {
-  position: absolute;
-  top: 48.74px;
-  left: 19.41px;
-  border-radius: var(--br-sm);
-  box-shadow: var(--effect);
-  width: 416.17px;
-  height: 128.58px;
-}
-.div13,
-.div14,
-.yellow-sofa {
-  position: absolute;
-  line-height: 18px;
-  display: inline-block;
-}
-.yellow-sofa {
-  top: 69px;
-  left: 260.87px;
-  font-size: var(--body-s-size);
-  letter-spacing: 0.41px;
-  width: 98.28px;
-}
-.div13,
-.div14 {
-  font-weight: 500;
-}
-.div13 {
-  top: 119px;
-  left: 349.44px;
-  letter-spacing: 0.41px;
-  color: var(--color-coral);
-  width: 41.25px;
-}
-.div14 {
-  top: 0;
-  left: 24.27px;
-  text-decoration: line-through;
-  letter-spacing: -0.08px;
-  width: 52.17px;
-}
-.group-div12,
-.iconglyphstar-copy-23 {
-  position: absolute;
-  top: 1.04px;
-  left: 0;
-  width: 19.41px;
-  height: 16.59px;
-}
-.group-div12 {
-  top: 117.17px;
-  left: 260.87px;
-  width: 76.44px;
-  height: 18.66px;
-  overflow: hidden;
-  color: var(--color-gray-11);
-  font-family: var(--font-sf-pro-text);
-}
-.div15,
-.div16 {
-  position: absolute;
-  top: 95px;
-  left: 285.13px;
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  font-weight: 500;
-  text-align: center;
-  display: inline-block;
-  width: 25.48px;
-}
-.div16 {
-  left: 313.04px;
-  color: var(--color-gray-11);
-  width: 42.47px;
-}
-.iconglyphstar3 {
-  position: absolute;
-  top: 93.32px;
-  left: 260.87px;
-  width: 19.41px;
-  height: 16.59px;
-}
-.end-in-12001 {
-  position: absolute;
-  top: 143px;
-  left: 285.13px;
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  font-weight: 500;
-  color: var(--color-coral);
-  display: inline-block;
-  width: 103.13px;
-}
-.iconglyphstar-copy3 {
-  position: absolute;
-  top: 143.1px;
-  left: 260.87px;
-  width: 19.41px;
-  height: 16.59px;
-}
-.path-5-icon,
-.rectangle8 {
-  position: absolute;
-  top: 18.66px;
-  left: 0;
-  width: 4.85px;
-  height: 3.11px;
-}
-.rectangle8 {
-  top: 0;
-  border-radius: 0 var(--br-2xs) var(--br-2xs) 0;
-  background-color: var(--color-turquoise-200);
-  width: 38.83px;
-  height: 18.66px;
-}
-.div17 {
-  position: absolute;
-  top: 3px;
-  left: 4.85px;
-  letter-spacing: 0.07px;
-  line-height: 13px;
-  font-weight: 500;
-  display: inline-block;
-  width: 29.12px;
-}
-.group-div13 {
-  position: absolute;
-  top: 57.03px;
-  left: 14.56px;
-  width: 38.83px;
-  height: 21.78px;
-  overflow: hidden;
-  text-align: center;
-  font-size: var(--other-11-size);
-  color: var(--color-white1);
-  font-family: var(--font-sf-pro-text);
-}
-.rectangle9 {
-  position: absolute;
-  top: 193.9px;
-  left: 19.41px;
-  border-radius: var(--br-sm);
-  background-color: var(--color-white1);
-  box-shadow: var(--effect);
-  width: 416.17px;
-  height: 128.58px;
-}
-.blue-sofa,
-.div18,
-.div19 {
-  position: absolute;
-  line-height: 18px;
-  display: inline-block;
-}
-.blue-sofa {
-  top: 209px;
-  left: 260.87px;
-  font-size: var(--body-s-size);
-  letter-spacing: 0.41px;
-  width: 80.08px;
-}
-.div18,
-.div19 {
-  font-weight: 500;
-}
-.div18 {
-  top: 259px;
-  left: 349.44px;
-  letter-spacing: 0.41px;
-  color: var(--color-coral);
-  width: 40.04px;
-}
-.div19 {
-  top: 0;
-  left: 24.27px;
-  text-decoration: line-through;
-  letter-spacing: -0.08px;
-  width: 53.39px;
-}
-.group-div14 {
-  position: absolute;
-  top: 262.34px;
-  left: 260.87px;
-  width: 76.44px;
-  height: 18.66px;
-  overflow: hidden;
-  color: var(--color-gray-11);
-  font-family: var(--font-sf-pro-text);
-}
-.div20,
-.div21 {
-  position: absolute;
-  top: 235px;
-  left: 285.13px;
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  font-weight: 500;
-  text-align: center;
-  display: inline-block;
-  width: 25.48px;
-}
-.div21 {
-  left: 313.04px;
-  color: var(--color-gray-11);
-  width: 42.47px;
-}
-.iconglyphstar4 {
-  position: absolute;
-  top: 238.49px;
-  left: 260.87px;
-  width: 19.41px;
-  height: 16.59px;
-}
-.end-in-120011 {
-  position: absolute;
-  top: 283px;
-  left: 285.13px;
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  font-weight: 500;
-  color: var(--color-coral);
-  display: inline-block;
-  width: 103.13px;
-}
-.group-div15,
-.iconglyphstar-copy4 {
-  position: absolute;
-  top: 288.26px;
-  left: 260.87px;
-  width: 19.41px;
-  height: 16.59px;
-}
-.group-div15 {
-  top: 202.2px;
-  left: 14.56px;
-  width: 38.83px;
-  height: 21.78px;
-  overflow: hidden;
-  text-align: center;
-  font-size: var(--other-11-size);
-  color: var(--color-white1);
-  font-family: var(--font-sf-pro-text);
-}
-.deal-of-the-day,
-.see-all {
-  position: absolute;
-  top: 13px;
-  left: 16px;
-  font-size: var(--body-s-size);
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  display: inline-block;
-}
-.see-all {
-  left: 384px;
-  color: var(--color-coral);
-  text-align: right;
-}
-.frame-icon,
-.frame-icon1 {
-  position: absolute;
-  top: 80px;
-  left: 62px;
-  width: 75px;
-  height: 75px;
-  overflow: hidden;
-}
-.frame-icon1 {
-  top: 220px;
-}
-.dealsection {
-  align-self: stretch;
-  position: relative;
-  background-color: var(--color-white1);
-  height: 337px;
-  flex-shrink: 0;
-  overflow: hidden;
-  font-size: var(--other-m1-size);
-}
 .market {
   position: relative;
-  width: 100%;
+  background-color: var(--color-white1);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+}
+.lasttransactions {
+  padding: var(--padding-2xs) var(--padding-xs);
+  box-sizing: border-box;
+  justify-content: center;
+  gap: 3px;
+  font-size: var(--headline-s1-size);
+  color: var(--color-black1);
+  font-family: var(--caption1);
+}
+.market {
+  width: 100%;
+  height: 822px;
   justify-content: flex-start;
   gap: var(--gap-0);
   text-align: left;
-  font-size: var(--font-size-3xl);
-  color: var(--color-black1);
-  font-family: var(--caption1);
+  font-size: var(--font-size-4xl);
+  color: var(--color-white1);
+  font-family: var(--font-sf-pro-text);
 }

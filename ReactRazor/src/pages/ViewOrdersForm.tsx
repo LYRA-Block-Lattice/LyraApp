@@ -11,7 +11,7 @@ const ViewOrdersForm: FunctionComponent = () => {
 
   return (
     <div className="viewordersform">
-      <div className="frame-div">
+      <div className="view-orders-parent">
         <div className="view-orders">View Orders</div>
         <button
           className="prepare-sell-order-button"
