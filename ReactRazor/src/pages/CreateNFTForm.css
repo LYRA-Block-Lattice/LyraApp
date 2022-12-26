@@ -14,15 +14,17 @@
   background-color: var(--color-beige);
   border-radius: var(--br-sm);
   width: 301px;
-  height: 40px;
   flex-shrink: 0;
   overflow: hidden;
   display: flex;
   flex-direction: row;
   padding: var(--padding-5xs);
   box-sizing: border-box;
-  align-items: center;
   justify-content: flex-start;
+}
+.nft-name {
+  height: 40px;
+  align-items: center;
 }
 .nft-description {
   height: 124px;
@@ -55,7 +57,7 @@
 .prepare-sell-order-button6 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-5xs) var(--padding-xl);
+  padding: var(--padding-5xs) var(--padding-2xl);
   background-color: var(--secondary);
   border-radius: var(--br-xl);
   height: 40px;
@@ -68,7 +70,7 @@
   background-color: var(--color-white1);
   width: 100%;
   flex-direction: column;
-  padding: var(--padding-md) var(--padding-2xs);
+  padding: var(--padding-lg) var(--padding-xs);
   justify-content: flex-start;
   gap: var(--gap-md);
   text-align: left;
