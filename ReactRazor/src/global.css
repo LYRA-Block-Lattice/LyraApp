@@ -42,14 +42,12 @@ body {
 
   /* Gaps */
   --gap-0: 0px;
-  --gap-2xs: 1px;
-  --gap-xs: 4px;
+  --gap-xs: 1px;
   --gap-sm: 9px;
   --gap-md: 10px;
   --gap-lg: 16px;
   --gap-xl: 18px;
-  --gap-2xl: 19px;
-  --gap-3xl: 50px;
+  --gap-2xl: 50px;
 
   /* Paddings */
   --padding-6xs: 5px;
