@@ -1,12 +1,42 @@
 import { FunctionComponent, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import WalletCard from "../components/WalletCard";
-import EntryButton from "../components/EntryButton";
 import TxInfoBar from "../components/TxInfoBar";
 import "./Market.css";
 
 const Market: FunctionComponent = () => {
   const navigate = useNavigate();
+
+  const onNFTCountClick = useCallback(() => {
+    navigate("/redir");
+  }, [navigate]);
+
+  const onFrameButtonClick = useCallback(() => {
+    navigate("/redir");
+  }, [navigate]);
+
+  const onNFTCount1Click = useCallback(() => {
+    navigate("/redir");
+  }, [navigate]);
+
+  const onFrameButton1Click = useCallback(() => {
+    navigate("/redir");
+  }, [navigate]);
+
+  const onNFTCount2Click = useCallback(() => {
+    navigate("/redir");
+  }, [navigate]);
+
+  const onFrameButton2Click = useCallback(() => {
+    navigate("/viewordersform");
+  }, [navigate]);
+
+  const onNFTCount3Click = useCallback(() => {
+    navigate("/redir");
+  }, [navigate]);
+
+  const onFrameButton3Click = useCallback(() => {
+    navigate("/viewtradesform");
+  }, [navigate]);
 
   const onWalletNameLabelClick = useCallback(() => {
     navigate("/redir");
@@ -20,6 +50,22 @@ const Market: FunctionComponent = () => {
     navigate("/redir");
   }, [navigate]);
 
+  const onDaoButtonClick = useCallback(() => {
+    navigate("/redir");
+  }, [navigate]);
+
+  const onSwapButtonClick = useCallback(() => {
+    navigate("/redir");
+  }, [navigate]);
+
+  const onInvestButtonClick = useCallback(() => {
+    navigate("/redir");
+  }, [navigate]);
+
+  const onSwapButton1Click = useCallback(() => {
+    navigate("/redir");
+  }, [navigate]);
+
   const onMoreClick = useCallback(() => {
     navigate("/transactionhistory");
   }, [navigate]);
@@ -29,7 +75,53 @@ const Market: FunctionComponent = () => {
       <div className="bannersection">
         <div className="walletcard">
           <div className="mask-group">
-            <WalletCard />
+            <div className="maps-parent">
+              <img className="maps-icon" alt="" src="../asserts/maps.svg" />
+              <a className="balance-display-zone">
+                <b className="lyrbalance">120,000</b>
+                <b className="lyrlabel">LYR</b>
+                <b className="lyrbalance">5,000</b>
+                <b className="lyrlabel">USDT</b>
+              </a>
+              <div className="token-lists">
+                <button
+                  className="nft-count-parent"
+                  onClick={onFrameButtonClick}
+                >
+                  <button className="nft-count" onClick={onNFTCountClick}>
+                    12
+                  </button>
+                  <b className="nft-label">NFT</b>
+                </button>
+                <button
+                  className="nft-count-group"
+                  onClick={onFrameButton1Click}
+                >
+                  <button className="nft-count1" onClick={onNFTCount1Click}>
+                    3
+                  </button>
+                  <b className="nft-label1">TOT</b>
+                </button>
+                <button
+                  className="nft-count-group"
+                  onClick={onFrameButton2Click}
+                >
+                  <button className="nft-count1" onClick={onNFTCount2Click}>
+                    0
+                  </button>
+                  <b className="nft-label1">Selling</b>
+                </button>
+                <button
+                  className="nft-count-group"
+                  onClick={onFrameButton3Click}
+                >
+                  <button className="nft-count1" onClick={onNFTCount3Click}>
+                    0
+                  </button>
+                  <b className="nft-label1">Buying</b>
+                </button>
+              </div>
+            </div>
             <button
               className="wallet-name-label"
               onClick={onWalletNameLabelClick}
@@ -47,7 +139,7 @@ const Market: FunctionComponent = () => {
               <img
                 className="qrcode-icon"
                 alt=""
-                src="_content/ReactRazor/asserts/qrcode-icon.svg"
+                src="../asserts/qrcode-icon.svg"
               />
             </div>
             <div className="wallet-decoration">LYRA WALLET</div>
@@ -58,55 +150,71 @@ const Market: FunctionComponent = () => {
       </div>
       <div className="iconssection">
         <div className="dao-button-parent">
-          <EntryButton
-            homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution.svg"
-            ranking="DAO"
-          />
-          <EntryButton
-            homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution1.svg"
-            ranking="OTC"
-          />
-          <EntryButton
-            homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution2.svg"
-            ranking="Invest"
-          />
-          <EntryButton
-            homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution3.svg"
-            ranking="Swap"
-          />
+          <button className="dao-button" onClick={onDaoButtonClick}>
+            <img
+              className="home-icon-interlocution"
+              alt=""
+              src="../asserts/home--icon--interlocution.svg"
+            />
+            <div className="ranking">DAO</div>
+          </button>
+          <button className="dao-button" onClick={onSwapButtonClick}>
+            <img
+              className="home-icon-interlocution"
+              alt=""
+              src="../asserts/home--icon--interlocution1.svg"
+            />
+            <div className="ranking">OTC</div>
+          </button>
+          <button className="dao-button" onClick={onInvestButtonClick}>
+            <img
+              className="home-icon-interlocution"
+              alt=""
+              src="../asserts/home--icon--interlocution2.svg"
+            />
+            <div className="ranking">Invest</div>
+          </button>
+          <button className="dao-button" onClick={onSwapButton1Click}>
+            <img
+              className="home-icon-interlocution"
+              alt=""
+              src="../asserts/home--icon--interlocution3.svg"
+            />
+            <div className="ranking">Swap</div>
+          </button>
         </div>
       </div>
       <div className="iconssection">
         <div className="dao-button-parent">
-          <button className="dex-button">
+          <button className="dao-button">
             <img
               className="home-icon-interlocution"
               alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution4.svg"
+              src="../asserts/home--icon--interlocution4.svg"
             />
             <div className="ranking">DEX</div>
           </button>
-          <button className="dex-button">
+          <button className="dao-button">
             <img
               className="home-icon-interlocution"
               alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution5.svg"
+              src="../asserts/home--icon--interlocution5.svg"
             />
             <div className="ranking">NFT</div>
           </button>
-          <button className="dex-button">
+          <button className="dao-button">
             <img
               className="home-icon-interlocution"
               alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution6.svg"
+              src="../asserts/home--icon--interlocution6.svg"
             />
             <div className="ranking">Mint</div>
           </button>
-          <button className="dex-button">
+          <button className="dao-button">
             <img
               className="home-icon-interlocution"
               alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution7.svg"
+              src="../asserts/home--icon--interlocution7.svg"
             />
             <div className="ranking">Staking</div>
           </button>
@@ -119,7 +227,7 @@ const Market: FunctionComponent = () => {
             buyTVAtSonyStore="Receive"
             component="From Harry James"
             component1="+ 1000 LYR"
-            path="_content/ReactRazor/asserts/path3.svg"
+            path="../asserts/path3.svg"
           />
           <TxInfoBar
             componentWidth="333px"
@@ -128,7 +236,7 @@ const Market: FunctionComponent = () => {
             component1="- 100 LYR"
             componentColor="#d15252"
             componentFontWeight="600"
-            path="_content/ReactRazor/asserts/path4.svg"
+            path="../asserts/path4.svg"
             componentTop="27px"
             componentRight="8px"
           />

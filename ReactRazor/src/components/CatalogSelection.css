@@ -22,7 +22,7 @@
   gap: var(--gap-md);
 }
 .catalogselection {
-  gap: var(--gap-2xs);
+  gap: var(--gap-xs);
   text-align: center;
   font-size: var(--body-s-size);
   color: var(--black-000000100);
