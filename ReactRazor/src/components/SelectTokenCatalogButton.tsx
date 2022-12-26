@@ -33,7 +33,7 @@ const SelectTokenCatalogButton: FunctionComponent<
         alt=""
         src={icbaselineGeneratingToken}
       />
-      <div className="frame-div7">
+      <div className="token-wrapper">
         <b className="token">{token}</b>
       </div>
     </button>

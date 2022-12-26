@@ -14,7 +14,7 @@
   height: 156px;
   overflow: hidden;
   text-align: left;
-  font-size: var(--other-m1-size);
+  font-size: var(--regular-body-size);
   color: var(--black-000000100);
   font-family: var(--caption1);
 }

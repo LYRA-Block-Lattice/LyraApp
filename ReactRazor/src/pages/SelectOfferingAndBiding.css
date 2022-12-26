@@ -1,5 +1,5 @@
 .i-want-to-sell-token,
-.utility-button3 {
+.secondary-button5 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
@@ -9,8 +9,8 @@
 .i-want-to-sell-token {
   width: 184px;
 }
-.utility-button3 {
-  font-size: var(--font-size-lg);
+.secondary-button5 {
+  font-size: var(--font-size-2xl);
   font-family: var(--caption1);
   color: var(--color-white1);
   text-align: center;
@@ -18,10 +18,10 @@
 .prepare-sell-order-button10 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-5xs) var(--padding-sm);
-  background-color: var(--tertiary);
+  padding: var(--padding-5xs) var(--padding-xl);
+  background-color: var(--secondary);
   border-radius: var(--br-xl);
-  height: 30px;
+  height: 40px;
   flex-shrink: 0;
   overflow: hidden;
   display: flex;
@@ -30,24 +30,15 @@
   align-items: center;
   justify-content: center;
 }
-.or1,
-.utility-button4 {
+.or1 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
   display: inline-block;
-}
-.or1 {
   width: 31px;
 }
-.utility-button4 {
-  font-size: var(--body-s-size);
-  font-family: var(--caption1);
-  color: var(--color-white1);
-  text-align: center;
-}
-.frame-div1 {
+.i-want-to-sell-token-parent {
   border-radius: var(--br-md);
   border: 1px solid var(--color-gray-100);
   box-sizing: border-box;
@@ -57,7 +48,7 @@
   padding: var(--padding-xl) var(--padding-3xs);
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-lg);
+  gap: var(--gap-md);
 }
 .buyer-should-pay-me-by {
   position: relative;
@@ -66,7 +57,7 @@
   font-weight: 500;
   display: inline-block;
 }
-.frame-div2 {
+.buyer-should-pay-me-by-parent {
   border-radius: var(--br-md);
   border: 1px solid var(--color-gray-100);
   box-sizing: border-box;
@@ -75,11 +66,11 @@
   padding: var(--padding-xl) var(--padding-3xs);
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-lg);
+  gap: var(--gap-md);
 }
 .primary-button2 {
   position: relative;
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;

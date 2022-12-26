@@ -1,4 +1,4 @@
-.chose-the-catalog {
+.choose-the-catalog {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
@@ -6,7 +6,7 @@
   display: inline-block;
   width: 296px;
 }
-.line-div {
+.catalog-section-child {
   position: relative;
   border-right: 1px solid #bcbcbc;
   box-sizing: border-box;
@@ -27,7 +27,7 @@
 }
 .primary-button3 {
   position: relative;
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
@@ -54,6 +54,9 @@
   flex-direction: row;
   justify-content: center;
 }
+.prepare-sell-order-button15:hover {
+  background-color: #8277e8;
+}
 .starttocreateorder {
   position: relative;
   background-color: var(--color-white1);
@@ -63,7 +66,7 @@
   justify-content: flex-start;
   gap: 21px;
   text-align: left;
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
   color: var(--black-000000100);
   font-family: var(--caption1);
 }

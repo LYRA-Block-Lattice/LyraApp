@@ -8,7 +8,7 @@
   display: inline-block;
 }
 .select-token {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
   color: var(--black-000000100);
   text-align: left;
   width: 296px;

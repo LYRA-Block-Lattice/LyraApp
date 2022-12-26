@@ -4,7 +4,7 @@
   height: 378.54px;
   flex-shrink: 0;
 }
-.frame-div8 {
+.maps-wrapper {
   border-radius: var(--br-md);
   background: radial-gradient(50% 50%at 50% 50%, #b3efe1, #0051ed);
   width: 423px;
