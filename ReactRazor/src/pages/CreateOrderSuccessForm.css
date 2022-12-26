@@ -1,6 +1,6 @@
 .success {
   position: relative;
-  font-size: var(--font-size-4xl);
+  font-size: var(--font-size-3xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
@@ -39,7 +39,7 @@
   width: 292px;
 }
 .secondary-button {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-xl);
   font-weight: 500;
   font-family: var(--caption1);
   color: var(--color-white1);
@@ -55,7 +55,7 @@
 .prepare-sell-order-button1 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-5xs) var(--padding-2xl);
+  padding: var(--padding-4xs) var(--padding-3xl);
   background-color: var(--secondary);
   border-radius: var(--br-xl);
   height: 40px;
@@ -68,9 +68,9 @@
   background-color: var(--color-white1);
   width: 100%;
   flex-direction: column;
-  padding: var(--padding-lg) var(--padding-2xs);
+  padding: var(--padding-xl) var(--padding-xs);
   justify-content: flex-start;
-  gap: var(--gap-md);
+  gap: var(--gap-xl);
   text-align: center;
   font-size: var(--font-size-sm);
   color: var(--black-000000100);

@@ -5,6 +5,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import Empty from "./pages/Empty";
+import ViewTradesForm from "./pages/ViewTradesForm";
 import ViewOrdersForm from "./pages/ViewOrdersForm";
 import CreateOrderSuccessForm from "./pages/CreateOrderSuccessForm";
 import SignTradeSecretForm from "./pages/SignTradeSecretForm";
@@ -51,6 +52,10 @@ function App() {
     //TODO: Update meta titles and descriptions below
     switch (pathname) {
       case "/":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/viewtradesform":
         title = "";
         metaDescription = "";
         break;
@@ -149,6 +154,8 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Empty />} />
+
+      <Route path="/viewtradesform" element={<ViewTradesForm />} />
 
       <Route path="/viewordersform" element={<ViewOrdersForm />} />
 

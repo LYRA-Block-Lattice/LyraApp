@@ -11,7 +11,7 @@
 .search-bar {
   display: flex;
   flex-direction: row;
-  padding: 0 var(--padding-3xs);
+  padding: 0 var(--padding-2xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
@@ -28,7 +28,7 @@
   border-radius: var(--br-lg);
   background-color: var(--color-coral);
 }
-.div3 {
+.div6 {
   position: absolute;
   top: calc(50% - 9px);
   left: 38.81%;
@@ -67,7 +67,7 @@
   border-radius: var(--br-lg);
   background-color: rgba(223, 224, 229, 0.5);
 }
-.div4 {
+.div7 {
   position: absolute;
   top: calc(50% - 9px);
   left: 27.96%;
@@ -110,7 +110,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-xs) 179px var(--padding-xs) var(--padding-2xs);
+  padding: var(--padding-sm) 179px var(--padding-sm) var(--padding-xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
@@ -129,7 +129,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: 8px var(--padding-sm);
+  padding: 8px var(--padding-md);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
@@ -150,14 +150,12 @@
 .to-harry-james,
 .transfer-money {
   position: absolute;
+  width: 97.39%;
+  top: calc(50% - 20px);
   left: 0;
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
-}
-.transfer-money {
-  width: 97.39%;
-  top: calc(50% - 20px);
 }
 .to-harry-james {
   width: 77.39%;
@@ -208,7 +206,7 @@
   left: 4.66%;
   overflow: hidden;
 }
-.div5 {
+.div8 {
   position: absolute;
   top: calc(50% - 9px);
   left: 23.4%;
@@ -229,7 +227,7 @@
   overflow: hidden;
   max-height: 100%;
 }
-.div6,
+.div9,
 .parent {
   position: absolute;
 }
@@ -242,7 +240,7 @@
   left: 39.36%;
   overflow: hidden;
 }
-.div6 {
+.div9 {
   top: calc(50% - 9px);
   left: 39.29%;
   letter-spacing: 0.41px;
@@ -315,11 +313,9 @@
 .transactionhistory {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-}
-.receivedetailcard-parent {
   align-items: flex-start;
-  gap: var(--gap-sm);
+  justify-content: flex-start;
+  gap: var(--gap-md);
   font-size: var(--regular-body-size);
 }
 .transactionhistory {
@@ -328,10 +324,10 @@
   width: 100%;
   height: 677px;
   overflow: hidden;
-  padding: var(--padding-sm) 0;
+  padding: var(--padding-md) 0;
   box-sizing: border-box;
   align-items: center;
-  gap: 9px;
+  gap: var(--gap-sm);
   text-align: left;
   font-size: var(--caption1-size);
   color: var(--color-black1);

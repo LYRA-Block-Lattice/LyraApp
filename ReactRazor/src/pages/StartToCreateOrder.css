@@ -27,7 +27,7 @@
 }
 .primary-button3 {
   position: relative;
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-2xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
@@ -46,7 +46,7 @@
 .prepare-sell-order-button15 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-5xs) var(--padding-4xl);
+  padding: var(--padding-4xs) var(--padding-5xl);
   background-color: var(--primary);
   border-radius: var(--br-xl);
   height: 50px;
@@ -62,11 +62,11 @@
   background-color: var(--color-white1);
   width: 100%;
   flex-direction: column;
-  padding: var(--padding-xl) 66px var(--padding-lg);
+  padding: var(--padding-2xl) 66px var(--padding-xl);
   justify-content: flex-start;
   gap: 21px;
   text-align: left;
-  font-size: var(--font-size-4xl);
+  font-size: var(--font-size-3xl);
   color: var(--black-000000100);
   font-family: var(--caption1);
 }

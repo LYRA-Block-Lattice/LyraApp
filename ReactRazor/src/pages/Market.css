@@ -5,174 +5,16 @@
   background-color: transparent;
   position: absolute;
   margin: 0 !important;
-  top: 40px;
-  left: 49px;
-  font-size: var(--font-size-3xl);
+  top: 21.5px;
+  left: 71px;
+  font-size: var(--font-size-2xl);
   font-family: var(--font-sf-pro-text);
   color: var(--color-white1);
-  text-align: left;
+  text-align: right;
   display: inline-block;
+  width: 206px;
+  flex-shrink: 0;
   z-index: 1;
-}
-.span1 {
-  font-size: var(--body-s-size);
-}
-.span {
-  font-size: var(--font-size-4xs);
-  color: var(--color-gray-200);
-}
-.basebalance {
-  position: absolute;
-  margin: 0 !important;
-  top: 75px;
-  left: 49px;
-  letter-spacing: 0.3px;
-  display: inline-block;
-  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.24);
-  z-index: 2;
-}
-.span2 {
-  font-size: var(--font-size-4xl);
-}
-.aux-balance,
-.nft-count,
-.nft-label {
-  position: absolute;
-  display: inline-block;
-}
-.aux-balance {
-  margin: 0 !important;
-  top: 115px;
-  left: 49px;
-  letter-spacing: 0.3px;
-  font-weight: 600;
-  width: 152.68px;
-  flex-shrink: 0;
-  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.24);
-  z-index: 3;
-  font-size: var(--body-s-size);
-}
-.nft-label {
-  width: 100%;
-  top: calc(50% - 19.5px);
-  left: 0;
-}
-.nft-count {
-  cursor: pointer;
-  border: 0;
-  padding: 0;
-  background-color: transparent;
-  width: 95.1%;
-  top: calc(50% + 0.5px);
-  left: 3.17%;
-  font-size: var(--font-size-lg);
-  letter-spacing: 3.5px;
-  font-weight: 600;
-  font-family: var(--font-sf-pro-text);
-  color: var(--color-white1);
-  text-align: left;
-}
-.nft-label-parent {
-  position: relative;
-  width: 30.38px;
-  height: 39px;
-  flex-shrink: 0;
-}
-.tot-count {
-  cursor: pointer;
-  border: 0;
-  padding: 0;
-  background-color: transparent;
-  position: absolute;
-  width: 58.33%;
-  top: calc(50% + 0.5px);
-  left: 23.11%;
-  font-size: var(--font-size-lg);
-  letter-spacing: 3.5px;
-  font-weight: 600;
-  font-family: var(--font-sf-pro-text);
-  color: var(--color-white1);
-  text-align: left;
-  display: inline-block;
-}
-.tot-label-parent {
-  position: relative;
-  width: 29.16px;
-  height: 39px;
-  flex-shrink: 0;
-}
-.orders-count,
-.orders-label {
-  position: absolute;
-  display: inline-block;
-  font-family: var(--font-sf-pro-text);
-  text-align: left;
-}
-.orders-label {
-  width: 100%;
-  top: calc(50% - 20px);
-  left: 0;
-  font-size: var(--caption1-size);
-  color: var(--color-gray-200);
-}
-.orders-count {
-  width: 23.81%;
-  top: calc(50% + 1px);
-  left: 37.74%;
-  font-size: var(--font-size-lg);
-  letter-spacing: 3.5px;
-  font-weight: 600;
-  color: var(--color-white1);
-}
-.orders-count,
-.orders-label-parent,
-.trades-count {
-  cursor: pointer;
-  border: 0;
-  padding: 0;
-  background-color: transparent;
-}
-.orders-label-parent {
-  position: relative;
-  width: 51.03px;
-  height: 40px;
-  flex-shrink: 0;
-}
-.trades-count {
-  position: absolute;
-  width: 31.05%;
-  top: calc(50% + 0.5px);
-  left: 23.73%;
-  font-size: var(--font-size-lg);
-  letter-spacing: 3.5px;
-  font-weight: 600;
-  font-family: var(--font-sf-pro-text);
-  color: var(--color-white1);
-  text-align: left;
-  display: inline-block;
-}
-.trades-label-parent {
-  position: relative;
-  width: 54.79px;
-  height: 39px;
-  flex-shrink: 0;
-}
-.token-lists {
-  margin: 0 !important;
-  position: absolute;
-  bottom: 14.5px;
-  left: 49.5px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  padding: 9px 0;
-  box-sizing: border-box;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: var(--gap-lg);
-  z-index: 4;
-  font-size: var(--caption1-size);
-  color: var(--color-gray-200);
 }
 .qrcode-button-round {
   position: absolute;
@@ -208,20 +50,19 @@
   flex-shrink: 0;
   overflow: hidden;
   cursor: pointer;
-  z-index: 5;
+  z-index: 2;
 }
 .wallet-decoration {
   width: 23.35%;
   top: calc(50% + 43.5px);
   left: 1.88%;
-  font-size: 6px;
   letter-spacing: 4.47px;
   line-height: 13px;
   display: inline-block;
   height: 17.35px;
   transform: rotate(-90deg);
   transform-origin: 0 0;
-  z-index: 6;
+  z-index: 3;
 }
 .rectangle5,
 .rectangle6 {
@@ -235,12 +76,12 @@
   left: 2.82%;
   border-radius: var(--br-2xs);
   background-color: var(--color-white1);
-  z-index: 7;
+  z-index: 4;
 }
 .rectangle6 {
   top: 83.53%;
   bottom: 10.09%;
-  z-index: 8;
+  z-index: 5;
 }
 .mask-group,
 .walletcard {
@@ -279,13 +120,13 @@
 }
 .dao-button-parent {
   align-items: flex-start;
-  gap: var(--gap-xl);
+  gap: var(--gap-3xl);
 }
 .iconssection {
-  height: 58px;
-  flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  padding: var(--padding-6xs);
+  box-sizing: border-box;
   align-items: center;
   justify-content: center;
 }
@@ -310,154 +151,34 @@
   border: 0;
   padding: 0;
   background-color: var(--color-white1);
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: var(--gap-0);
 }
-.buy-tv-at-sony-store {
-  font-weight: 600;
-}
-.buy-tv-at-sony-store,
-.div12,
 .recent-transaction {
   position: absolute;
-  letter-spacing: 0.41px;
-  display: inline-block;
-}
-.recent-transaction {
-  font-weight: 600;
   margin: 0 !important;
   top: 12px;
   left: 16px;
+  letter-spacing: 0.41px;
   line-height: 22px;
+  font-weight: 600;
+  display: inline-block;
   z-index: 0;
 }
-.buy-tv-at-sony-store {
-  top: calc(50% - 24px);
-  left: 0;
-  line-height: 18px;
-}
-.div12 {
-  left: 0;
-  top: calc(50% - 2px);
-  font-size: var(--other-11-size);
-  line-height: 13px;
-  font-weight: 500;
-  color: var(--color-gray-11);
-}
-.b,
-.path-icon3 {
-  position: absolute;
-  right: 0;
-}
-.b {
-  top: calc(50% - 24px);
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  display: inline-block;
-  color: #55b944;
-  text-align: right;
-}
-.path-icon3 {
-  height: 2.13%;
-  width: 100%;
-  top: 99.11%;
-  bottom: -1.23%;
-  left: 0;
-  max-width: 100%;
-  overflow: hidden;
-  max-height: 100%;
-}
-.div13 {
-  position: absolute;
-  top: 28px;
-  right: 7px;
-  font-size: var(--caption1-size);
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  color: var(--black-000000100);
-  text-align: right;
-  display: inline-block;
-}
-.div11 {
-  align-self: stretch;
-  position: relative;
-  height: 56px;
-  flex-shrink: 0;
-}
-.buy-tv-at-sony-store1,
-.div14 {
-  position: absolute;
-  top: calc(50% - 23.75px);
-  left: 0;
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  font-weight: 600;
-  display: inline-block;
-}
-.div14 {
-  top: calc(50% - 1.75px);
-  font-size: var(--other-11-size);
-  line-height: 13px;
-  font-weight: 500;
-  color: var(--color-gray-11);
-}
-.div15,
-.path-icon4 {
-  position: absolute;
-  right: 0;
-}
-.div15 {
-  top: calc(50% - 23.75px);
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  font-weight: 600;
-  color: #d15252;
-  text-align: right;
-  display: inline-block;
-}
-.path-icon4 {
-  height: 2.13%;
-  width: 100%;
-  top: 99.1%;
-  bottom: -1.23%;
-  left: 0;
-  max-width: 100%;
-  overflow: hidden;
-  max-height: 100%;
-}
-.div16 {
-  position: absolute;
-  top: 27px;
-  right: 8px;
-  font-size: var(--caption1-size);
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  color: var(--black-000000100);
-  text-align: right;
-  display: inline-block;
-}
-.copy {
-  align-self: stretch;
-  position: relative;
-  height: 55.5px;
-  flex-shrink: 0;
-}
-.frame-div,
-.more {
-  font-size: var(--body-s-size);
-}
 .frame-div {
-  width: 448px;
   display: flex;
   flex-direction: column;
-  padding: 30px var(--padding-5xs) var(--padding-5xs);
+  padding: 30px 0 var(--padding-4xs) var(--padding-4xs);
   box-sizing: border-box;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: var(--gap-sm);
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-md);
   z-index: 1;
 }
 .more {
@@ -469,6 +190,7 @@
   margin: 0 !important;
   top: 16px;
   right: 17px;
+  font-size: var(--body-s-size);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 700;
@@ -487,7 +209,8 @@
   align-items: center;
 }
 .lasttransactions {
-  padding: var(--padding-xs) var(--padding-sm);
+  width: 425px;
+  padding: var(--padding-sm) var(--padding-md);
   box-sizing: border-box;
   justify-content: center;
   gap: 3px;
@@ -501,7 +224,7 @@
   justify-content: flex-start;
   gap: var(--gap-0);
   text-align: left;
-  font-size: var(--font-size-4xl);
+  font-size: 6px;
   color: var(--color-white1);
   font-family: var(--font-sf-pro-text);
 }

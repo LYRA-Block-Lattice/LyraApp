@@ -3,18 +3,144 @@
   width: 711.29px;
   height: 378.54px;
   flex-shrink: 0;
+  z-index: 0;
 }
-.maps-wrapper {
+.lyrbalance,
+.lyrlabel {
+  position: relative;
+  letter-spacing: 0.3px;
+  display: inline-block;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.24);
+}
+.lyrbalance {
+  width: 168px;
+}
+.lyrlabel {
+  font-size: var(--font-size-4xs);
+  color: var(--color-gray-200);
+  text-align: left;
+}
+.balance-display-zone {
+  text-decoration: none;
+  margin: 0 !important;
+  position: absolute;
+  top: 58.5px;
+  right: 147px;
+  width: 228px;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: var(--padding-5xs) 0 var(--padding-5xs) var(--padding-3xs);
+  box-sizing: border-box;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: var(--gap-xs);
+  z-index: 1;
+  color: inherit;
+}
+.nft-count,
+.nft-label {
+  position: absolute;
+  display: inline-block;
+  font-family: var(--font-sf-pro-text);
+  text-align: center;
+}
+.nft-count {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  top: calc(50% - 22.5px);
+  left: 30%;
+  font-size: var(--font-size-xl);
+  letter-spacing: 3.5px;
+  font-weight: 600;
+  color: var(--color-white1);
+}
+.nft-label {
+  top: calc(50% + 7.5px);
+  left: 32.5%;
+  font-size: var(--font-size-4xs);
+  color: var(--color-gray-200);
+}
+.nft-count-parent {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  position: relative;
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+.nft-count1,
+.nft-label1 {
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-sf-pro-text);
+  text-align: center;
+}
+.nft-count1 {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  font-size: var(--font-size-xl);
+  letter-spacing: 3.5px;
+  font-weight: 600;
+  color: var(--color-white1);
+}
+.nft-label1 {
+  font-size: var(--font-size-4xs);
+  color: var(--color-gray-200);
+}
+.nft-count-group {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-sm);
+}
+.maps-parent,
+.token-lists {
+  display: flex;
+  flex-direction: row;
+}
+.token-lists {
+  margin: 0 !important;
+  position: absolute;
+  top: calc(50% + 51px);
+  left: calc(50% - 102.5px);
+  height: 63px;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-2xl);
+  z-index: 2;
+}
+.maps-parent {
   border-radius: var(--br-md);
-  background: radial-gradient(50% 50%at 50% 50%, #b3efe1, #0051ed);
+  background: radial-gradient(50% 50%at 50% 50%, #395851, #0051ed);
   width: 423px;
   height: 247px;
   flex-shrink: 0;
-  display: flex;
-  flex-direction: row;
-  padding: var(--padding-5xs);
+  padding: var(--padding-4xs);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
+  position: relative;
+  gap: var(--gap-md);
   z-index: 0;
+  text-align: right;
+  font-size: var(--font-size-3xl);
+  color: var(--color-white1);
+  font-family: var(--font-sf-pro-text);
 }
