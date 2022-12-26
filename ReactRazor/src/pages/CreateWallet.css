@@ -70,11 +70,11 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-md) var(--padding-xs);
+  padding: var(--padding-lg) var(--padding-sm);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
   gap: 28px;
-  font-size: var(--large-title1-size);
+  font-size: var(--large-title-size);
   color: var(--color-coral);
 }

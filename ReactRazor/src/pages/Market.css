@@ -19,7 +19,7 @@
 }
 .span {
   font-size: var(--font-size-4xs);
-  color: var(--color-gray-300);
+  color: var(--color-gray-200);
 }
 .basebalance {
   position: absolute;
@@ -52,7 +52,6 @@
   z-index: 3;
   font-size: var(--body-s-size);
 }
-.nft-count,
 .nft-label {
   width: 100%;
   top: calc(50% - 19.5px);
@@ -105,14 +104,16 @@
 .orders-count,
 .orders-label {
   position: absolute;
+  display: inline-block;
+  font-family: var(--font-sf-pro-text);
+  text-align: left;
+}
+.orders-label {
   width: 100%;
   top: calc(50% - 20px);
   left: 0;
   font-size: var(--caption1-size);
-  display: inline-block;
-  font-family: var(--font-sf-pro-text);
-  color: var(--color-gray-300);
-  text-align: left;
+  color: var(--color-gray-200);
 }
 .orders-count {
   width: 23.81%;
@@ -171,7 +172,7 @@
   gap: var(--gap-lg);
   z-index: 4;
   font-size: var(--caption1-size);
-  color: var(--color-gray-300);
+  color: var(--color-gray-200);
 }
 .qrcode-button-round {
   position: absolute;
@@ -181,8 +182,8 @@
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: var(--br-2xl);
-  background-color: var(--color-gray-200);
+  border-radius: 32.5px;
+  background-color: #dfe0e5;
   opacity: 0.5;
   mix-blend-mode: normal;
   cursor: pointer;
@@ -315,28 +316,31 @@
   justify-content: center;
   gap: var(--gap-0);
 }
+.buy-tv-at-sony-store {
+  font-weight: 600;
+}
 .buy-tv-at-sony-store,
 .div12,
 .recent-transaction {
   position: absolute;
   letter-spacing: 0.41px;
-  font-weight: 600;
   display: inline-block;
 }
 .recent-transaction {
+  font-weight: 600;
   margin: 0 !important;
   top: 12px;
   left: 16px;
   line-height: 22px;
   z-index: 0;
 }
-.buy-tv-at-sony-store,
-.div12 {
+.buy-tv-at-sony-store {
   top: calc(50% - 24px);
   left: 0;
   line-height: 18px;
 }
 .div12 {
+  left: 0;
   top: calc(50% - 2px);
   font-size: var(--other-11-size);
   line-height: 13px;
@@ -483,7 +487,7 @@
   align-items: center;
 }
 .lasttransactions {
-  padding: var(--padding-2xs) var(--padding-xs);
+  padding: var(--padding-xs) var(--padding-sm);
   box-sizing: border-box;
   justify-content: center;
   gap: 3px;
