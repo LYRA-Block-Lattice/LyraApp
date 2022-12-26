@@ -1,0 +1,114 @@
+.view-trades {
+  position: relative;
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 500;
+  display: inline-block;
+  width: 180px;
+  flex-shrink: 0;
+}
+.view-trades-wrapper {
+  background-color: var(--color-white1);
+  width: 276px;
+  height: 52px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  padding: var(--padding-xl) var(--padding-md) var(--padding-xl)
+    var(--padding-xl);
+  box-sizing: border-box;
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+  font-size: var(--font-size-3xl);
+}
+.biding,
+.div,
+.fiat-usd,
+.great-nft,
+.open,
+.price,
+.selling,
+.status {
+  position: absolute;
+  top: 17px;
+  left: 94px;
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 500;
+  display: inline-block;
+}
+.biding,
+.div,
+.fiat-usd,
+.open,
+.price,
+.selling,
+.status {
+  top: 52px;
+  left: 99px;
+}
+.biding,
+.div,
+.open,
+.price,
+.selling,
+.status {
+  top: 87px;
+  left: 114px;
+}
+.biding,
+.div,
+.price,
+.selling,
+.status {
+  top: 115px;
+  left: 113px;
+}
+.biding,
+.price,
+.selling,
+.status {
+  top: 17px;
+  left: 12px;
+  width: 71px;
+}
+.biding,
+.price,
+.status {
+  top: 52px;
+}
+.price,
+.status {
+  top: 87px;
+  left: 15px;
+}
+.price {
+  top: 115px;
+}
+.ordercard,
+.viewtradesform {
+  position: relative;
+  background-color: var(--color-white1);
+  overflow: hidden;
+}
+.ordercard {
+  border-radius: var(--br-xs);
+  border: 1px solid var(--black-000000100);
+  box-sizing: border-box;
+  width: 192px;
+  height: 155px;
+  flex-shrink: 0;
+}
+.viewtradesform {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--gap-lg);
+  text-align: center;
+  font-size: var(--body-s-size);
+  color: var(--black-000000100);
+  font-family: var(--caption1);
+}

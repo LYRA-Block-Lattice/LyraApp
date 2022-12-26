@@ -43,7 +43,7 @@ const OpenWallet: FunctionComponent = () => {
       <img
         className="illus5-copy-icon"
         alt=""
-        src="_content/ReactRazor/asserts/illus5-copy.svg"
+        src="../asserts/illus5-copy.svg"
       />
       <div>
         <Button

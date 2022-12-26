@@ -20,35 +20,35 @@ const ViewOrdersForm: FunctionComponent = () => {
           <div className="utility-button">New</div>
         </button>
       </div>
-      <div className="ordercard">
-        <div className="great-nft">Great NFT</div>
-        <div className="fiat-usd">Fiat USD</div>
-        <div className="open">Open</div>
-        <div className="div">$300</div>
-        <div className="selling">Selling</div>
-        <div className="biding">Biding</div>
-        <div className="status">Status</div>
-        <div className="price">Price</div>
+      <div className="ordercard3">
+        <div className="great-nft3">Great NFT</div>
+        <div className="fiat-usd3">Fiat USD</div>
+        <div className="open3">Open</div>
+        <div className="div3">$300</div>
+        <div className="selling3">Selling</div>
+        <div className="biding3">Biding</div>
+        <div className="status3">Status</div>
+        <div className="price3">Price</div>
       </div>
-      <div className="ordercard">
-        <div className="great-nft">Great NFT</div>
-        <div className="fiat-usd">Fiat USD</div>
-        <div className="open">Open</div>
-        <div className="div">$300</div>
-        <div className="selling">Selling</div>
-        <div className="biding">Biding</div>
-        <div className="status">Status</div>
-        <div className="price">Price</div>
+      <div className="ordercard3">
+        <div className="great-nft3">Great NFT</div>
+        <div className="fiat-usd3">Fiat USD</div>
+        <div className="open3">Open</div>
+        <div className="div3">$300</div>
+        <div className="selling3">Selling</div>
+        <div className="biding3">Biding</div>
+        <div className="status3">Status</div>
+        <div className="price3">Price</div>
       </div>
-      <div className="ordercard">
-        <div className="great-nft">Great NFT</div>
-        <div className="fiat-usd">Fiat USD</div>
-        <div className="open">Open</div>
-        <div className="div">$300</div>
-        <div className="selling">Selling</div>
-        <div className="biding">Biding</div>
-        <div className="status">Status</div>
-        <div className="price">Price</div>
+      <div className="ordercard3">
+        <div className="great-nft3">Great NFT</div>
+        <div className="fiat-usd3">Fiat USD</div>
+        <div className="open3">Open</div>
+        <div className="div3">$300</div>
+        <div className="selling3">Selling</div>
+        <div className="biding3">Biding</div>
+        <div className="status3">Status</div>
+        <div className="price3">Price</div>
       </div>
     </div>
   );

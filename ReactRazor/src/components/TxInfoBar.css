@@ -1,15 +1,15 @@
 .buy-tv-at-sony-store,
-.div24 {
+.div15 {
   position: absolute;
-  top: calc(50% - 23.75px);
+  top: calc(50% - 24px);
   left: 0;
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 600;
   display: inline-block;
 }
-.div24 {
-  top: calc(50% - 1.75px);
+.div15 {
+  top: calc(50% - 2px);
   font-size: var(--other-11-size);
   line-height: 13px;
   font-weight: 500;
@@ -21,7 +21,7 @@
   right: 0;
 }
 .b {
-  top: calc(50% - 23.75px);
+  top: calc(50% - 24px);
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
@@ -31,19 +31,29 @@
 .path-icon3 {
   height: 2.13%;
   width: 100%;
-  top: 99.1%;
+  top: 99.11%;
   bottom: -1.23%;
   left: 0;
   max-width: 100%;
   overflow: hidden;
   max-height: 100%;
 }
-.div23 {
-  align-self: stretch;
+.div16 {
+  position: absolute;
+  top: 28px;
+  right: 7px;
+  font-size: var(--caption1-size);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  color: var(--black-000000100);
+  text-align: right;
+  display: inline-block;
+}
+.div14 {
   position: relative;
-  height: 55.5px;
+  width: 335px;
+  height: 56px;
   flex-shrink: 0;
-  z-index: 0;
   text-align: left;
   font-size: var(--body-s-size);
   color: var(--color-black1);

@@ -1,6 +1,6 @@
 .create-tot {
   position: relative;
-  font-size: var(--font-size-4xl);
+  font-size: var(--font-size-3xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
@@ -18,17 +18,15 @@
   background-color: var(--color-beige);
   border-radius: var(--br-sm);
   width: 301px;
+  height: 40px;
   flex-shrink: 0;
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-5xs);
+  padding: var(--padding-4xs);
   box-sizing: border-box;
-  justify-content: flex-start;
-}
-.tot-name {
-  height: 40px;
   align-items: center;
+  justify-content: flex-start;
 }
 .tot-description2 {
   height: 124px;
@@ -48,7 +46,7 @@
 .prepare-sell-order-button4 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-5xs) var(--padding-md);
+  padding: var(--padding-4xs) var(--padding-lg);
   background-color: var(--tertiary);
   border-radius: var(--br-xl);
   height: 30px;
@@ -90,7 +88,7 @@
 .prepare-sell-order-button5 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-5xs) var(--padding-2xl);
+  padding: var(--padding-4xs) var(--padding-3xl);
   background-color: var(--secondary);
   border-radius: var(--br-xl);
   height: 40px;
@@ -103,7 +101,7 @@
   background-color: var(--color-white1);
   width: 100%;
   flex-direction: column;
-  padding: var(--padding-lg) var(--padding-xs);
+  padding: var(--padding-xl) var(--padding-sm);
   justify-content: flex-start;
-  gap: var(--gap-md);
+  gap: var(--gap-xl);
 }

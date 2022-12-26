@@ -2,32 +2,13 @@ import { FunctionComponent, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import WalletCard from "../components/WalletCard";
 import EntryButton from "../components/EntryButton";
+import TxInfoBar from "../components/TxInfoBar";
 import "./Market.css";
 
 const Market: FunctionComponent = () => {
   const navigate = useNavigate();
 
   const onWalletNameLabelClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
-
-  const onNFTCountClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
-
-  const onTOTCountClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
-
-  const onOrdersCountClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
-
-  const onGroupButtonClick = useCallback(() => {
-    navigate("/viewordersform");
-  }, [navigate]);
-
-  const onTradesCountClick = useCallback(() => {
     navigate("/redir");
   }, [navigate]);
 
@@ -55,53 +36,6 @@ const Market: FunctionComponent = () => {
             >
               My Primary Account
             </button>
-            <div className="basebalance">
-              <span>
-                <b>120,000</b>
-                <span className="span">
-                  <span className="span1">{` `}</span>
-                </span>
-              </span>
-              <span className="span">
-                <span>LYR</span>
-              </span>
-            </div>
-            <div className="aux-balance">
-              <span>
-                <span className="span2">500</span>
-                <span>{`          `}</span>
-              </span>
-              <span className="span">USDT</span>
-            </div>
-            <div className="token-lists">
-              <div className="nft-label-parent">
-                <b className="nft-label">NFT</b>
-                <button className="nft-count" onClick={onNFTCountClick}>
-                  12
-                </button>
-              </div>
-              <div className="tot-label-parent">
-                <b className="nft-label">TOT</b>
-                <button className="tot-count" onClick={onTOTCountClick}>
-                  3
-                </button>
-              </div>
-              <button
-                className="orders-label-parent"
-                onClick={onGroupButtonClick}
-              >
-                <b className="orders-label">Selling</b>
-                <button className="orders-count" onClick={onOrdersCountClick}>
-                  0
-                </button>
-              </button>
-              <div className="trades-label-parent">
-                <b className="nft-label">Buying</b>
-                <button className="trades-count" onClick={onTradesCountClick}>
-                  0
-                </button>
-              </div>
-            </div>
             <div
               className="qrcode-button"
               onClick={onQRCodeButtonContainerClick}
@@ -113,7 +47,7 @@ const Market: FunctionComponent = () => {
               <img
                 className="qrcode-icon"
                 alt=""
-                src="_content/ReactRazor/asserts/qrcode-icon.svg"
+                src="../asserts/qrcode-icon.svg"
               />
             </div>
             <div className="wallet-decoration">LYRA WALLET</div>
@@ -125,19 +59,19 @@ const Market: FunctionComponent = () => {
       <div className="iconssection">
         <div className="dao-button-parent">
           <EntryButton
-            homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution.svg"
+            homeIconInterlocution="../asserts/home--icon--interlocution.svg"
             ranking="DAO"
           />
           <EntryButton
-            homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution1.svg"
+            homeIconInterlocution="../asserts/home--icon--interlocution1.svg"
             ranking="OTC"
           />
           <EntryButton
-            homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution2.svg"
+            homeIconInterlocution="../asserts/home--icon--interlocution2.svg"
             ranking="Invest"
           />
           <EntryButton
-            homeIconInterlocution="_content/ReactRazor/asserts/home--icon--interlocution3.svg"
+            homeIconInterlocution="../asserts/home--icon--interlocution3.svg"
             ranking="Swap"
           />
         </div>
@@ -148,7 +82,7 @@ const Market: FunctionComponent = () => {
             <img
               className="home-icon-interlocution"
               alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution4.svg"
+              src="../asserts/home--icon--interlocution4.svg"
             />
             <div className="ranking">DEX</div>
           </button>
@@ -156,7 +90,7 @@ const Market: FunctionComponent = () => {
             <img
               className="home-icon-interlocution"
               alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution5.svg"
+              src="../asserts/home--icon--interlocution5.svg"
             />
             <div className="ranking">NFT</div>
           </button>
@@ -164,7 +98,7 @@ const Market: FunctionComponent = () => {
             <img
               className="home-icon-interlocution"
               alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution6.svg"
+              src="../asserts/home--icon--interlocution6.svg"
             />
             <div className="ranking">Mint</div>
           </button>
@@ -172,7 +106,7 @@ const Market: FunctionComponent = () => {
             <img
               className="home-icon-interlocution"
               alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution7.svg"
+              src="../asserts/home--icon--interlocution7.svg"
             />
             <div className="ranking">Staking</div>
           </button>
@@ -181,20 +115,23 @@ const Market: FunctionComponent = () => {
       <div className="lasttransactions">
         <div className="recent-transaction">Recent transaction</div>
         <div className="frame-div">
-          <div className="div11">
-            <div className="buy-tv-at-sony-store">Receive</div>
-            <div className="div12">From Harry James</div>
-            <b className="b">+ 1000 LYR</b>
-            <img className="path-icon3" alt="" src="_content/ReactRazor/asserts/path3.svg" />
-            <div className="div13">10 Min ago</div>
-          </div>
-          <div className="copy">
-            <div className="buy-tv-at-sony-store1">Send</div>
-            <div className="div14">From USD wallet</div>
-            <div className="div15">- 100 LYR</div>
-            <img className="path-icon4" alt="" src="_content/ReactRazor/asserts/path4.svg" />
-            <div className="div16">10 Min ago</div>
-          </div>
+          <TxInfoBar
+            buyTVAtSonyStore="Receive"
+            component="From Harry James"
+            component1="+ 1000 LYR"
+            path="../asserts/path3.svg"
+          />
+          <TxInfoBar
+            componentWidth="333px"
+            buyTVAtSonyStore="Send"
+            component="From USD wallet"
+            component1="- 100 LYR"
+            componentColor="#d15252"
+            componentFontWeight="600"
+            path="../asserts/path4.svg"
+            componentTop="27px"
+            componentRight="8px"
+          />
         </div>
         <button className="more" onClick={onMoreClick}>
           More

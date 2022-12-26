@@ -77,13 +77,11 @@
 .sign-up-parent {
   overflow: hidden;
   display: flex;
+  flex-direction: row;
+  padding: var(--padding-2xs) 40px;
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-}
-.sign-up-parent {
-  flex-direction: row;
-  padding: var(--padding-3xs) 40px;
   gap: 82px;
 }
 .openwallet {
@@ -92,8 +90,8 @@
   width: 100%;
   height: 817px;
   flex-direction: column;
-  padding: var(--padding-2xs) var(--padding-sm);
-  gap: var(--gap-lg);
+  padding: var(--padding-xs) var(--padding-md);
+  gap: 39px;
   text-align: center;
   font-size: var(--large-title-size);
   color: var(--color-coral);
