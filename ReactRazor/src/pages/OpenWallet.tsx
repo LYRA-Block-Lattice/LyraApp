@@ -10,65 +10,50 @@ import {
   Icon,
   InputAdornment,
   IconButton,
+  SelectChangeEvent
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "./OpenWallet.css";
 
 interface customWindow extends Window {
-    lyraSetProxy?: any;
-    lyraProxy?: any;
+  lyraSetProxy?: any;
+  lyraProxy?: any;
 }
 
 declare const window: customWindow;
 
 const OpenWallet: FunctionComponent = () => {
-    const inputRef = useRef<HTMLInputElement>(null);
-    const selRef = useRef<HTMLInputElement>(null);
-    const [wnames, setwnames] = useState([]);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [wnames, setwnames] = useState([]);
+  const [index, setIndex] = useState<number>(0);
 
-  const [selectedWalletNameAnchorEl, setSelectedWalletNameAnchorEl] =
-    useState<HTMLElement | null>(null);
-  const [selectedWalletNameSelectedIndex, setSelectedWalletNameSelectedIndex] =
-    useState<number>(0);
+  async function getWalletName() {
+    let wnames = await window.lyraProxy.invokeMethodAsync("GetWalletNames");
+    setwnames(wnames);
+  }
 
-    async function getWalletName() {
-        let wnames = await window.lyraProxy.invokeMethodAsync("GetWalletNames");
-        setwnames(wnames);
-    }
+  useEffect(() => {
+    getWalletName();
+  }, [wnames]);
 
-    useEffect(() => {
-        getWalletName();
-    }, [wnames]);
-
-    useEffect(() => {
-        console.log("names is " + wnames);
-        console.log("index changed to " + selectedWalletNameSelectedIndex);
-        console.log("selected name is " + wnames[selectedWalletNameSelectedIndex]);
-    }, [selectedWalletNameSelectedIndex]);
+  //useEffect(() => {
+  //  console.log("names is " + wnames);
+  //  console.log("index changed to " + selectedWalletNameSelectedIndex);
+  //  console.log("selected name is " + wnames[selectedWalletNameSelectedIndex]);
+  //}, [selectedWalletNameSelectedIndex]);
 
   const navigate = useNavigate();
-  const selectedWalletNameOpen = Boolean(selectedWalletNameAnchorEl);
-  const handleSelectedWalletNameClick = (
-    event: React.MouseEvent<HTMLElement>
-  ) => {
-    setSelectedWalletNameAnchorEl(event.currentTarget);
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setIndex(+event.target.value);
   };
 
-  const handleSelectedWalletNameMenuItemClick = (index: number) => {
-    setSelectedWalletNameSelectedIndex(index);
-    setSelectedWalletNameAnchorEl(null);
-  };
-  const handleSelectedWalletNameClose = () => {
-    setSelectedWalletNameAnchorEl(null);
-  };
+  const onOpenWallet = useCallback(() => {
+    console.log("names is " + wnames);
+    console.log("selected name is " + name);
 
-    const onOpenWallet = useCallback(() => {
-        console.log("names is " + wnames);
-        console.log("index changed to " + selectedWalletNameSelectedIndex);
-        console.log("selected name is " + wnames[selectedWalletNameSelectedIndex]);
-
-        window.lyraProxy.invokeMethodAsync("OpenWallet", wnames[selectedWalletNameSelectedIndex], inputRef.current!.value);
-    }, [wnames, selectedWalletNameSelectedIndex]);
+    window.lyraProxy.invokeMethodAsync("OpenWallet", wnames[index], inputRef.current!.value);
+  }, [wnames, name]);
 
   const onSignUpClick = useCallback(() => {
     navigate("/create-wallet");
@@ -88,9 +73,15 @@ const OpenWallet: FunctionComponent = () => {
         variant="standard"
       >
         <InputLabel color="primary">Wallet Name</InputLabel>
-        <Select color="primary" size="medium" label="Wallet Name">
-          <MenuItem value="wallet a">wallet a</MenuItem>
-          <MenuItem value="name b">name b</MenuItem>
+        <Select color="primary" size="medium" label="Wallet Name"
+          onChange={handleChange}
+          value={index.toString()}
+        >
+          {wnames.map((name, index) => (
+            <MenuItem value={index}>
+              {name}
+            </MenuItem>
+          ))}
         </Select>
         <FormHelperText />
       </FormControl>
@@ -116,7 +107,7 @@ const OpenWallet: FunctionComponent = () => {
         margin="none"
         required
       />
-        <button className="open-wallet-button" onClick={onOpenWallet}>
+      <button className="open-wallet-button" onClick={onOpenWallet}>
         <div className="button-shape1" />
         <div className="label">Open</div>
       </button>
