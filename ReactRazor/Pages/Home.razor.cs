@@ -13,6 +13,8 @@ using Fluxor;
 using Nebula.Store.WebWalletUseCase;
 using Blazored.LocalStorage;
 using Microsoft.Extensions.Localization;
+using Lyra.Core.API;
+using Newtonsoft.Json;
 
 namespace ReactRazor.Pages
 {
@@ -83,6 +85,13 @@ namespace ReactRazor.Pages
         {
             Dispatcher.Dispatch(new WebWalletOpenAction{store = _consts.NebulaStorName, name = name, password = password});
             return Task.FromResult($"Opening...");
+        }
+
+        [JSInvokable("GetBalance")]
+        public Task<string> GetBalancesAsync()
+        {
+            var balances = walletState.Value.wallet.GetLastSyncBlock().Balances.ToDecimalDict();
+            return Task.FromResult(JsonConvert.SerializeObject(balances.Select(kvp => new {token = kvp.Key, balance = kvp.Value })));
         }
     }
 }

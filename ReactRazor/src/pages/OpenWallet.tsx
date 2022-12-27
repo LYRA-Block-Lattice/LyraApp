@@ -26,6 +26,7 @@ const OpenWallet: FunctionComponent = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [wnames, setwnames] = useState([]);
   const [index, setIndex] = useState<number>(0);
+  const navigate = useNavigate();
 
   async function getWalletName() {
     let wnames = await window.lyraProxy.invokeMethodAsync("GetWalletNames");
@@ -35,14 +36,6 @@ const OpenWallet: FunctionComponent = () => {
   useEffect(() => {
     getWalletName();
   }, [wnames]);
-
-  //useEffect(() => {
-  //  console.log("names is " + wnames);
-  //  console.log("index changed to " + selectedWalletNameSelectedIndex);
-  //  console.log("selected name is " + wnames[selectedWalletNameSelectedIndex]);
-  //}, [selectedWalletNameSelectedIndex]);
-
-  const navigate = useNavigate();
 
   const handleChange = (event: SelectChangeEvent) => {
     setIndex(+event.target.value);

@@ -1,10 +1,31 @@
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent, useCallback, useState, useEffect } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "./SellTokenToToken.css";
 
+interface customWindow extends Window {
+  lyraSetProxy?: any;
+  lyraProxy?: any;
+}
+declare const window: customWindow;
+interface IBalance {
+  token: string;
+  balance: number;
+}
+
 const SellTokenToToken: FunctionComponent = () => {
+  const [tokens, setTokens] = useState<IBalance[]>([]);
   const navigate = useNavigate();
+
+  async function getTokens() {
+    let t = await window.lyraProxy.invokeMethodAsync("GetBalance");
+    var tkns = JSON.parse(t);
+    setTokens(tkns);
+  }
+
+  useEffect(() => {
+    getTokens();
+  }, [tokens]);
 
   const onReviewTheOrderClick = useCallback(() => {
     navigate("/previewsellorderform");
@@ -17,7 +38,7 @@ const SellTokenToToken: FunctionComponent = () => {
         <Autocomplete
           sx={{ width: 301 }}
           disablePortal
-          options={["aaa", "bbb", "ccc"]}
+          options={tokens.filter(a => !a.token.startsWith("tot/") && !a.token.startsWith("fiat/") && !a.token.startsWith("svc/")).map(a => a.token)}
           renderInput={(params: any) => (
             <TextField
               {...params}
