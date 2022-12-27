@@ -10,7 +10,7 @@
   display: inline-block;
   width: 296px;
 }
-.selecttypeoftot,
+.selecttypeoftot8,
 .tot-description2,
 .tot-supply {
   background-color: var(--color-beige);
@@ -24,7 +24,7 @@
   box-sizing: border-box;
   justify-content: flex-start;
 }
-.selecttypeoftot {
+.selecttypeoftot8 {
   height: 40px;
   align-items: center;
   gap: var(--gap-sm);
@@ -126,28 +126,66 @@
   flex-direction: row;
   justify-content: center;
 }
-.price-and-collateral4 {
-  font-size: var(--font-size-4xl);
-  font-weight: 500;
-  width: 296px;
-}
 .price-and-collateral4,
-.primary-button4,
 .set-the-price-1-offering-fo4 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
 }
+.price-and-collateral4 {
+  font-size: var(--font-size-4xl);
+  font-weight: 500;
+  width: 296px;
+}
 .set-the-price-1-offering-fo4 {
   width: 292px;
 }
+.limitmin4 {
+  border: 0;
+  font-family: var(--caption1);
+  font-size: var(--body-s-size);
+  background-color: var(--color-beige);
+  border-radius: var(--br-sm);
+  width: 138px;
+  height: 40px;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  padding: var(--padding-5xs);
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: flex-start;
+}
+.div4 {
+  position: relative;
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  display: inline-block;
+}
+.limitoftrade4 {
+  width: 322px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  padding: var(--padding-5xs);
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-sm);
+  font-size: var(--body-s-size);
+}
 .primary-button4 {
+  position: relative;
   font-size: var(--font-size-3xl);
+  letter-spacing: 0.41px;
+  line-height: 18px;
   font-weight: 500;
   font-family: var(--caption1);
   color: var(--color-white1);
   text-align: center;
+  display: inline-block;
 }
 .reviewtheorder4 {
   cursor: pointer;
@@ -170,6 +208,7 @@
 .priceandcollateralform4,
 .selltottotot {
   background-color: var(--color-white1);
+  width: 373px;
   overflow: hidden;
   display: flex;
   flex-direction: column;

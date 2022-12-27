@@ -27,7 +27,7 @@ const SellTOTToToken: FunctionComponent = () => {
       <div className="selltottotoken">
         <form className="createtottosellform2">
           <div className="to-get-tokennft">Create and Sell [TOT/SKU]</div>
-          <select className="selecttypeoftot2">
+          <select className="selecttypeoftot14">
             <option value="sku">Goods</option>
             <option value="svc">Service</option>
             <option value="tot">Generic Trade only TOken</option>
@@ -85,12 +85,25 @@ const SellTOTToToken: FunctionComponent = () => {
             type="number"
             placeholder="Price for biding token"
           />
-          <div className="set-the-price-1-offering-fo6">Count:</div>
+          <div className="set-the-price-1-offering-fo6">Amount:</div>
           <input
             className="tot-name5"
             type="number"
             placeholder="Count of the selling token"
           />
+          <div className="limitoftrade6">
+            <input
+              className="limitmin6"
+              type="number"
+              placeholder="Collateral in LYR to guard the trade"
+            />
+            <div className="div6">-</div>
+            <input
+              className="limitmin6"
+              type="number"
+              placeholder="Collateral in LYR to guard the trade"
+            />
+          </div>
           <div className="set-the-price-1-offering-fo6">
             Collateral (in LYR):
           </div>
@@ -102,6 +115,22 @@ const SellTOTToToken: FunctionComponent = () => {
           <div className="set-the-price-1-offering-fo6">
             Collateral worth in USD: $103
           </div>
+          <div className="set-the-price-1-offering-fo6">
+            Create order in DAO:
+          </div>
+          <select className="selecttypeoftot14">
+            <option value="sku">Goods</option>
+            <option value="svc">Service</option>
+            <option value="tot">Generic Trade only TOken</option>
+          </select>
+          <div className="set-the-price-1-offering-fo6">
+            Select current Dealer:
+          </div>
+          <select className="selecttypeoftot14">
+            <option value="sku">Goods</option>
+            <option value="svc">Service</option>
+            <option value="tot">Generic Trade only TOken</option>
+          </select>
           <button className="reviewtheorder6" onClick={onReviewTheOrderClick}>
             <div className="primary-button6">Review the Order</div>
           </button>

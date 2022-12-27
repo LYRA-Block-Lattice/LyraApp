@@ -54,7 +54,7 @@
   font-size: var(--font-size-4xl);
 }
 .biding3,
-.div3,
+.div12,
 .fiat-usd3,
 .great-nft3,
 .open3,
@@ -70,7 +70,7 @@
   display: inline-block;
 }
 .biding3,
-.div3,
+.div12,
 .fiat-usd3,
 .open3,
 .price3,
@@ -80,7 +80,7 @@
   left: 99px;
 }
 .biding3,
-.div3,
+.div12,
 .open3,
 .price3,
 .selling3,
@@ -89,7 +89,7 @@
   left: 114px;
 }
 .biding3,
-.div3,
+.div12,
 .price3,
 .selling3,
 .status3 {

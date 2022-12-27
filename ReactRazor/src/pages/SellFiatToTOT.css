@@ -113,28 +113,77 @@
   justify-content: flex-start;
   gap: var(--gap-lg);
 }
-.price-and-collateral2 {
-  font-size: var(--font-size-4xl);
-  font-weight: 500;
-  width: 296px;
-}
 .price-and-collateral2,
-.primary-button2,
 .set-the-price-1-offering-fo2 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
 }
+.price-and-collateral2 {
+  font-size: var(--font-size-4xl);
+  font-weight: 500;
+  width: 296px;
+}
 .set-the-price-1-offering-fo2 {
   width: 292px;
 }
+.limitmin2 {
+  border: 0;
+  font-family: var(--caption1);
+  font-size: var(--body-s-size);
+  background-color: var(--color-beige);
+  border-radius: var(--br-sm);
+  width: 138px;
+  height: 40px;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  padding: var(--padding-5xs);
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: flex-start;
+}
+.div2 {
+  position: relative;
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  display: inline-block;
+}
+.limitoftrade2,
+.selecttypeoftot4 {
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  padding: var(--padding-5xs);
+  box-sizing: border-box;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+.limitoftrade2 {
+  width: 322px;
+  justify-content: center;
+  font-size: var(--body-s-size);
+}
+.selecttypeoftot4 {
+  border-radius: var(--br-sm);
+  background-color: var(--color-beige);
+  width: 301px;
+  height: 40px;
+  flex-shrink: 0;
+  justify-content: flex-start;
+}
 .primary-button2 {
+  position: relative;
   font-size: var(--font-size-3xl);
+  letter-spacing: 0.41px;
+  line-height: 18px;
   font-weight: 500;
   font-family: var(--caption1);
   color: var(--color-white1);
   text-align: center;
+  display: inline-block;
 }
 .reviewtheorder2 {
   cursor: pointer;
@@ -157,6 +206,7 @@
 .priceandcollateralform2,
 .sellfiattotot {
   background-color: var(--color-white1);
+  width: 373px;
   overflow: hidden;
   display: flex;
   flex-direction: column;

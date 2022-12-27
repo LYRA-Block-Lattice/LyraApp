@@ -10,7 +10,7 @@
   display: inline-block;
   width: 296px;
 }
-.selecttypeoftot1,
+.selecttypeoftot11,
 .tot-description4,
 .tot-name4 {
   background-color: var(--color-beige);
@@ -26,7 +26,7 @@
   align-items: center;
   justify-content: flex-start;
 }
-.selecttypeoftot1 {
+.selecttypeoftot11 {
   gap: var(--gap-sm);
 }
 .tot-description4,
@@ -116,28 +116,66 @@
   padding: var(--padding-lg) var(--padding-2xs);
   gap: var(--gap-xl);
 }
-.price-and-collateral5 {
-  font-size: var(--font-size-4xl);
-  font-weight: 500;
-  width: 296px;
-}
 .price-and-collateral5,
-.primary-button5,
 .set-the-price-1-offering-fo5 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
 }
+.price-and-collateral5 {
+  font-size: var(--font-size-4xl);
+  font-weight: 500;
+  width: 296px;
+}
 .set-the-price-1-offering-fo5 {
   width: 292px;
 }
+.limitmin5 {
+  border: 0;
+  font-family: var(--caption1);
+  font-size: var(--body-s-size);
+  background-color: var(--color-beige);
+  border-radius: var(--br-sm);
+  width: 138px;
+  height: 40px;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  padding: var(--padding-5xs);
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: flex-start;
+}
+.div5 {
+  position: relative;
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  display: inline-block;
+}
+.limitoftrade5 {
+  width: 322px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  padding: var(--padding-5xs);
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-sm);
+  font-size: var(--body-s-size);
+}
 .primary-button5 {
+  position: relative;
   font-size: var(--font-size-3xl);
+  letter-spacing: 0.41px;
+  line-height: 18px;
   font-weight: 500;
   font-family: var(--caption1);
   color: var(--color-white1);
   text-align: center;
+  display: inline-block;
 }
 .reviewtheorder5 {
   cursor: pointer;
@@ -160,6 +198,7 @@
 .priceandcollateralform5,
 .selltottofiat {
   background-color: var(--color-white1);
+  width: 373px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
