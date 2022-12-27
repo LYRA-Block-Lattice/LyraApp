@@ -24,7 +24,7 @@ const ViewOrdersForm: FunctionComponent = () => {
         <div className="great-nft3">Great NFT</div>
         <div className="fiat-usd3">Fiat USD</div>
         <div className="open3">Open</div>
-        <div className="div3">$300</div>
+        <div className="div12">$300</div>
         <div className="selling3">Selling</div>
         <div className="biding3">Biding</div>
         <div className="status3">Status</div>
@@ -34,7 +34,7 @@ const ViewOrdersForm: FunctionComponent = () => {
         <div className="great-nft3">Great NFT</div>
         <div className="fiat-usd3">Fiat USD</div>
         <div className="open3">Open</div>
-        <div className="div3">$300</div>
+        <div className="div12">$300</div>
         <div className="selling3">Selling</div>
         <div className="biding3">Biding</div>
         <div className="status3">Status</div>
@@ -44,7 +44,7 @@ const ViewOrdersForm: FunctionComponent = () => {
         <div className="great-nft3">Great NFT</div>
         <div className="fiat-usd3">Fiat USD</div>
         <div className="open3">Open</div>
-        <div className="div3">$300</div>
+        <div className="div12">$300</div>
         <div className="selling3">Selling</div>
         <div className="biding3">Biding</div>
         <div className="status3">Status</div>

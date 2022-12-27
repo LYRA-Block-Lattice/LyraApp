@@ -36,6 +36,7 @@
 .set-the-price-1-offering-fo7 {
   width: 292px;
 }
+.limitmin7,
 .sellatprice7 {
   border: 0;
   font-family: var(--caption1);
@@ -51,6 +52,38 @@
   padding: var(--padding-5xs);
   box-sizing: border-box;
   align-items: center;
+  justify-content: flex-start;
+}
+.limitmin7 {
+  width: 138px;
+}
+.div7 {
+  position: relative;
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  display: inline-block;
+}
+.limitoftrade7,
+.selecttypeoftot17 {
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  padding: var(--padding-5xs);
+  box-sizing: border-box;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+.limitoftrade7 {
+  width: 322px;
+  justify-content: center;
+  font-size: var(--body-s-size);
+}
+.selecttypeoftot17 {
+  border-radius: var(--br-sm);
+  background-color: var(--color-beige);
+  width: 301px;
+  height: 40px;
+  flex-shrink: 0;
   justify-content: flex-start;
 }
 .primary-button7 {
@@ -85,6 +118,7 @@
 .priceandcollateralform7,
 .sellfiattotoken {
   background-color: var(--color-white1);
+  width: 373px;
   overflow: hidden;
   display: flex;
   flex-direction: column;

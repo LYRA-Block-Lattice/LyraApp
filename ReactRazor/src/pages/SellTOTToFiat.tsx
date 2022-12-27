@@ -29,7 +29,7 @@ const SellTOTToFiat: FunctionComponent = () => {
           <div className="create-and-sell-totsku1">
             Create and Sell [TOT/SKU]
           </div>
-          <select className="selecttypeoftot1">
+          <select className="selecttypeoftot11">
             <option value="sku">Goods</option>
             <option value="svc">Service</option>
             <option value="tot">Generic Trade only TOken</option>
@@ -87,12 +87,25 @@ const SellTOTToFiat: FunctionComponent = () => {
             type="number"
             placeholder="Price for biding token"
           />
-          <div className="set-the-price-1-offering-fo5">Count:</div>
+          <div className="set-the-price-1-offering-fo5">Amount:</div>
           <input
             className="tot-name4"
             type="number"
             placeholder="Count of the selling token"
           />
+          <div className="limitoftrade5">
+            <input
+              className="limitmin5"
+              type="number"
+              placeholder="Collateral in LYR to guard the trade"
+            />
+            <div className="div5">-</div>
+            <input
+              className="limitmin5"
+              type="number"
+              placeholder="Collateral in LYR to guard the trade"
+            />
+          </div>
           <div className="set-the-price-1-offering-fo5">
             Collateral (in LYR):
           </div>
@@ -104,6 +117,22 @@ const SellTOTToFiat: FunctionComponent = () => {
           <div className="set-the-price-1-offering-fo5">
             Collateral worth in USD: $103
           </div>
+          <div className="set-the-price-1-offering-fo5">
+            Create order in DAO:
+          </div>
+          <select className="selecttypeoftot11">
+            <option value="sku">Goods</option>
+            <option value="svc">Service</option>
+            <option value="tot">Generic Trade only TOken</option>
+          </select>
+          <div className="set-the-price-1-offering-fo5">
+            Select current Dealer:
+          </div>
+          <select className="selecttypeoftot11">
+            <option value="sku">Goods</option>
+            <option value="svc">Service</option>
+            <option value="tot">Generic Trade only TOken</option>
+          </select>
           <button className="reviewtheorder5" onClick={onReviewTheOrderClick}>
             <div className="primary-button5">Review the Order</div>
           </button>

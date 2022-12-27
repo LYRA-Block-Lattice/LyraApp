@@ -58,12 +58,25 @@ const SellFiatToFiat: FunctionComponent = () => {
           type="number"
           placeholder="Price for biding token"
         />
-        <div className="set-the-price-1-offering-fo3">Count:</div>
+        <div className="set-the-price-1-offering-fo3">Amount:</div>
         <input
           className="sellatprice3"
           type="number"
           placeholder="Count of the selling token"
         />
+        <div className="limitoftrade3">
+          <input
+            className="limitmin3"
+            type="number"
+            placeholder="Collateral in LYR to guard the trade"
+          />
+          <div className="div3">-</div>
+          <input
+            className="limitmin3"
+            type="number"
+            placeholder="Collateral in LYR to guard the trade"
+          />
+        </div>
         <div className="set-the-price-1-offering-fo3">Collateral (in LYR):</div>
         <input
           className="sellatprice3"
@@ -73,6 +86,20 @@ const SellFiatToFiat: FunctionComponent = () => {
         <div className="set-the-price-1-offering-fo3">
           Collateral worth in USD: $103
         </div>
+        <div className="set-the-price-1-offering-fo3">Create order in DAO:</div>
+        <select className="selecttypeoftot6">
+          <option value="sku">Goods</option>
+          <option value="svc">Service</option>
+          <option value="tot">Generic Trade only TOken</option>
+        </select>
+        <div className="set-the-price-1-offering-fo3">
+          Select current Dealer:
+        </div>
+        <select className="selecttypeoftot6">
+          <option value="sku">Goods</option>
+          <option value="svc">Service</option>
+          <option value="tot">Generic Trade only TOken</option>
+        </select>
         <button className="reviewtheorder3" onClick={onReviewTheOrderClick}>
           <div className="primary-button3">Review the Order</div>
         </button>

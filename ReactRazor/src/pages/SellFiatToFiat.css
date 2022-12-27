@@ -36,6 +36,7 @@
 .set-the-price-1-offering-fo3 {
   width: 292px;
 }
+.limitmin3,
 .sellatprice3 {
   border: 0;
   font-family: var(--caption1);
@@ -51,6 +52,38 @@
   padding: var(--padding-5xs);
   box-sizing: border-box;
   align-items: center;
+  justify-content: flex-start;
+}
+.limitmin3 {
+  width: 138px;
+}
+.div3 {
+  position: relative;
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  display: inline-block;
+}
+.limitoftrade3,
+.selecttypeoftot6 {
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  padding: var(--padding-5xs);
+  box-sizing: border-box;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+.limitoftrade3 {
+  width: 322px;
+  justify-content: center;
+  font-size: var(--body-s-size);
+}
+.selecttypeoftot6 {
+  border-radius: var(--br-sm);
+  background-color: var(--color-beige);
+  width: 301px;
+  height: 40px;
+  flex-shrink: 0;
   justify-content: flex-start;
 }
 .primary-button3 {
@@ -85,6 +118,7 @@
 .priceandcollateralform3,
 .sellfiattofiat {
   background-color: var(--color-white1);
+  width: 373px;
   overflow: hidden;
   display: flex;
   flex-direction: column;

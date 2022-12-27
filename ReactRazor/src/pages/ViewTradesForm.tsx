@@ -11,7 +11,7 @@ const ViewTradesForm: FunctionComponent = () => {
         <div className="great-nft">Great NFT</div>
         <div className="fiat-usd">Fiat USD</div>
         <div className="open">Open</div>
-        <div className="div">$300</div>
+        <div className="div9">$300</div>
         <div className="selling">Selling</div>
         <div className="biding">Biding</div>
         <div className="status">Status</div>
@@ -21,7 +21,7 @@ const ViewTradesForm: FunctionComponent = () => {
         <div className="great-nft">Great NFT</div>
         <div className="fiat-usd">Fiat USD</div>
         <div className="open">Open</div>
-        <div className="div">$300</div>
+        <div className="div9">$300</div>
         <div className="selling">Selling</div>
         <div className="biding">Biding</div>
         <div className="status">Status</div>
@@ -31,7 +31,7 @@ const ViewTradesForm: FunctionComponent = () => {
         <div className="great-nft">Great NFT</div>
         <div className="fiat-usd">Fiat USD</div>
         <div className="open">Open</div>
-        <div className="div">$300</div>
+        <div className="div9">$300</div>
         <div className="selling">Selling</div>
         <div className="biding">Biding</div>
         <div className="status">Status</div>
