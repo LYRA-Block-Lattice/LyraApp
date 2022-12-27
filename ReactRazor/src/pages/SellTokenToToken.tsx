@@ -21,10 +21,18 @@ interface IToken {
 }
 
 const SellTokenToToken: FunctionComponent = () => {
-  const [tokens, setTokens] = useState<IBalance[]>([]);
-  const navigate = useNavigate();
+  const [isDisabled, setDisabled] = useState<boolean>(false);
 
+  const [tokens, setTokens] = useState<IBalance[]>([]);  
   const [options, setOptions] = useState<IToken[]>([]);
+
+  const [tosell, setTosell] = useState("");
+  const [toget, setToget] = useState("");
+  const [price, setPrice] = useState<number>(0);
+  const [count, setCount] = useState<number>(0);
+  const [collateral, setCollateral] = useState<number>(0);
+
+  const navigate = useNavigate();
 
   const getData = (searchTerm) => {
     window.lyraProxy.invokeMethodAsync("SearchTokens", searchTerm, "Token")
@@ -43,13 +51,23 @@ const SellTokenToToken: FunctionComponent = () => {
       });
   };
 
-  const onInputChange = (event, value, reason) => {
+  const onSellChange = useCallback((event, value, reason) => {
     if (value) {
+      setTosell(value);
+    } else {
+      setTosell("");
+    }
+  }, [tosell, tokens]);
+
+  const onInputChange = useCallback((event, value, reason) => {
+    if (value) {
+      setToget(value);
       getData(value);
     } else {
+      setToget("");
       setOptions([]);
     }
-  };
+  }, [toget, options]);
 
   async function getTokens() {
     let t = await window.lyraProxy.invokeMethodAsync("GetBalance");
@@ -62,8 +80,17 @@ const SellTokenToToken: FunctionComponent = () => {
   }, [tokens]);
 
   const onReviewTheOrderClick = useCallback(() => {
-    navigate("/previewsellorderform");
-  }, [navigate]);
+    let togettoken = options.find(a => a.name == toget)?.token;
+    console.log("sell " + tosell + ", to get " + togettoken + ", on price " + price);
+    var obj = {
+      selltoken: tosell,
+      gettoken: togettoken,
+      price: price,
+      count: count,
+      collateral: collateral
+    };
+    navigate("/previewsellorderform/?data=" + encodeURIComponent(JSON.stringify(obj)));
+  }, [navigate, tosell, toget, price, count, collateral]);
 
   return (
     <div className="selltokentotoken">
@@ -72,6 +99,7 @@ const SellTokenToToken: FunctionComponent = () => {
         <Autocomplete
           sx={{ width: 301 }}
           disablePortal
+          onInputChange={onSellChange}
           options={tokens.filter(a => !a.token.startsWith("tot/") && !a.token.startsWith("fiat/") && !a.token.startsWith("svc/")).map(a => a.token)}
           renderInput={(params: any) => (
             <TextField
@@ -91,7 +119,7 @@ const SellTokenToToken: FunctionComponent = () => {
           disablePortal
           options={options}
           onInputChange={onInputChange}
-          getOptionLabel={(option) => option.token}
+          getOptionLabel={(option) => option.name}
           renderInput={(params: any) => (
             <TextField
               {...params}
@@ -108,29 +136,34 @@ const SellTokenToToken: FunctionComponent = () => {
       <div className="priceandcollateralform8">
         <div className="price-and-collateral8">Price and Collateral</div>
         <div className="set-the-price-1-offering-fo8">
-          Set the price, 1 [offering] for [biding]:
+          Set the price, 1 {tosell} for {toget}:
         </div>
         <input
           className="sellatprice8"
           type="number"
           placeholder="Price for biding token"
+          onChange={(e) => setPrice(+e.target.value)}
         />
         <div className="set-the-price-1-offering-fo8">Count:</div>
         <input
           className="sellatprice8"
           type="number"
           placeholder="Count of the selling token"
+          onChange={(e) => setCount(+e.target.value)}
         />
         <div className="set-the-price-1-offering-fo8">Collateral (in LYR):</div>
         <input
           className="sellatprice8"
           type="number"
           placeholder="Collateral in LYR to guard the trade"
+          onChange={(e) => setCollateral(+e.target.value)}
         />
         <div className="set-the-price-1-offering-fo8">
           Collateral worth in USD: $103
         </div>
-        <button className="reviewtheorder8" onClick={onReviewTheOrderClick}>
+        <button className="reviewtheorder8"
+          disabled={isDisabled}
+          onClick={onReviewTheOrderClick}>
           <div className="primary-button8">Review the Order</div>
         </button>
       </div>

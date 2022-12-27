@@ -1,10 +1,13 @@
 import { FunctionComponent, useCallback } from "react";
 import { FormControlLabel, Checkbox } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import "./PreviewSellOrderForm.css";
 
 const PreviewSellOrderForm: FunctionComponent = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams({});
+  const data = decodeURIComponent(searchParams.get("data")!);
+  const obj = JSON.parse(data);
 
   const onPrepareSellOrderButtonClick = useCallback(() => {
     navigate("/createordersuccessform");
@@ -14,9 +17,9 @@ const PreviewSellOrderForm: FunctionComponent = () => {
     <div className="previewsellorderform">
       <div className="preview-sell-order">Preview Sell Order</div>
       <div className="ill-sell-count-type-of-t">
-        <p className="ill-sell-count">I’ll sell (count) (type) of (token).</p>
+        <p className="ill-sell-count">I’ll sell {obj.count} of {obj.selltoken}.</p>
         <p className="ill-sell-count">
-          I want buyer pay me by (type) via (way)
+          I want buyer pay me by {obj.gettoken}
         </p>
         <p className="ill-send-trade">
           I’ll send trade secret to buyer privately as bellow:
