@@ -4,8 +4,8 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	<AssemblyVersion>1.3.0.348</AssemblyVersion>
-	<PackageVersion>1.3.0.348</PackageVersion>
+	<AssemblyVersion>1.3.0.349</AssemblyVersion>
+	<PackageVersion>1.3.0.349</PackageVersion>
   </PropertyGroup>
 
 	<ItemGroup>
