@@ -93,5 +93,12 @@ namespace ReactRazor.Pages
             var balances = walletState.Value.wallet.GetLastSyncBlock().Balances.ToDecimalDict();
             return Task.FromResult(JsonConvert.SerializeObject(balances.Select(kvp => new {token = kvp.Key, balance = kvp.Value })));
         }
+
+        [JSInvokable("SearchTokens")]
+        public async Task<string?> SearchTokensAsync(string? q, string? cat)
+        {
+            var tokens = await walletState.Value.wallet.RPC.FindTokensAsync(q, cat);
+            return tokens;
+        }
     }
 }

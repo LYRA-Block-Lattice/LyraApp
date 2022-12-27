@@ -1,7 +1,8 @@
-import { FunctionComponent, useCallback, useState, useEffect } from "react";
+import { FunctionComponent, useCallback, useState, useEffect, useRef } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "./SellTokenToToken.css";
+import { option } from "yargs";
 
 interface customWindow extends Window {
   lyraSetProxy?: any;
@@ -12,10 +13,43 @@ interface IBalance {
   token: string;
   balance: number;
 }
+interface IToken {
+  token: string;
+  domain: string;
+  isTOT: boolean;
+  name: string;
+}
 
 const SellTokenToToken: FunctionComponent = () => {
   const [tokens, setTokens] = useState<IBalance[]>([]);
   const navigate = useNavigate();
+
+  const [options, setOptions] = useState<IToken[]>([]);
+
+  const getData = (searchTerm) => {
+    window.lyraProxy.invokeMethodAsync("SearchTokens", searchTerm, "Token")
+      .then(function (response) {
+        return JSON.parse(response);
+      })
+      .then(function (myJson) {
+        console.log(
+          "search term: " + searchTerm + ", results: ",
+          myJson
+        );
+        //const updatedOptions = myJson.map((p) => {
+        //  return { token: p.token };
+        //});
+        setOptions(myJson);
+      });
+  };
+
+  const onInputChange = (event, value, reason) => {
+    if (value) {
+      getData(value);
+    } else {
+      setOptions([]);
+    }
+  };
 
   async function getTokens() {
     let t = await window.lyraProxy.invokeMethodAsync("GetBalance");
@@ -55,7 +89,9 @@ const SellTokenToToken: FunctionComponent = () => {
         <Autocomplete
           sx={{ width: 301 }}
           disablePortal
-          options={["aaa", "bbb", "ccc"]}
+          options={options}
+          onInputChange={onInputChange}
+          getOptionLabel={(option) => option.token}
           renderInput={(params: any) => (
             <TextField
               {...params}
