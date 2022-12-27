@@ -19,7 +19,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-4xs);
+  padding: var(--padding-5xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
@@ -29,7 +29,7 @@
   align-items: flex-start;
 }
 .or,
-.secondary-button2 {
+.secondary-button7 {
   position: relative;
   font-size: var(--body-s-size);
   letter-spacing: 0.41px;
@@ -41,21 +41,21 @@
 .or {
   width: 31px;
 }
-.secondary-button2 {
+.secondary-button7 {
   font-family: var(--caption1);
   color: var(--color-white1);
 }
 .createnftform,
-.prepare-sell-order-button6 {
+.prepare-sell-order-button16 {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
   align-items: center;
 }
-.prepare-sell-order-button6 {
+.prepare-sell-order-button16 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs) var(--padding-3xl);
+  padding: var(--padding-5xs) var(--padding-2xl);
   background-color: var(--secondary);
   border-radius: var(--br-xl);
   height: 40px;
@@ -68,11 +68,11 @@
   background-color: var(--color-white1);
   width: 100%;
   flex-direction: column;
-  padding: var(--padding-xl) var(--padding-sm);
+  padding: var(--padding-lg) var(--padding-xs);
   justify-content: flex-start;
-  gap: var(--gap-xl);
+  gap: var(--gap-lg);
   text-align: left;
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
   color: var(--black-000000100);
   font-family: var(--caption1);
 }

@@ -5,23 +5,31 @@ import {
   useLocation,
 } from "react-router-dom";
 import Empty from "./pages/Empty";
+import SellTokenToTOT from "./pages/SellTokenToTOT";
+import SellTokenToFiat from "./pages/SellTokenToFiat";
+import SellFiatToTOT from "./pages/SellFiatToTOT";
+import SellFiatToFiat from "./pages/SellFiatToFiat";
+import SellTOTToTOT from "./pages/SellTOTToTOT";
+import SellTOTToFiat from "./pages/SellTOTToFiat";
+import SellTOTToToken from "./pages/SellTOTToToken";
+import SellFiatToToken from "./pages/SellFiatToToken";
+import SellTokenToToken from "./pages/SellTokenToToken";
 import ViewTradesForm from "./pages/ViewTradesForm";
 import ViewOrdersForm from "./pages/ViewOrdersForm";
 import CreateOrderSuccessForm from "./pages/CreateOrderSuccessForm";
-import SignTradeSecretForm from "./pages/SignTradeSecretForm";
 import PreviewSellOrderForm from "./pages/PreviewSellOrderForm";
-import CreateTOTForm from "./pages/CreateTOTForm";
 import CreateNFTForm from "./pages/CreateNFTForm";
-import PriceAndCollateralForm from "./pages/PriceAndCollateralForm";
-import SelectTokenNameForm from "./pages/SelectTokenNameForm";
 import CreateTokenForm from "./pages/CreateTokenForm";
-import SelectOfferingAndBiding from "./pages/SelectOfferingAndBiding";
 import StartToCreateOrder from "./pages/StartToCreateOrder";
 import TransactionHistory from "./pages/TransactionHistory";
 import Redir from "./pages/Redir";
 import Market from "./pages/Market";
 import CreateWallet from "./pages/CreateWallet";
 import OpenWallet from "./pages/OpenWallet";
+import CreateTOTForm from "./pages/CreateTOTForm";
+import PriceAndCollateralForm from "./pages/PriceAndCollateralForm";
+import SelectTokenNameForm from "./pages/SelectTokenNameForm";
+import SelectOfferingAndBiding from "./pages/SelectOfferingAndBiding";
 import IconParkSolidworker from "./pages/IconParkSolidworker";
 import OldV1UI from "./pages/OldV1UI";
 import { useEffect } from "react";
@@ -47,6 +55,42 @@ function App() {
         title = "";
         metaDescription = "";
         break;
+      case "/selltokentotot":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/selltokentofiat":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/sellfiattotot":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/sellfiattofiat":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/selltottotot":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/selltottofiat":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/selltottotoken":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/sellfiattotoken":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/selltokentotoken":
+        title = "";
+        metaDescription = "";
+        break;
       case "/viewtradesform":
         title = "";
         metaDescription = "";
@@ -59,15 +103,7 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/signtradesecretform":
-        title = "";
-        metaDescription = "";
-        break;
       case "/previewsellorderform":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/createtotform":
         title = "";
         metaDescription = "";
         break;
@@ -75,19 +111,7 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/priceandcollateralform":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/selecttokennameform":
-        title = "";
-        metaDescription = "";
-        break;
       case "/createtokenform":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/selecttokenfororder":
         title = "";
         metaDescription = "";
         break;
@@ -112,6 +136,22 @@ function App() {
         metaDescription = "";
         break;
       case "/open-wallet":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/createtotform":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/priceandcollateralform":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/selecttokennameform":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/selectofferingandbiding":
         title = "";
         metaDescription = "";
         break;
@@ -143,6 +183,24 @@ function App() {
     <Routes>
       <Route path="/" element={<Empty />} />
 
+      <Route path="/selltokentotot" element={<SellTokenToTOT />} />
+
+      <Route path="/selltokentofiat" element={<SellTokenToFiat />} />
+
+      <Route path="/sellfiattotot" element={<SellFiatToTOT />} />
+
+      <Route path="/sellfiattofiat" element={<SellFiatToFiat />} />
+
+      <Route path="/selltottotot" element={<SellTOTToTOT />} />
+
+      <Route path="/selltottofiat" element={<SellTOTToFiat />} />
+
+      <Route path="/selltottotoken" element={<SellTOTToToken />} />
+
+      <Route path="/sellfiattotoken" element={<SellFiatToToken />} />
+
+      <Route path="/selltokentotoken" element={<SellTokenToToken />} />
+
       <Route path="/viewtradesform" element={<ViewTradesForm />} />
 
       <Route path="/viewordersform" element={<ViewOrdersForm />} />
@@ -152,27 +210,11 @@ function App() {
         element={<CreateOrderSuccessForm />}
       />
 
-      <Route path="/signtradesecretform" element={<SignTradeSecretForm />} />
-
       <Route path="/previewsellorderform" element={<PreviewSellOrderForm />} />
-
-      <Route path="/createtotform" element={<CreateTOTForm />} />
 
       <Route path="/createnftform" element={<CreateNFTForm />} />
 
-      <Route
-        path="/priceandcollateralform"
-        element={<PriceAndCollateralForm />}
-      />
-
-      <Route path="/selecttokennameform" element={<SelectTokenNameForm />} />
-
       <Route path="/createtokenform" element={<CreateTokenForm />} />
-
-      <Route
-        path="/selecttokenfororder"
-        element={<SelectOfferingAndBiding />}
-      />
 
       <Route path="/starttocreateorder" element={<StartToCreateOrder />} />
 
@@ -185,6 +227,20 @@ function App() {
       <Route path="/create-wallet" element={<CreateWallet />} />
 
       <Route path="/open-wallet" element={<OpenWallet />} />
+
+      <Route path="/createtotform" element={<CreateTOTForm />} />
+
+      <Route
+        path="/priceandcollateralform"
+        element={<PriceAndCollateralForm />}
+      />
+
+      <Route path="/selecttokennameform" element={<SelectTokenNameForm />} />
+
+      <Route
+        path="/selectofferingandbiding"
+        element={<SelectOfferingAndBiding />}
+      />
 
       <Route path="/iconparksolidworker" element={<IconParkSolidworker />} />
 

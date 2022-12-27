@@ -1,0 +1,191 @@
+.create-and-sell-totsku {
+  position: relative;
+  font-size: var(--font-size-4xl);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 500;
+  font-family: var(--caption1);
+  color: var(--black-000000100);
+  text-align: left;
+  display: inline-block;
+  width: 296px;
+}
+.selecttypeoftot,
+.tot-description2,
+.tot-supply {
+  background-color: var(--color-beige);
+  border-radius: var(--br-sm);
+  width: 301px;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  padding: var(--padding-5xs);
+  box-sizing: border-box;
+  justify-content: flex-start;
+}
+.selecttypeoftot {
+  height: 40px;
+  align-items: center;
+  gap: var(--gap-sm);
+}
+.tot-description2,
+.tot-supply {
+  border: 0;
+  font-family: var(--caption1);
+  font-size: var(--body-s-size);
+  height: 124px;
+  align-items: flex-start;
+}
+.tot-supply {
+  height: 40px;
+  align-items: center;
+}
+.utility-button2 {
+  position: relative;
+  font-size: var(--font-size-base);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 500;
+  font-family: var(--caption1);
+  color: var(--color-white1);
+  text-align: center;
+  display: inline-block;
+}
+.prepare-sell-order-button4 {
+  cursor: pointer;
+  border: 0;
+  padding: var(--padding-5xs) var(--padding-md);
+  background-color: var(--tertiary);
+  border-radius: var(--br-xl);
+  height: 30px;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+}
+.note-i-need-to-send-trade-sec2,
+.secondary-button2 {
+  position: relative;
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-family: var(--caption1);
+  display: inline-block;
+}
+.note-i-need-to-send-trade-sec2 {
+  font-size: var(--font-size-base);
+  color: var(--black-000000100);
+  text-align: left;
+  width: 292px;
+}
+.secondary-button2 {
+  font-size: var(--body-s-size);
+  font-weight: 500;
+  color: var(--color-white1);
+  text-align: center;
+}
+.prepare-sell-order-button5 {
+  cursor: pointer;
+  border: 0;
+  padding: var(--padding-5xs) var(--padding-2xl);
+  background-color: var(--secondary);
+  border-radius: var(--br-xl);
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.createtottosellform,
+.prepare-sell-order-button5,
+.prepare-sell-order-button6 {
+  overflow: hidden;
+  box-sizing: border-box;
+  align-items: center;
+}
+.createtottosellform {
+  background-color: var(--color-white1);
+  display: flex;
+  flex-direction: column;
+  padding: var(--padding-lg) var(--padding-xs);
+  justify-content: flex-start;
+  gap: var(--gap-lg);
+}
+.prepare-sell-order-button6 {
+  cursor: pointer;
+  border: 0;
+  padding: var(--padding-5xs) var(--padding-md);
+  background-color: var(--tertiary);
+  border-radius: var(--br-xl);
+  height: 30px;
+  flex-shrink: 0;
+  display: none;
+  flex-direction: row;
+  justify-content: center;
+}
+.price-and-collateral4 {
+  font-size: var(--font-size-4xl);
+  font-weight: 500;
+  width: 296px;
+}
+.price-and-collateral4,
+.primary-button4,
+.set-the-price-1-offering-fo4 {
+  position: relative;
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  display: inline-block;
+}
+.set-the-price-1-offering-fo4 {
+  width: 292px;
+}
+.primary-button4 {
+  font-size: var(--font-size-3xl);
+  font-weight: 500;
+  font-family: var(--caption1);
+  color: var(--color-white1);
+  text-align: center;
+}
+.reviewtheorder4 {
+  cursor: pointer;
+  border: 0;
+  padding: var(--padding-5xs) var(--padding-4xl);
+  background-color: var(--primary);
+  border-radius: var(--br-xl);
+  height: 50px;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+}
+.reviewtheorder4:disabled {
+  background-color: var(--color-gray-200);
+}
+.priceandcollateralform4,
+.selltottotot {
+  background-color: var(--color-white1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: var(--padding-lg) 0;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--gap-lg);
+}
+.selltottotot {
+  position: relative;
+  width: 100%;
+  padding: var(--padding-4xl) var(--padding-5xl);
+  gap: var(--gap-sm);
+  text-align: left;
+  font-size: var(--font-size-base);
+  color: var(--black-000000100);
+  font-family: var(--caption1);
+}

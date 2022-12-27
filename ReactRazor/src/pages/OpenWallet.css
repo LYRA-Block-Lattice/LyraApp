@@ -10,10 +10,13 @@
   height: 252px;
   flex-shrink: 0;
 }
+.password,
+.wallet-name1 {
+  position: relative;
+}
 .password {
   border: 0;
   background-color: transparent;
-  position: relative;
 }
 .button-shape1 {
   position: absolute;
@@ -78,7 +81,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-2xs) 40px;
+  padding: var(--padding-3xs) 40px;
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
@@ -90,7 +93,7 @@
   width: 100%;
   height: 817px;
   flex-direction: column;
-  padding: var(--padding-xs) var(--padding-md);
+  padding: var(--padding-2xs) var(--padding-sm);
   gap: 39px;
   text-align: center;
   font-size: var(--large-title-size);

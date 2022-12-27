@@ -29,8 +29,8 @@ const PriceAndCollateralForm: FunctionComponent = () => {
   }, [navigate]);
 
   return (
-    <div className="priceandcollateralform">
-      <div className="price-and-collateral">Price and Collateral</div>
+    <div className="priceandcollateralform9">
+      <div className="price-and-collateral9">Price and Collateral</div>
       <div className="offering-for-biding">1 [offering] for [biding]:</div>
       <div>
         <Button
@@ -71,10 +71,10 @@ const PriceAndCollateralForm: FunctionComponent = () => {
       </div>
       <div className="offering-for-biding">Collateral worth in USD: $103</div>
       <button
-        className="prepare-sell-order-button7"
+        className="prepare-sell-order-button21"
         onClick={onPrepareSellOrderButtonClick}
       >
-        <div className="primary-button1">Review the Order</div>
+        <div className="primary-button11">Review the Order</div>
       </button>
     </div>
   );

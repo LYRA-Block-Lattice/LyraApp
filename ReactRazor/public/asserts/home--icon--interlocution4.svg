@@ -2,14 +2,14 @@
 <rect width="40" height="40" fill="white"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M25.387 14.2258H27.1625C30.9661 14.2258 34.0496 17.3093 34.0496 21.1129C34.0496 21.5623 34.0056 22.0107 33.9182 22.4516C32.9268 27.4542 29.0836 31.4044 24.1101 32.5328L18.7713 33.744C17.2076 34.0988 15.6524 33.1188 15.2977 31.5551C15.2498 31.3443 15.2257 31.1289 15.2257 30.9127V24.3871C15.2257 18.7752 19.7751 14.2258 25.387 14.2258Z" fill="#FA6650" fill-opacity="0.14"/>
 <path d="M20.5484 7.5C23.8759 7.5 26.8859 8.84692 29.0679 11.0289C31.2499 13.2109 32.5968 16.2209 32.5968 19.5484C32.5968 22.8759 31.2499 25.8859 29.0679 28.0679C26.8859 30.2499 23.8759 31.5968 20.5484 31.5968H8.5V19.5484C8.5 16.2209 9.84692 13.2109 12.0289 11.0289C14.2109 8.84692 17.2209 7.5 20.5484 7.5Z" stroke="#080808" stroke-width="3"/>
-<path d="M15.2257 22.9355H20.0644" stroke="url(#paint0_linear_284_348)" stroke-width="3" stroke-linecap="round"/>
-<path d="M15.2257 17.6129H25.8709" stroke="url(#paint1_linear_284_348)" stroke-width="3" stroke-linecap="round"/>
+<path d="M15.2257 22.9355H20.0644" stroke="url(#paint0_linear_296_352)" stroke-width="3" stroke-linecap="round"/>
+<path d="M15.2257 17.6129H25.8709" stroke="url(#paint1_linear_296_352)" stroke-width="3" stroke-linecap="round"/>
 <defs>
-<linearGradient id="paint0_linear_284_348" x1="-nan" y1="-nan" x2="-nan" y2="-nan" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint0_linear_296_352" x1="-nan" y1="-nan" x2="-nan" y2="-nan" gradientUnits="userSpaceOnUse">
 <stop stop-color="#FF9B94"/>
 <stop offset="0.99419" stop-color="#FA6650"/>
 </linearGradient>
-<linearGradient id="paint1_linear_284_348" x1="-nan" y1="-nan" x2="-nan" y2="-nan" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint1_linear_296_352" x1="-nan" y1="-nan" x2="-nan" y2="-nan" gradientUnits="userSpaceOnUse">
 <stop stop-color="#FF9B94"/>
 <stop offset="1" stop-color="#FA6650"/>
 </linearGradient>

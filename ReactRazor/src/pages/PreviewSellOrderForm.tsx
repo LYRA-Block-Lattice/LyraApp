@@ -23,7 +23,7 @@ const PreviewSellOrderForm: FunctionComponent = () => {
         </p>
       </div>
       <textarea
-        className="tot-description1"
+        className="tot-description7"
         placeholder={`Please pay to my bank account number:
 
 Bank of America
@@ -38,10 +38,10 @@ Bank of America
         }
       />
       <button
-        className="prepare-sell-order-button3"
+        className="prepare-sell-order-button15"
         onClick={onPrepareSellOrderButtonClick}
       >
-        <div className="primary-button">Place Order</div>
+        <div className="primary-button9">Place Order</div>
       </button>
     </div>
   );

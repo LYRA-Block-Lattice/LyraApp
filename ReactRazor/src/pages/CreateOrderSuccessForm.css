@@ -1,6 +1,6 @@
 .success {
   position: relative;
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
@@ -26,7 +26,7 @@
   font-weight: 100;
 }
 .blvm6g1jjkwuz8ocens7fuuswjqdr3,
-.secondary-button,
+.secondary-button6,
 .view-on-block-explorer {
   position: relative;
   letter-spacing: 0.41px;
@@ -38,24 +38,24 @@
   color: inherit;
   width: 292px;
 }
-.secondary-button {
-  font-size: var(--font-size-xl);
+.secondary-button6 {
+  font-size: var(--font-size-2xl);
   font-weight: 500;
   font-family: var(--caption1);
   color: var(--color-white1);
   text-align: center;
 }
 .createordersuccessform,
-.prepare-sell-order-button1 {
+.prepare-sell-order-button13 {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
   align-items: center;
 }
-.prepare-sell-order-button1 {
+.prepare-sell-order-button13 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs) var(--padding-3xl);
+  padding: var(--padding-5xs) var(--padding-2xl);
   background-color: var(--secondary);
   border-radius: var(--br-xl);
   height: 40px;
@@ -68,11 +68,11 @@
   background-color: var(--color-white1);
   width: 100%;
   flex-direction: column;
-  padding: var(--padding-xl) var(--padding-xs);
+  padding: var(--padding-lg) var(--padding-2xs);
   justify-content: flex-start;
-  gap: var(--gap-xl);
+  gap: var(--gap-lg);
   text-align: center;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   color: var(--black-000000100);
   font-family: var(--caption1);
 }
