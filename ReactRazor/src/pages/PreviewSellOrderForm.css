@@ -15,13 +15,13 @@
 }
 .ill-sell-count-type-of-t {
   position: relative;
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
   width: 292px;
 }
-.tot-description1 {
+.tot-description7 {
   border: 0;
   background-color: var(--color-beige);
   font-family: var(--caption1);
@@ -33,17 +33,17 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-4xs);
+  padding: var(--padding-5xs);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
 }
 .confirm-before-create-order,
-.primary-button {
+.primary-button9 {
   position: relative;
 }
-.primary-button {
-  font-size: var(--font-size-2xl);
+.primary-button9 {
+  font-size: var(--font-size-3xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
@@ -52,17 +52,17 @@
   text-align: center;
   display: inline-block;
 }
-.prepare-sell-order-button3,
+.prepare-sell-order-button15,
 .previewsellorderform {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
   align-items: center;
 }
-.prepare-sell-order-button3 {
+.prepare-sell-order-button15 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs) var(--padding-5xl);
+  padding: var(--padding-5xs) var(--padding-4xl);
   background-color: var(--primary);
   border-radius: var(--br-xl);
   height: 50px;
@@ -75,11 +75,11 @@
   background-color: var(--color-white1);
   width: 100%;
   flex-direction: column;
-  padding: var(--padding-xl) var(--padding-md);
+  padding: var(--padding-lg) var(--padding-sm);
   justify-content: flex-start;
-  gap: var(--gap-xl);
+  gap: var(--gap-lg);
   text-align: left;
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
   color: var(--black-000000100);
   font-family: var(--caption1);
 }

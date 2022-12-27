@@ -34,8 +34,8 @@ const SelectTokenNameForm: FunctionComponent = () => {
           onClose={handleSelectTokenClose}
         />
       </div>
-      <button className="prepare-sell-order-button8">
-        <div className="secondary-button3">Confirm</div>
+      <button className="prepare-sell-order-button22">
+        <div className="secondary-button10">Confirm</div>
       </button>
     </form>
   );

@@ -1,8 +1,10 @@
 import { FunctionComponent, useRef, useState, useEffect, useCallback } from "react";
 import {
-  Button,
-  Menu,
+  FormControl,
+  InputLabel,
   MenuItem,
+  FormHelperText,
+  Select,
   TextField,
   Input,
   Icon,
@@ -80,33 +82,18 @@ const OpenWallet: FunctionComponent = () => {
         alt=""
         src="_content/ReactRazor/asserts/illus5-copy.svg"
       />
-      <div>
-        <Button          
-          id="button-Select Wallet"
-          aria-controls="menu-Select Wallet"
-          aria-haspopup="true"
-          aria-expanded={selectedWalletNameOpen ? "true" : undefined}
-          onClick={handleSelectedWalletNameClick}
-          color="primary"
-              >
-                  {wnames[selectedWalletNameSelectedIndex]}
-        </Button>
-        <Menu
-          anchorEl={selectedWalletNameAnchorEl}
-          open={selectedWalletNameOpen}
-          onClose={handleSelectedWalletNameClose}
-              >
-                  {wnames.map((name, index) => (
-                      <MenuItem
-                          key={name}
-                          selected={index === selectedWalletNameSelectedIndex}
-                          onClick={(event) => handleSelectedWalletNameMenuItemClick(index)}
-                      >
-                          {name}
-                      </MenuItem>
-                  ))}
-        </Menu>
-      </div>
+      <FormControl
+        className="wallet-name1"
+        sx={{ width: 343 }}
+        variant="standard"
+      >
+        <InputLabel color="primary">Wallet Name</InputLabel>
+        <Select color="primary" size="medium" label="Wallet Name">
+          <MenuItem value="wallet a">wallet a</MenuItem>
+          <MenuItem value="name b">name b</MenuItem>
+        </Select>
+        <FormHelperText />
+      </FormControl>
       <TextField
         className="password"
         inputRef={inputRef}

@@ -1,0 +1,106 @@
+.to-fiat {
+  position: relative;
+  font-size: var(--font-size-4xl);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 500;
+  font-family: var(--caption1);
+  color: var(--black-000000100);
+  text-align: left;
+  display: inline-block;
+  width: 296px;
+}
+.searchtokenbyname1 {
+  background-color: var(--color-white1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: var(--padding-lg) var(--padding-2xs);
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--gap-xl);
+}
+.price-and-collateral1,
+.set-the-price-1-offering-fo1 {
+  position: relative;
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  display: inline-block;
+}
+.price-and-collateral1 {
+  font-size: var(--font-size-4xl);
+  font-weight: 500;
+  width: 296px;
+}
+.set-the-price-1-offering-fo1 {
+  width: 292px;
+}
+.sellatprice1 {
+  border: 0;
+  font-family: var(--caption1);
+  font-size: var(--body-s-size);
+  background-color: var(--color-beige);
+  border-radius: var(--br-sm);
+  width: 301px;
+  height: 40px;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  padding: var(--padding-5xs);
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: flex-start;
+}
+.primary-button1 {
+  position: relative;
+  font-size: var(--font-size-3xl);
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  font-weight: 500;
+  font-family: var(--caption1);
+  color: var(--color-white1);
+  text-align: center;
+  display: inline-block;
+}
+.reviewtheorder1 {
+  cursor: pointer;
+  border: 0;
+  padding: var(--padding-5xs) var(--padding-4xl);
+  background-color: var(--primary);
+  border-radius: var(--br-xl);
+  height: 50px;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+}
+.reviewtheorder1:disabled {
+  background-color: var(--color-gray-200);
+}
+.priceandcollateralform1,
+.selltokentofiat {
+  background-color: var(--color-white1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: var(--padding-lg) 0;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--gap-lg);
+}
+.selltokentofiat {
+  position: relative;
+  width: 100%;
+  padding: var(--padding-4xl) var(--padding-5xl);
+  gap: var(--gap-sm);
+  text-align: left;
+  font-size: var(--font-size-base);
+  color: var(--black-000000100);
+  font-family: var(--caption1);
+}

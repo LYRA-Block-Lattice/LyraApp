@@ -14,10 +14,10 @@ const ViewOrdersForm: FunctionComponent = () => {
       <div className="view-orders-parent">
         <div className="view-orders">View Orders</div>
         <button
-          className="prepare-sell-order-button"
+          className="prepare-sell-order-button12"
           onClick={onPrepareSellOrderButtonClick}
         >
-          <div className="utility-button">New</div>
+          <div className="utility-button6">New</div>
         </button>
       </div>
       <div className="ordercard3">

@@ -80,7 +80,8 @@ const Market: FunctionComponent = () => {
               <a className="balance-display-zone">
                 <b className="lyrbalance">120,000</b>
                 <b className="lyrlabel">LYR</b>
-                <b className="lyrbalance">5,000</b>
+                <div className="balance-display-zone-child" />
+                <b className="usdtbalance">5,000</b>
                 <b className="lyrlabel">USDT</b>
               </a>
               <div className="token-lists">
@@ -90,29 +91,29 @@ const Market: FunctionComponent = () => {
                   </button>
                   <b className="nft-label">NFT</b>
                 </button>
-                <button className="go-tot-button" onClick={onGoTOTButtonClick}>
-                  <button className="tot-count" onClick={onTOTCountClick}>
+                <button className="go-nft-button" onClick={onGoTOTButtonClick}>
+                  <button className="nft-count" onClick={onTOTCountClick}>
                     3
                   </button>
-                  <b className="tot-label">TOT</b>
+                  <b className="nft-label">TOT</b>
                 </button>
                 <button
-                  className="go-tot-button"
+                  className="go-nft-button"
                   onClick={onGoSellingButtonClick}
                 >
-                  <button className="tot-count" onClick={onSellingCountClick}>
+                  <button className="nft-count" onClick={onSellingCountClick}>
                     0
                   </button>
-                  <b className="tot-label">Selling</b>
+                  <b className="nft-label">Selling</b>
                 </button>
                 <button
-                  className="go-tot-button"
+                  className="go-nft-button"
                   onClick={onGoBuyingButtonClick}
                 >
-                  <button className="tot-count" onClick={onBuyingCountClick}>
+                  <button className="nft-count" onClick={onBuyingCountClick}>
                     0
                   </button>
-                  <b className="tot-label">Buying</b>
+                  <b className="nft-label">Buying</b>
                 </button>
               </div>
             </div>

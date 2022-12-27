@@ -1,4 +1,4 @@
-.secondary-button3,
+.secondary-button10,
 .select-token {
   position: relative;
   letter-spacing: 0.41px;
@@ -8,27 +8,27 @@
   display: inline-block;
 }
 .select-token {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
   color: var(--black-000000100);
   text-align: left;
   width: 296px;
 }
-.secondary-button3 {
+.secondary-button10 {
   font-size: var(--body-s-size);
   color: var(--color-white1);
   text-align: center;
 }
-.prepare-sell-order-button8,
+.prepare-sell-order-button22,
 .selecttokennameform {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
   align-items: center;
 }
-.prepare-sell-order-button8 {
+.prepare-sell-order-button22 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs) var(--padding-3xl);
+  padding: var(--padding-5xs) var(--padding-2xl);
   background-color: var(--secondary);
   border-radius: var(--br-xl);
   height: 40px;
@@ -41,7 +41,7 @@
   background-color: var(--color-white1);
   width: 100%;
   flex-direction: column;
-  padding: var(--padding-xl) var(--padding-xs);
+  padding: var(--padding-lg) var(--padding-2xs);
   justify-content: flex-start;
-  gap: 26px;
+  gap: var(--gap-xl);
 }

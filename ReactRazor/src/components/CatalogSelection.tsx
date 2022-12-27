@@ -41,6 +41,7 @@ const CatalogSelection: FunctionComponent<CatalogSelectionType> = ({
       <div className="tradecatalog">
         {buttons.map((a, index) => (
             <SelectTokenCatalogButton
+              key={a.tokenName}
               xref={a.xref}
               icbaselineGeneratingToken={a.icon}                                    
               token={a.tokenName}

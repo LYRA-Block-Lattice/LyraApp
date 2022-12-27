@@ -14,13 +14,13 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-xl) var(--padding-md) var(--padding-xl)
-    var(--padding-xl);
+  padding: var(--padding-lg) var(--padding-sm) var(--padding-lg)
+    var(--padding-lg);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
   text-align: left;
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
 }
 .biding,
 .div,
@@ -106,7 +106,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-lg);
+  gap: var(--gap-md);
   text-align: center;
   font-size: var(--body-s-size);
   color: var(--black-000000100);
