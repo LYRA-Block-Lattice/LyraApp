@@ -87,7 +87,8 @@ const SellTokenToToken: FunctionComponent = () => {
       gettoken: togettoken,
       price: price,
       count: count,
-      collateral: collateral
+      collateral: collateral,
+      secret: undefined,
     };
     navigate("/previewsellorderform/?data=" + encodeURIComponent(JSON.stringify(obj)));
   }, [navigate, tosell, toget, price, count, collateral]);

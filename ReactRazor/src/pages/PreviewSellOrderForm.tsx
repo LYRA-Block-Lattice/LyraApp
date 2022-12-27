@@ -13,25 +13,36 @@ const PreviewSellOrderForm: FunctionComponent = () => {
     navigate("/createordersuccessform");
   }, [navigate]);
 
+  function ShowTS(props) {
+    if (obj.secret != undefined)
+      return <>
+        <div>
+          <p className="ill-send-trade">
+            I’ll send trade secret to buyer privately as bellow:
+          </p>
+        </div >
+        <textarea
+          className="tot-description7"
+          placeholder={`Please pay to my bank account number:
+
+  Bank of America
+  1234 1234 1234 1234`}
+        />
+      </>;
+    else
+      return <></>;
+  };
+
   return (
     <div className="previewsellorderform">
       <div className="preview-sell-order">Preview Sell Order</div>
       <div className="ill-sell-count-type-of-t">
         <p className="ill-sell-count">I’ll sell {obj.count} of {obj.selltoken}.</p>
         <p className="ill-sell-count">
-          I want buyer pay me by {obj.gettoken}
+          I want buyer pay me by {obj.gettoken} on price {obj.price}
         </p>
-        <p className="ill-send-trade">
-          I’ll send trade secret to buyer privately as bellow:
-        </p>
+        <ShowTS />
       </div>
-      <textarea
-        className="tot-description7"
-        placeholder={`Please pay to my bank account number:
-
-Bank of America
-1234 1234 1234 1234`}
-      />
       <FormControlLabel
         className="confirm-before-create-order"
         label="I agree to the term of service of Lyra Web3 eCommerce platform."
