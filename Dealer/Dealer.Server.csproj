@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="CoinGeckoAsyncApi" Version="1.7.0" />
-    <PackageReference Include="Lyra.Data" Version="3.6.4.3" />
+    <PackageReference Include="Lyra.Data" Version="3.6.4.5" />
     <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.2.1" />
     <PackageReference Include="MailKit" Version="3.4.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.0" />

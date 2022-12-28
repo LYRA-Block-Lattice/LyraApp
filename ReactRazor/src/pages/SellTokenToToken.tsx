@@ -19,23 +19,32 @@ interface IToken {
   isTOT: boolean;
   name: string;
 }
+interface IDao {
+  name: string;
+  daoid: string;
+}
 
 const SellTokenToToken: FunctionComponent = () => {
-  const [isDisabled, setDisabled] = useState<boolean>(false);
+  //const [isDisabled, setDisabled] = useState<boolean>(false);
 
   const [tokens, setTokens] = useState<IBalance[]>([]);  
   const [options, setOptions] = useState<IToken[]>([]);
+  const [daos, setDaos] = useState<IDao[]>([]);
 
   const [tosell, setTosell] = useState("");
   const [toget, setToget] = useState("");
   const [price, setPrice] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
+  const [limitmin, setLimitmin] = useState<number>(0);
+  const [limitmax, setLimitmax] = useState<number>(0);
   const [collateral, setCollateral] = useState<number>(0);
+  const [daoid, setDaoid] = useState("");
+  const [dealerid, setDealerid] = useState("");
 
   const navigate = useNavigate();
 
-  const getData = (searchTerm) => {
-    window.lyraProxy.invokeMethodAsync("SearchTokens", searchTerm, "Token")
+  const searchToken = (searchTerm) => {
+    window.lyraProxy.invokeMethodAsync("SearchToken", searchTerm, "Token")
       .then(function (response) {
         return JSON.parse(response);
       })
@@ -51,6 +60,23 @@ const SellTokenToToken: FunctionComponent = () => {
       });
   };
 
+  const searchDao = (searchTerm) => {
+    window.lyraProxy.invokeMethodAsync("SearchDao", searchTerm)
+      .then(function (response) {
+        return JSON.parse(response);
+      })
+      .then(function (myJson) {
+        console.log(
+          "search term: " + searchTerm + ", results: ",
+          myJson
+        );
+        //const updatedOptions = myJson.map((p) => {
+        //  return { token: p.token };
+        //});
+        setDaos(myJson);
+      });
+  };
+
   const onSellChange = useCallback((event, value, reason) => {
     if (value) {
       setTosell(value);
@@ -59,10 +85,10 @@ const SellTokenToToken: FunctionComponent = () => {
     }
   }, [tosell, tokens]);
 
-  const onInputChange = useCallback((event, value, reason) => {
+  const onGetTokenInputChange = useCallback((event, value, reason) => {
     if (value) {
       setToget(value);
-      getData(value);
+      searchToken(value);
     } else {
       setToget("");
       setOptions([]);
@@ -119,7 +145,7 @@ const SellTokenToToken: FunctionComponent = () => {
           sx={{ width: 301 }}
           disablePortal
           options={options}
-          onInputChange={onInputChange}
+          onInputChange={onGetTokenInputChange}
           getOptionLabel={(option) => option.name}
           renderInput={(params: any) => (
             <TextField
@@ -156,13 +182,15 @@ const SellTokenToToken: FunctionComponent = () => {
           <input
             className="limitmin8"
             type="number"
-            placeholder="Collateral in LYR to guard the trade"
+            placeholder="Set limit min"
+            onChange={(e) => setLimitmin(+e.target.value)}
           />
           <div className="div8">-</div>
           <input
             className="limitmin8"
             type="number"
-            placeholder="Collateral in LYR to guard the trade"
+            placeholder="Set limit max"
+            onChange={(e) => setLimitmax(+e.target.value)}
           />
         </div>
         <div className="set-the-price-1-offering-fo8">Collateral (in LYR):</div>

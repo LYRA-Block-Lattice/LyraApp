@@ -94,10 +94,17 @@ namespace ReactRazor.Pages
             return Task.FromResult(JsonConvert.SerializeObject(balances.Select(kvp => new {token = kvp.Key, balance = kvp.Value })));
         }
 
+        [JSInvokable("GetDaos")]
+        public async Task<string> GetDaosAsync(string q)
+        {
+            var daos = await walletState.Value.wallet.RPC?.FindDaosAsync(q);
+            return daos;
+        }
+
         [JSInvokable("SearchTokens")]
         public async Task<string?> SearchTokensAsync(string? q, string? cat)
         {
-            var tokens = await walletState.Value.wallet.RPC.FindTokensAsync(q, cat);
+            var tokens = await walletState.Value.wallet.RPC?.FindTokensAsync(q, cat);
             return tokens;
         }
     }
