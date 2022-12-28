@@ -297,9 +297,9 @@ namespace Dealer.Server.Services
                             svcReq = BrokerActions.BRK_DLR_CREATE,
                             targetAccountId = LyraGlobal.GUILDACCOUNTID,
                             amounts = new Dictionary<string, decimal>
-                        {
-                            { LyraGlobal.OFFICIALTICKERCODE, 1 },
-                        },
+                            {
+                                { LyraGlobal.OFFICIALTICKERCODE, 1 },
+                            },
                             objArgument = new DealerCreateArgument
                             {
                                 Name = _config["DealerName"],

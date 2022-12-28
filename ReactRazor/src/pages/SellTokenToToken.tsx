@@ -22,7 +22,7 @@ interface IToken {
 }
 interface IDao {
   name: string;
-  daoid: string;
+  daoId: string;
 }
 
 const SellTokenToToken: FunctionComponent = () => {
@@ -39,7 +39,7 @@ const SellTokenToToken: FunctionComponent = () => {
   const [limitmin, setLimitmin] = useState<number>(0);
   const [limitmax, setLimitmax] = useState<number>(0);
   const [collateral, setCollateral] = useState<number>(0);
-  const [daoid, setDaoid] = useState("");
+  const [daoId, setDaoId] = useState("");
   const [dealerid, setDealerid] = useState("");
 
   const navigate = useNavigate();
@@ -54,9 +54,6 @@ const SellTokenToToken: FunctionComponent = () => {
           "search term: " + searchTerm + ", results: ",
           myJson
         );
-        //const updatedOptions = myJson.map((p) => {
-        //  return { token: p.token };
-        //});
         setOptions(myJson);
       });
   };
@@ -71,9 +68,6 @@ const SellTokenToToken: FunctionComponent = () => {
           "search term: " + searchTerm + ", results: ",
           myJson
         );
-        //const updatedOptions = myJson.map((p) => {
-        //  return { token: p.token };
-        //});
         setDaos(myJson);
       });
   };
@@ -102,7 +96,7 @@ const SellTokenToToken: FunctionComponent = () => {
     } else {
       setDaos([]);
     }
-  }, [toget, options]);
+  }, [daos]);
 
   async function getTokens() {
     let t = await window.lyraProxy.invokeMethodAsync("GetBalance");
@@ -127,9 +121,11 @@ const SellTokenToToken: FunctionComponent = () => {
       count: count,
       collateral: collateral,
       secret: undefined,
+      daoid: daoId,
+      dealerid: dealerid,
     };
     navigate("/previewsellorderform/?data=" + encodeURIComponent(JSON.stringify(obj)));
-  }, [navigate, tosell, toget, price, count, collateral]);
+  }, [navigate, tosell, toget, price, count, collateral, daoId, dealerid]);
 
   return (
     <div className="selltokentotoken">
@@ -221,6 +217,7 @@ const SellTokenToToken: FunctionComponent = () => {
           disablePortal
           options={daos}
           onInputChange={onDaoSearchChange}
+          onChange={(event, value) => setDaoId(value?.daoId!)}
           getOptionLabel={(option) => option.name}
           renderInput={(params: any) => (
             <TextField

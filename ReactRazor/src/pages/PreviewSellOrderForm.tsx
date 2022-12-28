@@ -41,6 +41,12 @@ const PreviewSellOrderForm: FunctionComponent = () => {
         <p className="ill-sell-count">
           I want buyer pay me by {obj.gettoken} on price {obj.price}
         </p>
+        <p className="ill-sell-count">
+          Order will be created in DAO { obj.daoid}
+        </p>
+        <p className="ill-sell-count">
+          I'll contact buyers through dealer {obj.dealerid}
+        </p>
         <ShowTS />
       </div>
       <FormControlLabel
