@@ -29,7 +29,7 @@ const SellTOTToFiat: FunctionComponent = () => {
           <div className="create-and-sell-totsku1">
             Create and Sell [TOT/SKU]
           </div>
-          <select className="selecttypeoftot11">
+          <select className="selecttypeoftot1">
             <option value="sku">Goods</option>
             <option value="svc">Service</option>
             <option value="tot">Generic Trade only TOken</option>
@@ -97,13 +97,13 @@ const SellTOTToFiat: FunctionComponent = () => {
             <input
               className="limitmin5"
               type="number"
-              placeholder="Collateral in LYR to guard the trade"
+              placeholder="Limit Min"
             />
             <div className="div5">-</div>
             <input
               className="limitmin5"
               type="number"
-              placeholder="Collateral in LYR to guard the trade"
+              placeholder="Limit Max"
             />
           </div>
           <div className="set-the-price-1-offering-fo5">
@@ -120,19 +120,27 @@ const SellTOTToFiat: FunctionComponent = () => {
           <div className="set-the-price-1-offering-fo5">
             Create order in DAO:
           </div>
-          <select className="selecttypeoftot11">
-            <option value="sku">Goods</option>
-            <option value="svc">Service</option>
-            <option value="tot">Generic Trade only TOken</option>
-          </select>
+          <Autocomplete
+            sx={{ width: 301 }}
+            disablePortal
+            options={[] as any}
+            renderInput={(params: any) => (
+              <TextField
+                {...params}
+                color="primary"
+                label="Select DAO the order will be created in"
+                variant="outlined"
+                placeholder=""
+                helperText="Find DAO"
+                required
+              />
+            )}
+            size="medium"
+          />
           <div className="set-the-price-1-offering-fo5">
-            Select current Dealer:
+            Current dealer is [dealer name]. You will contact buyers by the
+            dealer.
           </div>
-          <select className="selecttypeoftot11">
-            <option value="sku">Goods</option>
-            <option value="svc">Service</option>
-            <option value="tot">Generic Trade only TOken</option>
-          </select>
           <button className="reviewtheorder5" onClick={onReviewTheOrderClick}>
             <div className="primary-button5">Review the Order</div>
           </button>

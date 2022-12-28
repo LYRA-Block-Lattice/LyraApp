@@ -1,4 +1,4 @@
-.selecttypeoftot14,
+.selecttypeoftot2,
 .tot-description5,
 .tot-name5 {
   background-color: var(--color-beige);
@@ -14,7 +14,7 @@
   align-items: center;
   justify-content: flex-start;
 }
-.selecttypeoftot14 {
+.selecttypeoftot2 {
   gap: var(--gap-sm);
 }
 .tot-description5,

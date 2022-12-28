@@ -82,17 +82,9 @@ const SellTokenToTOT: FunctionComponent = () => {
             placeholder="Count of the selling token"
           />
           <div className="limitoftrade">
-            <input
-              className="limitmin"
-              type="number"
-              placeholder="Collateral in LYR to guard the trade"
-            />
+            <input className="limitmin" type="number" placeholder="Limit Min" />
             <div className="div">-</div>
-            <input
-              className="limitmin"
-              type="number"
-              placeholder="Collateral in LYR to guard the trade"
-            />
+            <input className="limitmin" type="number" placeholder="Limit Max" />
           </div>
           <div className="set-the-price-1-offering-fo">
             Collateral (in LYR):
@@ -108,19 +100,27 @@ const SellTokenToTOT: FunctionComponent = () => {
           <div className="set-the-price-1-offering-fo">
             Create order in DAO:
           </div>
-          <select className="selecttypeoftot">
-            <option value="sku">Goods</option>
-            <option value="svc">Service</option>
-            <option value="tot">Generic Trade only TOken</option>
-          </select>
+          <Autocomplete
+            sx={{ width: 301 }}
+            disablePortal
+            options={[] as any}
+            renderInput={(params: any) => (
+              <TextField
+                {...params}
+                color="primary"
+                label="Select DAO the order will be created in"
+                variant="outlined"
+                placeholder=""
+                helperText="Find DAO"
+                required
+              />
+            )}
+            size="medium"
+          />
           <div className="set-the-price-1-offering-fo">
-            Select current Dealer:
+            Current dealer is [dealer name]. You will contact buyers by the
+            dealer.
           </div>
-          <select className="selecttypeoftot">
-            <option value="sku">Goods</option>
-            <option value="svc">Service</option>
-            <option value="tot">Generic Trade only TOken</option>
-          </select>
           <button className="reviewtheorder" onClick={onReviewTheOrderClick}>
             <div className="primary-button">Review the Order</div>
           </button>

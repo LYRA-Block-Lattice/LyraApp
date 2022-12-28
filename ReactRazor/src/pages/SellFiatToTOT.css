@@ -151,28 +151,17 @@
   line-height: 18px;
   display: inline-block;
 }
-.limitoftrade2,
-.selecttypeoftot4 {
+.limitoftrade2 {
+  width: 322px;
   overflow: hidden;
   display: flex;
   flex-direction: row;
   padding: var(--padding-5xs);
   box-sizing: border-box;
   align-items: center;
-  gap: var(--gap-sm);
-}
-.limitoftrade2 {
-  width: 322px;
   justify-content: center;
+  gap: var(--gap-sm);
   font-size: var(--body-s-size);
-}
-.selecttypeoftot4 {
-  border-radius: var(--br-sm);
-  background-color: var(--color-beige);
-  width: 301px;
-  height: 40px;
-  flex-shrink: 0;
-  justify-content: flex-start;
 }
 .primary-button2 {
   position: relative;
