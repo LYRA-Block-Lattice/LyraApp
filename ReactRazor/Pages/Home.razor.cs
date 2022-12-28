@@ -90,22 +90,33 @@ namespace ReactRazor.Pages
         [JSInvokable("GetBalance")]
         public Task<string> GetBalancesAsync()
         {
+            if (walletState.Value.wallet == null)
+                return Task.FromResult("");
+
             var balances = walletState.Value.wallet.GetLastSyncBlock().Balances.ToDecimalDict();
             return Task.FromResult(JsonConvert.SerializeObject(balances.Select(kvp => new {token = kvp.Key, balance = kvp.Value })));
         }
 
-        [JSInvokable("GetDaos")]
-        public async Task<string> GetDaosAsync(string q)
+        [JSInvokable("SearchDao")]
+        public async Task<string> SearchDaoAsync(string q)
         {
             var daos = await walletState.Value.wallet.RPC?.FindDaosAsync(q);
             return daos;
         }
 
-        [JSInvokable("SearchTokens")]
-        public async Task<string?> SearchTokensAsync(string? q, string? cat)
+        [JSInvokable("SearchToken")]
+        public async Task<string?> SearchTokenAsync(string? q, string? cat)
         {
             var tokens = await walletState.Value.wallet.RPC?.FindTokensAsync(q, cat);
             return tokens;
+        }
+
+        [JSInvokable("GetCurrentDealer")]
+        public async Task<string?> GetCurrentDealerAsync()
+        {
+            var storStr = await localStorage.GetItemAsync<string>(_consts.PrefStorName) ?? "{}";
+            var pc = JsonConvert.DeserializeObject<PreferenceContainer>(storStr);
+            return pc.PriceFeedingDealerID;
         }
     }
 }

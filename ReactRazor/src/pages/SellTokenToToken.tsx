@@ -3,6 +3,7 @@ import { Autocomplete, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "./SellTokenToToken.css";
 import { option } from "yargs";
+import Search from "antd/lib/transfer/search";
 
 interface customWindow extends Window {
   lyraSetProxy?: any;
@@ -95,10 +96,21 @@ const SellTokenToToken: FunctionComponent = () => {
     }
   }, [toget, options]);
 
+  const onDaoSearchChange = useCallback((event, value, reason) => {
+    if (value) {
+      searchDao(value);
+    } else {
+      setDaos([]);
+    }
+  }, [toget, options]);
+
   async function getTokens() {
     let t = await window.lyraProxy.invokeMethodAsync("GetBalance");
     var tkns = JSON.parse(t);
     setTokens(tkns);
+
+    let dlr = await window.lyraProxy.invokeMethodAsync("GetCurrentDealer");
+    setDealerid(dlr);
   }
 
   useEffect(() => {
@@ -207,7 +219,9 @@ const SellTokenToToken: FunctionComponent = () => {
         <Autocomplete
           sx={{ width: 301 }}
           disablePortal
-          options={[] as any}
+          options={daos}
+          onInputChange={onDaoSearchChange}
+          getOptionLabel={(option) => option.name}
           renderInput={(params: any) => (
             <TextField
               {...params}
