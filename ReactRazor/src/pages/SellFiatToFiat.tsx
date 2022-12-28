@@ -65,17 +65,9 @@ const SellFiatToFiat: FunctionComponent = () => {
           placeholder="Count of the selling token"
         />
         <div className="limitoftrade3">
-          <input
-            className="limitmin3"
-            type="number"
-            placeholder="Collateral in LYR to guard the trade"
-          />
+          <input className="limitmin3" type="number" placeholder="Limit Min" />
           <div className="div3">-</div>
-          <input
-            className="limitmin3"
-            type="number"
-            placeholder="Collateral in LYR to guard the trade"
-          />
+          <input className="limitmin3" type="number" placeholder="Limit Max" />
         </div>
         <div className="set-the-price-1-offering-fo3">Collateral (in LYR):</div>
         <input
@@ -87,19 +79,27 @@ const SellFiatToFiat: FunctionComponent = () => {
           Collateral worth in USD: $103
         </div>
         <div className="set-the-price-1-offering-fo3">Create order in DAO:</div>
-        <select className="selecttypeoftot6">
-          <option value="sku">Goods</option>
-          <option value="svc">Service</option>
-          <option value="tot">Generic Trade only TOken</option>
-        </select>
+        <Autocomplete
+          sx={{ width: 301 }}
+          disablePortal
+          options={[] as any}
+          renderInput={(params: any) => (
+            <TextField
+              {...params}
+              color="primary"
+              label="Select DAO the order will be created in"
+              variant="outlined"
+              placeholder=""
+              helperText="Find DAO"
+              required
+            />
+          )}
+          size="medium"
+        />
         <div className="set-the-price-1-offering-fo3">
-          Select current Dealer:
+          Current dealer is [dealer name]. You will contact buyers by the
+          dealer.
         </div>
-        <select className="selecttypeoftot6">
-          <option value="sku">Goods</option>
-          <option value="svc">Service</option>
-          <option value="tot">Generic Trade only TOken</option>
-        </select>
         <button className="reviewtheorder3" onClick={onReviewTheOrderClick}>
           <div className="primary-button3">Review the Order</div>
         </button>

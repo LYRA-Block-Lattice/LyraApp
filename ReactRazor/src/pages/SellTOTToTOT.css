@@ -10,7 +10,7 @@
   display: inline-block;
   width: 296px;
 }
-.selecttypeoftot8,
+.selecttypeoftot,
 .tot-description2,
 .tot-supply {
   background-color: var(--color-beige);
@@ -24,7 +24,7 @@
   box-sizing: border-box;
   justify-content: flex-start;
 }
-.selecttypeoftot8 {
+.selecttypeoftot {
   height: 40px;
   align-items: center;
   gap: var(--gap-sm);

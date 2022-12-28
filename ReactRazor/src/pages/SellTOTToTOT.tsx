@@ -1,4 +1,5 @@
 import { FunctionComponent, useState, useCallback } from "react";
+import { Autocomplete, TextField } from "@mui/material";
 import SignTradeSecretPopup from "../components/SignTradeSecretPopup";
 import PortalPopup from "../components/PortalPopup";
 import { useNavigate } from "react-router-dom";
@@ -38,7 +39,7 @@ const SellTOTToTOT: FunctionComponent = () => {
           <div className="create-and-sell-totsku">
             Create and Sell [TOT/SKU]
           </div>
-          <select className="selecttypeoftot8">
+          <select className="selecttypeoftot">
             <option value="sku">Goods</option>
             <option value="svc">Service</option>
             <option value="tot">Generic Trade only TOken</option>
@@ -109,13 +110,13 @@ const SellTOTToTOT: FunctionComponent = () => {
             <input
               className="limitmin4"
               type="number"
-              placeholder="Collateral in LYR to guard the trade"
+              placeholder="Limit Min"
             />
             <div className="div4">-</div>
             <input
               className="limitmin4"
               type="number"
-              placeholder="Collateral in LYR to guard the trade"
+              placeholder="Limit Max"
             />
           </div>
           <div className="set-the-price-1-offering-fo4">
@@ -132,19 +133,27 @@ const SellTOTToTOT: FunctionComponent = () => {
           <div className="set-the-price-1-offering-fo4">
             Create order in DAO:
           </div>
-          <select className="selecttypeoftot8">
-            <option value="sku">Goods</option>
-            <option value="svc">Service</option>
-            <option value="tot">Generic Trade only TOken</option>
-          </select>
+          <Autocomplete
+            sx={{ width: 301 }}
+            disablePortal
+            options={[] as any}
+            renderInput={(params: any) => (
+              <TextField
+                {...params}
+                color="primary"
+                label="Select DAO the order will be created in"
+                variant="outlined"
+                placeholder=""
+                helperText="Find DAO"
+                required
+              />
+            )}
+            size="medium"
+          />
           <div className="set-the-price-1-offering-fo4">
-            Select current Dealer:
+            Current dealer is [dealer name]. You will contact buyers by the
+            dealer.
           </div>
-          <select className="selecttypeoftot8">
-            <option value="sku">Goods</option>
-            <option value="svc">Service</option>
-            <option value="tot">Generic Trade only TOken</option>
-          </select>
           <button className="reviewtheorder4" onClick={onReviewTheOrderClick}>
             <div className="primary-button4">Review the Order</div>
           </button>

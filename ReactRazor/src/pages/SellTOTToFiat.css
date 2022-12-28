@@ -10,7 +10,7 @@
   display: inline-block;
   width: 296px;
 }
-.selecttypeoftot11,
+.selecttypeoftot1,
 .tot-description4,
 .tot-name4 {
   background-color: var(--color-beige);
@@ -26,7 +26,7 @@
   align-items: center;
   justify-content: flex-start;
 }
-.selecttypeoftot11 {
+.selecttypeoftot1 {
   gap: var(--gap-sm);
 }
 .tot-description4,
