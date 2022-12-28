@@ -15,6 +15,12 @@ using Blazored.LocalStorage;
 using Microsoft.Extensions.Localization;
 using Lyra.Core.API;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Converto;
+using Lyra.Data.API.WorkFlow.UniMarket;
+using Lyra.Data.API.WorkFlow;
+using Org.BouncyCastle.Ocsp;
+using MudBlazor;
 
 namespace ReactRazor.Pages
 {
@@ -25,6 +31,7 @@ namespace ReactRazor.Pages
 
         [Inject]
         private IDispatcher Dispatcher { get; set; }
+        [Inject] ISnackbar Snackbar { get; set; }
 
         [Inject]
         NebulaConsts _consts { get; set; }
@@ -63,6 +70,17 @@ namespace ReactRazor.Pages
         {
             navigator.NavigateTo($"/{path}", false, true);
             return Task.FromResult($"wanna redirect to Blazor url /{path}?");
+        }
+
+        [JSInvokable("Alert")]
+        public Task<string> AlertAsync(string severity, string message)
+        {
+            var svt = Severity.Info;
+            if (Enum.TryParse(severity, out Severity svtx))
+                svt = svtx;
+
+            Snackbar.Add(message, svt);
+            return Task.FromResult("");
         }
 
         [JSInvokable("GetWalletNames")]
@@ -117,6 +135,54 @@ namespace ReactRazor.Pages
             var storStr = await localStorage.GetItemAsync<string>(_consts.PrefStorName) ?? "{}";
             var pc = JsonConvert.DeserializeObject<PreferenceContainer>(storStr);
             return pc.PriceFeedingDealerID;
+        }
+
+        [JSInvokable("CreateOrder")]
+        public async Task<string?> CreateOrderAsync(string json)
+        {
+            try
+            {
+                var argsObj = JObject.Parse(json);
+                var argsDict = argsObj.ToObject<Dictionary<string, string>>();
+                if (argsDict != null)
+                {
+                    var order = new UniOrder
+                    {
+                        daoId = argsDict["daoid"],
+                        dealerId = argsDict["dealerid"],
+                        offerby = LyraGlobal.GetHoldTypeFromTicker(argsDict["selltoken"]),
+                        offering = argsDict["selltoken"],
+                        bidby = LyraGlobal.GetHoldTypeFromTicker(argsDict["gettoken"]),
+                        biding = argsDict["gettoken"],
+                        price = decimal.Parse(argsDict["price"]),
+                        cltamt = decimal.Parse(argsDict["collateral"]),
+                        //payBy = new string[] { "Paypal" },
+
+                        amount = decimal.Parse(argsDict["count"]),
+                        limitMin = decimal.Parse(argsDict["limitmin"]),
+                        limitMax = decimal.Parse(argsDict["limitmax"]),
+                    };
+
+                    var ret = await walletState.Value.wallet.CreateUniOrderAsync(order);
+                    return JsonConvert.SerializeObject(
+                        new
+                        {
+                            ret = ret.ResultCode.ToString(),
+                            txhash = ret.TxHash,
+                        });
+                }
+            }
+            catch(Exception ex)
+            {
+                return JsonConvert.SerializeObject(
+                new
+                {
+                    ret = "Exception",
+                    msg = ex.Message,
+                });
+            }
+
+            return "";
         }
     }
 }

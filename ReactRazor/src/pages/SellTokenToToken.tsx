@@ -123,6 +123,8 @@ const SellTokenToToken: FunctionComponent = () => {
       secret: undefined,
       daoid: daoId,
       dealerid: dealerid,
+      limitmin: limitmin,
+      limitmax: limitmax,
     };
     navigate("/previewsellorderform/?data=" + encodeURIComponent(JSON.stringify(obj)));
   }, [navigate, tosell, toget, price, count, collateral, daoId, dealerid]);

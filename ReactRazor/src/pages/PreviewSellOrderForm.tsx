@@ -3,6 +3,12 @@ import { FormControlLabel, Checkbox } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "./PreviewSellOrderForm.css";
 
+interface customWindow extends Window {
+  lyraSetProxy?: any;
+  lyraProxy?: any;
+}
+declare const window: customWindow;
+
 const PreviewSellOrderForm: FunctionComponent = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams({});
@@ -10,7 +16,16 @@ const PreviewSellOrderForm: FunctionComponent = () => {
   const obj = JSON.parse(data);
 
   const onPrepareSellOrderButtonClick = useCallback(() => {
-    navigate("/createordersuccessform");
+    window.lyraProxy.invokeMethodAsync("CreateOrder", data)
+      .then(function (response) {
+        var ret = JSON.parse(response);
+        if (ret.ret == "Success") {
+          navigate("/createordersuccessform?tx=" + ret.txhash);
+        }
+        else {
+          window.lyraProxy.invokeMethodAsync("Alert", "Warning", ret.msg);
+        }
+      })
   }, [navigate]);
 
   function ShowTS(props) {
