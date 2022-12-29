@@ -1,4 +1,4 @@
-.icbaseline-generating-tokens-icon {
+.icbaseline-generating-tokens-icon2 {
   position: relative;
   width: 32px;
   height: 32px;
@@ -7,14 +7,14 @@
 }
 .token {
   position: relative;
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-2xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
   font-family: var(--caption1);
   color: var(--color-white1);
   text-align: center;
-  width: 90px;
+  width: 71px;
 }
 .select-token-catalog-button,
 .token-wrapper {
@@ -30,8 +30,8 @@
   background-color: var(--tertiary);
   border-radius: var(--br-sm);
   box-shadow: 0 4px 23px rgba(0, 0, 0, 0.12);
-  width: 100px;
-  height: 90px;
+  width: 80px;
+  height: 80px;
   flex-shrink: 0;
   box-sizing: border-box;
   gap: var(--gap-sm);

@@ -80,5 +80,5 @@
   flex-direction: column;
   padding: var(--padding-lg) var(--padding-sm);
   justify-content: flex-start;
-  gap: var(--gap-lg);
+  gap: var(--gap-xl);
 }

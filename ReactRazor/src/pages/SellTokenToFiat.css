@@ -19,7 +19,7 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-xl);
+  gap: var(--gap-2xl);
 }
 .price-and-collateral1,
 .set-the-price-1-offering-fo1 {
@@ -72,7 +72,7 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
   font-size: var(--body-s-size);
 }
 .primary-button1 {
@@ -115,13 +115,13 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-lg);
+  gap: var(--gap-xl);
 }
 .selltokentofiat {
   position: relative;
   width: 100%;
   padding: var(--padding-4xl) var(--padding-5xl);
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
   text-align: left;
   font-size: var(--font-size-base);
   color: var(--black-000000100);

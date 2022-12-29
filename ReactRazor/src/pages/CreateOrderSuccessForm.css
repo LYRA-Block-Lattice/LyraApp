@@ -70,7 +70,7 @@
   flex-direction: column;
   padding: var(--padding-lg) var(--padding-2xs);
   justify-content: flex-start;
-  gap: var(--gap-lg);
+  gap: var(--gap-xl);
   text-align: center;
   font-size: var(--font-size-base);
   color: var(--black-000000100);
