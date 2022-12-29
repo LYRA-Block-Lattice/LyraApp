@@ -1,6 +1,8 @@
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent, useMemo, useState, useEffect } from "react";
 import CSS, { Property } from "csstype";
 import "./OrderCard.css";
+
+import TableComponent, {TableComponentProps} from "../components/TableComponent";
 
 type OrderCardType = {
   offering?: string;
@@ -35,6 +37,18 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
   shelf,
   orderStatusBackgroundColor,
 }) => {
+  const [trades, setTrades] = useState<any[]>([]);
+  const [showTradeTable, setShowTradeTable] = useState(false);
+
+  // useEffect(() => {
+  //   setTrades(data);
+  // }, []);
+
+  const toggle = () => {
+    setTrades(datasrc);
+    setShowTradeTable(!showTradeTable); 
+  }
+  
   const orderStatusStyle: CSS.Properties = useMemo(() => {
     return {
       backgroundColor: orderStatusBackgroundColor,
@@ -44,7 +58,7 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
   return (
     <div className="ordercard3">
       <div className="order-brief-section">
-        <button className="banner-image">
+        <button className="banner-image" onClick={toggle}>
           <div className="order-banner">
             <button className="order-image">
               <img
@@ -103,9 +117,28 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
           </div>
         </div>
       </div>
-      <div className="trades-section" />
+      <div className="trades-section">
+        {showTradeTable ? <TableComponent data={trades} /> : null}
+      </div>
     </div>
   );
 };
 
 export default OrderCard;
+
+const datasrc = [{
+  name: 'Marcel',
+  surname: 'Michau',
+  age: '24',
+  gender: 'Male'
+}, {
+  name: 'Joe',
+  surname: 'Bloggs',
+  age: '27',
+  gender: 'Male'
+}, {
+  name: 'Jane',
+  surname: 'Doe',
+  age: '22',
+  gender: 'Female'
+}];
