@@ -103,5 +103,5 @@
   flex-direction: column;
   padding: var(--padding-lg) var(--padding-xs);
   justify-content: flex-start;
-  gap: var(--gap-lg);
+  gap: var(--gap-xl);
 }

@@ -104,7 +104,7 @@
   overflow: hidden;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
   z-index: 2;
 }
 .maps-parent {
@@ -118,7 +118,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   position: relative;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
   z-index: 0;
 }
 .wallet-name-label {
@@ -277,7 +277,7 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: var(--gap-2xl);
+  gap: var(--gap-3xl);
 }
 .iconssection {
   display: flex;
@@ -305,7 +305,7 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
   z-index: 1;
 }
 .more {

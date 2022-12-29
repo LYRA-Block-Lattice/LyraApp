@@ -87,17 +87,17 @@ const SellTokenToToken: FunctionComponent = () => {
             <TextField
               {...params}
               color="primary"
-              label="Select DAO the order will be created in"
+              label="Find DAO"
               variant="outlined"
               placeholder=""
-              helperText="Find DAO"
+              helperText="Select DAO the order will be created in"
               required
             />
           )}
           size="medium"
         />
         <div className="set-the-price-1-offering-fo8">
-          Current dealer is [dealer name]. You will contact buyers by the
+          Current dealer is [dealer name]. You will contact buyers through the
           dealer.
         </div>
         <button className="reviewtheorder8" onClick={onReviewTheOrderClick}>
