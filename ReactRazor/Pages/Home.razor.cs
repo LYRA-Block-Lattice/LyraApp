@@ -201,11 +201,15 @@ namespace ReactRazor.Pages
                     .Select(a => new
                     {
                         hash = (a as TransactionBlock).Hash,
+                        hash2 = (a as TransactionBlock).Hash.Shorten(),
                         status = a.UOStatus.ToString(),
                         offering = a.Order.offering.Shorten(),
                         biding = a.Order.biding.Shorten(),
                         a.Order.amount,
                         a.Order.price,
+                        limitmin = a.Order.limitMin, 
+                        limitmax = a.Order.limitMax,
+                        time = a.TimeStamp.ToString()
                     });
                 return JsonConvert.SerializeObject(
                 new
