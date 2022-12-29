@@ -27,7 +27,7 @@
 .fiat-usd,
 .great-nft,
 .open,
-.price,
+.price2,
 .selling,
 .status {
   position: absolute;
@@ -42,7 +42,7 @@
 .div9,
 .fiat-usd,
 .open,
-.price,
+.price2,
 .selling,
 .status {
   top: 52px;
@@ -51,7 +51,7 @@
 .biding,
 .div9,
 .open,
-.price,
+.price2,
 .selling,
 .status {
   top: 87px;
@@ -59,14 +59,14 @@
 }
 .biding,
 .div9,
-.price,
+.price2,
 .selling,
 .status {
   top: 115px;
   left: 113px;
 }
 .biding,
-.price,
+.price2,
 .selling,
 .status {
   top: 17px;
@@ -74,25 +74,25 @@
   width: 71px;
 }
 .biding,
-.price,
+.price2,
 .status {
   top: 52px;
 }
-.price,
+.price2,
 .status {
   top: 87px;
   left: 15px;
 }
-.price {
+.price2 {
   top: 115px;
 }
-.ordercard,
+.ordercard2,
 .viewtradesform {
   position: relative;
   background-color: var(--color-white1);
   overflow: hidden;
 }
-.ordercard {
+.ordercard2 {
   border-radius: var(--br-xs);
   border: 1px solid var(--black-000000100);
   box-sizing: border-box;

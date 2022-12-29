@@ -53,15 +53,15 @@ const SellFiatToTOT: FunctionComponent = () => {
             placeholder="Public Description, seen by everyone"
           />
           <button
-            className="prepare-sell-order-button2"
+            className="prepare-sell-order-button3"
             onClick={openSignTradeSecretPopup}
           >
-            <div className="utility-button1">Sign trade secret</div>
+            <div className="utility-button2">Sign trade secret</div>
           </button>
           <div className="note-i-need-to-send-trade-sec1">
             Note: I need to send trade secret privately to buyer(s).
           </div>
-          <button className="prepare-sell-order-button3">
+          <button className="prepare-sell-order-button4">
             <div className="secondary-button1">Create TOT</div>
           </button>
         </form>

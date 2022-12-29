@@ -27,7 +27,7 @@
   height: 124px;
   align-items: flex-start;
 }
-.utility-button5 {
+.utility-button6 {
   position: relative;
   font-size: var(--font-size-base);
   letter-spacing: 0.41px;
@@ -38,7 +38,7 @@
   text-align: center;
   display: inline-block;
 }
-.prepare-sell-order-button10 {
+.prepare-sell-order-button11 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-5xs) var(--padding-md);
@@ -74,13 +74,13 @@
   text-align: center;
 }
 .createtottosellform2,
-.prepare-sell-order-button11 {
+.prepare-sell-order-button12 {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
   align-items: center;
 }
-.prepare-sell-order-button11 {
+.prepare-sell-order-button12 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-5xs) var(--padding-2xl);
