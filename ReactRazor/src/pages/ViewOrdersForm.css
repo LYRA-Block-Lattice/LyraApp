@@ -1,4 +1,4 @@
-.utility-button6,
+.utility-button,
 .view-orders {
   position: relative;
   letter-spacing: 0.41px;
@@ -11,19 +11,19 @@
   flex-shrink: 0;
   z-index: 0;
 }
-.utility-button6 {
+.utility-button {
   font-size: 16px;
   font-family: var(--caption1);
   color: var(--color-white1);
   text-align: center;
 }
-.prepare-sell-order-button12,
+.prepare-sell-order-button,
 .view-orders-parent {
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
 }
-.prepare-sell-order-button12 {
+.prepare-sell-order-button {
   cursor: pointer;
   border: 0;
   padding: var(--padding-5xs) var(--padding-md);
@@ -68,9 +68,9 @@
   flex-shrink: 0;
 }
 .a-big-seller,
-.amount9,
+.amount,
 .order-image,
-.price3 {
+.price {
   position: absolute;
   margin: 0 !important;
   flex-shrink: 0;
@@ -94,26 +94,26 @@
   z-index: 0;
 }
 .a-big-seller,
-.amount9,
-.price3 {
+.amount,
+.price {
   display: inline-block;
   height: 20px;
 }
 .a-big-seller {
   top: 10px;
-  left: calc(50% - 46px);
+  left: calc(50% - 65px);
   font-size: var(--font-size-base);
-  width: 79px;
+  width: 98px;
   z-index: 1;
 }
-.amount9,
-.price3 {
+.amount,
+.price {
   top: 30px;
   left: calc(50% - 40px);
   width: 73px;
   z-index: 2;
 }
-.amount9 {
+.amount {
   top: 45px;
   z-index: 3;
 }
@@ -129,7 +129,7 @@
   margin: 0 !important;
   top: 10px;
   font-size: var(--font-size-base);
-  width: 86px;
+  width: 116px;
   flex-shrink: 0;
   z-index: 4;
 }
@@ -161,19 +161,19 @@
   height: 14.73px;
   z-index: 7;
 }
-.ordercard3,
+.ordercard,
 .viewordersform {
   position: relative;
   background-color: var(--color-white1);
   display: flex;
   justify-content: flex-start;
 }
-.ordercard3 {
+.ordercard {
   border-radius: var(--br-md);
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border: 1px solid var(--color-gray-400);
   box-sizing: border-box;
-  width: 346px;
+  width: 376px;
   height: 77px;
   flex-shrink: 0;
   flex-direction: row;
@@ -182,6 +182,7 @@
 }
 .viewordersform {
   width: 100%;
+  height: 428px;
   overflow: hidden;
   flex-direction: column;
   align-items: center;

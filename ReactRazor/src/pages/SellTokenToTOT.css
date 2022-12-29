@@ -42,7 +42,7 @@
   height: 124px;
   align-items: flex-start;
 }
-.utility-button {
+.utility-button1 {
   position: relative;
   font-size: var(--font-size-base);
   letter-spacing: 0.41px;
@@ -53,7 +53,7 @@
   text-align: center;
   display: inline-block;
 }
-.prepare-sell-order-button {
+.prepare-sell-order-button1 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-5xs) var(--padding-md);
@@ -88,14 +88,14 @@
   color: var(--color-white1);
   text-align: center;
 }
-.prepare-sell-order-button1,
+.prepare-sell-order-button2,
 .togettotform {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
   align-items: center;
 }
-.prepare-sell-order-button1 {
+.prepare-sell-order-button2 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-5xs) var(--padding-2xl);

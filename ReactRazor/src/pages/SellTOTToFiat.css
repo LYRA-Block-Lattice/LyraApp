@@ -39,7 +39,7 @@
   height: 124px;
   align-items: flex-start;
 }
-.utility-button4 {
+.utility-button5 {
   position: relative;
   font-size: var(--font-size-base);
   letter-spacing: 0.41px;
@@ -50,7 +50,7 @@
   text-align: center;
   display: inline-block;
 }
-.prepare-sell-order-button8 {
+.prepare-sell-order-button9 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-5xs) var(--padding-md);
@@ -85,7 +85,7 @@
   color: var(--color-white1);
   text-align: center;
 }
-.prepare-sell-order-button9 {
+.prepare-sell-order-button10 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-5xs) var(--padding-2xl);

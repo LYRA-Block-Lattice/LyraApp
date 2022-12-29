@@ -5,6 +5,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import Empty from "./pages/Empty";
+import ViewOrdersForm from "./pages/ViewOrdersForm";
 import SellTokenToTOT from "./pages/SellTokenToTOT";
 import SellTokenToFiat from "./pages/SellTokenToFiat";
 import SellFiatToTOT from "./pages/SellFiatToTOT";
@@ -15,7 +16,6 @@ import SellTOTToToken from "./pages/SellTOTToToken";
 import SellFiatToToken from "./pages/SellFiatToToken";
 import SellTokenToToken from "./pages/SellTokenToToken";
 import ViewTradesForm from "./pages/ViewTradesForm";
-import ViewOrdersForm from "./pages/ViewOrdersForm";
 import CreateOrderSuccessForm from "./pages/CreateOrderSuccessForm";
 import PreviewSellOrderForm from "./pages/PreviewSellOrderForm";
 import CreateNFTForm from "./pages/CreateNFTForm";
@@ -63,6 +63,10 @@ function App() {
         title = "";
         metaDescription = "";
         break;
+      case "/viewordersform":
+        title = "";
+        metaDescription = "";
+        break;
       case "/selltokentotot":
         title = "";
         metaDescription = "";
@@ -100,10 +104,6 @@ function App() {
         metaDescription = "";
         break;
       case "/viewtradesform":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/viewordersform":
         title = "";
         metaDescription = "";
         break;
@@ -195,6 +195,8 @@ function App() {
     <Routes>
       <Route path="/" element={<Empty />} />
 
+      <Route path="/viewordersform" element={<ViewOrdersForm />} />
+
       <Route path="/selltokentotot" element={<SellTokenToTOT />} />
 
       <Route path="/selltokentofiat" element={<SellTokenToFiat />} />
@@ -214,8 +216,6 @@ function App() {
       <Route path="/selltokentotoken" element={<SellTokenToToken />} />
 
       <Route path="/viewtradesform" element={<ViewTradesForm />} />
-
-      <Route path="/viewordersform" element={<ViewOrdersForm />} />
 
       <Route
         path="/createordersuccessform"
