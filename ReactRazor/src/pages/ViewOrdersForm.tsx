@@ -65,10 +65,10 @@ const ViewOrdersForm: FunctionComponent = () => {
               src="_content/ReactRazor/asserts/carbonuserservicedesk.svg"
             />
           </button>
-          <div className="a-big-seller">{order.offering}</div>
+          <div className="a-big-seller">{order.offering.replace(/(.{8})..+/, "$1...")}</div>
           <div className="price3">Price:</div>
           <div className="amount9">Amount:</div>
-          <div className="a-big-buyer">{order.biding}</div>
+          <div className="a-big-buyer">{order.biding.replace(/(.{8})..+/, "$1...")}</div>
           <div className="pricelabel">{order.price}</div>
           <div className="amountlabel">{order.amount}</div>
           <img className="ordercard-child" alt="" src="_content/ReactRazor/asserts/arrow-2.svg" />
