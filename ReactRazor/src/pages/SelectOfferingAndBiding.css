@@ -18,9 +18,9 @@
 .prepare-sell-order-button23 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs) var(--padding-3xl);
+  padding: var(--padding-3xs) var(--padding-4xl);
   background-color: var(--secondary);
-  border-radius: var(--br-2xl);
+  border-radius: var(--br-xl);
   height: 40px;
   flex-shrink: 0;
   overflow: hidden;
@@ -39,13 +39,13 @@
   width: 31px;
 }
 .i-want-to-sell-token-parent {
-  border-radius: var(--br-lg);
+  border-radius: var(--br-md);
   border: 1px solid var(--color-gray-100);
   box-sizing: border-box;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-3xl) var(--padding-xs);
+  padding: var(--padding-4xl) var(--padding-sm);
   align-items: center;
   justify-content: flex-start;
   gap: var(--gap-2xl);
@@ -58,12 +58,12 @@
   display: inline-block;
 }
 .buyer-should-pay-me-by-parent {
-  border-radius: var(--br-lg);
+  border-radius: var(--br-md);
   border: 1px solid var(--color-gray-100);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-3xl) var(--padding-xs);
+  padding: var(--padding-4xl) var(--padding-sm);
   align-items: center;
   justify-content: flex-start;
   gap: var(--gap-2xl);
@@ -89,9 +89,9 @@
 .prepare-sell-order-button27 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs) var(--padding-5xl);
+  padding: var(--padding-3xs) var(--padding-6xl);
   background-color: var(--primary);
-  border-radius: var(--br-2xl);
+  border-radius: var(--br-xl);
   height: 50px;
   flex-shrink: 0;
   flex-direction: row;
@@ -102,7 +102,7 @@
   background-color: var(--color-white1);
   width: 100%;
   flex-direction: column;
-  padding: var(--padding-xl) var(--padding-8xs);
+  padding: var(--padding-2xl) var(--padding-8xs);
   justify-content: flex-start;
   gap: 45px;
   text-align: center;

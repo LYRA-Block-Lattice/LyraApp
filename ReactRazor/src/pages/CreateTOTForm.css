@@ -16,14 +16,14 @@
   font-family: var(--caption1);
   font-size: var(--body-s-size);
   background-color: var(--color-beige);
-  border-radius: var(--br-md);
+  border-radius: var(--br-sm);
   width: 301px;
   height: 40px;
   flex-shrink: 0;
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-4xs);
+  padding: var(--padding-3xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
@@ -46,9 +46,9 @@
 .prepare-sell-order-button19 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs) var(--padding-lg);
+  padding: var(--padding-3xs) var(--padding-xl);
   background-color: var(--tertiary);
-  border-radius: var(--br-2xl);
+  border-radius: var(--br-xl);
   height: 30px;
   flex-shrink: 0;
   overflow: hidden;
@@ -88,9 +88,9 @@
 .prepare-sell-order-button20 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs) var(--padding-3xl);
+  padding: var(--padding-3xs) var(--padding-4xl);
   background-color: var(--secondary);
-  border-radius: var(--br-2xl);
+  border-radius: var(--br-xl);
   height: 40px;
   flex-shrink: 0;
   flex-direction: row;
@@ -101,7 +101,7 @@
   background-color: var(--color-white1);
   width: 100%;
   flex-direction: column;
-  padding: var(--padding-xl) var(--padding-sm);
+  padding: var(--padding-2xl) var(--padding-md);
   justify-content: flex-start;
   gap: var(--gap-2xl);
 }

@@ -17,7 +17,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: var(--br-2xl);
+  border-radius: var(--br-xl);
   background-color: var(--color-coral);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
@@ -70,7 +70,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-xl) var(--padding-md);
+  padding: var(--padding-2xl) var(--padding-lg);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;

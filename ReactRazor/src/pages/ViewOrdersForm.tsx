@@ -28,17 +28,17 @@ const ViewOrdersForm: FunctionComponent = () => {
                 <img
                   className="icbaseline-generating-tokens-icon"
                   alt=""
-                  src="_content/ReactRazor/asserts/icbaselinegeneratingtokens.svg"
+                  src="../asserts/icbaselinegeneratingtokens.svg"
                 />
                 <img
                   className="order-image-child"
                   alt=""
-                  src="_content/ReactRazor/asserts/arrow-1.svg"
+                  src="../asserts/arrow-1.svg"
                 />
                 <img
                   className="icbaseline-generating-tokens-icon"
                   alt=""
-                  src="_content/ReactRazor/asserts/carbonuserservicedesk.svg"
+                  src="../asserts/carbonuserservicedesk.svg"
                 />
               </button>
               <div className="order-status">
@@ -52,95 +52,44 @@ const ViewOrdersForm: FunctionComponent = () => {
               <img
                 className="frame-child"
                 alt=""
-                src="_content/ReactRazor/asserts/arrow-2.svg"
+                src="../asserts/arrow-2.svg"
               />
               <b className="tetherusdt">tether/USDT</b>
             </div>
-            <div className="btc">Price: 1,323</div>
-            <div className="btc">Amount: 3.2</div>
+            <div className="group-parent">
+              <div className="frame-group">
+                <div className="price-1323-wrapper">
+                  <div className="btc">Price: 1,323</div>
+                </div>
+                <div className="limit-min-1323-wrapper">
+                  <div className="btc">Limit Min: 1,323</div>
+                </div>
+              </div>
+              <div className="frame-container">
+                <div className="price-1323-wrapper">
+                  <div className="btc">Amount: 3.2</div>
+                </div>
+                <div className="limit-min-1323-wrapper">
+                  <div className="btc">Limit Max: 3.2</div>
+                </div>
+              </div>
+              <div className="group-div">
+                <div className="price-1323-wrapper">
+                  <div className="btc">Sold: 3.2</div>
+                </div>
+                <div className="limit-min-1323-wrapper">
+                  <div className="btc">Left: 3.2</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="table-details-section">
-          <div className="row">
-            <div className="cell">
-              <div className="content">
-                <div className="text">Buyer</div>
-              </div>
-            </div>
-            <div className="cell1">
-              <div className="content1">
-                <div className="text1">Amount</div>
-              </div>
-            </div>
-            <div className="cell">
-              <div className="content">
-                <div className="text">Time</div>
-              </div>
-            </div>
-            <div className="cell">
-              <div className="content1">
-                <div className="text1">Status</div>
-              </div>
-            </div>
-            <div className="cell">
-              <div className="content1">
-                <div className="text1">Action</div>
-              </div>
-            </div>
+        <div className="frame-parent1">
+          <div className="price-1323-wrapper">
+            <div className="btc">Time: 2022.12.19 13:00:00</div>
           </div>
-          <div className="row">
-            <div className="buyer-name-cell">
-              <div className="content1">
-                <div className="text5">someone</div>
-              </div>
-            </div>
-            <div className="buyer-name-cell">
-              <div className="content1">
-                <div className="text6">1.0</div>
-              </div>
-            </div>
-            <div className="buyer-name-cell">
-              <div className="content7">
-                <div className="text5">3 hours ago</div>
-              </div>
-            </div>
-            <div className="buyer-name-cell">
-              <div className="content1">
-                <div className="text5">Pending</div>
-              </div>
-            </div>
-            <div className="buyer-name-cell">
-              <div className="content1">
-                <div className="text9" />
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="buyer-name-cell">
-              <div className="content10">
-                <div className="text6" />
-              </div>
-            </div>
-            <div className="buyer-name-cell">
-              <div className="content10">
-                <div className="text6" />
-              </div>
-            </div>
-            <div className="buyer-name-cell">
-              <div className="content10">
-                <div className="text6" />
-              </div>
-            </div>
-            <div className="buyer-name-cell">
-              <div className="content10">
-                <div className="text6" />
-              </div>
-            </div>
-            <div className="buyer-name-cell">
-              <div className="content10">
-                <div className="text6" />
-              </div>
-            </div>
+          <div className="hash-38ae3ef3-wrapper">
+            <div className="btc">Hash: 38AE...3EF3</div>
           </div>
         </div>
       </div>
@@ -152,17 +101,17 @@ const ViewOrdersForm: FunctionComponent = () => {
                 <img
                   className="icbaseline-generating-tokens-icon"
                   alt=""
-                  src="_content/ReactRazor/asserts/icbaselinegeneratingtokens1.svg"
+                  src="../asserts/icbaselinegeneratingtokens1.svg"
                 />
                 <img
                   className="order-image-child"
                   alt=""
-                  src="_content/ReactRazor/asserts/arrow-1.svg"
+                  src="../asserts/arrow-1.svg"
                 />
                 <img
                   className="icbaseline-generating-tokens-icon"
                   alt=""
-                  src="_content/ReactRazor/asserts/carbonuserservicedesk.svg"
+                  src="../asserts/carbonuserservicedesk.svg"
                 />
               </button>
               <div className="order-status">
@@ -176,95 +125,44 @@ const ViewOrdersForm: FunctionComponent = () => {
               <img
                 className="frame-child"
                 alt=""
-                src="_content/ReactRazor/asserts/arrow-2.svg"
+                src="../asserts/arrow-2.svg"
               />
               <b className="tetherusdt">tether/USDT</b>
             </div>
-            <div className="btc">Price: 1,323</div>
-            <div className="btc">Amount: 3.2</div>
+            <div className="group-parent">
+              <div className="frame-group">
+                <div className="price-1323-wrapper">
+                  <div className="btc">Price: 1,323</div>
+                </div>
+                <div className="limit-min-1323-wrapper">
+                  <div className="btc">Limit Min: 1,323</div>
+                </div>
+              </div>
+              <div className="frame-container">
+                <div className="price-1323-wrapper">
+                  <div className="btc">Amount: 3.2</div>
+                </div>
+                <div className="limit-min-1323-wrapper">
+                  <div className="btc">Limit Max: 3.2</div>
+                </div>
+              </div>
+              <div className="group-div">
+                <div className="price-1323-wrapper">
+                  <div className="btc">Sold: 3.2</div>
+                </div>
+                <div className="limit-min-1323-wrapper">
+                  <div className="btc">Left: 3.2</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="table-details-section">
-          <div className="row">
-            <div className="cell">
-              <div className="content">
-                <div className="text">Buyer</div>
-              </div>
-            </div>
-            <div className="cell1">
-              <div className="content1">
-                <div className="text1">Amount</div>
-              </div>
-            </div>
-            <div className="cell">
-              <div className="content">
-                <div className="text">Time</div>
-              </div>
-            </div>
-            <div className="cell">
-              <div className="content1">
-                <div className="text1">Status</div>
-              </div>
-            </div>
-            <div className="cell">
-              <div className="content1">
-                <div className="text1">Action</div>
-              </div>
-            </div>
+        <div className="frame-parent1">
+          <div className="price-1323-wrapper">
+            <div className="btc">Time: 2022.12.19 13:00:00</div>
           </div>
-          <div className="row">
-            <div className="buyer-name-cell">
-              <div className="content1">
-                <div className="text5">someone</div>
-              </div>
-            </div>
-            <div className="buyer-name-cell">
-              <div className="content1">
-                <div className="text6">1.0</div>
-              </div>
-            </div>
-            <div className="buyer-name-cell">
-              <div className="content7">
-                <div className="text5">3 hours ago</div>
-              </div>
-            </div>
-            <div className="buyer-name-cell">
-              <div className="content1">
-                <div className="text5">Pending</div>
-              </div>
-            </div>
-            <div className="buyer-name-cell">
-              <div className="content1">
-                <div className="text9" />
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <div className="buyer-name-cell">
-              <div className="content10">
-                <div className="text6" />
-              </div>
-            </div>
-            <div className="buyer-name-cell">
-              <div className="content10">
-                <div className="text6" />
-              </div>
-            </div>
-            <div className="buyer-name-cell">
-              <div className="content10">
-                <div className="text6" />
-              </div>
-            </div>
-            <div className="buyer-name-cell">
-              <div className="content10">
-                <div className="text6" />
-              </div>
-            </div>
-            <div className="buyer-name-cell">
-              <div className="content10">
-                <div className="text6" />
-              </div>
-            </div>
+          <div className="hash-38ae3ef3-wrapper">
+            <div className="btc">Hash: 38AE...3EF3</div>
           </div>
         </div>
       </div>

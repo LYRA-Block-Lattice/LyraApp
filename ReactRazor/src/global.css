@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Myriad+Pro:wght@400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@100;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Verdana:wght@400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@400;600;700&display=swap");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
@@ -12,6 +13,7 @@ body {
   /* fonts */
   --font-myriad-pro: "Myriad Pro";
   --caption1: "SF Pro Display";
+  --font-verdana: Verdana;
   --font-inter: Inter;
   --font-sf-pro-text: "SF Pro Text";
 
@@ -35,13 +37,10 @@ body {
   --color-gray-100: #e5e5e5;
   --color-gray-200: #dfdfdf;
   --color-gray-300: #b6e0ff;
-  --color-gray-400: #b9b9b9;
-  --color-gray-500: #979797;
+  --color-gray-400: #979797;
   --color-gray-11: #7f8592;
   --info: #2196f3;
   --color-black1: #1b2749;
-  --color-gray-900: rgba(0, 0, 0, 0.06);
-  --color-gray-1000: rgba(255, 255, 255, 0);
   --color-beige: #f6ffde;
   --color-coral: #fa7268;
   --secondary: #ff4081;
@@ -66,27 +65,27 @@ body {
   --padding-7xs: 3px;
   --padding-6xs: 5px;
   --padding-5xs: 6px;
-  --padding-4xs: 10px;
-  --padding-3xs: 11px;
-  --padding-2xs: 12px;
-  --padding-xs: 14px;
-  --padding-sm: 15px;
-  --padding-md: 16px;
-  --padding-lg: 18px;
-  --padding-xl: 19px;
-  --padding-2xl: 20px;
-  --padding-3xl: 22px;
-  --padding-4xl: 25px;
-  --padding-5xl: 28px;
-  --padding-6xl: 30px;
-  --padding-7xl: 32px;
+  --padding-4xs: 8px;
+  --padding-3xs: 10px;
+  --padding-2xs: 11px;
+  --padding-xs: 12px;
+  --padding-sm: 14px;
+  --padding-md: 15px;
+  --padding-lg: 16px;
+  --padding-xl: 18px;
+  --padding-2xl: 19px;
+  --padding-3xl: 20px;
+  --padding-4xl: 22px;
+  --padding-5xl: 25px;
+  --padding-6xl: 28px;
+  --padding-7xl: 30px;
+  --padding-8xl: 32px;
 
   /* border radiuses */
   --br-2xs: 2.5px;
-  --br-xs: 4px;
-  --br-sm: 5px;
-  --br-md: 8px;
-  --br-lg: 10px;
-  --br-xl: 21px;
-  --br-2xl: 25px;
+  --br-xs: 5px;
+  --br-sm: 8px;
+  --br-md: 10px;
+  --br-lg: 21px;
+  --br-xl: 25px;
 }

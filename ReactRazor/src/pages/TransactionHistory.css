@@ -11,7 +11,7 @@
 .search-bar {
   display: flex;
   flex-direction: row;
-  padding: 0 var(--padding-2xs);
+  padding: 0 var(--padding-xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
@@ -25,7 +25,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: var(--br-xl);
+  border-radius: var(--br-lg);
   background-color: var(--color-coral);
 }
 .div12 {
@@ -64,7 +64,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: var(--br-xl);
+  border-radius: var(--br-lg);
   background-color: rgba(223, 224, 229, 0.5);
 }
 .div13 {
@@ -104,13 +104,13 @@
   flex-shrink: 0;
   color: var(--color-gray-11);
 }
-.group-parent {
+.group-group {
   height: 46px;
   flex-shrink: 0;
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-sm) 179px var(--padding-sm) var(--padding-xs);
+  padding: var(--padding-md) 179px var(--padding-md) var(--padding-sm);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
@@ -129,7 +129,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: 8px var(--padding-md);
+  padding: var(--padding-4xs) var(--padding-lg);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
@@ -143,7 +143,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: var(--br-md);
+  border-radius: var(--br-sm);
   background-color: var(--color-white1);
   box-shadow: 0 4px 23px rgba(0, 0, 0, 0.12);
 }
@@ -325,7 +325,7 @@
   background-color: var(--color-white1);
   width: 100%;
   overflow: hidden;
-  padding: var(--padding-md) 0;
+  padding: var(--padding-lg) 0;
   box-sizing: border-box;
   align-items: center;
   gap: 9px;

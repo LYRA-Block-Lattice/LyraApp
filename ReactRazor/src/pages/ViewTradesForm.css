@@ -14,8 +14,8 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-xl) var(--padding-md) var(--padding-xl)
-    var(--padding-xl);
+  padding: var(--padding-2xl) var(--padding-lg) var(--padding-2xl)
+    var(--padding-2xl);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
@@ -93,7 +93,7 @@
   overflow: hidden;
 }
 .ordercard {
-  border-radius: var(--br-sm);
+  border-radius: var(--br-xs);
   border: 1px solid var(--black-000000100);
   box-sizing: border-box;
   width: 192px;
