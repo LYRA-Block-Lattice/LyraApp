@@ -26,13 +26,13 @@
 .select-token-catalog-button {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-6xl) var(--padding-3xl);
+  padding: var(--padding-7xl) var(--padding-4xl);
   background-color: var(--tertiary);
-  border-radius: var(--br-sm);
+  border-radius: var(--br-md);
   box-shadow: 0 4px 23px rgba(0, 0, 0, 0.12);
   width: 80px;
   height: 80px;
   flex-shrink: 0;
   box-sizing: border-box;
-  gap: var(--gap-sm);
+  gap: var(--gap-xs);
 }

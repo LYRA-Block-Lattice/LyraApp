@@ -14,8 +14,8 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-lg) var(--padding-sm) var(--padding-lg)
-    var(--padding-lg);
+  padding: var(--padding-xl) var(--padding-md) var(--padding-xl)
+    var(--padding-xl);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
@@ -93,7 +93,7 @@
   overflow: hidden;
 }
 .ordercard {
-  border-radius: var(--br-xs);
+  border-radius: var(--br-sm);
   border: 1px solid var(--black-000000100);
   box-sizing: border-box;
   width: 192px;
@@ -106,7 +106,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-lg);
+  gap: var(--gap-xl);
   text-align: center;
   font-size: var(--body-s-size);
   color: var(--black-000000100);
