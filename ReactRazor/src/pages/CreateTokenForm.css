@@ -1,6 +1,6 @@
 .mint-token {
   position: relative;
-  font-size: var(--font-size-4xl);
+  font-size: var(--font-size-5xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
@@ -80,5 +80,5 @@
   flex-direction: column;
   padding: var(--padding-xl) var(--padding-md);
   justify-content: flex-start;
-  gap: var(--gap-2xl);
+  gap: var(--gap-3xl);
 }

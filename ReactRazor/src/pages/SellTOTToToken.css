@@ -15,7 +15,7 @@
   justify-content: flex-start;
 }
 .selecttypeoftot2 {
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
 }
 .tot-description5,
 .tot-name5 {
@@ -96,11 +96,11 @@
   flex-direction: column;
   padding: var(--padding-xl) var(--padding-sm);
   justify-content: flex-start;
-  gap: var(--gap-2xl);
+  gap: var(--gap-3xl);
 }
 .to-get-tokennft {
   position: relative;
-  font-size: var(--font-size-4xl);
+  font-size: var(--font-size-5xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
@@ -119,7 +119,7 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-3xl);
+  gap: var(--gap-4xl);
 }
 .price-and-collateral6,
 .set-the-price-1-offering-fo6 {
@@ -129,7 +129,7 @@
   display: inline-block;
 }
 .price-and-collateral6 {
-  font-size: var(--font-size-4xl);
+  font-size: var(--font-size-5xl);
   font-weight: 500;
   width: 296px;
 }
@@ -168,12 +168,12 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
   font-size: var(--body-s-size);
 }
 .primary-button6 {
   position: relative;
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
@@ -211,13 +211,13 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-2xl);
+  gap: var(--gap-3xl);
 }
 .selltottotoken {
   position: relative;
   width: 100%;
   padding: var(--padding-5xl) var(--padding-6xl);
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
   text-align: left;
   font-size: var(--font-size-base);
   color: var(--black-000000100);

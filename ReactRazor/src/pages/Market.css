@@ -68,7 +68,7 @@
   border: 0;
   padding: 0;
   background-color: transparent;
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   letter-spacing: 3.5px;
   font-weight: 600;
   color: var(--color-white1);
@@ -104,7 +104,7 @@
   overflow: hidden;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-xl);
+  gap: var(--gap-2xl);
   z-index: 2;
 }
 .maps-parent {
@@ -118,7 +118,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   position: relative;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
   z-index: 0;
 }
 .wallet-name-label {
@@ -130,7 +130,7 @@
   margin: 0 !important;
   top: 21.5px;
   left: 71px;
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
   font-family: var(--font-sf-pro-text);
   color: var(--color-white1);
   text-align: right;
@@ -277,7 +277,7 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: var(--gap-4xl);
+  gap: var(--gap-5xl);
 }
 .iconssection {
   display: flex;
@@ -305,7 +305,7 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
   z-index: 1;
 }
 .more {
@@ -351,7 +351,7 @@
   justify-content: flex-start;
   gap: var(--gap-0);
   text-align: right;
-  font-size: var(--font-size-4xl);
+  font-size: var(--font-size-5xl);
   color: var(--color-white1);
   font-family: var(--font-sf-pro-text);
 }

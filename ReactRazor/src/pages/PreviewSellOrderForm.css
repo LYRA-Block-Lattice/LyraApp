@@ -43,7 +43,7 @@
   position: relative;
 }
 .primary-button9 {
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
@@ -77,9 +77,9 @@
   flex-direction: column;
   padding: var(--padding-xl) var(--padding-md);
   justify-content: flex-start;
-  gap: var(--gap-2xl);
+  gap: var(--gap-3xl);
   text-align: left;
-  font-size: var(--font-size-4xl);
+  font-size: var(--font-size-5xl);
   color: var(--black-000000100);
   font-family: var(--caption1);
 }

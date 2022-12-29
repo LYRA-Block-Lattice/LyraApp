@@ -7,7 +7,7 @@
   display: inline-block;
 }
 .utility-button6 {
-  font-size: 16px;
+  font-size: var(--font-size-xl);
   font-family: var(--caption1);
   color: var(--color-white1);
   text-align: center;
@@ -45,13 +45,12 @@
 .viewordersform {
   position: relative;
   width: 100%;
-  height: 430px;
   overflow: hidden;
   flex-direction: column;
   justify-content: flex-start;
-  gap: var(--gap-xl);
+  gap: var(--gap-2xl);
   text-align: left;
-  font-size: var(--font-size-4xl);
+  font-size: var(--font-size-5xl);
   color: var(--black-000000100);
   font-family: var(--caption1);
 }

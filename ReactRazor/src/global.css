@@ -1,7 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Myriad+Pro:wght@400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@100;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Verdana:wght@400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@400;600;700&display=swap");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
@@ -13,8 +12,7 @@ body {
   /* fonts */
   --font-myriad-pro: "Myriad Pro";
   --caption1: "SF Pro Display";
-  --font-verdana: Verdana;
-  --font-inter: Inter;
+  --font-calibri: Calibri;
   --font-sf-pro-text: "SF Pro Text";
 
   /* font sizes */
@@ -24,10 +22,11 @@ body {
   --regular-body-size: 13px;
   --font-size-base: 14px;
   --body-s-size: 15px;
+  --font-size-xl: 16px;
   --headline-s1-size: 17px;
-  --font-size-2xl: 18px;
-  --font-size-3xl: 20px;
-  --font-size-4xl: 24px;
+  --font-size-3xl: 18px;
+  --font-size-4xl: 20px;
+  --font-size-5xl: 24px;
   --large-title-size: 34px;
 
   /* Colors */
@@ -55,12 +54,13 @@ body {
   --gap-2xs: 3px;
   --gap-xs: 4px;
   --gap-sm: 5px;
-  --gap-md: 10px;
-  --gap-lg: 12px;
-  --gap-xl: 16px;
-  --gap-2xl: 18px;
-  --gap-3xl: 26px;
-  --gap-4xl: 50px;
+  --gap-md: 6px;
+  --gap-lg: 10px;
+  --gap-xl: 12px;
+  --gap-2xl: 16px;
+  --gap-3xl: 18px;
+  --gap-4xl: 26px;
+  --gap-5xl: 50px;
 
   /* Paddings */
   --padding-8xs: 2px;

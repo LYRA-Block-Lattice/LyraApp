@@ -10,7 +10,7 @@
   width: 184px;
 }
 .secondary-button11 {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   font-family: var(--caption1);
   color: var(--color-white1);
   text-align: center;
@@ -48,7 +48,7 @@
   padding: var(--padding-3xl) var(--padding-xs);
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-2xl);
+  gap: var(--gap-3xl);
 }
 .buyer-should-pay-me-by {
   position: relative;
@@ -66,11 +66,11 @@
   padding: var(--padding-3xl) var(--padding-xs);
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-2xl);
+  gap: var(--gap-3xl);
 }
 .primary-button12 {
   position: relative;
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-4xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
