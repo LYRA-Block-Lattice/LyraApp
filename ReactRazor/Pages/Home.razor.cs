@@ -159,7 +159,7 @@ namespace ReactRazor.Pages
                         biding = argsDict["gettoken"],
                         price = decimal.Parse(argsDict["price"]),
                         cltamt = decimal.Parse(argsDict["collateral"]),
-                        //payBy = new string[] { "Paypal" },
+                        payBy = new string[0],
 
                         amount = decimal.Parse(argsDict["count"]),
                         limitMin = decimal.Parse(argsDict["limitmin"]),

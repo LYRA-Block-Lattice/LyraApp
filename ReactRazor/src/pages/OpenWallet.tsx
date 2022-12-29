@@ -35,7 +35,7 @@ const OpenWallet: FunctionComponent = () => {
 
   useEffect(() => {
     getWalletName();
-  }, [wnames]);
+  }, []);
 
   const handleChange = (event: SelectChangeEvent) => {
     setIndex(+event.target.value);
