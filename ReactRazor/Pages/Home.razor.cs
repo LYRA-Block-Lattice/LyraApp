@@ -21,6 +21,7 @@ using Lyra.Data.API.WorkFlow.UniMarket;
 using Lyra.Data.API.WorkFlow;
 using Org.BouncyCastle.Ocsp;
 using MudBlazor;
+using Humanizer;
 
 namespace ReactRazor.Pages
 {
@@ -183,6 +184,40 @@ namespace ReactRazor.Pages
             }
 
             return "";
+        }
+
+        [JSInvokable("GetOrders")]
+        public async Task<string?> GetOrdersAsync()
+        {
+            // get all current trades
+            var ret = await walletState.Value.wallet.RPC.GetUniOrdersByOwnerAsync(walletState.Value.wallet.AccountId);
+            if (ret.Successful())
+            {
+                var orders = ret.GetBlocks()
+                    .OrderByDescending(a => a.TimeStamp)
+                    .Cast<IUniOrder>()
+                    .Select(a => new
+                    {
+                        status = a.UOStatus.ToString(),
+                        a.Order.offering,
+                        a.Order.biding,
+                        a.Order.amount,
+                        a.Order.price,
+                    });
+                return JsonConvert.SerializeObject(
+                new
+                {
+                    ret = ret.ResultCode.ToString(),
+                    orders
+                });
+            }
+
+            return JsonConvert.SerializeObject(
+            new
+            {
+                ret = "Error",
+                msg = ret.ResultCode.ToString(),
+            });
         }
     }
 }
