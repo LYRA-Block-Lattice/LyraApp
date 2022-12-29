@@ -15,11 +15,11 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-2xl) var(--padding-sm);
+  padding: var(--padding-xl) var(--padding-xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-3xl);
+  gap: var(--gap-2xl);
 }
 .price-and-collateral7,
 .set-the-price-1-offering-fo7 {
@@ -49,7 +49,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-3xs);
+  padding: var(--padding-4xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
@@ -68,11 +68,11 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-3xs);
+  padding: var(--padding-4xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-md);
+  gap: var(--gap-sm);
   font-size: var(--body-s-size);
 }
 .primary-button7 {
@@ -89,7 +89,7 @@
 .reviewtheorder7 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-3xs) var(--padding-6xl);
+  padding: var(--padding-4xs) var(--padding-5xl);
   background-color: var(--primary);
   border-radius: var(--br-xl);
   height: 50px;
@@ -111,17 +111,17 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-2xl) 0;
+  padding: var(--padding-xl) 0;
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-2xl);
+  gap: var(--gap-xl);
 }
 .sellfiattotoken {
   position: relative;
   width: 100%;
-  padding: var(--padding-6xl) var(--padding-7xl);
-  gap: var(--gap-md);
+  padding: var(--padding-5xl) var(--padding-6xl);
+  gap: var(--gap-sm);
   text-align: left;
   font-size: var(--font-size-base);
   color: var(--black-000000100);

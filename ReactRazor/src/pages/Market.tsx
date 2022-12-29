@@ -217,7 +217,7 @@ const Market: FunctionComponent = () => {
       </div>
       <div className="lasttransactions">
         <div className="recent-transaction">Recent transaction</div>
-        <div className="parent5">
+        <div className="frame-div">
           <TxInfoBar
             buyTVAtSonyStore="Receive"
             component="From Harry James"

@@ -11,7 +11,7 @@
 .search-bar {
   display: flex;
   flex-direction: row;
-  padding: 0 var(--padding-xs);
+  padding: 0 var(--padding-2xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
@@ -110,11 +110,11 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-md) 179px var(--padding-md) var(--padding-sm);
+  padding: var(--padding-sm) 179px var(--padding-sm) var(--padding-xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-lg);
+  gap: var(--gap-md);
   color: var(--color-white1);
 }
 .all-transactions {
@@ -129,7 +129,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-4xs) var(--padding-lg);
+  padding: var(--padding-5xs) var(--padding-md);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
@@ -317,7 +317,7 @@
 }
 .receivedetailcard-parent {
   align-items: flex-start;
-  gap: var(--gap-md);
+  gap: var(--gap-sm);
   font-size: var(--regular-body-size);
 }
 .transactionhistory {
@@ -325,7 +325,7 @@
   background-color: var(--color-white1);
   width: 100%;
   overflow: hidden;
-  padding: var(--padding-lg) 0;
+  padding: var(--padding-md) 0;
   box-sizing: border-box;
   align-items: center;
   gap: 9px;
