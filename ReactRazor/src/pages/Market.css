@@ -49,7 +49,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-6xs) 0 var(--padding-6xs) var(--padding-4xs);
+  padding: var(--padding-5xs) 0 var(--padding-5xs) var(--padding-3xs);
   box-sizing: border-box;
   align-items: flex-end;
   justify-content: center;
@@ -89,7 +89,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-xs);
+  gap: var(--gap-2xs);
 }
 .maps-parent,
 .token-lists {
@@ -104,16 +104,16 @@
   overflow: hidden;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-lg);
+  gap: var(--gap-xl);
   z-index: 2;
 }
 .maps-parent {
-  border-radius: var(--br-md);
+  border-radius: var(--br-lg);
   background: radial-gradient(50% 50%at 50% 50%, #395851, #0051ed);
   width: 423px;
   height: 247px;
   flex-shrink: 0;
-  padding: var(--padding-5xs);
+  padding: var(--padding-4xs);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
@@ -209,7 +209,7 @@
   z-index: 5;
 }
 .mask-group {
-  border-radius: var(--br-md);
+  border-radius: var(--br-lg);
   background-color: var(--black-000000100);
   width: 424px;
   height: 247px;
@@ -277,12 +277,12 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: var(--gap-3xl);
+  gap: var(--gap-4xl);
 }
 .iconssection {
   display: flex;
   flex-direction: column;
-  padding: var(--padding-7xs);
+  padding: var(--padding-6xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
@@ -301,7 +301,7 @@
 .frame-div {
   display: flex;
   flex-direction: column;
-  padding: var(--padding-5xl) 0 var(--padding-5xs) var(--padding-5xs);
+  padding: var(--padding-6xl) 0 var(--padding-4xs) var(--padding-4xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
@@ -337,10 +337,10 @@
 }
 .lasttransactions {
   width: 425px;
-  padding: var(--padding-xs) var(--padding-sm);
+  padding: var(--padding-sm) var(--padding-md);
   box-sizing: border-box;
   justify-content: center;
-  gap: var(--gap-xs);
+  gap: var(--gap-2xs);
   text-align: left;
   font-size: var(--headline-s1-size);
   color: var(--color-black1);
