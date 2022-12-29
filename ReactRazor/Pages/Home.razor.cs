@@ -22,6 +22,8 @@ using Lyra.Data.API.WorkFlow;
 using Org.BouncyCastle.Ocsp;
 using MudBlazor;
 using Humanizer;
+using Lyra.Data.Shared;
+using Lyra.Core.Blocks;
 
 namespace ReactRazor.Pages
 {
@@ -198,9 +200,10 @@ namespace ReactRazor.Pages
                     .Cast<IUniOrder>()
                     .Select(a => new
                     {
+                        hash = (a as TransactionBlock).Hash,
                         status = a.UOStatus.ToString(),
-                        a.Order.offering,
-                        a.Order.biding,
+                        offering = a.Order.offering.Shorten(),
+                        biding = a.Order.biding.Shorten(),
                         a.Order.amount,
                         a.Order.price,
                     });
