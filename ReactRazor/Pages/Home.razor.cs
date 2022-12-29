@@ -205,24 +205,30 @@ namespace ReactRazor.Pages
             var ret = await walletState.Value.wallet.RPC.GetUniOrdersByOwnerAsync(walletState.Value.wallet.AccountId);
             if (ret.Successful())
             {
-                var orders = ret.GetBlocks()
-                    .OrderByDescending(a => a.TimeStamp)
-                    .Cast<IUniOrder>()
+                var blocks = ret.GetBlocks().Cast<TransactionBlock>();
+                var orders = blocks
+                    .Where(a => a.BlockType == BlockTypes.UniOrderGenesis)
                     .Select(a => new
                     {
-                        hash = (a as TransactionBlock).Hash,
-                        hash2 = (a as TransactionBlock).Hash.Shorten(),
-                        status = a.UOStatus.ToString(),
-                        offering = ShortToken(a.Order.offering),
-                        biding = ShortToken(a.Order.biding),
-                        a.Order.amount,
-                        a.Order.price,
-                        limitmin = a.Order.limitMin, 
-                        limitmax = a.Order.limitMax,
-                        time = a.TimeStamp.ToString(),
+                        gens = a as IUniOrder,
+                        latest = blocks.FirstOrDefault(x => x.BlockType != BlockTypes.UniOrderGenesis && x.AccountID == a.AccountID) as IUniOrder ?? a as IUniOrder,
+                    })                    
+                    .OrderByDescending(a => a.gens.TimeStamp)
+                    .Select(a => new
+                    {
+                        hash = "",//(a as TransactionBlock).Hash,
+                        hash2 = "",//(a as TransactionBlock).Hash.Shorten(),
+                        status = a.latest.UOStatus.ToString(),
+                        offering = ShortToken(a.gens.Order.offering),
+                        biding = ShortToken(a.gens.Order.biding),
+                        a.gens.Order.amount,
+                        a.gens.Order.price,
+                        limitmin = a.gens.Order.limitMin, 
+                        limitmax = a.gens.Order.limitMax,
+                        time = a.gens.TimeStamp.ToString(),
                         // TODO: calculate the data
-                        sold = 0,
-                        shelf = 0,
+                        sold = a.gens.Order.amount - a.latest.Order.amount,
+                        shelf = a.latest.Order.amount,
                     });
                 return JsonConvert.SerializeObject(
                 new
