@@ -188,6 +188,16 @@ namespace ReactRazor.Pages
             return "";
         }
 
+        public string Shorten(this string addr)
+        {
+            if (string.IsNullOrWhiteSpace(addr) || addr.Length < 12)
+            {
+                return addr;
+            }
+
+            return addr.Substring(0, 4) + "..." + addr.Substring(addr.Length - 6, 6);
+        }
+
         [JSInvokable("GetOrders")]
         public async Task<string?> GetOrdersAsync()
         {
@@ -203,13 +213,16 @@ namespace ReactRazor.Pages
                         hash = (a as TransactionBlock).Hash,
                         hash2 = (a as TransactionBlock).Hash.Shorten(),
                         status = a.UOStatus.ToString(),
-                        offering = a.Order.offering.Shorten(),
-                        biding = a.Order.biding.Shorten(),
+                        offering = Shorten(a.Order.offering),
+                        biding = Shorten(a.Order.biding),
                         a.Order.amount,
                         a.Order.price,
                         limitmin = a.Order.limitMin, 
                         limitmax = a.Order.limitMax,
-                        time = a.TimeStamp.ToString()
+                        time = a.TimeStamp.ToString(),
+                        // TODO: calculate the data
+                        sold = 0,
+                        shelf = 0,
                     });
                 return JsonConvert.SerializeObject(
                 new

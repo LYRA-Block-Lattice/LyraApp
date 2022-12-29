@@ -20,6 +20,8 @@ interface IOrder {
   amount: number;
   limitmin: number;
   limitmax: number;
+  sold: number;
+  shelf: number;
 }
 
 const ViewOrdersForm: FunctionComponent = () => {
@@ -53,21 +55,23 @@ const ViewOrdersForm: FunctionComponent = () => {
           <div className="utility-button6">New</div>
         </button>
       </div>
-      <OrderCard
-        offering="BTC"
-        biding="tether/USDT"
-        orderStatus="Open"
-        offeringImg="_content/ReactRazor/asserts/icbaselinegeneratingtokens.svg"
-        bidingImg="_content/ReactRazor/asserts/carbonuserservicedesk.svg"
-        time="12/29/2022 10:25:37 AM"
-        price="10,323"
-        amount="1113.2"
-        limitMin="3.3"
-        limitMax="4.3"
-        sold="12"
-        shelf="123"
-        orderStatusBackgroundColor="#2196F3"
-      />
+      {orders.map((order) =>
+        <OrderCard
+          offering={order.offering}
+          biding={order.biding}
+          orderStatus={order.status}
+          offeringImg="_content/ReactRazor/asserts/icbaselinegeneratingtokens.svg"
+          bidingImg="_content/ReactRazor/asserts/carbonuserservicedesk.svg"
+          time={order.time}
+          price={order.price.toString()}
+          amount={order.amount.toString()}
+          limitMin={order.limitmin.toString()}
+          limitMax={order.limitmax.toString()}
+          sold={order.sold.toString()}
+          shelf={order.shelf.toString()}
+          orderStatusBackgroundColor={order.status == "Open" ? "#2196F3" : "gray"}
+        />
+      )}
     </div>
   );
 };
