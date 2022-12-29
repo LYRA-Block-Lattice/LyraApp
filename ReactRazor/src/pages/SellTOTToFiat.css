@@ -27,7 +27,7 @@
   justify-content: flex-start;
 }
 .selecttypeoftot1 {
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
 }
 .tot-description4,
 .tot-name4 {
@@ -110,11 +110,11 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-xl);
+  gap: var(--gap-2xl);
 }
 .searchtokenbyname4 {
   padding: var(--padding-xl) var(--padding-xs);
-  gap: var(--gap-2xl);
+  gap: var(--gap-3xl);
 }
 .price-and-collateral5,
 .set-the-price-1-offering-fo5 {
@@ -163,7 +163,7 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
   font-size: var(--body-s-size);
 }
 .primary-button5 {
@@ -206,13 +206,13 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-xl);
+  gap: var(--gap-2xl);
 }
 .selltottofiat {
   position: relative;
   width: 100%;
   padding: var(--padding-5xl) var(--padding-6xl);
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
   text-align: left;
   font-size: var(--font-size-base);
   color: var(--black-000000100);

@@ -18,7 +18,7 @@
   bottom: 0;
   left: 0;
   border-radius: var(--br-xl);
-  background-color: var(--color-coral);
+  background-color: var(--sell1);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 .createlabel {
@@ -76,5 +76,5 @@
   justify-content: center;
   gap: 28px;
   font-size: var(--large-title-size);
-  color: var(--color-coral);
+  color: var(--sell1);
 }

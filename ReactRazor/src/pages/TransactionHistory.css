@@ -26,7 +26,7 @@
   bottom: 0;
   left: 0;
   border-radius: var(--br-lg);
-  background-color: var(--color-coral);
+  background-color: var(--sell1);
 }
 .div12 {
   position: absolute;
@@ -104,7 +104,7 @@
   flex-shrink: 0;
   color: var(--color-gray-11);
 }
-.group-group {
+.group-parent {
   height: 46px;
   flex-shrink: 0;
   overflow: hidden;
@@ -114,7 +114,7 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
   color: var(--color-white1);
 }
 .all-transactions {
@@ -129,7 +129,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-5xs) var(--padding-md);
+  padding: 8px var(--padding-md);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
@@ -317,7 +317,7 @@
 }
 .receivedetailcard-parent {
   align-items: flex-start;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
   font-size: var(--regular-body-size);
 }
 .transactionhistory {

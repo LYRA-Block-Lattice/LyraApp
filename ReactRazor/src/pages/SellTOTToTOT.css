@@ -27,7 +27,7 @@
 .selecttypeoftot {
   height: 40px;
   align-items: center;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
 }
 .tot-description2,
 .tot-supply {
@@ -112,7 +112,7 @@
   flex-direction: column;
   padding: var(--padding-xl) var(--padding-sm);
   justify-content: flex-start;
-  gap: var(--gap-xl);
+  gap: var(--gap-2xl);
 }
 .prepare-sell-order-button6 {
   cursor: pointer;
@@ -173,7 +173,7 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
   font-size: var(--body-s-size);
 }
 .primary-button4 {
@@ -216,13 +216,13 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-xl);
+  gap: var(--gap-2xl);
 }
 .selltottotot {
   position: relative;
   width: 100%;
   padding: var(--padding-5xl) var(--padding-6xl);
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
   text-align: left;
   font-size: var(--font-size-base);
   color: var(--black-000000100);

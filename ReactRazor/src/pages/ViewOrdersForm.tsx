@@ -1,5 +1,6 @@
 import { FunctionComponent, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import OrderCard from "../components/OrderCard";
 import "./ViewOrdersForm.css";
 
 const ViewOrdersForm: FunctionComponent = () => {
@@ -20,79 +21,21 @@ const ViewOrdersForm: FunctionComponent = () => {
           <div className="utility-button6">New</div>
         </button>
       </div>
-      <div className="ordercard3">
-        <div className="order-brief-section">
-          <button className="order-banner-wrapper">
-            <div className="order-banner">
-              <button className="order-image">
-                <img
-                  className="icbaseline-generating-tokens-icon"
-                  alt=""
-                  src="_content/ReactRazor/asserts/icbaselinegeneratingtokens.svg"
-                />
-                <img
-                  className="order-image-child"
-                  alt=""
-                  src="_content/ReactRazor/asserts/arrow-1.svg"
-                />
-                <img
-                  className="icbaseline-generating-tokens-icon"
-                  alt=""
-                  src="_content/ReactRazor/asserts/carbonuserservicedesk.svg"
-                />
-              </button>
-              <div className="order-status">
-                <b className="open3">Open</b>
-              </div>
-            </div>
-          </button>
-          <div className="frame-parent">
-            <div className="btc-parent">
-              <b className="btc">BTC</b>
-              <img
-                className="frame-child"
-                alt=""
-                src="_content/ReactRazor/asserts/arrow-2.svg"
-              />
-              <b className="tetherusdt">tether/USDT</b>
-            </div>
-            <div className="group-parent">
-              <div className="frame-group">
-                <div className="price-1323-wrapper">
-                  <div className="btc">Price: 1,323</div>
-                </div>
-                <div className="limit-min-1323-wrapper">
-                  <div className="btc">Limit Min: 1,323</div>
-                </div>
-              </div>
-              <div className="frame-container">
-                <div className="price-1323-wrapper">
-                  <div className="btc">Amount: 3.2</div>
-                </div>
-                <div className="limit-min-1323-wrapper">
-                  <div className="btc">Limit Max: 3.2</div>
-                </div>
-              </div>
-              <div className="group-div">
-                <div className="price-1323-wrapper">
-                  <div className="btc">Sold: 3.2</div>
-                </div>
-                <div className="limit-min-1323-wrapper">
-                  <div className="btc">Left: 3.2</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="frame-parent1">
-          <div className="time-12292022-102537-am-wrapper">
-            <div className="btc">Time: 12/29/2022 10:25:37 AM</div>
-          </div>
-          <div className="hash-38ae3ef3-wrapper">
-            <div className="btc">Hash: 38AE...3EF3</div>
-          </div>
-        </div>
-      </div>
+      <OrderCard
+        offering="BTC"
+        biding="tether/USDT"
+        orderStatus="Open"
+        offeringImg="_content/ReactRazor/asserts/icbaselinegeneratingtokens.svg"
+        bidingImg="_content/ReactRazor/asserts/carbonuserservicedesk.svg"
+        time="12/29/2022 10:25:37 AM"
+        price="10,323"
+        amount="1113.2"
+        limitMin="3.3"
+        limitMax="4.3"
+        sold="12"
+        shelf="123"
+        orderStatusBackgroundColor="#2196F3"
+      />
     </div>
   );
 };
