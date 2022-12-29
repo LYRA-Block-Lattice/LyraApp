@@ -188,7 +188,7 @@ namespace ReactRazor.Pages
             return "";
         }
 
-        public string Shorten(this string addr)
+        public string ShortToken(string addr)
         {
             if (string.IsNullOrWhiteSpace(addr) || addr.Length < 12)
             {
@@ -213,8 +213,8 @@ namespace ReactRazor.Pages
                         hash = (a as TransactionBlock).Hash,
                         hash2 = (a as TransactionBlock).Hash.Shorten(),
                         status = a.UOStatus.ToString(),
-                        offering = Shorten(a.Order.offering),
-                        biding = Shorten(a.Order.biding),
+                        offering = ShortToken(a.Order.offering),
+                        biding = ShortToken(a.Order.biding),
                         a.Order.amount,
                         a.Order.price,
                         limitmin = a.Order.limitMin, 
