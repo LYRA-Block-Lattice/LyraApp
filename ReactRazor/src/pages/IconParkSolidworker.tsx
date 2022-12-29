@@ -4,7 +4,7 @@ import "./IconParkSolidworker.css";
 const IconParkSolidworker: FunctionComponent = () => {
   return (
     <div className="icon-park-solidworker">
-      <img className="mask-group-icon" alt="" src="../asserts/mask-group.svg" />
+      <img className="mask-group-icon" alt="" src="_content/ReactRazor/asserts/mask-group.svg" />
     </div>
   );
 };
