@@ -22,7 +22,7 @@
 .searchtokenbyname {
   background-color: var(--color-white1);
   flex-direction: column;
-  padding: var(--padding-xl) var(--padding-xs);
+  padding: var(--padding-2xl) var(--padding-sm);
   gap: var(--gap-3xl);
 }
 .tot-description,
@@ -31,12 +31,12 @@
   font-family: var(--caption1);
   font-size: var(--body-s-size);
   background-color: var(--color-beige);
-  border-radius: var(--br-md);
+  border-radius: var(--br-sm);
   width: 301px;
   height: 40px;
   flex-shrink: 0;
   flex-direction: row;
-  padding: var(--padding-4xs);
+  padding: var(--padding-3xs);
 }
 .tot-description {
   height: 124px;
@@ -56,9 +56,9 @@
 .prepare-sell-order-button {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs) var(--padding-lg);
+  padding: var(--padding-3xs) var(--padding-xl);
   background-color: var(--tertiary);
-  border-radius: var(--br-2xl);
+  border-radius: var(--br-xl);
   height: 30px;
   flex-shrink: 0;
   overflow: hidden;
@@ -98,9 +98,9 @@
 .prepare-sell-order-button1 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs) var(--padding-3xl);
+  padding: var(--padding-3xs) var(--padding-4xl);
   background-color: var(--secondary);
-  border-radius: var(--br-2xl);
+  border-radius: var(--br-xl);
   height: 40px;
   flex-shrink: 0;
   flex-direction: row;
@@ -109,7 +109,7 @@
 .togettotform {
   background-color: var(--color-white1);
   flex-direction: column;
-  padding: var(--padding-xl) var(--padding-sm);
+  padding: var(--padding-2xl) var(--padding-md);
   justify-content: flex-start;
   gap: var(--gap-2xl);
 }
@@ -133,14 +133,14 @@
   font-family: var(--caption1);
   font-size: var(--body-s-size);
   background-color: var(--color-beige);
-  border-radius: var(--br-md);
+  border-radius: var(--br-sm);
   width: 138px;
   height: 40px;
   flex-shrink: 0;
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-4xs);
+  padding: var(--padding-3xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
@@ -156,7 +156,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-4xs);
+  padding: var(--padding-3xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
@@ -177,9 +177,9 @@
 .reviewtheorder {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs) var(--padding-5xl);
+  padding: var(--padding-3xs) var(--padding-6xl);
   background-color: var(--primary);
-  border-radius: var(--br-2xl);
+  border-radius: var(--br-xl);
   height: 50px;
   flex-shrink: 0;
   overflow: hidden;
@@ -199,7 +199,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-xl) 0;
+  padding: var(--padding-2xl) 0;
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
@@ -208,7 +208,7 @@
 .selltokentotot {
   position: relative;
   width: 100%;
-  padding: var(--padding-5xl) var(--padding-6xl);
+  padding: var(--padding-6xl) var(--padding-7xl);
   gap: var(--gap-md);
   text-align: left;
   font-size: var(--font-size-base);

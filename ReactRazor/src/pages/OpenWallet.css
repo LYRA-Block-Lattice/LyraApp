@@ -26,7 +26,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: var(--br-2xl);
+  border-radius: var(--br-xl);
   background-color: var(--color-coral);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
@@ -81,7 +81,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-2xs) 40px;
+  padding: var(--padding-xs) 40px;
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
@@ -93,7 +93,7 @@
   width: 100%;
   height: 817px;
   flex-direction: column;
-  padding: var(--padding-xs) var(--padding-md);
+  padding: var(--padding-sm) var(--padding-lg);
   gap: 39px;
   text-align: center;
   font-size: var(--large-title-size);

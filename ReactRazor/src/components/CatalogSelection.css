@@ -17,7 +17,7 @@
   background-color: var(--color-white1);
   width: 110px;
   overflow: hidden;
-  padding: var(--padding-2xl) var(--padding-3xs) var(--padding-4xs);
+  padding: var(--padding-3xl) var(--padding-2xs) var(--padding-3xs);
   box-sizing: border-box;
   gap: var(--gap-md);
 }

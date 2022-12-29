@@ -49,7 +49,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-5xs) 0 var(--padding-5xs) var(--padding-3xs);
+  padding: var(--padding-5xs) 0 var(--padding-5xs) var(--padding-2xs);
   box-sizing: border-box;
   align-items: flex-end;
   justify-content: center;
@@ -108,12 +108,12 @@
   z-index: 2;
 }
 .maps-parent {
-  border-radius: var(--br-lg);
+  border-radius: var(--br-md);
   background: radial-gradient(50% 50%at 50% 50%, #395851, #0051ed);
   width: 423px;
   height: 247px;
   flex-shrink: 0;
-  padding: var(--padding-4xs);
+  padding: var(--padding-3xs);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
@@ -209,7 +209,7 @@
   z-index: 5;
 }
 .mask-group {
-  border-radius: var(--br-lg);
+  border-radius: var(--br-md);
   background-color: var(--black-000000100);
   width: 424px;
   height: 247px;
@@ -298,10 +298,10 @@
   display: inline-block;
   z-index: 0;
 }
-.frame-div {
+.parent5 {
   display: flex;
   flex-direction: column;
-  padding: var(--padding-6xl) 0 var(--padding-4xs) var(--padding-4xs);
+  padding: var(--padding-7xl) 0 var(--padding-3xs) var(--padding-3xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
@@ -337,7 +337,7 @@
 }
 .lasttransactions {
   width: 425px;
-  padding: var(--padding-sm) var(--padding-md);
+  padding: var(--padding-md) var(--padding-lg);
   box-sizing: border-box;
   justify-content: center;
   gap: var(--gap-2xs);
