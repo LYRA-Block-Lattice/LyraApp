@@ -14,13 +14,13 @@ const ViewOrdersForm: FunctionComponent = () => {
       <div className="view-orders-parent">
         <div className="view-orders">View Orders</div>
         <button
-          className="prepare-sell-order-button"
+          className="prepare-sell-order-button12"
           onClick={onPrepareSellOrderButtonClick}
         >
-          <div className="utility-button">New</div>
+          <div className="utility-button6">New</div>
         </button>
       </div>
-      <div className="ordercard">
+      <div className="ordercard3">
         <button className="order-image">
           <img
             className="icbaseline-generating-tokens-icon"
@@ -39,14 +39,14 @@ const ViewOrdersForm: FunctionComponent = () => {
           />
         </button>
         <div className="a-big-seller">A Big Seller</div>
-        <div className="price">Price:</div>
-        <div className="amount">Amount:</div>
+        <div className="price3">Price:</div>
+        <div className="amount9">Amount:</div>
         <div className="a-big-buyer">A Big Buyer</div>
         <div className="pricelabel">1,323</div>
         <div className="amountlabel">3.2</div>
         <img className="ordercard-child" alt="" src="_content/ReactRazor/asserts/arrow-2.svg" />
       </div>
-      <div className="ordercard">
+      <div className="ordercard3">
         <button className="order-image">
           <img
             className="icbaseline-generating-tokens-icon"
@@ -65,8 +65,8 @@ const ViewOrdersForm: FunctionComponent = () => {
           />
         </button>
         <div className="a-big-seller">A Big Seller</div>
-        <div className="price">Price:</div>
-        <div className="amount">Amount:</div>
+        <div className="price3">Price:</div>
+        <div className="amount9">Amount:</div>
         <div className="a-big-buyer">A Big Buyer</div>
         <div className="pricelabel">1,323</div>
         <div className="amountlabel">3.2</div>
