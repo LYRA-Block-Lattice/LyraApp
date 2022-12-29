@@ -31,7 +31,7 @@
   position: relative;
   font-size: var(--caption1-size);
   display: inline-block;
-  font-family: var(--font-inter);
+  font-family: var(--font-calibri);
   color: var(--color-white1);
   text-align: center;
 }
@@ -69,7 +69,7 @@
 }
 .frame-child {
   position: relative;
-  width: 31.5px;
+  width: 12.5px;
   height: 7.36px;
   flex-shrink: 0;
 }
@@ -84,8 +84,7 @@
   align-items: center;
   justify-content: flex-start;
   gap: var(--gap-md);
-  font-size: var(--font-size-2xl);
-  font-family: var(--font-inter);
+  font-size: var(--font-size-xl);
 }
 .title-section-child {
   position: relative;
@@ -157,7 +156,7 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
-  gap: var(--gap-lg);
+  gap: var(--gap-xl);
 }
 .trades-section {
   align-self: stretch;
@@ -181,5 +180,5 @@
   text-align: right;
   font-size: var(--caption1-size);
   color: var(--black-000000100);
-  font-family: var(--font-verdana);
+  font-family: var(--font-calibri);
 }

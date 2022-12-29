@@ -8,7 +8,7 @@
   display: inline-block;
 }
 .select-token {
-  font-size: var(--font-size-4xl);
+  font-size: var(--font-size-5xl);
   color: var(--black-000000100);
   text-align: left;
   width: 296px;
@@ -43,5 +43,5 @@
   flex-direction: column;
   padding: var(--padding-xl) var(--padding-xs);
   justify-content: flex-start;
-  gap: var(--gap-3xl);
+  gap: var(--gap-4xl);
 }

@@ -114,7 +114,7 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-lg);
+  gap: var(--gap-xl);
   color: var(--color-white1);
 }
 .all-transactions {
@@ -317,7 +317,7 @@
 }
 .receivedetailcard-parent {
   align-items: flex-start;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
   font-size: var(--regular-body-size);
 }
 .transactionhistory {

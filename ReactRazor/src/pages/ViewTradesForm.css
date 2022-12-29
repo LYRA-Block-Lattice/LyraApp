@@ -20,7 +20,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   text-align: left;
-  font-size: var(--font-size-4xl);
+  font-size: var(--font-size-5xl);
 }
 .biding,
 .div9,
@@ -106,7 +106,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-xl);
+  gap: var(--gap-2xl);
   text-align: center;
   font-size: var(--body-s-size);
   color: var(--black-000000100);
