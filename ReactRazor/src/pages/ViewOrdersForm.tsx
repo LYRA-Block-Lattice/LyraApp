@@ -1,5 +1,6 @@
 import { FunctionComponent, useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import OrderCard from "../components/OrderCard";
 import "./ViewOrdersForm.css";
 
 interface customWindow extends Window {
@@ -52,81 +53,21 @@ const ViewOrdersForm: FunctionComponent = () => {
           <div className="utility-button6">New</div>
         </button>
       </div>
-      {orders.map((order) =>
-        <div className="ordercard3">
-          <div className="order-brief-section">
-            <button className="order-banner-wrapper">
-              <div className="order-banner">
-                <button className="order-image">
-                  <img
-                    className="icbaseline-generating-tokens-icon"
-                    alt=""
-                    src="_content/ReactRazor/asserts/icbaselinegeneratingtokens.svg"
-                  />
-                  <img
-                    className="order-image-child"
-                    alt=""
-                    src="_content/ReactRazor/asserts/arrow-1.svg"
-                  />
-                  <img
-                    className="icbaseline-generating-tokens-icon"
-                    alt=""
-                    src="_content/ReactRazor/asserts/carbonuserservicedesk.svg"
-                  />
-                </button>
-                <div className="order-status">
-                  <b className="open3">{order.status}</b>
-                </div>
-              </div>
-            </button>
-            <div className="frame-parent">
-              <div className="btc-parent">
-                <b className="btc">{order.offering}</b>
-                <img
-                  className="frame-child"
-                  alt=""
-                  src="_content/ReactRazor/asserts/arrow-2.svg"
-                />
-                <b className="tetherusdt">{order.biding}</b>
-              </div>
-              <div className="group-parent">
-                <div className="frame-group">
-                  <div className="price-1323-wrapper">
-                    <div className="btc">Price: {order.price}</div>
-                  </div>
-                  <div className="limit-min-1323-wrapper">
-                    <div className="btc">Limit Min: {order.limitmin}</div>
-                  </div>
-                </div>
-                <div className="frame-container">
-                  <div className="price-1323-wrapper">
-                    <div className="btc">Amount: {order.amount}</div>
-                  </div>
-                  <div className="limit-min-1323-wrapper">
-                    <div className="btc">Limit Max: {order.limitmax}</div>
-                  </div>
-                </div>
-                <div className="group-div">
-                  <div className="price-1323-wrapper">
-                    <div className="btc">Sold: 3.2</div>
-                  </div>
-                  <div className="limit-min-1323-wrapper">
-                    <div className="btc">Left: 3.2</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="frame-parent1">
-            <div className="time-12292022-102537-am-wrapper">
-              <div className="btc">Time: {order.time}</div>
-            </div>
-            <div className="hash-38ae3ef3-wrapper">
-              <div className="btc">Hash: {order.hash2}</div>
-            </div>
-          </div>
-        </div>
-      )}
+      <OrderCard
+        offering="BTC"
+        biding="tether/USDT"
+        orderStatus="Open"
+        offeringImg="_content/ReactRazor/asserts/icbaselinegeneratingtokens.svg"
+        bidingImg="_content/ReactRazor/asserts/carbonuserservicedesk.svg"
+        time="12/29/2022 10:25:37 AM"
+        price="10,323"
+        amount="1113.2"
+        limitMin="3.3"
+        limitMax="4.3"
+        sold="12"
+        shelf="123"
+        orderStatusBackgroundColor="#2196F3"
+      />
     </div>
   );
 };

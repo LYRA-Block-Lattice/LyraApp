@@ -19,10 +19,10 @@
   overflow: hidden;
   padding: var(--padding-2xl) var(--padding-3xs) var(--padding-4xs);
   box-sizing: border-box;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
 }
 .catalogselection {
-  gap: var(--gap-3xs);
+  gap: var(--gap-4xs);
   text-align: center;
   font-size: var(--body-s-size);
   color: var(--black-000000100);

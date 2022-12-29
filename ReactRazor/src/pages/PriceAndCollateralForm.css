@@ -46,7 +46,7 @@
   flex-direction: column;
   padding: var(--padding-xl) 0;
   justify-content: flex-start;
-  gap: var(--gap-xl);
+  gap: var(--gap-2xl);
   text-align: left;
   font-size: var(--font-size-base);
   color: var(--black-000000100);

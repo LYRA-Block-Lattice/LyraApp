@@ -43,5 +43,5 @@
   flex-direction: column;
   padding: var(--padding-xl) var(--padding-xs);
   justify-content: flex-start;
-  gap: var(--gap-2xl);
+  gap: var(--gap-3xl);
 }

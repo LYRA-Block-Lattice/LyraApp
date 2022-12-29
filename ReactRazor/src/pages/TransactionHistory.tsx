@@ -47,7 +47,7 @@ const TransactionHistory: FunctionComponent = () => {
           src="_content/ReactRazor/asserts/advanced-filter.svg"
         />
       </div>
-      <div className="group-group">
+      <div className="group-parent">
         <div className="group">
           <div className="rectangle" />
           <div className="div12">$200</div>
