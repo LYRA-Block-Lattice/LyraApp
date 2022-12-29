@@ -17,9 +17,9 @@
   background-color: var(--color-white1);
   width: 110px;
   overflow: hidden;
-  padding: var(--padding-3xl) var(--padding-2xs) var(--padding-3xs);
+  padding: var(--padding-2xl) var(--padding-3xs) var(--padding-4xs);
   box-sizing: border-box;
-  gap: var(--gap-md);
+  gap: var(--gap-sm);
 }
 .catalogselection {
   gap: var(--gap-3xs);

@@ -20,14 +20,14 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-3xs);
+  padding: var(--padding-4xs);
   box-sizing: border-box;
   justify-content: flex-start;
 }
 .selecttypeoftot {
   height: 40px;
   align-items: center;
-  gap: var(--gap-md);
+  gap: var(--gap-sm);
 }
 .tot-description2,
 .tot-supply {
@@ -55,7 +55,7 @@
 .prepare-sell-order-button4 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-3xs) var(--padding-xl);
+  padding: var(--padding-4xs) var(--padding-lg);
   background-color: var(--tertiary);
   border-radius: var(--br-xl);
   height: 30px;
@@ -90,7 +90,7 @@
 .prepare-sell-order-button5 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-3xs) var(--padding-4xl);
+  padding: var(--padding-4xs) var(--padding-3xl);
   background-color: var(--secondary);
   border-radius: var(--br-xl);
   height: 40px;
@@ -110,14 +110,14 @@
   background-color: var(--color-white1);
   display: flex;
   flex-direction: column;
-  padding: var(--padding-2xl) var(--padding-md);
+  padding: var(--padding-xl) var(--padding-sm);
   justify-content: flex-start;
-  gap: var(--gap-2xl);
+  gap: var(--gap-xl);
 }
 .prepare-sell-order-button6 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-3xs) var(--padding-xl);
+  padding: var(--padding-4xs) var(--padding-lg);
   background-color: var(--tertiary);
   border-radius: var(--br-xl);
   height: 30px;
@@ -153,7 +153,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-3xs);
+  padding: var(--padding-4xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
@@ -169,11 +169,11 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-3xs);
+  padding: var(--padding-4xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-md);
+  gap: var(--gap-sm);
   font-size: var(--body-s-size);
 }
 .primary-button4 {
@@ -190,7 +190,7 @@
 .reviewtheorder4 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-3xs) var(--padding-6xl);
+  padding: var(--padding-4xs) var(--padding-5xl);
   background-color: var(--primary);
   border-radius: var(--br-xl);
   height: 50px;
@@ -212,17 +212,17 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-2xl) 0;
+  padding: var(--padding-xl) 0;
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-2xl);
+  gap: var(--gap-xl);
 }
 .selltottotot {
   position: relative;
   width: 100%;
-  padding: var(--padding-6xl) var(--padding-7xl);
-  gap: var(--gap-md);
+  padding: var(--padding-5xl) var(--padding-6xl);
+  gap: var(--gap-sm);
   text-align: left;
   font-size: var(--font-size-base);
   color: var(--black-000000100);
