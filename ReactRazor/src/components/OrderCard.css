@@ -160,7 +160,6 @@
 }
 .trades-section {
   align-self: stretch;
-  height: 0;
   flex-shrink: 0;
   overflow: hidden;
 }
