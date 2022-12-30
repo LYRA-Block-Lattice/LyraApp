@@ -180,7 +180,7 @@
   justify-content: center;
 }
 .reviewtheorder1:disabled {
-  background-color: var(--color-gray-200);
+  background-color: var(--color-gray-100);
 }
 .priceandcollateralform1,
 .selltottotot {

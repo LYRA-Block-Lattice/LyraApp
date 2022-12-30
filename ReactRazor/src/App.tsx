@@ -23,16 +23,7 @@ import Redir from "./pages/Redir";
 import Market from "./pages/Market";
 import CreateWallet from "./pages/CreateWallet";
 import OpenWallet from "./pages/OpenWallet";
-import SellTokenToFiat from "./pages/SellTokenToFiat";
-import SellFiatToTOT from "./pages/SellFiatToTOT";
-import SellFiatToFiat from "./pages/SellFiatToFiat";
-import SellTOTToFiat from "./pages/SellTOTToFiat";
-import SellFiatToToken from "./pages/SellFiatToToken";
 import CreateTOTForm1 from "./pages/CreateTOTForm1";
-import PriceAndCollateralForm from "./pages/PriceAndCollateralForm";
-import SelectTokenNameForm from "./pages/SelectTokenNameForm";
-import SelectOfferingAndBiding from "./pages/SelectOfferingAndBiding";
-import IconParkSolidworker from "./pages/IconParkSolidworker";
 import OldV1UI from "./pages/OldV1UI";
 import { useEffect } from "react";
 
@@ -129,43 +120,7 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/selltokentofiat":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/sellfiattotot":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/sellfiattofiat":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/selltottofiat":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/sellfiattotoken":
-        title = "";
-        metaDescription = "";
-        break;
       case "/createtotform":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/priceandcollateralform":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/selecttokennameform":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/selectofferingandbiding":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/iconparksolidworker":
         title = "";
         metaDescription = "";
         break;
@@ -232,31 +187,7 @@ function App() {
 
       <Route path="/open-wallet" element={<OpenWallet />} />
 
-      <Route path="/selltokentofiat" element={<SellTokenToFiat />} />
-
-      <Route path="/sellfiattotot" element={<SellFiatToTOT />} />
-
-      <Route path="/sellfiattofiat" element={<SellFiatToFiat />} />
-
-      <Route path="/selltottofiat" element={<SellTOTToFiat />} />
-
-      <Route path="/sellfiattotoken" element={<SellFiatToToken />} />
-
       <Route path="/createtotform" element={<CreateTOTForm1 />} />
-
-      <Route
-        path="/priceandcollateralform"
-        element={<PriceAndCollateralForm />}
-      />
-
-      <Route path="/selecttokennameform" element={<SelectTokenNameForm />} />
-
-      <Route
-        path="/selectofferingandbiding"
-        element={<SelectOfferingAndBiding />}
-      />
-
-      <Route path="/iconparksolidworker" element={<IconParkSolidworker />} />
 
       <Route path="/oldv1ui" element={<OldV1UI />} />
     </Routes>

@@ -133,7 +133,7 @@
   justify-content: center;
 }
 .reviewtheorder3:disabled {
-  background-color: var(--color-gray-200);
+  background-color: var(--color-gray-100);
 }
 .priceandcollateralform3,
 .selltokentotoken {

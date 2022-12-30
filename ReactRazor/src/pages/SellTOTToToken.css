@@ -198,7 +198,7 @@
   justify-content: center;
 }
 .reviewtheorder2:disabled {
-  background-color: var(--color-gray-200);
+  background-color: var(--color-gray-100);
 }
 .priceandcollateralform2,
 .selltottotoken {
