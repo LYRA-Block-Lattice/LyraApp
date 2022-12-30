@@ -217,7 +217,7 @@ namespace ReactRazor.Pages
                     .Select(a => new
                     {
                         orderid = a.gens.AccountID,
-                        status = a.latest.UOStatus.ToString(),
+                        status = (a.latest ?? a.gens).UOStatus.ToString(),
                         offering = ShortToken(a.gens.Order.offering),
                         biding = ShortToken(a.gens.Order.biding),
                         a.gens.Order.amount,
@@ -225,8 +225,8 @@ namespace ReactRazor.Pages
                         limitmin = a.gens.Order.limitMin, 
                         limitmax = a.gens.Order.limitMax,
                         time = a.gens.TimeStamp.ToString(),
-                        sold = a.gens.Order.amount - a.latest.Order.amount,
-                        shelf = a.latest.Order.amount,
+                        sold = a.gens.Order.amount - (a.latest ?? a.gens).Order.amount,
+                        shelf = (a.latest ?? a.gens).Order.amount,
                     });
                 return JsonConvert.SerializeObject(
                 new
@@ -266,7 +266,7 @@ namespace ReactRazor.Pages
                         buyer = a.gens.AccountID.Shorten(),
                         time = a.gens.TimeStamp.ToString(),
                         a.gens.Trade.amount,
-                        status = a.latest.UTStatus.ToString(),                     
+                        status = (a.latest ?? a.gens).UTStatus.ToString(),                     
                     });
                 return JsonConvert.SerializeObject(
                 new

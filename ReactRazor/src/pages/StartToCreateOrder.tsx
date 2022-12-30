@@ -25,29 +25,29 @@ const StartToCreateOrder: FunctionComponent = () => {
     if(start == "Token" || start == "NFT")
     {
       if(end == "Token" || end == "NFT")
-        navigate("/selltokentotoken");
+        navigate(`/selltokentotoken?sell=${start}&get=${end}`);
       else if(end == "Fiat")
-        navigate("/selltokentofiat");
+        navigate(`/selltokentofiat?sell=${start}&get=${end}`);
       else
-        navigate("/selltokentotot");
+        navigate(`/selltokentotot?sell=${start}&get=${end}`);
     }
     else if(start == "Fiat")
     {
       if(end == "Token" || end == "NFT")
-        navigate("/sellfiattotoken");
+        navigate(`/sellfiattotoken?sell=${start}&get=${end}`);
       else if(end == "Fiat")
-        navigate("/sellfiattofiat");
+        navigate(`/sellfiattofiat?sell=${start}&get=${end}`);
       else
-        navigate("/sellfiattotot");
+        navigate(`/sellfiattotot?sell=${start}&get=${end}`);
     }
     else
     {
       if(end == "Token" || end == "NFT")
-        navigate("/selltottotoken");
+        navigate(`/selltottotoken?sell=${start}&get=${end}`);
       else if(end == "Fiat")
-        navigate("/selltottofiat");
+        navigate(`/selltottofiat?sell=${start}&get=${end}`);
       else
-        navigate("/selltottotot");
+        navigate(`/selltottotot?sell=${start}&get=${end}`);
     }
   }, [navigate, start, end]);
 

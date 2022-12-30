@@ -1,6 +1,6 @@
-import { FunctionComponent, useCallback, useState, useEffect, useRef } from "react";
+import { FunctionComponent, useCallback, useState, useEffect } from "react";
 import { Autocomplete, TextField } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import "./SellTokenToToken.css";
 import { option } from "yargs";
 import Search from "antd/lib/transfer/search";
@@ -27,6 +27,9 @@ interface IDao {
 
 const SellTokenToToken: FunctionComponent = () => {
   //const [isDisabled, setDisabled] = useState<boolean>(false);
+  const [searchParams, setSearchParams] = useSearchParams({});
+  const catsell = decodeURIComponent(searchParams.get("sell")!);
+  const catget = decodeURIComponent(searchParams.get("get")!);
 
   const [tokens, setTokens] = useState<IBalance[]>([]);  
   const [options, setOptions] = useState<IToken[]>([]);
@@ -44,8 +47,8 @@ const SellTokenToToken: FunctionComponent = () => {
 
   const navigate = useNavigate();
 
-  const searchToken = (searchTerm) => {
-    window.lyraProxy.invokeMethodAsync("SearchToken", searchTerm, "Token")
+  const searchToken = (searchTerm, cat) => {
+    window.lyraProxy.invokeMethodAsync("SearchToken", searchTerm, cat)
       .then(function (response) {
         return JSON.parse(response);
       })
@@ -83,7 +86,7 @@ const SellTokenToToken: FunctionComponent = () => {
   const onGetTokenInputChange = useCallback((event, value, reason) => {
     if (value) {
       setToget(value);
-      searchToken(value);
+      searchToken(value, catget);
     } else {
       setToget("");
       setOptions([]);
@@ -137,7 +140,7 @@ const SellTokenToToken: FunctionComponent = () => {
           sx={{ width: 301 }}
           disablePortal
           onInputChange={onSellChange}
-          options={tokens.filter(a => !a.token.startsWith("tot/") && !a.token.startsWith("fiat/") && !a.token.startsWith("svc/")).map(a => a.token)}
+          options={tokens.filter(a => !a.token.startsWith("nft/") && !a.token.startsWith("tot/") && !a.token.startsWith("fiat/") && !a.token.startsWith("svc/")).map(a => a.token)}
           renderInput={(params: any) => (
             <TextField
               {...params}
