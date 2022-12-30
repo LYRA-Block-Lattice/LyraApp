@@ -22,7 +22,12 @@ const MintFiatToken: FunctionComponent = () => {
         )}
         size="medium"
       />
-      <input className="domain-name" type="number" required />
+      <input
+        className="domain-name"
+        type="number"
+        placeholder="Amount to print"
+        required
+      />
       <button className="prepare-sell-order-button">
         <div className="secondary-button">Print</div>
       </button>

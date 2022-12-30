@@ -1,5 +1,7 @@
 import { FunctionComponent, useCallback, useState, useEffect } from "react";
 import { Autocomplete, TextField } from "@mui/material";
+import GeneralPopup from "../components/GeneralPopup";
+import PortalPopup from "../components/PortalPopup";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "./SellTokenToToken.css";
 import SearchTokenInput from "../dup/SearchTokenInput";
@@ -32,7 +34,7 @@ const SellTokenToToken: FunctionComponent = () => {
   const [collateral, setCollateral] = useState<number>(0);
   const [daoId, setDaoId] = useState("");
   const [dealerid, setDealerid] = useState("");
-
+  const [isGeneralPopupOpen, setGeneralPopupOpen] = useState(false);
   const navigate = useNavigate();
 
   const searchDao = (searchTerm) => {
@@ -74,6 +76,14 @@ const SellTokenToToken: FunctionComponent = () => {
     init();
   }, []);
 
+  const openGeneralPopup = useCallback(() => {
+    setGeneralPopupOpen(true);
+  }, []);
+
+  const closeGeneralPopup = useCallback(() => {
+    setGeneralPopupOpen(false);
+  }, []);
+
   const onReviewTheOrderClick = useCallback(() => {
     let togettoken = toget;
     console.log("sell " + tosell + ", to get " + togettoken + ", on price " + price);
@@ -93,6 +103,7 @@ const SellTokenToToken: FunctionComponent = () => {
   }, [navigate, tosell, toget, price, count, collateral, daoId, dealerid]);
 
   return (
+    <>
     <div className="selltokentotoken">
       <form className="searchtokenbyname2">
         <SearchTokenInput dir="Sell" cat={catsell} ownOnly={true} onTokenSelect={setTosell} />
@@ -175,6 +186,16 @@ const SellTokenToToken: FunctionComponent = () => {
         </button>
       </div>
     </div>
+    {isGeneralPopupOpen && (
+      <PortalPopup
+        overlayColor="rgba(113, 113, 113, 0.3)"
+        placement="Centered"
+        onOutsideClick={closeGeneralPopup}
+      >
+        <GeneralPopup onClose={closeGeneralPopup} />
+      </PortalPopup>
+      )}
+      </>
   );
 };
 
