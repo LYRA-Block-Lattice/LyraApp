@@ -8,6 +8,11 @@ interface customWindow extends Window {
 }
 declare const window: customWindow;
 
+interface IBalance {
+  token: string;
+  balance: number;
+}
+
 interface IToken {
   token: string;
   domain: string;
@@ -17,9 +22,25 @@ interface IToken {
 
 function SearchTokenInput ({ dir, cat, ownOnly, onTokenSelect }) {
   const [options, setOptions] = useState<IToken[]>([]);
+  const [tokens, setTokens] = useState<IBalance[]>([]);  
+
+  async function getTokens() {
+    let t = await window.lyraProxy.invokeMethodAsync("GetBalance");
+    var tkns = JSON.parse(t);
+    setTokens(tkns);
+  }
+
+  useEffect(() => {
+    getTokens();
+  }, [tokens]);
 
   const searchToken = (searchTerm, cat) => {
-    window.lyraProxy.invokeMethodAsync("SearchToken", searchTerm, cat)
+    let method = "SearchToken";
+    if (ownOnly) { // search in wallet/balance
+      method = "SearchTokenForAccount";
+    }
+
+    window.lyraProxy.invokeMethodAsync(method, searchTerm, cat)
       .then(function (response) {
         return JSON.parse(response);
       })

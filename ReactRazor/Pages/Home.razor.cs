@@ -132,6 +132,13 @@ namespace ReactRazor.Pages
             return tokens;
         }
 
+        [JSInvokable("SearchTokenForAccount")]
+        public async Task<string?> SearchTokenForAccountAsync(string? q, string? cat)
+        {
+            var tokens = await walletState.Value.wallet.RPC?.FindTokensForAccountAsync(walletState.Value.wallet.AccountId, q, cat);
+            return tokens;
+        }
+
         [JSInvokable("GetCurrentDealer")]
         public async Task<string?> GetCurrentDealerAsync()
         {

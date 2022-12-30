@@ -9,10 +9,6 @@ interface customWindow extends Window {
   lyraProxy?: any;
 }
 declare const window: customWindow;
-interface IBalance {
-  token: string;
-  balance: number;
-}
 
 interface IDao {
   name: string;
@@ -24,8 +20,6 @@ const SellTokenToToken: FunctionComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams({});
   const catsell = decodeURIComponent(searchParams.get("sell")!);
   const catget = decodeURIComponent(searchParams.get("get")!);
-
-  const [tokens, setTokens] = useState<IBalance[]>([]);  
   
   const [daos, setDaos] = useState<IDao[]>([]);
 
@@ -55,13 +49,13 @@ const SellTokenToToken: FunctionComponent = () => {
       });
   };
 
-  const onSellChange = useCallback((event, value, reason) => {
-    if (value) {
-      setTosell(value);
-    } else {
-      setTosell("");
-    }
-  }, [tosell, tokens]);
+  //const onSellChange = useCallback((event, value, reason) => {
+  //  if (value) {
+  //    setTosell(value);
+  //  } else {
+  //    setTosell("");
+  //  }
+  //}, [tosell, tokens]);
 
   const onDaoSearchChange = useCallback((event, value, reason) => {
     if (value) {
@@ -71,18 +65,14 @@ const SellTokenToToken: FunctionComponent = () => {
     }
   }, [daos]);
 
-  async function getTokens() {
-    let t = await window.lyraProxy.invokeMethodAsync("GetBalance");
-    var tkns = JSON.parse(t);
-    setTokens(tkns);
-
+  async function init() {
     let dlr = await window.lyraProxy.invokeMethodAsync("GetCurrentDealer");
     setDealerid(dlr);
   }
 
   useEffect(() => {
-    getTokens();
-  }, [tokens]);
+    init();
+  }, []);
 
   const onReviewTheOrderClick = useCallback(() => {
     let togettoken = toget;
@@ -105,24 +95,7 @@ const SellTokenToToken: FunctionComponent = () => {
   return (
     <div className="selltokentotoken">
       <form className="searchtokenbyname7">
-        <div className="sell2">Sell</div>
-        <Autocomplete
-          sx={{ width: 301 }}
-          disablePortal
-          onInputChange={onSellChange}
-          options={tokens.filter(a => !a.token.startsWith("nft/") && !a.token.startsWith("tot/") && !a.token.startsWith("fiat/") && !a.token.startsWith("svc/")).map(a => a.token)}
-          renderInput={(params: any) => (
-            <TextField
-              {...params}
-              color="primary"
-              label="Token Name"
-              variant="outlined"
-              placeholder=""
-              helperText=""
-            />
-          )}
-          size="medium"
-        />
+        <SearchTokenInput dir="Sell" cat={catsell} ownOnly={true} onTokenSelect={setTosell} />
         <SearchTokenInput dir="Get" cat={catget} ownOnly={false} onTokenSelect={setToget} />
       </form>
       <div className="priceandcollateralform8">
