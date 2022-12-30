@@ -19,13 +19,13 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: 0 50px;
+  padding: 0 var(--padding-8xl);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
   gap: 29px;
 }
-.primary-button10 {
+.primary-button5 {
   position: relative;
   font-size: var(--font-size-4xl);
   letter-spacing: 0.41px;
@@ -36,7 +36,7 @@
   text-align: center;
   display: inline-block;
 }
-.prepare-sell-order-button18 {
+.prepare-sell-order-button16 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-5xl);
@@ -51,10 +51,10 @@
   align-items: center;
   justify-content: center;
 }
-.prepare-sell-order-button18:hover {
+.prepare-sell-order-button16:hover {
   background-color: #8277e8;
 }
-.prepare-sell-order-button18:disabled {
+.prepare-sell-order-button16:disabled {
   background-color: var(--color-gray-200);
 }
 .starttocreateorder {

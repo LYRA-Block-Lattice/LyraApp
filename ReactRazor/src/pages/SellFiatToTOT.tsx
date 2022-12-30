@@ -25,7 +25,7 @@ const SellFiatToTOT: FunctionComponent = () => {
   return (
     <>
       <div className="sellfiattotot">
-        <form className="searchtokenbyname2">
+        <form className="searchtokenbyname4">
           <div className="sell-fiat">Sell Fiat</div>
           <Autocomplete
             sx={{ width: 301 }}
@@ -44,68 +44,68 @@ const SellFiatToTOT: FunctionComponent = () => {
             size="medium"
           />
         </form>
-        <form className="togettotform1">
+        <form className="togettotform2">
           <div className="sell-fiat">To get [TOT/SKU/SVC]</div>
-          <input className="tot-name1" type="text" placeholder="Name" />
+          <input className="tot-name4" type="text" placeholder="Name" />
           <input
-            className="tot-description1"
+            className="tot-description6"
             type="text"
             placeholder="Public Description, seen by everyone"
           />
           <button
-            className="prepare-sell-order-button2"
+            className="prepare-sell-order-button17"
             onClick={openSignTradeSecretPopup}
           >
-            <div className="utility-button1">Sign trade secret</div>
+            <div className="utility-button6">Sign trade secret</div>
           </button>
-          <div className="note-i-need-to-send-trade-sec1">
+          <div className="note-i-need-to-send-trade-sec4">
             Note: I need to send trade secret privately to buyer(s).
           </div>
-          <button className="prepare-sell-order-button3">
-            <div className="secondary-button1">Create TOT</div>
+          <button className="prepare-sell-order-button18">
+            <div className="secondary-button8">Create TOT</div>
           </button>
         </form>
-        <div className="priceandcollateralform2">
-          <div className="price-and-collateral2">Price and Collateral</div>
-          <div className="set-the-price-1-offering-fo2">
+        <div className="priceandcollateralform5">
+          <div className="price-and-collateral5">Price and Collateral</div>
+          <div className="set-the-price-1-offering-fo5">
             Set the price, 1 [offering] for [biding]:
           </div>
           <input
-            className="tot-name1"
+            className="tot-name4"
             type="number"
             placeholder="Price for biding token"
           />
-          <div className="set-the-price-1-offering-fo2">Amount:</div>
+          <div className="set-the-price-1-offering-fo5">Amount:</div>
           <input
-            className="tot-name1"
+            className="tot-name4"
             type="number"
             placeholder="Count of the selling token"
           />
-          <div className="limitoftrade2">
+          <div className="limitoftrade5">
             <input
-              className="limitmin2"
+              className="limitmin5"
               type="number"
               placeholder="Limit Min"
             />
-            <div className="div2">-</div>
+            <div className="div15">-</div>
             <input
-              className="limitmin2"
+              className="limitmin5"
               type="number"
               placeholder="Limit Max"
             />
           </div>
-          <div className="set-the-price-1-offering-fo2">
+          <div className="set-the-price-1-offering-fo5">
             Collateral (in LYR):
           </div>
           <input
-            className="tot-name1"
+            className="tot-name4"
             type="number"
             placeholder="Collateral in LYR to guard the trade"
           />
-          <div className="set-the-price-1-offering-fo2">
+          <div className="set-the-price-1-offering-fo5">
             Collateral worth in USD: $103
           </div>
-          <div className="set-the-price-1-offering-fo2">
+          <div className="set-the-price-1-offering-fo5">
             Create order in DAO:
           </div>
           <Autocomplete
@@ -125,12 +125,12 @@ const SellFiatToTOT: FunctionComponent = () => {
             )}
             size="medium"
           />
-          <div className="set-the-price-1-offering-fo2">
+          <div className="set-the-price-1-offering-fo5">
             Current dealer is [dealer name]. You will contact buyers through the
             dealer.
           </div>
-          <button className="reviewtheorder2" onClick={onReviewTheOrderClick}>
-            <div className="primary-button2">Review the Order</div>
+          <button className="reviewtheorder5" onClick={onReviewTheOrderClick}>
+            <div className="primary-button7">Review the Order</div>
           </button>
         </div>
       </div>

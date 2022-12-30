@@ -12,8 +12,8 @@ const SellFiatToFiat: FunctionComponent = () => {
 
   return (
     <div className="sellfiattofiat">
-      <form className="searchtokenbyname3">
-        <div className="to-get-fiat">Sell Fiat</div>
+      <form className="searchtokenbyname5">
+        <div className="sell-fiat1">Sell Fiat</div>
         <Autocomplete
           sx={{ width: 301 }}
           disablePortal
@@ -30,7 +30,7 @@ const SellFiatToFiat: FunctionComponent = () => {
           )}
           size="medium"
         />
-        <div className="to-get-fiat">To get Fiat</div>
+        <div className="sell-fiat1">To get Fiat</div>
         <Autocomplete
           sx={{ width: 301 }}
           disablePortal
@@ -48,37 +48,37 @@ const SellFiatToFiat: FunctionComponent = () => {
           size="medium"
         />
       </form>
-      <div className="priceandcollateralform3">
-        <div className="price-and-collateral3">Price and Collateral</div>
-        <div className="set-the-price-1-offering-fo3">
+      <div className="priceandcollateralform6">
+        <div className="price-and-collateral6">Price and Collateral</div>
+        <div className="set-the-price-1-offering-fo6">
           Set the price, 1 [offering] for [biding]:
         </div>
         <input
-          className="sellatprice3"
+          className="sellatprice6"
           type="number"
           placeholder="Price for biding token"
         />
-        <div className="set-the-price-1-offering-fo3">Amount:</div>
+        <div className="set-the-price-1-offering-fo6">Amount:</div>
         <input
-          className="sellatprice3"
+          className="sellatprice6"
           type="number"
           placeholder="Count of the selling token"
         />
-        <div className="limitoftrade3">
-          <input className="limitmin3" type="number" placeholder="Limit Min" />
-          <div className="div3">-</div>
-          <input className="limitmin3" type="number" placeholder="Limit Max" />
+        <div className="limitoftrade6">
+          <input className="limitmin6" type="number" placeholder="Limit Min" />
+          <div className="div16">-</div>
+          <input className="limitmin6" type="number" placeholder="Limit Max" />
         </div>
-        <div className="set-the-price-1-offering-fo3">Collateral (in LYR):</div>
+        <div className="set-the-price-1-offering-fo6">Collateral (in LYR):</div>
         <input
-          className="sellatprice3"
+          className="sellatprice6"
           type="number"
           placeholder="Collateral in LYR to guard the trade"
         />
-        <div className="set-the-price-1-offering-fo3">
+        <div className="set-the-price-1-offering-fo6">
           Collateral worth in USD: $103
         </div>
-        <div className="set-the-price-1-offering-fo3">Create order in DAO:</div>
+        <div className="set-the-price-1-offering-fo6">Create order in DAO:</div>
         <Autocomplete
           sx={{ width: 301 }}
           disablePortal
@@ -96,12 +96,12 @@ const SellFiatToFiat: FunctionComponent = () => {
           )}
           size="medium"
         />
-        <div className="set-the-price-1-offering-fo3">
+        <div className="set-the-price-1-offering-fo6">
           Current dealer is [dealer name]. You will contact buyers through the
           dealer.
         </div>
-        <button className="reviewtheorder3" onClick={onReviewTheOrderClick}>
-          <div className="primary-button3">Review the Order</div>
+        <button className="reviewtheorder6" onClick={onReviewTheOrderClick}>
+          <div className="primary-button8">Review the Order</div>
         </button>
       </div>
     </div>

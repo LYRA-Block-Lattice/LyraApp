@@ -1,4 +1,4 @@
-.secondary-button10,
+.secondary-button11,
 .select-token {
   position: relative;
   letter-spacing: 0.41px;
@@ -13,19 +13,19 @@
   text-align: left;
   width: 296px;
 }
-.secondary-button10 {
+.secondary-button11 {
   font-size: var(--body-s-size);
   color: var(--color-white1);
   text-align: center;
 }
-.prepare-sell-order-button22,
+.prepare-sell-order-button24,
 .selecttokennameform {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
   align-items: center;
 }
-.prepare-sell-order-button22 {
+.prepare-sell-order-button24 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-3xl);

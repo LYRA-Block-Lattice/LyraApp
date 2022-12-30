@@ -1,4 +1,4 @@
-.create-and-sell-totsku1 {
+.create-and-sell-totsku2 {
   position: relative;
   font-size: var(--font-size-5xl);
   letter-spacing: 0.41px;
@@ -10,9 +10,9 @@
   display: inline-block;
   width: 296px;
 }
-.selecttypeoftot1,
-.tot-description4,
-.tot-name4 {
+.selecttypeoftot2,
+.tot-description7,
+.tot-name5 {
   background-color: var(--color-beige);
   border-radius: var(--br-sm);
   width: 301px;
@@ -26,20 +26,20 @@
   align-items: center;
   justify-content: flex-start;
 }
-.selecttypeoftot1 {
+.selecttypeoftot2 {
   gap: var(--gap-lg);
 }
-.tot-description4,
-.tot-name4 {
+.tot-description7,
+.tot-name5 {
   border: 0;
   font-family: var(--caption1);
   font-size: var(--body-s-size);
 }
-.tot-description4 {
+.tot-description7 {
   height: 124px;
   align-items: flex-start;
 }
-.utility-button4 {
+.utility-button7 {
   position: relative;
   font-size: var(--font-size-base);
   letter-spacing: 0.41px;
@@ -50,7 +50,7 @@
   text-align: center;
   display: inline-block;
 }
-.prepare-sell-order-button8 {
+.prepare-sell-order-button19 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-lg);
@@ -65,27 +65,27 @@
   align-items: center;
   justify-content: center;
 }
-.note-i-need-to-send-trade-sec4,
-.secondary-button4 {
+.note-i-need-to-send-trade-sec5,
+.secondary-button9 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
   font-family: var(--caption1);
   display: inline-block;
 }
-.note-i-need-to-send-trade-sec4 {
+.note-i-need-to-send-trade-sec5 {
   font-size: var(--font-size-base);
   color: var(--black-000000100);
   text-align: left;
   width: 292px;
 }
-.secondary-button4 {
+.secondary-button9 {
   font-size: var(--body-s-size);
   font-weight: 500;
   color: var(--color-white1);
   text-align: center;
 }
-.prepare-sell-order-button9 {
+.prepare-sell-order-button20 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-3xl);
@@ -100,8 +100,8 @@
   align-items: center;
   justify-content: center;
 }
-.createtottosellform1,
-.searchtokenbyname4 {
+.createtottosellform2,
+.searchtokenbyname6 {
   background-color: var(--color-white1);
   overflow: hidden;
   display: flex;
@@ -112,26 +112,26 @@
   justify-content: flex-start;
   gap: var(--gap-3xl);
 }
-.searchtokenbyname4 {
+.searchtokenbyname6 {
   padding: var(--padding-xl) var(--padding-xs);
   gap: var(--gap-4xl);
 }
-.price-and-collateral5,
-.set-the-price-1-offering-fo5 {
+.price-and-collateral7,
+.set-the-price-1-offering-fo7 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
 }
-.price-and-collateral5 {
+.price-and-collateral7 {
   font-size: var(--font-size-5xl);
   font-weight: 500;
   width: 296px;
 }
-.set-the-price-1-offering-fo5 {
+.set-the-price-1-offering-fo7 {
   width: 292px;
 }
-.limitmin5 {
+.limitmin7 {
   border: 0;
   font-family: var(--caption1);
   font-size: var(--body-s-size);
@@ -148,13 +148,13 @@
   align-items: center;
   justify-content: flex-start;
 }
-.div5 {
+.div17 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
 }
-.limitoftrade5 {
+.limitoftrade7 {
   width: 322px;
   overflow: hidden;
   display: flex;
@@ -166,7 +166,7 @@
   gap: var(--gap-lg);
   font-size: var(--body-s-size);
 }
-.primary-button5 {
+.primary-button9 {
   position: relative;
   font-size: var(--font-size-4xl);
   letter-spacing: 0.41px;
@@ -177,7 +177,7 @@
   text-align: center;
   display: inline-block;
 }
-.reviewtheorder5 {
+.reviewtheorder7 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-5xl);
@@ -192,10 +192,10 @@
   align-items: center;
   justify-content: center;
 }
-.reviewtheorder5:disabled {
+.reviewtheorder7:disabled {
   background-color: var(--color-gray-200);
 }
-.priceandcollateralform5,
+.priceandcollateralform7,
 .selltottofiat {
   background-color: var(--color-white1);
   width: 373px;

@@ -68,10 +68,10 @@ const ViewOrdersForm: FunctionComponent = () => {
       <div className="view-orders-parent">
         <div className="view-orders">View Orders</div>
         <button
-          className="prepare-sell-order-button12"
+          className="prepare-sell-order-button11"
           onClick={onPrepareSellOrderButtonClick}
         >
-          <div className="utility-button6">New</div>
+          <div className="utility-button4">New</div>
         </button>
       </div>
       {orders.map((order) =>

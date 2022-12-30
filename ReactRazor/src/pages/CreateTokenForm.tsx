@@ -13,8 +13,8 @@ const CreateTokenForm: FunctionComponent = () => {
         placeholder="Description"
       />
       <input className="token-name" type="text" placeholder="Total Supply" />
-      <button className="prepare-sell-order-button17">
-        <div className="secondary-button8">Mint Token</div>
+      <button className="prepare-sell-order-button1">
+        <div className="secondary-button1">Mint Token</div>
       </button>
     </form>
   );

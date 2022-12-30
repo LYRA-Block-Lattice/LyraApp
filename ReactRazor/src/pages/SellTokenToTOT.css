@@ -11,38 +11,33 @@
   width: 296px;
 }
 .searchtokenbyname,
-.tot-description,
-.tot-name {
+.tot-description1 {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
-  align-items: center;
   justify-content: flex-start;
 }
 .searchtokenbyname {
   background-color: var(--color-white1);
   flex-direction: column;
   padding: var(--padding-xl) var(--padding-xs);
+  align-items: center;
   gap: var(--gap-4xl);
 }
-.tot-description,
-.tot-name {
+.tot-description1 {
   border: 0;
   font-family: var(--caption1);
   font-size: var(--body-s-size);
   background-color: var(--color-beige);
   border-radius: var(--br-sm);
   width: 301px;
-  height: 40px;
+  height: 124px;
   flex-shrink: 0;
   flex-direction: row;
   padding: var(--padding-4xs);
-}
-.tot-description {
-  height: 124px;
   align-items: flex-start;
 }
-.utility-button {
+.utility-button1 {
   position: relative;
   font-size: var(--font-size-base);
   letter-spacing: 0.41px;
@@ -53,7 +48,7 @@
   text-align: center;
   display: inline-block;
 }
-.prepare-sell-order-button {
+.prepare-sell-order-button4 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-lg);
@@ -68,34 +63,34 @@
   align-items: center;
   justify-content: center;
 }
-.note-i-need-to-send-trade-sec,
-.secondary-button {
+.note-i-need-to-send-trade-sec1,
+.secondary-button3 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
   font-family: var(--caption1);
   display: inline-block;
 }
-.note-i-need-to-send-trade-sec {
+.note-i-need-to-send-trade-sec1 {
   font-size: var(--font-size-base);
   color: var(--black-000000100);
   text-align: left;
   width: 292px;
 }
-.secondary-button {
+.secondary-button3 {
   font-size: var(--body-s-size);
   font-weight: 500;
   color: var(--color-white1);
   text-align: center;
 }
-.prepare-sell-order-button1,
+.prepare-sell-order-button5,
 .togettotform {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
   align-items: center;
 }
-.prepare-sell-order-button1 {
+.prepare-sell-order-button5 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-3xl);
@@ -128,13 +123,14 @@
 .set-the-price-1-offering-fo {
   width: 292px;
 }
-.limitmin {
+.limitmin,
+.sellatprice {
   border: 0;
   font-family: var(--caption1);
   font-size: var(--body-s-size);
   background-color: var(--color-beige);
   border-radius: var(--br-sm);
-  width: 138px;
+  width: 301px;
   height: 40px;
   flex-shrink: 0;
   overflow: hidden;
@@ -144,6 +140,9 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
+}
+.limitmin {
+  width: 138px;
 }
 .div {
   position: relative;

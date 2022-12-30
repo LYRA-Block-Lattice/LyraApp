@@ -27,7 +27,7 @@ const CreateOrderSuccessForm: FunctionComponent = () => {
         View on block explorer
       </a>
       <button
-        className="prepare-sell-order-button13"
+        className="prepare-sell-order-button12"
         onClick={onPrepareSellOrderButtonClick}
       >
         <div className="secondary-button6">View my orders</div>

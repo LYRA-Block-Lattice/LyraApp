@@ -1,5 +1,5 @@
 .buy-tv-at-sony-store,
-.div27 {
+.div26 {
   position: absolute;
   top: calc(50% - 24px);
   left: 0;
@@ -8,7 +8,7 @@
   font-weight: 600;
   display: inline-block;
 }
-.div27 {
+.div26 {
   top: calc(50% - 2px);
   font-size: var(--other-11-size);
   line-height: 13px;
@@ -25,7 +25,7 @@
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
-  color: var(--color-green);
+  color: var(--color-green-200);
   text-align: right;
 }
 .path-icon3 {
@@ -38,7 +38,7 @@
   overflow: hidden;
   max-height: 100%;
 }
-.div28 {
+.div27 {
   position: absolute;
   top: 28px;
   right: 7px;
@@ -49,7 +49,7 @@
   text-align: right;
   display: inline-block;
 }
-.div26 {
+.div25 {
   position: relative;
   width: 335px;
   height: 56px;

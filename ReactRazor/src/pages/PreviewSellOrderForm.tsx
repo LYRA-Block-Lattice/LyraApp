@@ -73,10 +73,10 @@ const PreviewSellOrderForm: FunctionComponent = () => {
         }
       />
       <button
-        className="prepare-sell-order-button15"
+        className="prepare-sell-order-button14"
         onClick={onPrepareSellOrderButtonClick}
       >
-        <div className="primary-button9">Place Order</div>
+        <div className="primary-button4">Place Order</div>
       </button>
     </div>
   );

@@ -94,24 +94,28 @@ const SellTokenToToken: FunctionComponent = () => {
 
   return (
     <div className="selltokentotoken">
-      <form className="searchtokenbyname7">
+      <form className="searchtokenbyname2">
         <SearchTokenInput dir="Sell" cat={catsell} ownOnly={true} onTokenSelect={setTosell} />
+        <button className="prepare-sell-order-button10">
+          <div className="mini-button">Mint to sell</div>
+        </button>
+        <div className="searchtokenbyname-child" />
         <SearchTokenInput dir="Get" cat={catget} ownOnly={false} onTokenSelect={setToget} />
       </form>
-      <div className="priceandcollateralform8">
-        <div className="price-and-collateral8">Price and Collateral</div>
-        <div className="set-the-price-1-offering-fo8">
+      <div className="priceandcollateralform3">
+        <div className="price-and-collateral3">Price and Collateral</div>
+        <div className="set-the-price-1-offering-fo3">
           Set the price, 1 {tosell} for {toget}:
         </div>
         <input
-          className="sellatprice8"
+          className="sellatprice3"
           type="number"
           placeholder="Price for biding token"
           onChange={(e) => setPrice(+e.target.value)}
         />
-        <div className="set-the-price-1-offering-fo8">Amount:</div>
+        <div className="set-the-price-1-offering-fo3">Amount:</div>
         <input
-          className="sellatprice8"
+          className="sellatprice3"
           type="number"
           placeholder="Count of the selling token"
           onChange={(e) => setCount(+e.target.value)}
@@ -131,17 +135,17 @@ const SellTokenToToken: FunctionComponent = () => {
             onChange={(e) => setLimitmax(+e.target.value)}
           />
         </div>
-        <div className="set-the-price-1-offering-fo8">Collateral (in LYR):</div>
+        <div className="set-the-price-1-offering-fo3">Collateral (in LYR):</div>
         <input
-          className="sellatprice8"
+          className="sellatprice3"
           type="number"
           placeholder="Collateral in LYR to guard the trade"
           onChange={(e) => setCollateral(+e.target.value)}
         />
-        <div className="set-the-price-1-offering-fo8">
+        <div className="set-the-price-1-offering-fo3">
           Collateral worth in USD: $103
         </div>
-        <div className="set-the-price-1-offering-fo8">Create order in DAO:</div>
+        <div className="set-the-price-1-offering-fo3">Create order in DAO:</div>
         <Autocomplete
           sx={{ width: 301 }}
           disablePortal
@@ -162,12 +166,12 @@ const SellTokenToToken: FunctionComponent = () => {
           )}
           size="medium"
         />
-        <div className="set-the-price-1-offering-fo8">
+        <div className="set-the-price-1-offering-fo3">
           Current dealer is [dealer name]. You will contact buyers through the
           dealer.
         </div>
-        <button className="reviewtheorder8" onClick={onReviewTheOrderClick}>
-          <div className="primary-button8">Review the Order</div>
+        <button className="reviewtheorder3" onClick={onReviewTheOrderClick}>
+          <div className="primary-button3">Review the Order</div>
         </button>
       </div>
     </div>
