@@ -4,7 +4,14 @@ import "./OrderCard.css";
 
 import TableComponent, {TableComponentProps} from "../components/TableComponent";
 
+interface customWindow extends Window {
+  lyraSetProxy?: any;
+  lyraProxy?: any;
+}
+declare const window: customWindow;
+
 type OrderCardType = {
+  orderid?: string;
   offering?: string;
   biding?: string;
   orderStatus?: string;
@@ -23,6 +30,7 @@ type OrderCardType = {
 };
 
 const OrderCard: FunctionComponent<OrderCardType> = ({
+  orderid,
   offering,
   biding,
   orderStatus,
@@ -40,12 +48,12 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
   const [trades, setTrades] = useState<any[]>([]);
   const [showTradeTable, setShowTradeTable] = useState(false);
 
-  // useEffect(() => {
-  //   setTrades(data);
-  // }, []);
-
-  const toggle = () => {
-    setTrades(datasrc);
+  const toggle = async () => {
+    if (!showTradeTable) {
+      var tt = await window.lyraProxy.invokeMethodAsync("GetTrades", orderid);
+      var ret = JSON.parse(tt);
+      setTrades(ret.trades);
+    }
     setShowTradeTable(!showTradeTable); 
   }
   
@@ -58,7 +66,7 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
   return (
     <div className="ordercard3">
       <div className="order-brief-section">
-        <button className="banner-image" onClick={toggle}>
+        <button className="banner-image" onClick={async () => { await toggle(); }}>
           <div className="order-banner">
             <button className="order-image">
               <img

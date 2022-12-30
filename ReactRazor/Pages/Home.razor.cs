@@ -216,8 +216,7 @@ namespace ReactRazor.Pages
                     .OrderByDescending(a => a.gens.TimeStamp)
                     .Select(a => new
                     {
-                        hash = "",//(a as TransactionBlock).Hash,
-                        hash2 = "",//(a as TransactionBlock).Hash.Shorten(),
+                        orderid = a.gens.AccountID,
                         status = a.latest.UOStatus.ToString(),
                         offering = ShortToken(a.gens.Order.offering),
                         biding = ShortToken(a.gens.Order.biding),
@@ -226,7 +225,6 @@ namespace ReactRazor.Pages
                         limitmin = a.gens.Order.limitMin, 
                         limitmax = a.gens.Order.limitMax,
                         time = a.gens.TimeStamp.ToString(),
-                        // TODO: calculate the data
                         sold = a.gens.Order.amount - a.latest.Order.amount,
                         shelf = a.latest.Order.amount,
                     });
@@ -235,6 +233,46 @@ namespace ReactRazor.Pages
                 {
                     ret = ret.ResultCode.ToString(),
                     orders
+                });
+            }
+
+            return JsonConvert.SerializeObject(
+            new
+            {
+                ret = "Error",
+                msg = ret.ResultCode.ToString(),
+            });
+        }
+
+        [JSInvokable("GetTrades")]
+        public async Task<string?> GetTradesAsync(string orderid)
+        {
+            // get all current trades
+            var ret = await walletState.Value.wallet.RPC.FindUniTradeForOrderAsync(orderid);
+            if (ret.Successful())
+            {
+                var blocks = ret.GetBlocks().Cast<TransactionBlock>();
+                var trades = blocks
+                    .Where(a => a.BlockType == BlockTypes.UniTradeGenesis)
+                    .Select(a => new
+                    {
+                        gens = a as IUniTrade,
+                        latest = blocks.FirstOrDefault(x => x.BlockType != BlockTypes.UniTradeGenesis && x.AccountID == a.AccountID) as IUniTrade ?? a as IUniTrade,
+                    })
+                    .OrderByDescending(a => a.gens.TimeStamp)
+                    .Select(a => new
+                    {
+                        orderid,
+                        buyer = a.gens.AccountID,
+                        status = a.latest.UTStatus.ToString(),
+                        a.gens.Trade.amount,
+                        time = a.gens.TimeStamp.ToString(),
+                    });
+                return JsonConvert.SerializeObject(
+                new
+                {
+                    ret = ret.ResultCode.ToString(),
+                    trades
                 });
             }
 

@@ -10,9 +10,8 @@ interface customWindow extends Window {
 declare const window: customWindow;
 
 interface IOrder {
+  orderid: string;
   time: string;
-  hash: string;
-  hash2: string;
   status: string;
   offering: string;
   biding: string;
@@ -57,6 +56,7 @@ const ViewOrdersForm: FunctionComponent = () => {
       </div>
       {orders.map((order) =>
         <OrderCard
+          orderid={order.orderid}
           offering={order.offering}
           biding={order.biding}
           orderStatus={order.status}

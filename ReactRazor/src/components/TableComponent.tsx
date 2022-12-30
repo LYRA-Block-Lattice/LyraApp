@@ -9,29 +9,36 @@ export interface TableComponentProps {
 }
 
 const TableComponent: React.FC<TableComponentProps> = ({ data }) => {
-  let headings = Object.keys(data[1]);
-  return (
-    <table className='tradeHist'>
-      <thead>
-        <tr>
+
+  if (data != undefined && data.length > 0) {
+    let headings = Object.keys(data[0]);
+    return (
+      <table className='tradeHist'>
+        <thead>
+          <tr>
+            {
+              headings.map(heading => <th>{heading}</th>)
+            }
+          </tr>
+        </thead>
+        <tbody>
           {
-            headings.map(heading => <th>{heading}</th>)
-          }
-        </tr>
-      </thead>
-      <tbody>
-        {
-            data.map(item => 
+            data.map(item =>
               <tr>
-               {
-                  headings.map(heading => <td>{item[heading]}</td>) 
-               }
+                {
+                  headings.map(heading => <td>{item[heading]}</td>)
+                }
               </tr>
             )
-        }
-      </tbody>
-    </table>
-  );
+          }
+        </tbody>
+      </table>
+    );
+  }
+  else {
+    return <div>No trades found.</div>
+      ;
+  }
 }
 
 export default TableComponent;
