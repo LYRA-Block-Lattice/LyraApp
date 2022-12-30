@@ -15,17 +15,17 @@ const ViewTradesForm: FunctionComponent = () => {
                 <img
                   className="icbaseline-generating-tokens-icon"
                   alt=""
-                  src="../asserts/icbaselinegeneratingtokens.svg"
+                  src="_content/ReactRazor/asserts/icbaselinegeneratingtokens.svg"
                 />
                 <img
                   className="order-image-child"
                   alt=""
-                  src="../asserts/arrow-1.svg"
+                  src="_content/ReactRazor/asserts/arrow-1.svg"
                 />
                 <img
                   className="icbaseline-generating-tokens-icon"
                   alt=""
-                  src="../asserts/carbonuserservicedesk.svg"
+                  src="_content/ReactRazor/asserts/carbonuserservicedesk.svg"
                 />
               </button>
               <div className="order-status">
@@ -40,7 +40,7 @@ const ViewTradesForm: FunctionComponent = () => {
               <img
                 className="frame-child"
                 alt=""
-                src="../asserts/arrow-2.svg"
+                src="_content/ReactRazor/asserts/arrow-2.svg"
               />
               <b className="tetherusdt">tether/USDT</b>
             </div>
