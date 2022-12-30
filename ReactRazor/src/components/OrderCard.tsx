@@ -126,9 +126,8 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
         </div>
       </div>
       <div className="trades-section">
-        <div className="width-controller">
+        <div className="width-controller" />        
         {showTradeTable ? <TableComponent data={trades} /> : null}
-      </div>
       </div>
     </div>
   );
