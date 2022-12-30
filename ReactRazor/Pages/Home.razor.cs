@@ -179,6 +179,7 @@ namespace ReactRazor.Pages
                         {
                             ret = ret.ResultCode.ToString(),
                             txhash = ret.TxHash,
+                            msg = ret.ResultCode.Humanize(),
                         });
                 }
             }

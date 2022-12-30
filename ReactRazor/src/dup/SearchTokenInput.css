@@ -11,3 +11,7 @@
     width: 296px;
     margin-bottom: 25px;
 }
+
+.MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] {
+    background: var(--color-beige);
+}

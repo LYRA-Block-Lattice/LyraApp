@@ -22,21 +22,22 @@ interface IToken {
 
 function SearchTokenInput ({ dir, cat, ownOnly, onTokenSelect }) {
   const [options, setOptions] = useState<IToken[]>([]);
-  const [tokens, setTokens] = useState<IBalance[]>([]);  
+  const [balance, setBalance] = useState<IBalance[]>([]);
+  const [selbalance, setSelbalance] = useState<number | undefined>(0);
 
   async function getTokens() {
     let t = await window.lyraProxy.invokeMethodAsync("GetBalance");
     var tkns = JSON.parse(t);
-    setTokens(tkns);
+    setBalance(tkns);
   }
 
   useEffect(() => {
     getTokens();
-  }, [tokens]);
+  }, []);
 
   const searchToken = (searchTerm, cat) => {
     let method = "SearchToken";
-    if (ownOnly) { // search in wallet/balance
+    if (ownOnly && cat != "Fiat") { // search in wallet/balance
       method = "SearchTokenForAccount";
     }
 
@@ -57,15 +58,20 @@ function SearchTokenInput ({ dir, cat, ownOnly, onTokenSelect }) {
     if (value) {
       onTokenSelect(value);
       searchToken(value, cat);
+
+      if (balance?.find(a => a.token == value)) {
+        setSelbalance(balance?.find(a => a.token == value)?.balance)
+      }
     } else {
       onTokenSelect("");
       setOptions([]);
+      setSelbalance(0);
     }
   }, [options]);
 
     return (
       <div>
-        <div className="sell2">To {dir}</div>
+        <div className="sell2">To {dir} {cat}</div>
         <Autocomplete
           sx={{ width: 301 }}
           disablePortal
@@ -84,6 +90,7 @@ function SearchTokenInput ({ dir, cat, ownOnly, onTokenSelect }) {
           )}
           size="medium"
         />
+        <div>Balance: {selbalance}</div>
       </div>
     );
 }
