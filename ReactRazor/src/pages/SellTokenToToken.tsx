@@ -2,8 +2,7 @@ import { FunctionComponent, useCallback, useState, useEffect } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "./SellTokenToToken.css";
-import { option } from "yargs";
-import Search from "antd/lib/transfer/search";
+import SearchTokenInput from "../dup/SearchTokenInput";
 
 interface customWindow extends Window {
   lyraSetProxy?: any;
@@ -14,12 +13,7 @@ interface IBalance {
   token: string;
   balance: number;
 }
-interface IToken {
-  token: string;
-  domain: string;
-  isTOT: boolean;
-  name: string;
-}
+
 interface IDao {
   name: string;
   daoId: string;
@@ -32,7 +26,7 @@ const SellTokenToToken: FunctionComponent = () => {
   const catget = decodeURIComponent(searchParams.get("get")!);
 
   const [tokens, setTokens] = useState<IBalance[]>([]);  
-  const [options, setOptions] = useState<IToken[]>([]);
+  
   const [daos, setDaos] = useState<IDao[]>([]);
 
   const [tosell, setTosell] = useState("");
@@ -46,20 +40,6 @@ const SellTokenToToken: FunctionComponent = () => {
   const [dealerid, setDealerid] = useState("");
 
   const navigate = useNavigate();
-
-  const searchToken = (searchTerm, cat) => {
-    window.lyraProxy.invokeMethodAsync("SearchToken", searchTerm, cat)
-      .then(function (response) {
-        return JSON.parse(response);
-      })
-      .then(function (myJson) {
-        console.log(
-          "search term: " + searchTerm + ", results: ",
-          myJson
-        );
-        setOptions(myJson);
-      });
-  };
 
   const searchDao = (searchTerm) => {
     window.lyraProxy.invokeMethodAsync("SearchDao", searchTerm)
@@ -83,16 +63,6 @@ const SellTokenToToken: FunctionComponent = () => {
     }
   }, [tosell, tokens]);
 
-  const onGetTokenInputChange = useCallback((event, value, reason) => {
-    if (value) {
-      setToget(value);
-      searchToken(value, catget);
-    } else {
-      setToget("");
-      setOptions([]);
-    }
-  }, [toget, options]);
-
   const onDaoSearchChange = useCallback((event, value, reason) => {
     if (value) {
       searchDao(value);
@@ -115,7 +85,7 @@ const SellTokenToToken: FunctionComponent = () => {
   }, [tokens]);
 
   const onReviewTheOrderClick = useCallback(() => {
-    let togettoken = options.find(a => a.name == toget)?.token;
+    let togettoken = toget;
     console.log("sell " + tosell + ", to get " + togettoken + ", on price " + price);
     var obj = {
       selltoken: tosell,
@@ -153,25 +123,7 @@ const SellTokenToToken: FunctionComponent = () => {
           )}
           size="medium"
         />
-        <div className="sell2">To get</div>
-        <Autocomplete
-          sx={{ width: 301 }}
-          disablePortal
-          options={options}
-          onInputChange={onGetTokenInputChange}
-          getOptionLabel={(option) => option.name}
-          renderInput={(params: any) => (
-            <TextField
-              {...params}
-              color="primary"
-              label="Token Name"
-              variant="outlined"
-              placeholder=""
-              helperText=""
-            />
-          )}
-          size="medium"
-        />
+        <SearchTokenInput dir="Get" cat={catget} ownOnly={false} onTokenSelect={setToget} />
       </form>
       <div className="priceandcollateralform8">
         <div className="price-and-collateral8">Price and Collateral</div>

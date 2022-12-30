@@ -1,7 +1,27 @@
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent, useCallback, useState, useEffect } from "react";
 import { Autocomplete, TextField } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import "./SellTokenToFiat.css";
+
+interface customWindow extends Window {
+  lyraSetProxy?: any;
+  lyraProxy?: any;
+}
+declare const window: customWindow;
+interface IBalance {
+  token: string;
+  balance: number;
+}
+interface IToken {
+  token: string;
+  domain: string;
+  isTOT: boolean;
+  name: string;
+}
+interface IDao {
+  name: string;
+  daoId: string;
+}
 
 const SellTokenToFiat: FunctionComponent = () => {
   const navigate = useNavigate();
