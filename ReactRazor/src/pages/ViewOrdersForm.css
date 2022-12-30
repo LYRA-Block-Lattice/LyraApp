@@ -1,4 +1,4 @@
-.utility-button6,
+.utility-button4,
 .view-orders {
   position: relative;
   letter-spacing: 0.41px;
@@ -6,13 +6,13 @@
   font-weight: 500;
   display: inline-block;
 }
-.utility-button6 {
+.utility-button4 {
   font-size: var(--font-size-xl);
   font-family: var(--caption1);
   color: var(--color-white1);
   text-align: center;
 }
-.prepare-sell-order-button12 {
+.prepare-sell-order-button11 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-lg);
@@ -33,6 +33,7 @@
   align-items: center;
 }
 .view-orders-parent {
+  width: 386px;
   height: 52px;
   flex-shrink: 0;
   flex-direction: row;
@@ -40,7 +41,7 @@
     var(--padding-xl);
   box-sizing: border-box;
   justify-content: center;
-  gap: 80px;
+  gap: 183px;
 }
 .viewordersform {
   position: relative;

@@ -1,17 +1,17 @@
-.icbaseline-generating-tokens-icon {
+.icbaseline-generating-tokens-icon1 {
   position: relative;
   width: 32px;
   height: 32px;
   flex-shrink: 0;
   overflow: hidden;
 }
-.order-image-child {
+.order-image-item {
   position: relative;
   width: 19.5px;
   height: 7.36px;
   flex-shrink: 0;
 }
-.order-image {
+.order-image1 {
   cursor: pointer;
   border: 0;
   padding: 0;
@@ -27,7 +27,7 @@
   justify-content: center;
   gap: var(--gap-xs);
 }
-.open3 {
+.open1 {
   position: relative;
   font-size: var(--caption1-size);
   display: inline-block;
@@ -35,10 +35,10 @@
   color: var(--color-white1);
   text-align: center;
 }
-.order-status {
+.order-status1 {
   align-self: stretch;
   border-radius: 0 0 var(--br-md) var(--br-md);
-  background-color: var(--info1);
+  background-color: var(--info);
   display: flex;
   flex-direction: row;
   padding: var(--padding-7xs) var(--padding-8xs);
@@ -46,39 +46,35 @@
   align-items: center;
   justify-content: center;
 }
-.banner-image,
-.order-banner {
+.banner-image1,
+.order-banner1 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
-.order-banner {
+.order-banner1 {
   gap: var(--gap-0);
 }
-.banner-image {
+.banner-image1 {
   cursor: pointer;
   border: 0;
   padding: 0;
   background-color: transparent;
 }
-.btc {
-  position: relative;
-  display: inline-block;
-}
-.frame-child {
+.frame-item {
   position: relative;
   width: 12.5px;
   height: 7.36px;
   flex-shrink: 0;
 }
-.tetherusdt {
+.tetherusdt1 {
   position: relative;
   display: inline-block;
   text-align: left;
 }
-.btc-parent {
+.sell-parent {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -86,45 +82,48 @@
   gap: var(--gap-md);
   font-size: var(--font-size-xl);
 }
-.title-section-child {
+.title-section-item {
   position: relative;
-  border-top: 1px solid var(--text-secondary1);
+  border-top: 1px solid var(--text-secondary);
   box-sizing: border-box;
   width: 128px;
   height: 1px;
   flex-shrink: 0;
 }
-.am-wrapper,
-.block1,
-.block2 {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-}
-.am-wrapper {
+.am-container {
   align-self: stretch;
   background-color: var(--color-white1);
   overflow: hidden;
+  display: flex;
   flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
   text-align: left;
 }
-.block1,
-.block2 {
+.limit-min {
+  position: relative;
+  display: inline-block;
+}
+.block11,
+.block21 {
+  display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
   gap: var(--gap-0);
 }
-.block2 {
+.block21 {
   overflow: hidden;
   align-items: flex-end;
 }
-.details-section-child {
+.details-section-item {
   position: relative;
   width: 4px;
   height: 15px;
   flex-shrink: 0;
   overflow: hidden;
 }
-.block3 {
+.block31 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -132,31 +131,31 @@
   justify-content: flex-start;
   gap: var(--gap-0);
 }
-.details-section,
-.title-section {
+.details-section1,
+.title-section1 {
   display: flex;
   justify-content: flex-start;
   gap: var(--gap-sm);
 }
-.details-section {
+.details-section1 {
   align-self: stretch;
   overflow: hidden;
   flex-direction: row;
   align-items: center;
 }
-.title-section {
+.title-section1 {
   border-radius: var(--br-xs) var(--br-xs) 0 0;
   flex-direction: column;
   align-items: flex-start;
 }
-.order-brief-section {
+.order-brief-section1 {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
   gap: var(--gap-xl);
 }
-.width-controller {
+.width-controller1 {
   position: relative;
   border-top: 1px solid var(--color-gray-900);
   box-sizing: border-box;
@@ -164,19 +163,19 @@
   height: 1px;
   flex-shrink: 0;
 }
-.ordercard3,
-.trades-section {
+.ordercard1,
+.trades-section1 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.trades-section {
+.trades-section1 {
   align-self: stretch;
   flex-shrink: 0;
   overflow: hidden;
 }
-.ordercard3 {
+.ordercard1 {
   border-radius: var(--br-md);
   background-color: var(--color-white1);
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);

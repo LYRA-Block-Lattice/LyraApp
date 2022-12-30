@@ -1,65 +1,67 @@
 import { FunctionComponent, useState, useCallback } from "react";
-import { Button, Menu, MenuItem } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import SignTradeSecretPopup from "../components/SignTradeSecretPopup";
+import PortalPopup from "../components/PortalPopup";
 import "./CreateTOTForm.css";
 
 const CreateTOTForm: FunctionComponent = () => {
-  const [selectTypeOfTOTAnchorEl, setSelectTypeOfTOTAnchorEl] =
-    useState<HTMLElement | null>(null);
-  const navigate = useNavigate();
-  const selectTypeOfTOTOpen = Boolean(selectTypeOfTOTAnchorEl);
-  const handleSelectTypeOfTOTClick = (event: React.MouseEvent<HTMLElement>) => {
-    setSelectTypeOfTOTAnchorEl(event.currentTarget);
-  };
-  const handleSelectTypeOfTOTClose = () => {
-    setSelectTypeOfTOTAnchorEl(null);
-  };
+  const [isSignTradeSecretPopupOpen, setSignTradeSecretPopupOpen] =
+    useState(false);
 
-  const onPrepareSellOrderButtonClick = useCallback(() => {
-    navigate("/signtradesecretform");
-  }, [navigate]);
+  const openSignTradeSecretPopup = useCallback(() => {
+    setSignTradeSecretPopupOpen(true);
+  }, []);
+
+  const closeSignTradeSecretPopup = useCallback(() => {
+    setSignTradeSecretPopupOpen(false);
+  }, []);
 
   return (
-    <form className="createtotform">
-      <div className="create-tot">Create TOT</div>
-      <div>
-        <Button
-          sx={{ width: 301 }}
-          id="button-Select Type of TOT"
-          aria-controls="menu-Select Type of TOT"
-          aria-haspopup="true"
-          aria-expanded={selectTypeOfTOTOpen ? "true" : undefined}
-          onClick={handleSelectTypeOfTOTClick}
-          color="primary"
+    <>
+      <div className="create-tot-form">
+        <form className="createtottosellform">
+          <div className="create-and-sell-totsku">
+            Create and Sell [TOT/SKU]
+          </div>
+          <select className="selecttypeoftot">
+            <option value="sku">Goods</option>
+            <option value="svc">Service</option>
+            <option value="tot">Generic Trade only TOken</option>
+          </select>
+          <input className="tot-name" type="text" placeholder="TOT Name" />
+          <input
+            className="tot-description"
+            type="text"
+            placeholder="Public Description, seen by everyone"
+          />
+          <input
+            className="tot-name"
+            type="number"
+            placeholder="Total Supply"
+          />
+          <button
+            className="prepare-sell-order-button2"
+            onClick={openSignTradeSecretPopup}
+          >
+            <div className="utility-button">Sign trade secret</div>
+          </button>
+          <div className="note-i-need-to-send-trade-sec">
+            Note: I need to send trade secret privately to buyer(s).
+          </div>
+          <button className="prepare-sell-order-button3">
+            <div className="secondary-button2">Create TOT</div>
+          </button>
+        </form>
+      </div>
+      {isSignTradeSecretPopupOpen && (
+        <PortalPopup
+          overlayColor="rgba(113, 113, 113, 0.3)"
+          placement="Centered"
+          onOutsideClick={closeSignTradeSecretPopup}
         >
-          Select Type of TOT
-        </Button>
-        <Menu
-          anchorEl={selectTypeOfTOTAnchorEl}
-          open={selectTypeOfTOTOpen}
-          onClose={handleSelectTypeOfTOTClose}
-        />
-      </div>
-      <input className="tot-name6" type="text" placeholder="TOT Name" />
-      <input
-        className="tot-description8"
-        type="text"
-        placeholder="Public Description, seen by everyone"
-      />
-      <input className="tot-name6" type="text" placeholder="Total Supply" />
-      <button
-        className="prepare-sell-order-button19"
-        onClick={onPrepareSellOrderButtonClick}
-      >
-        <div className="utility-button8">Sign trade secret</div>
-      </button>
-      <div className="note-i-need-to-send-trade-sec6">
-        Note: I need to send trade secret privately to buyer(s).
-      </div>
-      <button className="prepare-sell-order-button20">
-        <div className="secondary-button9">Create TOT</div>
-      </button>
-    </form>
+          <SignTradeSecretPopup onClose={closeSignTradeSecretPopup} />
+        </PortalPopup>
+      )}
+    </>
   );
 };
 

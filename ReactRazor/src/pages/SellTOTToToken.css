@@ -1,6 +1,6 @@
-.selecttypeoftot2,
-.tot-description5,
-.tot-name5 {
+.selecttypeoftot1,
+.tot-description3,
+.tot-name3 {
   background-color: var(--color-beige);
   border-radius: var(--br-sm);
   width: 301px;
@@ -14,20 +14,20 @@
   align-items: center;
   justify-content: flex-start;
 }
-.selecttypeoftot2 {
+.selecttypeoftot1 {
   gap: var(--gap-lg);
 }
-.tot-description5,
-.tot-name5 {
+.tot-description3,
+.tot-name3 {
   border: 0;
   font-family: var(--caption1);
   font-size: var(--body-s-size);
 }
-.tot-description5 {
+.tot-description3 {
   height: 124px;
   align-items: flex-start;
 }
-.utility-button5 {
+.utility-button3 {
   position: relative;
   font-size: var(--font-size-base);
   letter-spacing: 0.41px;
@@ -38,7 +38,7 @@
   text-align: center;
   display: inline-block;
 }
-.prepare-sell-order-button10 {
+.prepare-sell-order-button8 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-lg);
@@ -53,7 +53,7 @@
   align-items: center;
   justify-content: center;
 }
-.note-i-need-to-send-trade-sec5,
+.note-i-need-to-send-trade-sec3,
 .secondary-button5 {
   position: relative;
   letter-spacing: 0.41px;
@@ -61,7 +61,7 @@
   font-family: var(--caption1);
   display: inline-block;
 }
-.note-i-need-to-send-trade-sec5 {
+.note-i-need-to-send-trade-sec3 {
   font-size: var(--font-size-base);
   color: var(--black-000000100);
   text-align: left;
@@ -73,14 +73,14 @@
   color: var(--color-white1);
   text-align: center;
 }
-.createtottosellform2,
-.prepare-sell-order-button11 {
+.createtottosellform1,
+.prepare-sell-order-button9 {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
   align-items: center;
 }
-.prepare-sell-order-button11 {
+.prepare-sell-order-button9 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-3xl);
@@ -91,7 +91,7 @@
   flex-direction: row;
   justify-content: center;
 }
-.createtottosellform2 {
+.createtottosellform1 {
   background-color: var(--color-white1);
   flex-direction: column;
   padding: var(--padding-xl) var(--padding-sm);
@@ -110,7 +110,7 @@
   display: inline-block;
   width: 296px;
 }
-.searchtokenbyname5 {
+.searchtokenbyname1 {
   background-color: var(--color-white1);
   overflow: hidden;
   display: flex;
@@ -121,22 +121,22 @@
   justify-content: flex-start;
   gap: var(--gap-4xl);
 }
-.price-and-collateral6,
-.set-the-price-1-offering-fo6 {
+.price-and-collateral2,
+.set-the-price-1-offering-fo2 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
 }
-.price-and-collateral6 {
+.price-and-collateral2 {
   font-size: var(--font-size-5xl);
   font-weight: 500;
   width: 296px;
 }
-.set-the-price-1-offering-fo6 {
+.set-the-price-1-offering-fo2 {
   width: 292px;
 }
-.limitmin6 {
+.limitmin2 {
   border: 0;
   font-family: var(--caption1);
   font-size: var(--body-s-size);
@@ -153,13 +153,13 @@
   align-items: center;
   justify-content: flex-start;
 }
-.div6 {
+.div2 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
 }
-.limitoftrade6 {
+.limitoftrade2 {
   width: 322px;
   overflow: hidden;
   display: flex;
@@ -171,7 +171,7 @@
   gap: var(--gap-lg);
   font-size: var(--body-s-size);
 }
-.primary-button6 {
+.primary-button2 {
   position: relative;
   font-size: var(--font-size-4xl);
   letter-spacing: 0.41px;
@@ -182,7 +182,7 @@
   text-align: center;
   display: inline-block;
 }
-.reviewtheorder6 {
+.reviewtheorder2 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-5xl);
@@ -197,10 +197,10 @@
   align-items: center;
   justify-content: center;
 }
-.reviewtheorder6:disabled {
+.reviewtheorder2:disabled {
   background-color: var(--color-gray-200);
 }
-.priceandcollateralform6,
+.priceandcollateralform2,
 .selltottotoken {
   background-color: var(--color-white1);
   width: 373px;

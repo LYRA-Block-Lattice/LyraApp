@@ -15,18 +15,18 @@ const ViewOrdersForm: FunctionComponent = () => {
       <div className="view-orders-parent">
         <div className="view-orders">View Orders</div>
         <button
-          className="prepare-sell-order-button12"
+          className="prepare-sell-order-button11"
           onClick={onPrepareSellOrderButtonClick}
         >
-          <div className="utility-button6">New</div>
+          <div className="utility-button4">New</div>
         </button>
       </div>
       <OrderCard
         offering="BTC"
         biding="tether/USDT"
         orderStatus="Open"
-        offeringImg="_content/ReactRazor/asserts/icbaselinegeneratingtokens.svg"
-        bidingImg="_content/ReactRazor/asserts/carbonuserservicedesk.svg"
+        offeringImg="../asserts/icbaselinegeneratingtokens.svg"
+        bidingImg="../asserts/carbonuserservicedesk.svg"
         time="12/29/2022 10:25:37 AM"
         price="10,323"
         amount="1113.2"

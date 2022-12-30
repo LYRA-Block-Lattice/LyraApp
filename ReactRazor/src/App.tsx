@@ -5,28 +5,30 @@ import {
   useLocation,
 } from "react-router-dom";
 import Empty from "./pages/Empty";
+import MintFiatToken from "./pages/MintFiatToken";
+import CreateTokenForm from "./pages/CreateTokenForm";
+import CreateTOTForm from "./pages/CreateTOTForm";
 import SellTokenToTOT from "./pages/SellTokenToTOT";
-import SellTokenToFiat from "./pages/SellTokenToFiat";
-import SellFiatToTOT from "./pages/SellFiatToTOT";
-import SellFiatToFiat from "./pages/SellFiatToFiat";
 import SellTOTToTOT from "./pages/SellTOTToTOT";
-import SellTOTToFiat from "./pages/SellTOTToFiat";
 import SellTOTToToken from "./pages/SellTOTToToken";
-import SellFiatToToken from "./pages/SellFiatToToken";
 import SellTokenToToken from "./pages/SellTokenToToken";
 import ViewTradesForm from "./pages/ViewTradesForm";
 import ViewOrdersForm from "./pages/ViewOrdersForm";
 import CreateOrderSuccessForm from "./pages/CreateOrderSuccessForm";
 import PreviewSellOrderForm from "./pages/PreviewSellOrderForm";
 import CreateNFTForm from "./pages/CreateNFTForm";
-import CreateTokenForm from "./pages/CreateTokenForm";
 import StartToCreateOrder from "./pages/StartToCreateOrder";
 import TransactionHistory from "./pages/TransactionHistory";
 import Redir from "./pages/Redir";
 import Market from "./pages/Market";
 import CreateWallet from "./pages/CreateWallet";
 import OpenWallet from "./pages/OpenWallet";
-import CreateTOTForm from "./pages/CreateTOTForm";
+import SellTokenToFiat from "./pages/SellTokenToFiat";
+import SellFiatToTOT from "./pages/SellFiatToTOT";
+import SellFiatToFiat from "./pages/SellFiatToFiat";
+import SellTOTToFiat from "./pages/SellTOTToFiat";
+import SellFiatToToken from "./pages/SellFiatToToken";
+import CreateTOTForm1 from "./pages/CreateTOTForm1";
 import PriceAndCollateralForm from "./pages/PriceAndCollateralForm";
 import SelectTokenNameForm from "./pages/SelectTokenNameForm";
 import SelectOfferingAndBiding from "./pages/SelectOfferingAndBiding";
@@ -55,19 +57,19 @@ function App() {
         title = "";
         metaDescription = "";
         break;
+      case "/mint-fiat-token":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/createtokenform":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/create-tot-form":
+        title = "";
+        metaDescription = "";
+        break;
       case "/selltokentotot":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/selltokentofiat":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/sellfiattotot":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/sellfiattofiat":
         title = "";
         metaDescription = "";
         break;
@@ -75,15 +77,7 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/selltottofiat":
-        title = "";
-        metaDescription = "";
-        break;
       case "/selltottotoken":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/sellfiattotoken":
         title = "";
         metaDescription = "";
         break;
@@ -111,10 +105,6 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/createtokenform":
-        title = "";
-        metaDescription = "";
-        break;
       case "/starttocreateorder":
         title = "";
         metaDescription = "";
@@ -136,6 +126,26 @@ function App() {
         metaDescription = "";
         break;
       case "/open-wallet":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/selltokentofiat":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/sellfiattotot":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/sellfiattofiat":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/selltottofiat":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/sellfiattotoken":
         title = "";
         metaDescription = "";
         break;
@@ -183,21 +193,17 @@ function App() {
     <Routes>
       <Route path="/" element={<Empty />} />
 
+      <Route path="/mint-fiat-token" element={<MintFiatToken />} />
+
+      <Route path="/createtokenform" element={<CreateTokenForm />} />
+
+      <Route path="/create-tot-form" element={<CreateTOTForm />} />
+
       <Route path="/selltokentotot" element={<SellTokenToTOT />} />
-
-      <Route path="/selltokentofiat" element={<SellTokenToFiat />} />
-
-      <Route path="/sellfiattotot" element={<SellFiatToTOT />} />
-
-      <Route path="/sellfiattofiat" element={<SellFiatToFiat />} />
 
       <Route path="/selltottotot" element={<SellTOTToTOT />} />
 
-      <Route path="/selltottofiat" element={<SellTOTToFiat />} />
-
       <Route path="/selltottotoken" element={<SellTOTToToken />} />
-
-      <Route path="/sellfiattotoken" element={<SellFiatToToken />} />
 
       <Route path="/selltokentotoken" element={<SellTokenToToken />} />
 
@@ -214,8 +220,6 @@ function App() {
 
       <Route path="/createnftform" element={<CreateNFTForm />} />
 
-      <Route path="/createtokenform" element={<CreateTokenForm />} />
-
       <Route path="/starttocreateorder" element={<StartToCreateOrder />} />
 
       <Route path="/transactionhistory" element={<TransactionHistory />} />
@@ -228,7 +232,17 @@ function App() {
 
       <Route path="/open-wallet" element={<OpenWallet />} />
 
-      <Route path="/createtotform" element={<CreateTOTForm />} />
+      <Route path="/selltokentofiat" element={<SellTokenToFiat />} />
+
+      <Route path="/sellfiattotot" element={<SellFiatToTOT />} />
+
+      <Route path="/sellfiattofiat" element={<SellFiatToFiat />} />
+
+      <Route path="/selltottofiat" element={<SellTOTToFiat />} />
+
+      <Route path="/sellfiattotoken" element={<SellFiatToToken />} />
+
+      <Route path="/createtotform" element={<CreateTOTForm1 />} />
 
       <Route
         path="/priceandcollateralform"

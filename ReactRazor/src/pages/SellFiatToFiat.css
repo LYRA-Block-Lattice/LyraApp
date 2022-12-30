@@ -1,4 +1,4 @@
-.to-get-fiat {
+.sell-fiat1 {
   position: relative;
   font-size: var(--font-size-5xl);
   letter-spacing: 0.41px;
@@ -10,7 +10,7 @@
   display: inline-block;
   width: 296px;
 }
-.searchtokenbyname3 {
+.searchtokenbyname5 {
   background-color: var(--color-white1);
   overflow: hidden;
   display: flex;
@@ -21,23 +21,23 @@
   justify-content: flex-start;
   gap: var(--gap-4xl);
 }
-.price-and-collateral3,
-.set-the-price-1-offering-fo3 {
+.price-and-collateral6,
+.set-the-price-1-offering-fo6 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
 }
-.price-and-collateral3 {
+.price-and-collateral6 {
   font-size: var(--font-size-5xl);
   font-weight: 500;
   width: 296px;
 }
-.set-the-price-1-offering-fo3 {
+.set-the-price-1-offering-fo6 {
   width: 292px;
 }
-.limitmin3,
-.sellatprice3 {
+.limitmin6,
+.sellatprice6 {
   border: 0;
   font-family: var(--caption1);
   font-size: var(--body-s-size);
@@ -54,16 +54,16 @@
   align-items: center;
   justify-content: flex-start;
 }
-.limitmin3 {
+.limitmin6 {
   width: 138px;
 }
-.div3 {
+.div16 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
 }
-.limitoftrade3 {
+.limitoftrade6 {
   width: 322px;
   overflow: hidden;
   display: flex;
@@ -75,7 +75,7 @@
   gap: var(--gap-lg);
   font-size: var(--body-s-size);
 }
-.primary-button3 {
+.primary-button8 {
   position: relative;
   font-size: var(--font-size-4xl);
   letter-spacing: 0.41px;
@@ -86,7 +86,7 @@
   text-align: center;
   display: inline-block;
 }
-.reviewtheorder3 {
+.reviewtheorder6 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-5xl);
@@ -101,10 +101,10 @@
   align-items: center;
   justify-content: center;
 }
-.reviewtheorder3:disabled {
+.reviewtheorder6:disabled {
   background-color: var(--color-gray-200);
 }
-.priceandcollateralform3,
+.priceandcollateralform6,
 .sellfiattofiat {
   background-color: var(--color-white1);
   width: 373px;

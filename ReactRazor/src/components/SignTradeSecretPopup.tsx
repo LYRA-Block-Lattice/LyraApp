@@ -46,14 +46,14 @@ const SignTradeSecretPopup: FunctionComponent<SignTradeSecretPopupType> = ({
         blockchain needed is a digital signature of the trade secret.
       </div>
       <textarea
-        className="tot-description6"
+        className="tot-description4"
         placeholder={`Please pay to my bank account number:
 
 Bank of America
 1234 1234 1234 1234`}
       />
-      <button className="prepare-sell-order-button14" onClick={onClose}>
-        <div className="utility-button7">Sign and return</div>
+      <button className="prepare-sell-order-button13" onClick={onClose}>
+        <div className="utility-button5">Sign and return</div>
       </button>
     </div>
   );

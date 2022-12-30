@@ -46,23 +46,23 @@ const SellTokenToTOT: FunctionComponent = () => {
         </form>
         <form className="togettotform">
           <div className="sell">To get [TOT/SKU/SVC]</div>
-          <input className="tot-name" type="text" placeholder="Name" />
+          <input className="sellatprice" type="text" placeholder="Name" />
           <input
-            className="tot-description"
+            className="tot-description1"
             type="text"
             placeholder="Public Description, seen by everyone"
           />
           <button
-            className="prepare-sell-order-button"
+            className="prepare-sell-order-button4"
             onClick={openSignTradeSecretPopup}
           >
-            <div className="utility-button">Sign trade secret</div>
+            <div className="utility-button1">Sign trade secret</div>
           </button>
-          <div className="note-i-need-to-send-trade-sec">
+          <div className="note-i-need-to-send-trade-sec1">
             Note: I need to send trade secret privately to buyer(s).
           </div>
-          <button className="prepare-sell-order-button1">
-            <div className="secondary-button">Create TOT</div>
+          <button className="prepare-sell-order-button5">
+            <div className="secondary-button3">Create TOT</div>
           </button>
         </form>
         <div className="priceandcollateralform">
@@ -71,13 +71,13 @@ const SellTokenToTOT: FunctionComponent = () => {
             Set the price, 1 [offering] for [biding]:
           </div>
           <input
-            className="tot-name"
+            className="sellatprice"
             type="number"
             placeholder="Price for biding token"
           />
           <div className="set-the-price-1-offering-fo">Amount:</div>
           <input
-            className="tot-name"
+            className="sellatprice"
             type="number"
             placeholder="Count of the selling token"
           />
@@ -90,7 +90,7 @@ const SellTokenToTOT: FunctionComponent = () => {
             Collateral (in LYR):
           </div>
           <input
-            className="tot-name"
+            className="sellatprice"
             type="number"
             placeholder="Collateral in LYR to guard the trade"
           />

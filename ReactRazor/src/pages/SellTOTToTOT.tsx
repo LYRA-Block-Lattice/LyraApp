@@ -8,8 +8,6 @@ import "./SellTOTToTOT.css";
 const SellTOTToTOT: FunctionComponent = () => {
   const [isSignTradeSecretPopupOpen, setSignTradeSecretPopupOpen] =
     useState(false);
-  const [isSignTradeSecretPopup1Open, setSignTradeSecretPopup1Open] =
-    useState(false);
   const navigate = useNavigate();
 
   const openSignTradeSecretPopup = useCallback(() => {
@@ -20,14 +18,6 @@ const SellTOTToTOT: FunctionComponent = () => {
     setSignTradeSecretPopupOpen(false);
   }, []);
 
-  const openSignTradeSecretPopup1 = useCallback(() => {
-    setSignTradeSecretPopup1Open(true);
-  }, []);
-
-  const closeSignTradeSecretPopup1 = useCallback(() => {
-    setSignTradeSecretPopup1Open(false);
-  }, []);
-
   const onReviewTheOrderClick = useCallback(() => {
     navigate("/previewsellorderform");
   }, [navigate]);
@@ -35,42 +25,9 @@ const SellTOTToTOT: FunctionComponent = () => {
   return (
     <>
       <div className="selltottotot">
-        <form className="createtottosellform">
-          <div className="create-and-sell-totsku">
-            Create and Sell [TOT/SKU]
-          </div>
-          <select className="selecttypeoftot">
-            <option value="sku">Goods</option>
-            <option value="svc">Service</option>
-            <option value="tot">Generic Trade only TOken</option>
-          </select>
-          <input className="tot-supply" type="text" placeholder="TOT Name" />
-          <input
-            className="tot-description2"
-            type="text"
-            placeholder="Public Description, seen by everyone"
-          />
-          <input
-            className="tot-supply"
-            type="number"
-            placeholder="Total Supply"
-          />
-          <button
-            className="prepare-sell-order-button4"
-            onClick={openSignTradeSecretPopup}
-          >
-            <div className="utility-button2">Sign trade secret</div>
-          </button>
-          <div className="note-i-need-to-send-trade-sec2">
-            Note: I need to send trade secret privately to buyer(s).
-          </div>
-          <button className="prepare-sell-order-button5">
-            <div className="secondary-button2">Create TOT</div>
-          </button>
-        </form>
-        <form className="createtottosellform">
-          <div className="create-and-sell-totsku">To get [TOT/SKU/SVC]</div>
-          <input className="tot-supply" type="text" placeholder="Name" />
+        <form className="togettotform1">
+          <div className="to-get-totskusvc1">To get [TOT/SKU/SVC]</div>
+          <input className="tot-name2" type="text" placeholder="Name" />
           <input
             className="tot-description2"
             type="text"
@@ -78,7 +35,7 @@ const SellTOTToTOT: FunctionComponent = () => {
           />
           <button
             className="prepare-sell-order-button6"
-            onClick={openSignTradeSecretPopup1}
+            onClick={openSignTradeSecretPopup}
           >
             <div className="utility-button2">Sign trade secret</div>
           </button>
@@ -86,51 +43,51 @@ const SellTOTToTOT: FunctionComponent = () => {
             Note: This [tot/sku/svc] share the same trade secret of selling
             item.
           </div>
-          <button className="prepare-sell-order-button5">
-            <div className="secondary-button2">Create TOT</div>
+          <button className="prepare-sell-order-button7">
+            <div className="secondary-button4">Create TOT</div>
           </button>
         </form>
-        <div className="priceandcollateralform4">
-          <div className="price-and-collateral4">Price and Collateral</div>
-          <div className="set-the-price-1-offering-fo4">
+        <div className="priceandcollateralform1">
+          <div className="price-and-collateral1">Price and Collateral</div>
+          <div className="set-the-price-1-offering-fo1">
             Set the price, 1 [offering] for [biding]:
           </div>
           <input
-            className="tot-supply"
+            className="tot-name2"
             type="number"
             placeholder="Price for biding token"
           />
-          <div className="set-the-price-1-offering-fo4">Amount:</div>
+          <div className="set-the-price-1-offering-fo1">Amount:</div>
           <input
-            className="tot-supply"
+            className="tot-name2"
             type="number"
             placeholder="Count of the selling token"
           />
-          <div className="limitoftrade4">
+          <div className="limitoftrade1">
             <input
-              className="limitmin4"
+              className="limitmin1"
               type="number"
               placeholder="Limit Min"
             />
-            <div className="div4">-</div>
+            <div className="div1">-</div>
             <input
-              className="limitmin4"
+              className="limitmin1"
               type="number"
               placeholder="Limit Max"
             />
           </div>
-          <div className="set-the-price-1-offering-fo4">
+          <div className="set-the-price-1-offering-fo1">
             Collateral (in LYR):
           </div>
           <input
-            className="tot-supply"
+            className="tot-name2"
             type="number"
             placeholder="Collateral in LYR to guard the trade"
           />
-          <div className="set-the-price-1-offering-fo4">
+          <div className="set-the-price-1-offering-fo1">
             Collateral worth in USD: $103
           </div>
-          <div className="set-the-price-1-offering-fo4">
+          <div className="set-the-price-1-offering-fo1">
             Create order in DAO:
           </div>
           <Autocomplete
@@ -150,12 +107,12 @@ const SellTOTToTOT: FunctionComponent = () => {
             )}
             size="medium"
           />
-          <div className="set-the-price-1-offering-fo4">
+          <div className="set-the-price-1-offering-fo1">
             Current dealer is [dealer name]. You will contact buyers through the
             dealer.
           </div>
-          <button className="reviewtheorder4" onClick={onReviewTheOrderClick}>
-            <div className="primary-button4">Review the Order</div>
+          <button className="reviewtheorder1" onClick={onReviewTheOrderClick}>
+            <div className="primary-button1">Review the Order</div>
           </button>
         </div>
       </div>
@@ -166,15 +123,6 @@ const SellTOTToTOT: FunctionComponent = () => {
           onOutsideClick={closeSignTradeSecretPopup}
         >
           <SignTradeSecretPopup onClose={closeSignTradeSecretPopup} />
-        </PortalPopup>
-      )}
-      {isSignTradeSecretPopup1Open && (
-        <PortalPopup
-          overlayColor="rgba(113, 113, 113, 0.3)"
-          placement="Centered"
-          onOutsideClick={closeSignTradeSecretPopup1}
-        >
-          <SignTradeSecretPopup onClose={closeSignTradeSecretPopup1} />
         </PortalPopup>
       )}
     </>

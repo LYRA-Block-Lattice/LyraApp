@@ -71,7 +71,7 @@ const PriceAndCollateralForm: FunctionComponent = () => {
       </div>
       <div className="offering-for-biding">Collateral worth in USD: $103</div>
       <button
-        className="prepare-sell-order-button21"
+        className="prepare-sell-order-button23"
         onClick={onPrepareSellOrderButtonClick}
       >
         <div className="primary-button11">Review the Order</div>

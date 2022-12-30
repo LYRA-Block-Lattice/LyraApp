@@ -21,14 +21,14 @@
   color: var(--color-white1);
   text-align: center;
 }
-.prepare-sell-order-button21,
+.prepare-sell-order-button23,
 .priceandcollateralform9 {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
   align-items: center;
 }
-.prepare-sell-order-button21 {
+.prepare-sell-order-button23 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-5xl);
