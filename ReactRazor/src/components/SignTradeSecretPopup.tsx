@@ -53,7 +53,7 @@ Bank of America
 1234 1234 1234 1234`}
       />
       <button className="prepare-sell-order-button13" onClick={onClose}>
-        <div className="utility-button5">Sign and return</div>
+        <div className="utility-button6">Sign and return</div>
       </button>
     </div>
   );

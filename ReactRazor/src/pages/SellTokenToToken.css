@@ -1,5 +1,5 @@
-.mini-button,
-.to-sell-token {
+.to-sell-token,
+.utility-button4 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
@@ -13,8 +13,8 @@
   text-align: left;
   width: 296px;
 }
-.mini-button {
-  font-size: var(--caption1-size);
+.utility-button4 {
+  font-size: var(--font-size-xl);
   color: var(--color-white1);
   text-align: center;
 }
@@ -22,9 +22,9 @@
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-lg);
-  background-color: var(--text-primary-dark);
+  background-color: var(--tertiary);
   border-radius: var(--br-xl);
-  height: 24px;
+  height: 30px;
   flex-shrink: 0;
   overflow: hidden;
   display: flex;

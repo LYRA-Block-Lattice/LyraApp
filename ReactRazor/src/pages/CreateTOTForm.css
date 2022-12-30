@@ -117,8 +117,7 @@
 .create-tot-form {
   position: relative;
   width: 100%;
-  height: 536px;
   flex-direction: row;
-  padding: var(--padding-8xl) 128px;
+  padding: var(--padding-4xs);
   justify-content: center;
 }

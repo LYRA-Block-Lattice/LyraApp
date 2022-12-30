@@ -1,0 +1,21 @@
+@keyframes slide-in-top {
+  0% {
+    transform: translateY(-200px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.generalpopup {
+  position: relative;
+  background-color: var(--color-white1);
+  overflow: hidden;
+  opacity: 0;
+  max-width: 100%;
+  max-height: 100%;
+}
+.generalpopup.animate {
+  animation: 1s ease 0s 1 normal forwards slide-in-top;
+}
