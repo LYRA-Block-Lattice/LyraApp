@@ -264,6 +264,8 @@ namespace Nebula.Store.WebWalletUseCase
 				{
                     IsBackuped = wltdat.Backup
                 });
+
+                await _localStorage.SetItemAsStringAsync("AccountId_" + config["network"], wallet.AccountId);
             }
             catch (FileNotFoundException ex)
             {

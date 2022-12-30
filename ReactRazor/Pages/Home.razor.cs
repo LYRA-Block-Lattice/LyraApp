@@ -24,6 +24,8 @@ using MudBlazor;
 using Humanizer;
 using Lyra.Data.Shared;
 using Lyra.Core.Blocks;
+using Lyra.Core.Accounts;
+using Lyra.Data.API;
 
 namespace ReactRazor.Pages
 {
@@ -41,6 +43,9 @@ namespace ReactRazor.Pages
         [Inject]
         private ILocalStorageService localStorage { get; set; }
         [Inject] IStringLocalizer<Home> localizer { get; set; }
+        [Inject] ILyraAPI lyraApi { get; set; }
+
+        private string LastAccountId { get; set; }
 
         private DotNetObjectReference<Home>? objRef;
         protected override void OnInitialized()
@@ -55,6 +60,7 @@ namespace ReactRazor.Pages
             {
                 try
                 {
+                    LastAccountId = await localStorage.GetItemAsync<string>(_consts.AccountIdStorName);
                     await JS.InvokeVoidAsync("loadScript", "_content/ReactRazor/static/js/main.js");
                     await JS.InvokeAsync<string>("lyraSetProxy", objRef);
                 }
@@ -109,33 +115,39 @@ namespace ReactRazor.Pages
         }
 
         [JSInvokable("GetBalance")]
-        public Task<string> GetBalancesAsync()
+        public async Task<string> GetBalancesAsync()
         {
-            if (walletState.Value.wallet == null)
-                return Task.FromResult("");
+            if (string.IsNullOrWhiteSpace(LastAccountId))
+                return "[]";
 
-            var balances = walletState.Value.wallet.GetLastSyncBlock().Balances.ToDecimalDict();
-            return Task.FromResult(JsonConvert.SerializeObject(balances.Select(kvp => new {token = kvp.Key, balance = kvp.Value })));
+            var lasttx = await lyraApi.GetLastBlockAsync(LastAccountId);
+            if(lasttx.Successful())
+            {
+                var balances = lasttx.As<TransactionBlock>().Balances.ToDecimalDict();
+                return JsonConvert.SerializeObject(balances.Select(kvp => new { token = kvp.Key, balance = kvp.Value }));
+            }
+
+            return "[]";
         }
 
         [JSInvokable("SearchDao")]
         public async Task<string> SearchDaoAsync(string q)
         {
-            var daos = await walletState.Value.wallet.RPC?.FindDaosAsync(q);
+            var daos = await lyraApi.FindDaosAsync(q);
             return daos;
         }
 
         [JSInvokable("SearchToken")]
         public async Task<string?> SearchTokenAsync(string? q, string? cat)
         {
-            var tokens = await walletState.Value.wallet.RPC?.FindTokensAsync(q, cat);
+            var tokens = await lyraApi.FindTokensAsync(q, cat);
             return tokens;
         }
 
         [JSInvokable("SearchTokenForAccount")]
         public async Task<string?> SearchTokenForAccountAsync(string? q, string? cat)
         {
-            var tokens = await walletState.Value.wallet.RPC?.FindTokensForAccountAsync(walletState.Value.wallet.AccountId, q, cat);
+            var tokens = await lyraApi.FindTokensForAccountAsync(walletState.Value.wallet.AccountId, q, cat);
             return tokens;
         }
 
@@ -172,6 +184,8 @@ namespace ReactRazor.Pages
                         limitMin = decimal.Parse(argsDict["limitmin"]),
                         limitMax = decimal.Parse(argsDict["limitmax"]),
                     };
+
+                    if (!walletState.Value.IsOpening) throw new InvalidOperationException("Wallet is not open");
 
                     var ret = await walletState.Value.wallet.CreateUniOrderAsync(order);
                     return JsonConvert.SerializeObject(
@@ -210,7 +224,7 @@ namespace ReactRazor.Pages
         public async Task<string?> GetOrdersAsync()
         {
             // get all current trades
-            var ret = await walletState.Value.wallet.RPC.GetUniOrdersByOwnerAsync(walletState.Value.wallet.AccountId);
+            var ret = await lyraApi.GetUniOrdersByOwnerAsync(LastAccountId);
             if (ret.Successful())
             {
                 var blocks = ret.GetBlocks().Cast<TransactionBlock>();
@@ -256,7 +270,7 @@ namespace ReactRazor.Pages
         public async Task<string?> GetTradesAsync(string orderid)
         {
             // get all current trades
-            var ret = await walletState.Value.wallet.RPC.FindUniTradeForOrderAsync(orderid);
+            var ret = await lyraApi.FindUniTradeForOrderAsync(orderid);
             if (ret.Successful())
             {
                 var blocks = ret.GetBlocks().Cast<TransactionBlock>();
