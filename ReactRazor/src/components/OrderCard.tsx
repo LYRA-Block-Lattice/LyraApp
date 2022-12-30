@@ -1,4 +1,4 @@
-import { FunctionComponent, useMemo, useState, useEffect } from "react";
+import { FunctionComponent, useMemo, useState, useCallback } from "react";
 import CSS, { Property } from "csstype";
 import "./OrderCard.css";
 
@@ -48,14 +48,14 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
   const [trades, setTrades] = useState<any[]>([]);
   const [showTradeTable, setShowTradeTable] = useState(false);
 
-  const toggle = async () => {
+  const toggle = useCallback(async () => {
     if (!showTradeTable) {
       var tt = await window.lyraProxy.invokeMethodAsync("GetTrades", orderid);
       var ret = JSON.parse(tt);
       setTrades(ret.trades);
     }
-    setShowTradeTable(!showTradeTable); 
-  }
+    setShowTradeTable(!showTradeTable);
+  }, [trades, showTradeTable]);
   
   const orderStatusStyle: CSS.Properties = useMemo(() => {
     return {
@@ -69,11 +69,6 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
         <button className="banner-image1" onClick={toggle}>
           <div className="order-banner1">
             <button className="order-image1">
-    <div className="ordercard3">
-      <div className="order-brief-section">
-        <button className="banner-image" onClick={async () => { await toggle(); }}>
-          <div className="order-banner">
-            <button className="order-image">
               <img
                 className="icbaseline-generating-tokens-icon1"
                 alt=""
@@ -132,7 +127,8 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
         </div>
       </div>
       <div className="trades-section1">
-        <div className="width-controller1">
+        <div className="width-controller1">          
+        </div>
         {showTradeTable ? <TableComponent data={trades} /> : null}
       </div>
     </div>
@@ -140,20 +136,3 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
 };
 
 export default OrderCard;
-
-const datasrc = [{
-  name: 'Marcel',
-  surname: 'Michau',
-  age: '24',
-  gender: 'Male'
-}, {
-  name: 'Joe',
-  surname: 'Bloggs',
-  age: '27',
-  gender: 'Male'
-}, {
-  name: 'Jane',
-  surname: 'Doe',
-  age: '22',
-  gender: 'Female'
-}];
