@@ -19,7 +19,7 @@
 }
 .lyrlabel {
   font-size: var(--font-size-3xs);
-  color: var(--color-gray-300);
+  color: var(--color-gray-200);
   text-align: left;
   margin-top: -4px;
 }
@@ -75,7 +75,7 @@
 }
 .nft-label {
   font-size: var(--font-size-3xs);
-  color: var(--color-gray-300);
+  color: var(--color-gray-200);
 }
 .go-nft-button {
   cursor: pointer;

@@ -40,24 +40,24 @@ const CreateTOTForm1: FunctionComponent = () => {
           onClose={handleSelectTypeOfTOTClose}
         />
       </div>
-      <input className="tot-name6" type="text" placeholder="TOT Name" />
+      <input className="tot-name4" type="text" placeholder="TOT Name" />
       <input
-        className="tot-description8"
+        className="tot-description6"
         type="text"
         placeholder="Public Description, seen by everyone"
       />
-      <input className="tot-name6" type="text" placeholder="Total Supply" />
+      <input className="tot-name4" type="text" placeholder="Total Supply" />
       <button
-        className="prepare-sell-order-button21"
+        className="prepare-sell-order-button17"
         onClick={onPrepareSellOrderButtonClick}
       >
-        <div className="utility-button8">Sign trade secret</div>
+        <div className="utility-button6">Sign trade secret</div>
       </button>
-      <div className="note-i-need-to-send-trade-sec6">
+      <div className="note-i-need-to-send-trade-sec4">
         Note: I need to send trade secret privately to buyer(s).
       </div>
-      <button className="prepare-sell-order-button22">
-        <div className="secondary-button10">Create TOT</div>
+      <button className="prepare-sell-order-button18">
+        <div className="secondary-button8">Create TOT</div>
       </button>
     </form>
   );
