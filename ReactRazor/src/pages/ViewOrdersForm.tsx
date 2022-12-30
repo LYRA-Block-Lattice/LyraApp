@@ -23,6 +23,26 @@ interface IOrder {
   shelf: number;
 }
 
+const icons = {
+  "Token": "_content/ReactRazor/asserts/icbaselinegeneratingtokens.svg",
+  "NFT": "_content/ReactRazor/asserts/mapartgallery.svg",
+  "Fiat": "_content/ReactRazor/asserts/fluentemojihighcontrastdollarbanknote.svg",
+  "Goods": "_content/ReactRazor/asserts/mditruckdelivery.svg",
+  "Service": "_content/ReactRazor/asserts/carbonuserservicedesk.svg",
+};
+
+const geticon = (ticker: string) => {
+  if (ticker.startsWith("nft/"))
+    return icons["NFT"];
+  if (ticker.startsWith("fiat/"))
+    return icons["Fiat"];
+  if (ticker.startsWith("tot/") || ticker.startsWith("sku/"))
+    return icons["Goods"];
+  if (ticker.startsWith("svc/"))
+    return icons["Service"];
+  return icons["Token"];
+}
+
 const ViewOrdersForm: FunctionComponent = () => {
   const navigate = useNavigate();
   const [orders, setOrders] = useState<IOrder[]>([]);
@@ -60,8 +80,8 @@ const ViewOrdersForm: FunctionComponent = () => {
           offering={order.offering}
           biding={order.biding}
           orderStatus={order.status}
-          offeringImg="_content/ReactRazor/asserts/icbaselinegeneratingtokens.svg"
-          bidingImg="_content/ReactRazor/asserts/carbonuserservicedesk.svg"
+          offeringImg={geticon(order.offering)}
+          bidingImg={geticon(order.biding)}
           time={order.time}
           price={order.price.toString()}
           amount={order.amount.toString()}

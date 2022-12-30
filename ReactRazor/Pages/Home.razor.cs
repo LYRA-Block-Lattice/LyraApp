@@ -262,11 +262,11 @@ namespace ReactRazor.Pages
                     .OrderByDescending(a => a.gens.TimeStamp)
                     .Select(a => new
                     {
-                        orderid,
-                        buyer = a.gens.AccountID,
-                        status = a.latest.UTStatus.ToString(),
-                        a.gens.Trade.amount,
+                        //orderid = orderid.Shorten(),
+                        buyer = a.gens.AccountID.Shorten(),
                         time = a.gens.TimeStamp.ToString(),
+                        a.gens.Trade.amount,
+                        status = a.latest.UTStatus.ToString(),                     
                     });
                 return JsonConvert.SerializeObject(
                 new
