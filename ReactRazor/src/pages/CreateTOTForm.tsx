@@ -58,7 +58,7 @@ const CreateTOTForm: FunctionComponent = () => {
             multiline
             rows={5}
             label="Public Description, seen by everyone"
-            placeholder="Textarea placeholder"
+            placeholder="Introduct to my token"
             margin="none"
           />
           <TextField

@@ -23,7 +23,6 @@ import Redir from "./pages/Redir";
 import Market from "./pages/Market";
 import CreateWallet from "./pages/CreateWallet";
 import OpenWallet from "./pages/OpenWallet";
-import CreateTOTForm1 from "./pages/CreateTOTForm1";
 import OldV1UI from "./pages/OldV1UI";
 import RedirBlazor from "./pages/RedirBlazor";
 import { useEffect } from "react";
@@ -64,7 +63,7 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/create-tot-form":
+      case "/createtotform":
         title = "";
         metaDescription = "";
         break;
@@ -128,10 +127,6 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/createtotform":
-        title = "";
-        metaDescription = "";
-        break;
       case "/oldv1ui":
         title = "";
         metaDescription = "";
@@ -164,7 +159,7 @@ function App() {
 
       <Route path="/createtokenform" element={<CreateTokenForm />} />
 
-      <Route path="/create-tot-form" element={<CreateTOTForm />} />
+      <Route path="/createtotform" element={<CreateTOTForm />} />
 
       <Route path="/selltokentotot" element={<SellTokenToTOT />} />
 
@@ -198,8 +193,6 @@ function App() {
       <Route path="/create-wallet" element={<CreateWallet />} />
 
       <Route path="/open-wallet" element={<OpenWallet />} />
-
-      <Route path="/createtotform" element={<CreateTOTForm1 />} />
 
       <Route path="/oldv1ui" element={<OldV1UI />} />
     </Routes>
