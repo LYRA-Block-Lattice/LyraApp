@@ -10,34 +10,9 @@
   display: inline-block;
   width: 296px;
 }
-.selecttypeoftot,
-.tot-description,
-.tot-name {
-  background-color: var(--color-beige);
-  border-radius: var(--br-sm);
-  width: 301px;
-  height: 40px;
-  flex-shrink: 0;
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  padding: var(--padding-4xs);
-  box-sizing: border-box;
-  align-items: center;
-  justify-content: flex-start;
-}
-.selecttypeoftot {
-  gap: var(--gap-lg);
-}
-.tot-description,
 .tot-name {
   border: 0;
-  font-family: var(--caption1);
-  font-size: var(--body-s-size);
-}
-.tot-description {
-  height: 124px;
-  align-items: flex-start;
+  background-color: transparent;
 }
 .utility-button {
   position: relative;

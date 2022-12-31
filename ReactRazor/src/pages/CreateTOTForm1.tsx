@@ -42,7 +42,7 @@ const CreateTOTForm1: FunctionComponent = () => {
       </div>
       <input className="tot-name4" type="text" placeholder="TOT Name" />
       <input
-        className="tot-description6"
+        className="tot-description5"
         type="text"
         placeholder="Public Description, seen by everyone"
       />

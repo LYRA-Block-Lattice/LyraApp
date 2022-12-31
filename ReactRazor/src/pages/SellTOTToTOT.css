@@ -10,7 +10,7 @@
   display: inline-block;
   width: 296px;
 }
-.tot-description2,
+.tot-description1,
 .tot-name2 {
   border: 0;
   font-family: var(--caption1);
@@ -28,7 +28,7 @@
   align-items: center;
   justify-content: flex-start;
 }
-.tot-description2 {
+.tot-description1 {
   height: 124px;
   align-items: flex-start;
 }
