@@ -48,7 +48,6 @@
 .collateral-worth-label {
   overflow: hidden;
   display: flex;
-  padding: 0 var(--padding-4xs);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
@@ -56,11 +55,13 @@
 .collateral-worth-label {
   width: 314px;
   flex-direction: row;
+  padding: 0 var(--padding-4xs);
   gap: var(--gap-lg);
 }
 .collateral-section {
   flex-direction: column;
-  gap: var(--gap-0);
+  padding: var(--padding-4xs);
+  gap: var(--gap-4xs);
 }
 .primary-button2 {
   position: relative;
