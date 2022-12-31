@@ -6,7 +6,7 @@ import CreateTOTForm from "../pages/CreateTOTForm";
 import CreateNFTForm from "../pages/CreateNFTForm";
 
 type GeneralPopupType = {
-  onClose?: () => void;
+  onClose?: (ticker?: string) => void;
   children?: React.ReactNode;
   tag?: string;
 };
@@ -25,7 +25,7 @@ const GeneralPopup: FunctionComponent<GeneralPopupType> = props => {
   return (
     <div className="generalpopup">
       {props.children}
-      <TagName />
+      <TagName onClose={props.onClose} />
     </div>
   );
 };

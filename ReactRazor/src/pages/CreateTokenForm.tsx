@@ -1,8 +1,46 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useCallback, useState } from "react";
 import { TextField } from "@mui/material";
 import "./CreateTokenForm.css";
 
-const CreateTokenForm: FunctionComponent = () => {
+interface customWindow extends Window {
+  lyraSetProxy?: any;
+  lyraProxy?: any;
+}
+
+declare const window: customWindow;
+
+type TokenMintProps = {
+  onClose?: (ticker?: string) => void;
+  children?: React.ReactNode;
+  tag?: string;
+};
+
+const CreateTokenForm: FunctionComponent<TokenMintProps> = props => {
+  const [name, setName] = useState<string>("");
+  const [desc, setDesc] = useState<string>("");
+  const [domain, setDomain] = useState<string>("");
+  const [supply, setSupply] = useState<number>(0);
+
+  const onMintClick = useCallback(() => {
+    console.log("mint token.");
+    window.lyraProxy.invokeMethodAsync("MintToken", name, domain, desc, supply)
+      .then(function (response) {
+        return JSON.parse(response);
+      })
+      .then(function (result) {
+        if (result.ret == "Success") {
+          let tickr = `${domain}/${name}`;
+          window.lyraProxy.invokeMethodAsync("Alert", "Success", tickr + " is ready for use.");
+          props.onClose!(tickr);
+        }
+        else {
+          window.lyraProxy.invokeMethodAsync("Alert", "Warning", result.msg);
+          props.onClose!();
+        }
+      });
+    
+  }, [name, desc, domain, supply]);
+
   return (
     <div className="createtokenform">
       <div className="mint-token">Mint Token</div>
@@ -15,6 +53,7 @@ const CreateTokenForm: FunctionComponent = () => {
         label="Token Name"
         size="medium"
         margin="none"
+        onChange={(e) => setName(e.target.value)}
       />
       <TextField
         className="token-name"
@@ -25,6 +64,7 @@ const CreateTokenForm: FunctionComponent = () => {
         label="Domain Name"
         size="medium"
         margin="none"
+        onChange={(e) => setDomain(e.target.value)}
       />
       <TextField
         sx={{ width: 301 }}
@@ -35,6 +75,7 @@ const CreateTokenForm: FunctionComponent = () => {
         label="Description"
         placeholder="Textarea placeholder"
         margin="none"
+        onChange={(e) => setDesc(e.target.value)}
       />
       <TextField
         className="token-name"
@@ -46,8 +87,9 @@ const CreateTokenForm: FunctionComponent = () => {
         placeholder="1"
         size="medium"
         margin="none"
+        onChange={(e) => setSupply(+e.target.value)}
       />
-      <button className="prepare-sell-order-button1">
+      <button className="prepare-sell-order-button1" onClick={onMintClick}>
         <div className="secondary-button1">Mint Token</div>
       </button>
     </div>

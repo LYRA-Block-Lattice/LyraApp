@@ -13,15 +13,24 @@ interface customWindow extends Window {
 }
 declare const window: customWindow;
 
+interface IToken {
+  token: string;
+  domain: string;
+  isTOT: boolean;
+  name: string;
+}
+
 const SellTokenToToken: FunctionComponent = () => {
   //const [isDisabled, setDisabled] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useSearchParams({});
   const catsell = decodeURIComponent(searchParams.get("sell")!);
   const catget = decodeURIComponent(searchParams.get("get")!);
 
-  const [tosell, setTosell] = useState("");
-  const [toget, setToget] = useState("");
+  const [tosell, setTosell] = useState("LYR");
+  const [toget, setToget] = useState("tether/USDT");
   const [isGeneralPopupOpen, setGeneralPopupOpen] = useState(false);
+
+  const [val, setVal] = useState<IToken>();
 
   //const onSellChange = useCallback((event, value, reason) => {
   //  if (value) {
@@ -35,16 +44,24 @@ const SellTokenToToken: FunctionComponent = () => {
     setGeneralPopupOpen(true);
   }, []);
 
-  const closeGeneralPopup = useCallback(() => {
-    console.log("popup closed!");
+  const closeGeneralPopup = useCallback((ticker) => {
+    if (ticker == null) {
+      console.log("popup closed. nothing happened.");
+    }
+    else {
+      console.log("popup closed!, the ticker is " + ticker);
+      setTosell(ticker);
+      setVal({ "token": ticker, "name": ticker } as IToken);
+    }
+
     setGeneralPopupOpen(false);
-  }, []);
+  }, [tosell, val]);
 
   return (
     <>
       <div className="selltokentotoken">
         <div className="searchtokenbyname2">
-          <SearchTokenInput dir="Sell" cat={catsell} ownOnly={true} onTokenSelect={setTosell} />
+          <SearchTokenInput key="tosell" val={val} dir="Sell" cat={catsell} ownOnly={true} onTokenSelect={setTosell} />
           <button
             className="prepare-sell-order-button10"
             onClick={openGeneralPopup}
@@ -52,7 +69,7 @@ const SellTokenToToken: FunctionComponent = () => {
             <div className="utility-button4">Mint to sell</div>
           </button>
           <div className="searchtokenbyname-child" />
-          <SearchTokenInput dir="Get" cat={catget} ownOnly={false} onTokenSelect={setToget} />
+          <SearchTokenInput key="toget" val={val} dir="Get" cat={catget} ownOnly={false} onTokenSelect={setToget} />
         </div>
         <PriceAndCollateralForm offering="offering" biding="biding" />
       </div>
@@ -60,7 +77,7 @@ const SellTokenToToken: FunctionComponent = () => {
         <PortalPopup
           overlayColor="rgba(113, 113, 113, 0.3)"
           placement="Centered"
-          onOutsideClick={closeGeneralPopup}
+          onOutsideClick={() => closeGeneralPopup(null)}
         >
           <GeneralPopup tag={catsell} onClose={closeGeneralPopup}>
           </GeneralPopup>

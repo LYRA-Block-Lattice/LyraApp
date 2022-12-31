@@ -26,6 +26,7 @@ using Lyra.Data.Shared;
 using Lyra.Core.Blocks;
 using Lyra.Core.Accounts;
 using Lyra.Data.API;
+using System.Xml.Linq;
 
 namespace ReactRazor.Pages
 {
@@ -303,6 +304,20 @@ namespace ReactRazor.Pages
             {
                 ret = "Error",
                 msg = ret.ResultCode.ToString(),
+            });
+        }
+
+        [JSInvokable("MintToken")]
+        public async Task<string?> MintToken(string name, string domain, string desc, decimal supply)
+        {
+            var ret = await walletState.Value.wallet.CreateTokenAsync(name, domain, desc, 8, supply, true,
+                null, null, null, ContractTypes.Cryptocurrency, null);
+            return JsonConvert.SerializeObject(
+            new
+            {
+                ret = ret.ResultCode.ToString(),
+                txhash = ret.TxHash,
+                msg = ret.ResultCode.Humanize(),
             });
         }
     }

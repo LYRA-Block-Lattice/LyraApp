@@ -20,7 +20,8 @@ interface IToken {
   name: string;
 }
 
-function SearchTokenInput ({ dir, cat, ownOnly, onTokenSelect }) {
+function SearchTokenInput({ dir, cat, ownOnly, onTokenSelect, val }) {
+  const [defval, setDefval] = useState<IToken>();
   const [options, setOptions] = useState<IToken[]>([]);
   const [balance, setBalance] = useState<IBalance[]>([]);
   const [selbalance, setSelbalance] = useState<number | undefined>(0);
@@ -30,6 +31,14 @@ function SearchTokenInput ({ dir, cat, ownOnly, onTokenSelect }) {
     var tkns = JSON.parse(t);
     setBalance(tkns);
   }
+
+  //useEffect(() => {
+  //  //let tok = { "token": val, "name": val } as IToken;
+  //  //if (options.find(a => a.token == val) == null) {
+  //  //  options.push(tok);
+  //  //}
+  //  setDefval(val);
+  //}, [val])
 
   useEffect(() => {
     getTokens();
@@ -75,6 +84,7 @@ function SearchTokenInput ({ dir, cat, ownOnly, onTokenSelect }) {
         <Autocomplete
           sx={{ width: 301 }}
           disablePortal
+          defaultValue={val}
           options={options}
           onInputChange={onGetTokenInputChange}
           getOptionLabel={(option) => option.name}
