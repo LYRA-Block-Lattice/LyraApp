@@ -80,7 +80,7 @@ const StartToCreateOrder: FunctionComponent = () => {
         disabled={isDisabled}
         onClick={onPrepareSellOrderButtonClick}
       >
-        <div className="primary-button5">Specify Token</div>
+        <div className="primary-button1">Specify Token</div>
       </button>
     </div>
   );

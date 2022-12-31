@@ -17,8 +17,11 @@
   justify-content: center;
   gap: 22px;
 }
+.div,
 .rectangle {
   position: absolute;
+}
+.rectangle {
   height: 100%;
   width: 100%;
   top: 0;
@@ -28,8 +31,7 @@
   border-radius: var(--br-lg);
   background-color: var(--sell1);
 }
-.div6 {
-  position: absolute;
+.div {
   top: calc(50% - 9px);
   left: 38.81%;
   letter-spacing: 0.41px;
@@ -67,7 +69,7 @@
   border-radius: var(--br-lg);
   background-color: rgba(223, 224, 229, 0.5);
 }
-.div7 {
+.div1 {
   position: absolute;
   top: calc(50% - 9px);
   left: 27.96%;
@@ -206,7 +208,7 @@
   left: 4.66%;
   overflow: hidden;
 }
-.div8 {
+.div2 {
   position: absolute;
   top: calc(50% - 9px);
   left: 23.4%;
@@ -227,7 +229,7 @@
   overflow: hidden;
   max-height: 100%;
 }
-.div9,
+.div3,
 .parent {
   position: absolute;
 }
@@ -240,7 +242,7 @@
   left: 39.36%;
   overflow: hidden;
 }
-.div9 {
+.div3 {
   top: calc(50% - 9px);
   left: 39.29%;
   letter-spacing: 0.41px;

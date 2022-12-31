@@ -2,13 +2,12 @@ import { FunctionComponent, useState, useCallback } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 import SignTradeSecretPopup from "../components/SignTradeSecretPopup";
 import PortalPopup from "../components/PortalPopup";
-import { useNavigate } from "react-router-dom";
+import PriceAndCollateralForm from "../components/PriceAndCollateralForm";
 import "./SellTOTToToken.css";
 
 const SellTOTToToken: FunctionComponent = () => {
   const [isSignTradeSecretPopupOpen, setSignTradeSecretPopupOpen] =
     useState(false);
-  const navigate = useNavigate();
 
   const openSignTradeSecretPopup = useCallback(() => {
     setSignTradeSecretPopupOpen(true);
@@ -17,10 +16,6 @@ const SellTOTToToken: FunctionComponent = () => {
   const closeSignTradeSecretPopup = useCallback(() => {
     setSignTradeSecretPopupOpen(false);
   }, []);
-
-  const onReviewTheOrderClick = useCallback(() => {
-    navigate("/previewsellorderform");
-  }, [navigate]);
 
   return (
     <>
@@ -75,74 +70,7 @@ const SellTOTToToken: FunctionComponent = () => {
             size="medium"
           />
         </form>
-        <div className="priceandcollateralform2">
-          <div className="price-and-collateral2">Price and Collateral</div>
-          <div className="set-the-price-1-offering-fo2">
-            Set the price, 1 [offering] for [biding]:
-          </div>
-          <input
-            className="tot-name3"
-            type="number"
-            placeholder="Price for biding token"
-          />
-          <div className="set-the-price-1-offering-fo2">Amount:</div>
-          <input
-            className="tot-name3"
-            type="number"
-            placeholder="Count of the selling token"
-          />
-          <div className="limitoftrade2">
-            <input
-              className="limitmin2"
-              type="number"
-              placeholder="Limit Min"
-            />
-            <div className="div2">-</div>
-            <input
-              className="limitmin2"
-              type="number"
-              placeholder="Limit Max"
-            />
-          </div>
-          <div className="set-the-price-1-offering-fo2">
-            Collateral (in LYR):
-          </div>
-          <input
-            className="tot-name3"
-            type="number"
-            placeholder="Collateral in LYR to guard the trade"
-          />
-          <div className="set-the-price-1-offering-fo2">
-            Collateral worth in USD: $103
-          </div>
-          <div className="set-the-price-1-offering-fo2">
-            Create order in DAO:
-          </div>
-          <Autocomplete
-            sx={{ width: 301 }}
-            disablePortal
-            options={[] as any}
-            renderInput={(params: any) => (
-              <TextField
-                {...params}
-                color="primary"
-                label="Find DAO"
-                variant="outlined"
-                placeholder=""
-                helperText="Select DAO the order will be created in"
-                required
-              />
-            )}
-            size="medium"
-          />
-          <div className="set-the-price-1-offering-fo2">
-            Current dealer is [dealer name]. You will contact buyers through the
-            dealer.
-          </div>
-          <button className="reviewtheorder2" onClick={onReviewTheOrderClick}>
-            <div className="primary-button2">Review the Order</div>
-          </button>
-        </div>
+        <PriceAndCollateralForm offering="offering" biding="biding" />
       </div>
       {isSignTradeSecretPopupOpen && (
         <PortalPopup

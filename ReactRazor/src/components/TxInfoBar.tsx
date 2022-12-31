@@ -48,14 +48,14 @@ const TxInfoBar: FunctionComponent<TxInfoBarType> = ({
   }, [componentTop, componentRight]);
 
   return (
-    <div className="div20" style={divStyle}>
+    <div className="div19" style={divStyle}>
       <div className="buy-tv-at-sony-store">{buyTVAtSonyStore}</div>
-      <div className="div21">{component}</div>
+      <div className="div20">{component}</div>
       <b className="b" style={bStyle}>
         {component1}
       </b>
       <img className="path-icon3" alt="" src={path} />
-      <div className="div22" style={div1Style}>
+      <div className="div21" style={div1Style}>
         10 Min ago
       </div>
     </div>

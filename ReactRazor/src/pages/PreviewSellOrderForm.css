@@ -39,10 +39,10 @@
   justify-content: flex-start;
 }
 .confirm-before-create-order,
-.primary-button4 {
+.primary-button {
   position: relative;
 }
-.primary-button4 {
+.primary-button {
   font-size: var(--font-size-4xl);
   letter-spacing: 0.41px;
   line-height: 18px;
