@@ -38,7 +38,7 @@
 .order-status1 {
   align-self: stretch;
   border-radius: 0 0 var(--br-md) var(--br-md);
-  background-color: var(--info);
+  background-color: var(--info1);
   display: flex;
   flex-direction: row;
   padding: var(--padding-7xs) var(--padding-8xs);
@@ -84,7 +84,7 @@
 }
 .title-section-item {
   position: relative;
-  border-top: 1px solid var(--text-secondary);
+  border-top: 1px solid var(--text-secondary1);
   box-sizing: border-box;
   width: 128px;
   height: 1px;

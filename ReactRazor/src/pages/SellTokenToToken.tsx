@@ -3,6 +3,7 @@ import { Autocomplete, TextField } from "@mui/material";
 import GeneralPopup from "../components/GeneralPopup";
 import PortalPopup from "../components/PortalPopup";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import PriceAndCollateralForm from "../components/PriceAndCollateralForm";
 import "./SellTokenToToken.css";
 import SearchTokenInput from "../dup/SearchTokenInput";
 import CreateNFTForm from "./CreateNFTForm";
@@ -36,7 +37,6 @@ const SellTokenToToken: FunctionComponent = () => {
   const [daoId, setDaoId] = useState("");
   const [dealerid, setDealerid] = useState("");
   const [isGeneralPopupOpen, setGeneralPopupOpen] = useState(false);
-  const navigate = useNavigate();
 
   const searchDao = (searchTerm) => {
     window.lyraProxy.invokeMethodAsync("SearchDao", searchTerm)
@@ -188,7 +188,8 @@ const SellTokenToToken: FunctionComponent = () => {
         <button className="reviewtheorder3" onClick={onReviewTheOrderClick}>
           <div className="primary-button3">Review the Order</div>
         </button>
-      </div>
+        </div>
+        <PriceAndCollateralForm offering="offering" biding="biding" />
     </div>
       {isGeneralPopupOpen && (
         <PortalPopup

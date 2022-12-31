@@ -110,7 +110,8 @@
   display: inline-block;
   width: 296px;
 }
-.searchtokenbyname1 {
+.searchtokenbyname1,
+.selltottotoken {
   background-color: var(--color-white1);
   overflow: hidden;
   display: flex;
@@ -121,105 +122,9 @@
   justify-content: flex-start;
   gap: var(--gap-4xl);
 }
-.price-and-collateral2,
-.set-the-price-1-offering-fo2 {
-  position: relative;
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  display: inline-block;
-}
-.price-and-collateral2 {
-  font-size: var(--font-size-5xl);
-  font-weight: 500;
-  width: 296px;
-}
-.set-the-price-1-offering-fo2 {
-  width: 292px;
-}
-.limitmin2 {
-  border: 0;
-  font-family: var(--caption1);
-  font-size: var(--body-s-size);
-  background-color: var(--color-beige);
-  border-radius: var(--br-sm);
-  width: 138px;
-  height: 40px;
-  flex-shrink: 0;
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  padding: var(--padding-4xs);
-  box-sizing: border-box;
-  align-items: center;
-  justify-content: flex-start;
-}
-.div2 {
-  position: relative;
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  display: inline-block;
-}
-.limitoftrade2 {
-  width: 322px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  padding: var(--padding-4xs);
-  box-sizing: border-box;
-  align-items: center;
-  justify-content: center;
-  gap: var(--gap-lg);
-  font-size: var(--body-s-size);
-}
-.primary-button2 {
-  position: relative;
-  font-size: var(--font-size-4xl);
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  font-weight: 500;
-  font-family: var(--caption1);
-  color: var(--color-white1);
-  text-align: center;
-  display: inline-block;
-}
-.reviewtheorder2 {
-  cursor: pointer;
-  border: 0;
-  padding: var(--padding-4xs) var(--padding-5xl);
-  background-color: var(--primary);
-  border-radius: var(--br-xl);
-  height: 50px;
-  flex-shrink: 0;
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  box-sizing: border-box;
-  align-items: center;
-  justify-content: center;
-}
-.reviewtheorder2:disabled {
-  background-color: var(--color-gray-100);
-}
-.priceandcollateralform2,
-.selltottotoken {
-  background-color: var(--color-white1);
-  width: 373px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  padding: var(--padding-xl) 0;
-  box-sizing: border-box;
-  align-items: center;
-  justify-content: flex-start;
-  gap: var(--gap-3xl);
-}
 .selltottotoken {
   position: relative;
   width: 100%;
   padding: var(--padding-5xl) var(--padding-6xl);
   gap: var(--gap-lg);
-  text-align: left;
-  font-size: var(--font-size-base);
-  color: var(--black-000000100);
-  font-family: var(--caption1);
 }
