@@ -147,7 +147,7 @@ namespace ReactRazor.Pages
         [JSInvokable("SearchTokenForAccount")]
         public async Task<string?> SearchTokenForAccountAsync(string? q, string? cat)
         {
-            var tokens = await lyraApi.FindTokensForAccountAsync(walletState.Value.wallet.AccountId, q, cat);
+            var tokens = await lyraApi.FindTokensForAccountAsync(LastAccountId, q, cat);
             return tokens;
         }
 

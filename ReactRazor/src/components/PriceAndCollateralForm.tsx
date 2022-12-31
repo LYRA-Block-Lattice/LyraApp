@@ -1,7 +1,18 @@
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent, useCallback, useState, useEffect } from "react";
 import { TextField, Autocomplete } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "./PriceAndCollateralForm.css";
+
+interface customWindow extends Window {
+  lyraSetProxy?: any;
+  lyraProxy?: any;
+}
+declare const window: customWindow;
+
+interface IDao {
+  name: string;
+  daoId: string;
+}
 
 type PriceAndCollateralFormType = {
   offering?: string;
@@ -13,10 +24,63 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
   biding,
 }) => {
   const navigate = useNavigate();
+  const [daos, setDaos] = useState<IDao[]>([]);
+  const [price, setPrice] = useState<number>(0);
+  const [count, setCount] = useState<number>(0);
+  const [limitmin, setLimitmin] = useState<number>(0);
+  const [limitmax, setLimitmax] = useState<number>(0);
+  const [collateral, setCollateral] = useState<number>(0);
+  const [daoId, setDaoId] = useState("");
+  const [dealerid, setDealerid] = useState("");
+
+  async function init() {
+    let dlr = await window.lyraProxy.invokeMethodAsync("GetCurrentDealer");
+    setDealerid(dlr);
+  }
+
+  useEffect(() => {
+    init();
+  }, []);
+
+  const searchDao = (searchTerm) => {
+    window.lyraProxy.invokeMethodAsync("SearchDao", searchTerm)
+      .then(function (response) {
+        return JSON.parse(response);
+      })
+      .then(function (myJson) {
+        console.log(
+          "search term: " + searchTerm + ", results: ",
+          myJson
+        );
+        setDaos(myJson);
+      });
+  };
+
+  const onDaoSearchChange = useCallback((event, value, reason) => {
+    if (value) {
+      searchDao(value);
+    } else {
+      setDaos([]);
+    }
+  }, [daos]);
 
   const onReviewTheOrderClick = useCallback(() => {
-    navigate("/previewsellorderform");
-  }, [navigate]);
+    let togettoken = biding;
+    console.log("sell " + offering + ", to get " + togettoken + ", on price " + price);
+    var obj = {
+      selltoken: offering,
+      gettoken: togettoken,
+      price: price,
+      count: count,
+      collateral: collateral,
+      secret: undefined,
+      daoid: daoId,
+      dealerid: dealerid,
+      limitmin: limitmin,
+      limitmax: limitmax,
+    };
+    navigate("/previewsellorderform/?data=" + encodeURIComponent(JSON.stringify(obj)));
+  }, [navigate, offering, biding, price, count, collateral, daoId, dealerid]);
 
   return (
     <div className="priceandcollateralform">
@@ -38,6 +102,7 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
         placeholder="1.0"
         size="medium"
         margin="none"
+        onChange={(e) => setPrice(+e.target.value)}
       />
       <div className="amount">Amount:</div>
       <TextField
@@ -50,6 +115,7 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
         placeholder="10"
         size="medium"
         margin="none"
+        onChange={(e) => setCount(+e.target.value)}
       />
       <div className="limitoftrade">
         <TextField
@@ -62,6 +128,7 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
           placeholder="1"
           size="medium"
           margin="none"
+          onChange={(e) => setLimitmin(+e.target.value)}
         />
         <div className="set-the-price-one">-</div>
         <TextField
@@ -74,6 +141,7 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
           placeholder="10"
           size="medium"
           margin="none"
+          onChange={(e) => setLimitmax(+e.target.value)}
         />
       </div>
       <div className="amount">Collateral (in LYR):</div>
@@ -88,6 +156,7 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
           placeholder="100"
           size="medium"
           margin="none"
+          onChange={(e) => setCollateral(+e.target.value)}
         />
         <div className="collateral-worth-label">
           <div className="set-the-price-one">Total worth in USD:</div>
@@ -98,7 +167,10 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
       <Autocomplete
         sx={{ width: 301 }}
         disablePortal
-        options={[] as any}
+        options={daos}
+        onInputChange={onDaoSearchChange}
+        onChange={(event, value) => setDaoId(value?.daoId!)}
+        getOptionLabel={(option) => option.name}
         renderInput={(params: any) => (
           <TextField
             {...params}
