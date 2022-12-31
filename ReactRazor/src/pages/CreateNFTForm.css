@@ -23,15 +23,13 @@
 .select-nft-image {
   border-radius: var(--br-sm);
   background-color: var(--color-beige);
-  width: 301px;
-  height: 40px;
-  flex-shrink: 0;
+  width: 297px;
   overflow: hidden;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   padding: var(--padding-4xs);
   box-sizing: border-box;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
 }
 .secondary-button7 {

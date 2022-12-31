@@ -25,7 +25,7 @@ const CreateTOTForm: FunctionComponent = () => {
 
   return (
     <>
-      <div className="create-tot-form">
+      <div className="createtotform">
         <form className="createtottosellform">
           <div className="create-and-sell-totsku">
             Create and Sell [TOT/SKU]
@@ -58,7 +58,7 @@ const CreateTOTForm: FunctionComponent = () => {
             multiline
             rows={5}
             label="Public Description, seen by everyone"
-            placeholder="Textarea placeholder"
+            placeholder="Introduct to my token"
             margin="none"
           />
           <TextField
