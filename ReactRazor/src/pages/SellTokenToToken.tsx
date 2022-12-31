@@ -4,6 +4,7 @@ import GeneralPopup from "../components/GeneralPopup";
 import PortalPopup from "../components/PortalPopup";
 import { useNavigate } from "react-router-dom";
 import "./SellTokenToToken.css";
+import CreateNFTForm from "./CreateNFTForm";
 
 const SellTokenToToken: FunctionComponent = () => {
   const [isGeneralPopupOpen, setGeneralPopupOpen] = useState(false);
@@ -24,7 +25,7 @@ const SellTokenToToken: FunctionComponent = () => {
   return (
     <>
       <div className="selltokentotoken">
-        <form className="searchtokenbyname2">
+        <div className="searchtokenbyname2">
           <div className="to-sell-token">To Sell Token</div>
           <Autocomplete
             sx={{ width: 301 }}
@@ -66,7 +67,7 @@ const SellTokenToToken: FunctionComponent = () => {
             )}
             size="medium"
           />
-        </form>
+        </div>
         <div className="priceandcollateralform3">
           <div className="price-and-collateral3">Price and Collateral</div>
           <div className="set-the-price-1-offering-fo3">
@@ -142,7 +143,9 @@ const SellTokenToToken: FunctionComponent = () => {
           placement="Centered"
           onOutsideClick={closeGeneralPopup}
         >
-          <GeneralPopup onClose={closeGeneralPopup} />
+          <GeneralPopup onClose={closeGeneralPopup}>
+            <CreateNFTForm />
+          </GeneralPopup>
         </PortalPopup>
       )}
     </>
