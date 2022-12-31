@@ -5,6 +5,7 @@ import PortalPopup from "../components/PortalPopup";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "./SellTokenToToken.css";
 import SearchTokenInput from "../dup/SearchTokenInput";
+import CreateNFTForm from "./CreateNFTForm";
 
 interface customWindow extends Window {
   lyraSetProxy?: any;
@@ -105,14 +106,17 @@ const SellTokenToToken: FunctionComponent = () => {
   return (
     <>
     <div className="selltokentotoken">
-      <form className="searchtokenbyname2">
+      <div className="searchtokenbyname2">
         <SearchTokenInput dir="Sell" cat={catsell} ownOnly={true} onTokenSelect={setTosell} />
-        <button className="prepare-sell-order-button10">
-          <div className="mini-button">Mint to sell</div>
-        </button>
-        <div className="searchtokenbyname-child" />
+          <button
+            className="prepare-sell-order-button10"
+            onClick={openGeneralPopup}
+          >
+            <div className="utility-button4">Mint to sell</div>
+          </button>
+          <div className="searchtokenbyname-child" />
         <SearchTokenInput dir="Get" cat={catget} ownOnly={false} onTokenSelect={setToget} />
-      </form>
+      </div>
       <div className="priceandcollateralform3">
         <div className="price-and-collateral3">Price and Collateral</div>
         <div className="set-the-price-1-offering-fo3">
@@ -131,16 +135,16 @@ const SellTokenToToken: FunctionComponent = () => {
           placeholder="Count of the selling token"
           onChange={(e) => setCount(+e.target.value)}
         />
-        <div className="limitoftrade8">
+          <div className="limitoftrade3">
           <input
-            className="limitmin8"
+              className="limitmin3"
             type="number"
             placeholder="Set limit min"
             onChange={(e) => setLimitmin(+e.target.value)}
           />
-          <div className="div8">-</div>
+            <div className="div3">-</div>
           <input
-            className="limitmin8"
+              className="limitmin3"
             type="number"
             placeholder="Set limit max"
             onChange={(e) => setLimitmax(+e.target.value)}
@@ -186,14 +190,16 @@ const SellTokenToToken: FunctionComponent = () => {
         </button>
       </div>
     </div>
-    {isGeneralPopupOpen && (
-      <PortalPopup
-        overlayColor="rgba(113, 113, 113, 0.3)"
-        placement="Centered"
-        onOutsideClick={closeGeneralPopup}
-      >
-        <GeneralPopup onClose={closeGeneralPopup} />
-      </PortalPopup>
+      {isGeneralPopupOpen && (
+        <PortalPopup
+          overlayColor="rgba(113, 113, 113, 0.3)"
+          placement="Centered"
+          onOutsideClick={closeGeneralPopup}
+        >
+          <GeneralPopup onClose={closeGeneralPopup}>
+            <CreateNFTForm />
+          </GeneralPopup>
+        </PortalPopup>
       )}
       </>
   );

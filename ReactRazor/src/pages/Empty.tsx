@@ -1,22 +1,38 @@
-import { FunctionComponent, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { FunctionComponent, useState, useCallback } from "react";
+import MatterhornPopup from "../components/MatterhornPopup";
+import PortalPopup from "../components/PortalPopup";
 import "./Empty.css";
 
 const Empty: FunctionComponent = () => {
-  const navigate = useNavigate();
+  const [isMatterhornPopupOpen, setMatterhornPopupOpen] = useState(false);
 
-  const onPXL202103092034547561Click = useCallback(() => {
-    navigate("/market");
-  }, [navigate]);
+  const openMatterhornPopup = useCallback(() => {
+    setMatterhornPopupOpen(true);
+  }, []);
+
+  const closeMatterhornPopup = useCallback(() => {
+    setMatterhornPopupOpen(false);
+  }, []);
 
   return (
-    <div className="empty">
-      <button
-        className="pxl-20210309-203454756-1"
-        onClick={onPXL202103092034547561Click}
-      />
-      <div className="should-not-see-me">Should not see me</div>
-    </div>
+    <>
+      <div className="empty">
+        <button
+          className="pxl-20210309-203454756-1"
+          onClick={openMatterhornPopup}
+        />
+        <div className="should-not-see-me">Should not see me</div>
+      </div>
+      {isMatterhornPopupOpen && (
+        <PortalPopup
+          overlayColor="rgba(113, 113, 113, 0.3)"
+          placement="Centered"
+          onOutsideClick={closeMatterhornPopup}
+        >
+          <MatterhornPopup onClose={closeMatterhornPopup} />
+        </PortalPopup>
+      )}
+    </>
   );
 };
 
