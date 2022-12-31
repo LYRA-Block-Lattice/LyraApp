@@ -196,8 +196,7 @@ const SellTokenToToken: FunctionComponent = () => {
           placement="Centered"
           onOutsideClick={closeGeneralPopup}
         >
-          <GeneralPopup onClose={closeGeneralPopup}>
-            <CreateNFTForm />
+          <GeneralPopup tag={catsell} onClose={closeGeneralPopup}>
           </GeneralPopup>
         </PortalPopup>
       )}
