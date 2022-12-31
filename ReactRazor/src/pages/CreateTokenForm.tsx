@@ -4,7 +4,7 @@ import "./CreateTokenForm.css";
 
 const CreateTokenForm: FunctionComponent = () => {
   return (
-    <form className="createtokenform">
+    <div className="createtokenform">
       <div className="mint-token">Mint Token</div>
       <TextField
         className="token-name"
@@ -50,7 +50,7 @@ const CreateTokenForm: FunctionComponent = () => {
       <button className="prepare-sell-order-button1">
         <div className="secondary-button1">Mint Token</div>
       </button>
-    </form>
+    </div>
   );
 };
 

@@ -36,6 +36,7 @@ const SellTokenToToken: FunctionComponent = () => {
   }, []);
 
   const closeGeneralPopup = useCallback(() => {
+    console.log("popup closed!");
     setGeneralPopupOpen(false);
   }, []);
 

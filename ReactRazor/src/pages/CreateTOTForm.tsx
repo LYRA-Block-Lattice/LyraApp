@@ -26,7 +26,7 @@ const CreateTOTForm: FunctionComponent = () => {
   return (
     <>
       <div className="create-tot-form">
-        <form className="createtottosellform">
+        <div className="createtottosellform">
           <div className="create-and-sell-totsku">
             Create and Sell [TOT/SKU]
           </div>
@@ -84,7 +84,7 @@ const CreateTOTForm: FunctionComponent = () => {
           <button className="prepare-sell-order-button3">
             <div className="secondary-button2">Create TOT</div>
           </button>
-        </form>
+        </div>
       </div>
       {isSignTradeSecretPopupOpen && (
         <PortalPopup
