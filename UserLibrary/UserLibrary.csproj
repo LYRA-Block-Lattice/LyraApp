@@ -4,8 +4,8 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <Platforms>AnyCPU</Platforms>
-	<AssemblyVersion>1.3.2.650</AssemblyVersion>
-	<PackageVersion>1.3.2.650</PackageVersion>
+	<AssemblyVersion>1.3.2.651</AssemblyVersion>
+	<PackageVersion>1.3.2.651</PackageVersion>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<PackageOutputPath>C:\working\lyra-tools\UserLibrary</PackageOutputPath>
   </PropertyGroup>
