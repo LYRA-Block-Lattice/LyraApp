@@ -1,4 +1,12 @@
 import { FunctionComponent, useState, useCallback } from "react";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  FormHelperText,
+  Select,
+  TextField,
+} from "@mui/material";
 import SignTradeSecretPopup from "../components/SignTradeSecretPopup";
 import PortalPopup from "../components/PortalPopup";
 import "./CreateTOTForm.css";
@@ -22,21 +30,47 @@ const CreateTOTForm: FunctionComponent = () => {
           <div className="create-and-sell-totsku">
             Create and Sell [TOT/SKU]
           </div>
-          <select className="selecttypeoftot">
-            <option value="sku">Goods</option>
-            <option value="svc">Service</option>
-            <option value="tot">Generic Trade only TOken</option>
-          </select>
-          <input className="tot-name" type="text" placeholder="TOT Name" />
-          <input
-            className="tot-description"
-            type="text"
-            placeholder="Public Description, seen by everyone"
-          />
-          <input
+          <FormControl sx={{ width: 301 }} variant="outlined">
+            <InputLabel color="primary">Select Type of TOT</InputLabel>
+            <Select color="primary" size="medium" label="Select Type of TOT">
+              <MenuItem value="Goods">Goods</MenuItem>
+              <MenuItem value="Service">Service</MenuItem>
+              <MenuItem value="Generic Trade only Token">
+                Generic Trade only Token
+              </MenuItem>
+            </Select>
+            <FormHelperText />
+          </FormControl>
+          <TextField
             className="tot-name"
+            sx={{ width: 301 }}
+            color="primary"
+            variant="outlined"
+            type="text"
+            label="TOT Name"
+            size="medium"
+            margin="none"
+          />
+          <TextField
+            sx={{ width: 301 }}
+            color="primary"
+            variant="outlined"
+            multiline
+            rows={5}
+            label="Public Description, seen by everyone"
+            placeholder="Textarea placeholder"
+            margin="none"
+          />
+          <TextField
+            className="tot-name"
+            sx={{ width: 301 }}
+            color="primary"
+            variant="outlined"
             type="number"
-            placeholder="Total Supply"
+            label="Total Supply"
+            placeholder="1"
+            size="medium"
+            margin="none"
           />
           <button
             className="prepare-sell-order-button2"

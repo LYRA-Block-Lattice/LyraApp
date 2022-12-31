@@ -1,5 +1,5 @@
-.selecttypeoftot1,
-.tot-description3,
+.selecttypeoftot,
+.tot-description2,
 .tot-name3 {
   background-color: var(--color-beige);
   border-radius: var(--br-sm);
@@ -14,16 +14,16 @@
   align-items: center;
   justify-content: flex-start;
 }
-.selecttypeoftot1 {
+.selecttypeoftot {
   gap: var(--gap-lg);
 }
-.tot-description3,
+.tot-description2,
 .tot-name3 {
   border: 0;
   font-family: var(--caption1);
   font-size: var(--body-s-size);
 }
-.tot-description3 {
+.tot-description2 {
   height: 124px;
   align-items: flex-start;
 }

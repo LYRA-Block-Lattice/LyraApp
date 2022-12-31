@@ -23,7 +23,7 @@ const SellTOTToTOT: FunctionComponent = () => {
           <div className="to-get-totskusvc1">To get [TOT/SKU/SVC]</div>
           <input className="tot-name2" type="text" placeholder="Name" />
           <input
-            className="tot-description2"
+            className="tot-description1"
             type="text"
             placeholder="Public Description, seen by everyone"
           />

@@ -22,14 +22,14 @@ const SellTOTToToken: FunctionComponent = () => {
       <div className="selltottotoken">
         <form className="createtottosellform1">
           <div className="to-get-tokennft">Create and Sell [TOT/SKU]</div>
-          <select className="selecttypeoftot1">
+          <select className="selecttypeoftot">
             <option value="sku">Goods</option>
             <option value="svc">Service</option>
             <option value="tot">Generic Trade only TOken</option>
           </select>
           <input className="tot-name3" type="text" placeholder="TOT Name" />
           <input
-            className="tot-description3"
+            className="tot-description2"
             type="text"
             placeholder="Public Description, seen by everyone"
           />

@@ -22,11 +22,16 @@ const MintFiatToken: FunctionComponent = () => {
         )}
         size="medium"
       />
-      <input
+      <TextField
         className="domain-name"
+        sx={{ width: 301 }}
+        color="primary"
+        variant="outlined"
         type="number"
-        placeholder="Amount to print"
-        required
+        label="Amount to print"
+        placeholder="100"
+        size="medium"
+        margin="none"
       />
       <button className="prepare-sell-order-button">
         <div className="secondary-button">Print</div>

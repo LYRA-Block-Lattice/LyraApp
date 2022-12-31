@@ -23,7 +23,7 @@ const PreviewSellOrderForm: FunctionComponent = () => {
         </p>
       </div>
       <textarea
-        className="tot-description5"
+        className="tot-description4"
         placeholder={`Please pay to my bank account number:
 
 Bank of America

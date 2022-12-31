@@ -46,7 +46,7 @@ const SignTradeSecretPopup: FunctionComponent<SignTradeSecretPopupType> = ({
         blockchain needed is a digital signature of the trade secret.
       </div>
       <textarea
-        className="tot-description4"
+        className="tot-description3"
         placeholder={`Please pay to my bank account number:
 
 Bank of America
