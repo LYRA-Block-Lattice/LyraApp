@@ -439,5 +439,19 @@ namespace ReactRazor.Pages
                 return returnError(ex.Message);
             }
         }
+
+        [JSInvokable("PrintFiat")]
+        public async Task<string?> PrintFiatAsync(string fiatTicker, long amount)
+        {
+            var wallet = walletState.Value.wallet;
+
+            var ret = await wallet.PrintFiatAsync(fiatTicker, amount);
+            if (ret.Successful())
+            {
+                return returnSuccess(fiatTicker);
+            }
+
+            return returnError(ret.ResultCode.Humanize());
+        }
     }
 }

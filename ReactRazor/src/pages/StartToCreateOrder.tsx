@@ -1,10 +1,8 @@
-import { setegid } from "process";
 import { FunctionComponent, useCallback, LegacyRef, useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import CatalogSelection from "../components/CatalogSelection";
 import "./StartToCreateOrder.css";
-import Xarrow, { useXarrow, Xwrapper } from 'react-xarrows';
-import { refType } from "@mui/utils";
+import Xarrow, { Xwrapper } from 'react-xarrows';
 
 const boxStyle = { border: "grey solid 2px", borderRadius: "10px", padding: "5px" };
 

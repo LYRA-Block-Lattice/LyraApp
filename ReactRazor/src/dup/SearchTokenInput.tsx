@@ -34,14 +34,6 @@ function SearchTokenInput({ dir, cat, ownOnly, onTokenSelect, val }) {
     }    
   }
 
-  //useEffect(() => {
-  //  //let tok = { "token": val, "name": val } as IToken;
-  //  //if (options.find(a => a.token == val) == null) {
-  //  //  options.push(tok);
-  //  //}
-  //  setDefval(val);
-  //}, [val])
-
   useEffect(() => {
     getTokens();
   }, []);
@@ -56,12 +48,8 @@ function SearchTokenInput({ dir, cat, ownOnly, onTokenSelect, val }) {
       .then(function (response) {
         return JSON.parse(response);
       })
-      .then(function (myJson) {
-        console.log(
-          "search term: " + searchTerm + ", results: ",
-          myJson
-        );
-        setOptions(myJson);
+      .then(function (ret) {
+        setOptions(ret);
       });
   };
 
