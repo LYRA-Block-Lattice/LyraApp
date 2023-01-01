@@ -27,6 +27,10 @@ using Lyra.Core.Blocks;
 using Lyra.Core.Accounts;
 using Lyra.Data.API;
 using System.Xml.Linq;
+using Lyra.Data.Crypto;
+using System.Security.Cryptography;
+using System.Reflection.Metadata.Ecma335;
+using static MudBlazor.Colors;
 
 namespace ReactRazor.Pages
 {
@@ -45,6 +49,7 @@ namespace ReactRazor.Pages
         private ILocalStorageService localStorage { get; set; }
         [Inject] IStringLocalizer<Home> localizer { get; set; }
         [Inject] ILyraAPI lyraApi { get; set; }
+        [Inject] DealerConnMgr connMgr { get; set; }
 
         private string LastAccountId { get; set; }
 
@@ -311,6 +316,82 @@ namespace ReactRazor.Pages
         public async Task<string?> MintToken(string name, string domain, string desc, decimal supply)
         {
             var ret = await walletState.Value.wallet.CreateTokenAsync(name, domain, desc, 8, supply, true,
+                null, null, null, ContractTypes.Cryptocurrency, null);
+            return JsonConvert.SerializeObject(
+            new
+            {
+                ret = ret.ResultCode.ToString(),
+                txhash = ret.TxHash,
+                msg = ret.ResultCode.Humanize(),
+            });
+        }
+
+        private string returnError(string errorMsg)
+        {
+            return JsonConvert.SerializeObject(
+            new
+            {
+                ret = "Error",
+                msg = errorMsg
+            });
+        }
+
+        private string returnSuccess(object result)
+        {
+            return JsonConvert.SerializeObject(
+            new
+            {
+                ret = "Success",
+                result
+            });
+        }
+
+        [JSInvokable("UploadFile")]
+        public async Task<string?> UploadFileAsync(string fileName, string type, byte[] data)
+        {
+            var dealer = connMgr.GetDealer(null);
+            var wallet = walletState.Value.wallet;
+
+            try
+            {
+                int MAXALLOWEDSIZE = 5 * 1024 * 1024;      // 5MB
+
+                if (data.Length > MAXALLOWEDSIZE)
+                {
+                    return returnError($"File too big. Max size {MAXALLOWEDSIZE}");
+                }
+
+                var imageData = data;
+
+                string hash, signature;
+                using (var sha = SHA256.Create())
+                {
+                    byte[] hash_bytes = sha.ComputeHash(imageData);
+                    hash = Base58Encoding.Encode(hash_bytes);
+                }
+                signature = PortableSignatures.GetSignature(wallet.PrivateKey, hash);
+
+                var ret = await dealer.UploadImageAsync(wallet.AccountId, signature, "-"/*tradeid*/,
+                    fileName, imageData, type);
+                if (ret.Successful())
+                {
+                    return returnSuccess(ret.Url);
+                }
+                else
+                {
+                    return returnError(ret.ResultCode.Humanize());
+                }
+            }
+            catch (Exception ex)
+            {
+                return returnError(ex.Message);
+            }
+        }
+
+        [JSInvokable("MintNFT")]
+        public async Task<string?> MintNFTAsync(string name, string desc, string metaDataUrl, int supply)
+        {
+            var ret = await walletState.Value.wallet.CreateTokenAsync(name, "", desc, 8, supply, true,
                 null, null, null, ContractTypes.Cryptocurrency, null);
             return JsonConvert.SerializeObject(
             new
