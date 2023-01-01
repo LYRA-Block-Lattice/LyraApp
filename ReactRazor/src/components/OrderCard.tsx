@@ -52,7 +52,12 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
     if (!showTradeTable) {
       var tt = await window.lyraProxy.invokeMethodAsync("GetTrades", orderid);
       var ret = JSON.parse(tt);
-      setTrades(ret.trades);
+      if (ret.ret == "Success") {
+        setTrades(ret.trades);
+      }
+      else {
+        window.lyraProxy.invokeMethodAsync("Alert", "Warning", ret.msg);
+      }      
     }
     setShowTradeTable(!showTradeTable);
   }, [trades, showTradeTable]);

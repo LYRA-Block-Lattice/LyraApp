@@ -51,7 +51,12 @@ const ViewOrdersForm: FunctionComponent = () => {
     window.lyraProxy.invokeMethodAsync("GetOrders")
       .then(function (resp) {
         var ret = JSON.parse(resp);
-        setOrders(ret.orders);
+        if (ret.ret == "Success") {
+          setOrders(ret.result);
+        }
+        else {
+          window.lyraProxy.invokeMethodAsync("Alert", "Warning", ret.msg);
+        }
       })
   }, []);
 

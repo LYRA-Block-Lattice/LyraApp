@@ -31,6 +31,7 @@ using Lyra.Data.Crypto;
 using System.Security.Cryptography;
 using System.Reflection.Metadata.Ecma335;
 using static MudBlazor.Colors;
+using Microsoft.Extensions.Configuration;
 
 namespace ReactRazor.Pages
 {
@@ -50,6 +51,7 @@ namespace ReactRazor.Pages
         [Inject] IStringLocalizer<Home> localizer { get; set; }
         [Inject] ILyraAPI lyraApi { get; set; }
         [Inject] DealerConnMgr connMgr { get; set; }
+        [Inject] IConfiguration Configuration { get; set; }
 
         private string LastAccountId { get; set; }
 
@@ -78,6 +80,48 @@ namespace ReactRazor.Pages
             }
 
             await base.OnAfterRenderAsync(firstRender);
+        }
+
+        // standard api return
+        private string returnError(string errorMsg)
+        {
+            return JsonConvert.SerializeObject(
+            new
+            {
+                ret = "Error",
+                msg = errorMsg
+            });
+        }
+
+        private string returnSuccess(object result)
+        {
+            return JsonConvert.SerializeObject(
+            new
+            {
+                ret = "Success",
+                result
+            });
+        }
+
+        private string returnApiResult(APIResult result)
+        {
+            return JsonConvert.SerializeObject(
+            new
+            {
+                ret = result.Successful() ? "Success" : "Error",
+                msg = result.ResultMessage ?? result.ResultCode.Humanize(),
+            });
+        }
+
+        private string returnApiResult(APIResult result, object payload)
+        {
+            return JsonConvert.SerializeObject(
+            new
+            {
+                ret = result.Successful() ? "Success" : "Error",
+                msg = result.ResultMessage ?? result.ResultCode.Humanize(),
+                result = payload,
+            });
         }
 
         [JSInvokable("Redir")]
@@ -124,16 +168,16 @@ namespace ReactRazor.Pages
         public async Task<string> GetBalancesAsync()
         {
             if (string.IsNullOrWhiteSpace(LastAccountId))
-                return "[]";
+                return returnError("Wallet not exists");
 
             var lasttx = await lyraApi.GetLastBlockAsync(LastAccountId);
-            if(lasttx.Successful())
+            if (lasttx.Successful())
             {
                 var balances = lasttx.As<TransactionBlock>().Balances.ToDecimalDict();
-                return JsonConvert.SerializeObject(balances.Select(kvp => new { token = kvp.Key, balance = kvp.Value }));
+                return returnSuccess(balances.Select(kvp => new { token = kvp.Key, balance = kvp.Value }));
             }
-
-            return "[]";
+            else
+                return returnError(lasttx.ResultCode.Humanize());            
         }
 
         [JSInvokable("SearchDao")]
@@ -194,26 +238,17 @@ namespace ReactRazor.Pages
                     if (!walletState.Value.IsOpening) throw new InvalidOperationException("Wallet is not open");
 
                     var ret = await walletState.Value.wallet.CreateUniOrderAsync(order);
-                    return JsonConvert.SerializeObject(
-                        new
-                        {
-                            ret = ret.ResultCode.ToString(),
-                            txhash = ret.TxHash,
-                            msg = ret.ResultCode.Humanize(),
-                        });
+                    return returnApiResult(ret, ret.TxHash);
+                }
+                else
+                {
+                    throw new Exception("Invalid order data");
                 }
             }
             catch(Exception ex)
             {
-                return JsonConvert.SerializeObject(
-                new
-                {
-                    ret = "Exception",
-                    msg = ex.Message,
-                });
+                return returnError(ex.Message);
             }
-
-            return "";
         }
 
         public string ShortToken(string addr)
@@ -256,20 +291,13 @@ namespace ReactRazor.Pages
                         sold = a.gens.Order.amount - (a.latest ?? a.gens).Order.amount,
                         shelf = (a.latest ?? a.gens).Order.amount,
                     });
-                return JsonConvert.SerializeObject(
-                new
-                {
-                    ret = ret.ResultCode.ToString(),
-                    orders
-                });
-            }
 
-            return JsonConvert.SerializeObject(
-            new
+                return returnApiResult(ret, orders);
+            }
+            else
             {
-                ret = "Error",
-                msg = ret.ResultCode.ToString(),
-            });
+                return returnApiResult(ret);
+            }
         }
 
         [JSInvokable("GetTrades")]
@@ -296,20 +324,11 @@ namespace ReactRazor.Pages
                         a.gens.Trade.amount,
                         status = (a.latest ?? a.gens).UTStatus.ToString(),                     
                     });
-                return JsonConvert.SerializeObject(
-                new
-                {
-                    ret = ret.ResultCode.ToString(),
-                    trades
-                });
+
+                return returnApiResult(ret, trades);
             }
 
-            return JsonConvert.SerializeObject(
-            new
-            {
-                ret = "Error",
-                msg = ret.ResultCode.ToString(),
-            });
+            return returnApiResult(ret);
         }
 
         [JSInvokable("MintToken")]
@@ -317,33 +336,8 @@ namespace ReactRazor.Pages
         {
             var ret = await walletState.Value.wallet.CreateTokenAsync(name, domain, desc, 8, supply, true,
                 null, null, null, ContractTypes.Cryptocurrency, null);
-            return JsonConvert.SerializeObject(
-            new
-            {
-                ret = ret.ResultCode.ToString(),
-                txhash = ret.TxHash,
-                msg = ret.ResultCode.Humanize(),
-            });
-        }
 
-        private string returnError(string errorMsg)
-        {
-            return JsonConvert.SerializeObject(
-            new
-            {
-                ret = "Error",
-                msg = errorMsg
-            });
-        }
-
-        private string returnSuccess(object result)
-        {
-            return JsonConvert.SerializeObject(
-            new
-            {
-                ret = "Success",
-                result
-            });
+            return returnApiResult(ret, ret.TxHash);
         }
 
         [JSInvokable("UploadFile")]
@@ -389,17 +383,61 @@ namespace ReactRazor.Pages
         }
 
         [JSInvokable("MintNFT")]
-        public async Task<string?> MintNFTAsync(string name, string desc, string metaDataUrl, int supply)
+        public async Task<string?> MintNFTAsync(string name, string desc, int supply, string metaDataUrl)
         {
-            var ret = await walletState.Value.wallet.CreateTokenAsync(name, "", desc, 8, supply, true,
-                null, null, null, ContractTypes.Cryptocurrency, null);
-            return JsonConvert.SerializeObject(
-            new
+            var wallet = walletState.Value.wallet;
+
+            var ret = await wallet.CreateNFTAsync(name, desc, supply, metaDataUrl);
+            if(ret.Successful())
             {
-                ret = ret.ResultCode.ToString(),
-                txhash = ret.TxHash,
-                msg = ret.ResultCode.Humanize(),
-            });
+                // get ticker
+                var gens = wallet.GetLastSyncBlock() as TokenGenesisBlock;
+                return returnSuccess(gens.Ticker);
+            }
+
+            return returnError(ret.ResultCode.Humanize());
+        }
+
+        // meta: one nft one meta
+        // NFT genesis: one genesis multiple nft/meta
+        // let's begin with the simplest.
+        [JSInvokable("CreateNFTMetaData")]
+        public async Task<string> CreateNFTMetaDataAsync(string name, string desc, string imageUrl)
+        {
+            try
+            {
+                var lsb = await lyraApi.GetLastServiceBlockAsync();
+                var acac = new AcademyClient(Configuration["network"]);
+                var wallet = walletState.Value.wallet;
+                var input = $"{wallet.AccountId}:{lsb.GetBlock().Hash}:{imageUrl}";
+                var signatures = Signatures.GetSignature(wallet.PrivateKey, input, wallet.AccountId);
+                var ret = await acac.CreateNFTMetaHostedAsync(wallet.AccountId, signatures,
+                    name, desc, imageUrl);
+                dynamic qs = JObject.Parse(ret);
+                if (qs.ok == "true")
+                {
+                    Snackbar.Add($"Metadata created.", Severity.Success);
+
+                    var url = qs.value.ToString();
+
+                    // then we can submit a NFT genesis block.
+                    var crret = await wallet.CreateNFTAsync(name, desc, 1, url);
+                    if (crret.Successful())
+                    {
+                        return returnSuccess(url);
+                    }
+                    else
+                        throw new Exception($"Error mint NFT: {crret.error}");
+                }
+                else
+                {
+                    throw new Exception($"Error create metadata: {qs.error}");
+                }
+            }
+            catch(Exception ex)
+            {
+                return returnError(ex.Message);
+            }
         }
     }
 }

@@ -53,7 +53,19 @@ const CreateNFTForm: FunctionComponent<TokenMintProps> = props => {
           })
           .then(function (result) {
             if (result.ret == "Success") {
-              setUrl(result.result);
+              // we got image url. so we create metadata for it.
+              window.lyraProxy.invokeMethodAsync("CreateNFTMetaData", name, desc, result.result)
+                .then(function (response) {
+                  return JSON.parse(response);
+                })
+                .then(function (result) {
+                  if (result.ret == "Success") {
+                    setUrl(result.result);
+                  }
+                  else {
+                    window.lyraProxy.invokeMethodAsync("Alert", "Error", result.msg);
+                  }
+                })              
             }
             else {
               window.lyraProxy.invokeMethodAsync("Alert", "Warning", result.msg);
@@ -67,13 +79,13 @@ const CreateNFTForm: FunctionComponent<TokenMintProps> = props => {
 
   const onMintClick = useCallback(() => {
     console.log("mint NFT.");
-    window.lyraProxy.invokeMethodAsync("MintNFT", name, desc, url, supply)
+    window.lyraProxy.invokeMethodAsync("MintNFT", name, desc, supply, url)
       .then(function (response) {
         return JSON.parse(response);
       })
       .then(function (result) {
         if (result.ret == "Success") {
-          let tickr = result.ticker;
+          let tickr = result.result;
           window.lyraProxy.invokeMethodAsync("Alert", "Success", tickr + " is ready for use.");
           props.onClose!(tickr);
         }

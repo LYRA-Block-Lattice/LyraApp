@@ -28,8 +28,10 @@ function SearchTokenInput({ dir, cat, ownOnly, onTokenSelect, val }) {
 
   async function getTokens() {
     let t = await window.lyraProxy.invokeMethodAsync("GetBalance");
-    var tkns = JSON.parse(t);
-    setBalance(tkns);
+    if (t.ret == "Success") {
+      var tkns = JSON.parse(t);
+      setBalance(tkns);
+    }    
   }
 
   //useEffect(() => {
