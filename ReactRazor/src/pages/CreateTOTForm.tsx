@@ -35,6 +35,8 @@ const CreateTOTForm: FunctionComponent<TokenMintProps> = props => {
   const [name, setName] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
   const [supply, setSupply] = useState<number>(1);
+
+  // signature for trade secret.
   const [tssign, setTssign] = useState<string | undefined>(undefined);
 
   const totTypeChanged = (e) => {

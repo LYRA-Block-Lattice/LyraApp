@@ -53,6 +53,7 @@ namespace ReactRazor.Pages
         [Inject] ILyraAPI lyraApi { get; set; }
         [Inject] DealerConnMgr connMgr { get; set; }
         [Inject] IConfiguration Configuration { get; set; }
+        [Inject] NavigationManager Navigation { get; set; }
 
         private string LastAccountId { get; set; }
 
@@ -123,6 +124,19 @@ namespace ReactRazor.Pages
                 msg = result.ResultMessage ?? result.ResultCode.Humanize(),
                 result = payload,
             });
+        }
+
+        private Wallet GetOpeningWallet()
+        {
+            if(!walletState.Value.IsOpening || GetOpeningWallet() == null)
+            {
+                Navigation.NavigateTo("/open-wallet");
+                return null;
+            }
+            else
+            {
+                return GetOpeningWallet();
+            }
         }
 
         [JSInvokable("Redir")]
@@ -215,6 +229,7 @@ namespace ReactRazor.Pages
         {
             try
             {
+                var wallet = GetOpeningWallet();
                 var argsObj = JObject.Parse(json);
                 var argsDict = argsObj.ToObject<Dictionary<string, string>>();
                 if (argsDict != null)
@@ -236,9 +251,7 @@ namespace ReactRazor.Pages
                         limitMax = decimal.Parse(argsDict["limitmax"]),
                     };
 
-                    if (!walletState.Value.IsOpening) throw new InvalidOperationException("Wallet is not open");
-
-                    var ret = await walletState.Value.wallet.CreateUniOrderAsync(order);
+                    var ret = await wallet.CreateUniOrderAsync(order);
                     return returnApiResult(ret, ret.TxHash);
                 }
                 else
@@ -335,7 +348,7 @@ namespace ReactRazor.Pages
         [JSInvokable("MintToken")]
         public async Task<string?> MintToken(string name, string domain, string desc, decimal supply)
         {
-            var ret = await walletState.Value.wallet.CreateTokenAsync(name, domain, desc, 8, supply, true,
+            var ret = await GetOpeningWallet().CreateTokenAsync(name, domain, desc, 8, supply, true,
                 null, null, null, ContractTypes.Cryptocurrency, null);
 
             return returnApiResult(ret, ret.TxHash);
@@ -345,7 +358,7 @@ namespace ReactRazor.Pages
         public async Task<string?> UploadFileAsync(string fileName, string type, byte[] data)
         {
             var dealer = connMgr.GetDealer(null);
-            var wallet = walletState.Value.wallet;
+            var wallet = GetOpeningWallet();
 
             try
             {
@@ -386,7 +399,7 @@ namespace ReactRazor.Pages
         [JSInvokable("MintNFT")]
         public async Task<string?> MintNFTAsync(string name, string desc, int supply, string metaDataUrl)
         {
-            var wallet = walletState.Value.wallet;
+            var wallet = GetOpeningWallet();
 
             var ret = await wallet.CreateNFTAsync(name, desc, supply, metaDataUrl);
             if(ret.Successful())
@@ -409,7 +422,7 @@ namespace ReactRazor.Pages
             {
                 var lsb = await lyraApi.GetLastServiceBlockAsync();
                 var acac = new AcademyClient(Configuration["network"]);
-                var wallet = walletState.Value.wallet;
+                var wallet = GetOpeningWallet();
                 var input = $"{wallet.AccountId}:{lsb.GetBlock().Hash}:{imageUrl}";
                 var signatures = Signatures.GetSignature(wallet.PrivateKey, input, wallet.AccountId);
                 var ret = await acac.CreateNFTMetaHostedAsync(wallet.AccountId, signatures,
@@ -444,7 +457,7 @@ namespace ReactRazor.Pages
         [JSInvokable("PrintFiat")]
         public async Task<string?> PrintFiatAsync(string fiatTicker, long amount)
         {
-            var wallet = walletState.Value.wallet;
+            var wallet = GetOpeningWallet();
 
             var ret = await wallet.PrintFiatAsync(fiatTicker, amount);
             if (ret.Successful())
@@ -464,7 +477,7 @@ namespace ReactRazor.Pages
             )
         {
             var acac = new AcademyClient(Configuration["network"]);
-            var wallet = walletState.Value.wallet;
+            var wallet = GetOpeningWallet();
 
             // try to sign the request
             var lsb = await lyraApi.GetLastServiceBlockAsync();
@@ -493,6 +506,25 @@ namespace ReactRazor.Pages
             {
                 return retJson;
             }    
+        }
+
+        [JSInvokable("SignTradeSecret")]
+        public Task<string> SignTradeSecretAsync(string tradeSecret)
+        {
+            var wallet = GetOpeningWallet();
+            var sign = Signatures.GetSignature(wallet.PrivateKey, tradeSecret, wallet.AccountId);
+            return Task.FromResult(returnSuccess(sign));
+        }
+
+        [JSInvokable("VerifyTradeSecret")]
+        public Task<string> VerifyTradeSecretAsync(string tradeSecret, string signature)
+        {
+            var wallet = GetOpeningWallet();
+            var ok = Signatures.VerifyAccountSignature(tradeSecret, signature, wallet.AccountId);
+            if (ok)
+                return Task.FromResult(returnSuccess(ok));
+            else
+                return Task.FromResult(returnError("Bad signature or wrong trade secret."));
         }
     }
 }
