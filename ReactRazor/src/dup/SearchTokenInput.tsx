@@ -23,7 +23,9 @@ interface IToken {
 function SearchTokenInput({ dir, cat, ownOnly, onTokenSelect, val }) {
   const [defval, setDefval] = useState<IToken>();
   const [options, setOptions] = useState<IToken[]>([]);
+  // all balance in current wallet
   const [balance, setBalance] = useState<IBalance[]>([]);
+  // balance of selected token
   const [selbalance, setSelbalance] = useState<number | undefined>(0);
 
   async function getTokens() {
@@ -63,6 +65,11 @@ function SearchTokenInput({ dir, cat, ownOnly, onTokenSelect, val }) {
 
       if (balance?.find(a => a.token == value)) {
         setSelbalance(balance?.find(a => a.token == value)?.balance)
+      }
+      else {
+        // for nft/tot, its the name
+        let ticker = options.find(a => a.name == value)?.token;
+        setSelbalance(balance?.find(a => a.token == ticker)?.balance)
       }
     } else {
       onTokenSelect("");

@@ -26,7 +26,7 @@ type TokenMintProps = {
 
 const holdTypes = {
   "Goods": "TOT",
-  "Services": "SVC",
+  "Service": "SVC",
   "Generic Trade only Token": "TOT"
 };
 
