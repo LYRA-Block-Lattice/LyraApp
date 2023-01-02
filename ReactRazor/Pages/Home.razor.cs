@@ -32,6 +32,7 @@ using System.Security.Cryptography;
 using System.Reflection.Metadata.Ecma335;
 using static MudBlazor.Colors;
 using Microsoft.Extensions.Configuration;
+using static MudBlazor.CategoryTypes;
 
 namespace ReactRazor.Pages
 {
@@ -414,11 +415,11 @@ namespace ReactRazor.Pages
                 var ret = await acac.CreateNFTMetaHostedAsync(wallet.AccountId, signatures,
                     name, desc, imageUrl);
                 dynamic qs = JObject.Parse(ret);
-                if (qs.ok == "true")
+                if (qs.ret == "Success")
                 {
                     Snackbar.Add($"Metadata created.", Severity.Success);
 
-                    var url = qs.value.ToString();
+                    var url = qs.result.ToString();
 
                     // then we can submit a NFT genesis block.
                     var crret = await wallet.CreateNFTAsync(name, desc, 1, url);
@@ -452,6 +453,46 @@ namespace ReactRazor.Pages
             }
 
             return returnError(ret.ResultCode.Humanize());
+        }
+
+        [JSInvokable("CreateTOT")]
+        public async Task<string> CreateTotAsync(string type,
+            string name,
+            string description,
+            int supply,
+            string tradeSecretSignature
+            )
+        {
+            var acac = new AcademyClient(Configuration["network"]);
+            var wallet = walletState.Value.wallet;
+
+            // try to sign the request
+            var lsb = await lyraApi.GetLastServiceBlockAsync();
+            var input = $"{wallet.AccountId}:{lsb.GetBlock().Hash}:{name}:{description}";
+            var signature = Signatures.GetSignature(wallet.PrivateKey, input, wallet.AccountId);
+            var totType = Enum.Parse<HoldTypes>(type);
+            var retJson = await acac.CreateTotMetaAsync(wallet.AccountId, signature, totType, name, description);
+            // the result format is compatible
+            var dynret = JsonConvert.DeserializeObject<dynamic>(retJson);
+
+            if(dynret.ret == "Success")
+            {
+                var metaUrl = dynret.result.ToString();
+                APIResult ctret = await wallet.CreateTOTAsync(totType, name, description, supply, metaUrl, tradeSecretSignature);
+                if(ctret.Successful())
+                {
+                    var totgen = wallet.GetLastSyncBlock() as TokenGenesisBlock;
+                    return returnApiResult(ctret, totgen.Ticker);
+                }
+                else
+                {
+                    return returnApiResult(ctret);
+                }
+            }
+            else
+            {
+                return retJson;
+            }    
         }
     }
 }

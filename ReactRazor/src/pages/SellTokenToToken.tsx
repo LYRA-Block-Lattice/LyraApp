@@ -32,13 +32,13 @@ const SellTokenToToken: FunctionComponent = () => {
 
   const [val, setVal] = useState<IToken>();
 
-  //const onSellChange = useCallback((event, value, reason) => {
-  //  if (value) {
-  //    setTosell(value);
-  //  } else {
-  //    setTosell("");
-  //  }
-  //}, [tosell, tokens]);
+  const onSellChange = useCallback((event, value, reason) => {
+    if (value) {
+      setTosell(value);
+    } else {
+      setTosell("");
+    }
+  }, [tosell]);
 
   const openGeneralPopup = useCallback(() => {
     setGeneralPopupOpen(true);
@@ -61,7 +61,7 @@ const SellTokenToToken: FunctionComponent = () => {
     <>
       <div className="selltokentotoken">
         <div className="searchtokenbyname2">
-          <SearchTokenInput key="tosell" val={val} dir="Sell" cat={catsell} ownOnly={true} onTokenSelect={setTosell} />
+          <SearchTokenInput key="tosell" val={val} dir="Sell" cat={catsell} ownOnly={true} onTokenSelect={onSellChange} />
           <button
             className="prepare-sell-order-button10"
             onClick={openGeneralPopup}

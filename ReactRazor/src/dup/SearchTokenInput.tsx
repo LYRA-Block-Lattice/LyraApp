@@ -27,9 +27,10 @@ function SearchTokenInput({ dir, cat, ownOnly, onTokenSelect, val }) {
   const [selbalance, setSelbalance] = useState<number | undefined>(0);
 
   async function getTokens() {
-    let t = await window.lyraProxy.invokeMethodAsync("GetBalance");
-    if (t.ret == "Success") {
-      var tkns = JSON.parse(t);
+    let str = await window.lyraProxy.invokeMethodAsync("GetBalance");
+    var ret = JSON.parse(str);
+    if (ret.ret == "Success") {
+      var tkns = ret.result;
       setBalance(tkns);
     }    
   }
@@ -55,6 +56,8 @@ function SearchTokenInput({ dir, cat, ownOnly, onTokenSelect, val }) {
 
   const onGetTokenInputChange = useCallback((event, value, reason) => {
     if (value) {
+      getTokens();
+
       onTokenSelect(value);
       searchToken(value, cat);
 

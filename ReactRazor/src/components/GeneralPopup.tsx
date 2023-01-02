@@ -16,6 +16,7 @@ const GeneralPopup: FunctionComponent<GeneralPopupType> = props => {
     "Token": CreateTokenForm,
     "Fiat": MintFiatToken,
     "NFT": CreateNFTForm,
+    "TOT": CreateTOTForm,
     "Goods": CreateTOTForm,
     "Service": CreateTOTForm
   };

@@ -6,6 +6,14 @@ import Xarrow, { Xwrapper } from 'react-xarrows';
 
 const boxStyle = { border: "grey solid 2px", borderRadius: "10px", padding: "5px" };
 
+const typeMap = {
+  Token: "Token",
+  NFT: "NFT",
+  Fiat: "Fiat",
+  Goods: "TOT",
+  Service: "TOT"
+};
+
 const StartToCreateOrder: FunctionComponent = () => {
   const [start, setStart] = useState<string | undefined>();
   const [end, setEnd] = useState<string | undefined>();
@@ -20,31 +28,32 @@ const StartToCreateOrder: FunctionComponent = () => {
   }, [start, end]);
 
   const onPrepareSellOrderButtonClick = useCallback(() => {
-    if (start == "Token" || start == "NFT" || start == "Fiat") {
-      if (end == "Token" || end == "NFT" || end == "Fiat")
-        navigate(`/selltokentotoken?sell=${start}&get=${end}`);
-      //else if(end == "Fiat")
-      //  navigate(`/selltokentofiat?sell=${start}&get=${end}`);
-      else
-        navigate(`/selltokentotot?sell=${start}&get=${end}`);
-    }
-    //else if(start == "Fiat")
-    //{
-    //  if(end == "Token" || end == "NFT")
-    //    navigate(`/sellfiattotoken?sell=${start}&get=${end}`);
-    //  else if(end == "Fiat")
-    //    navigate(`/sellfiattofiat?sell=${start}&get=${end}`);
+    navigate(`/selltokentotoken?sell=${typeMap[start!]}&get=${typeMap[end!]}`);
+    //if (start == "Token" || start == "NFT" || start == "Fiat") {
+    //  if (end == "Token" || end == "NFT" || end == "Fiat")
+    //    navigate(`/selltokentotoken?sell=${start}&get=${end}`);
+    //  //else if(end == "Fiat")
+    //  //  navigate(`/selltokentofiat?sell=${start}&get=${end}`);
     //  else
-    //    navigate(`/sellfiattotot?sell=${start}&get=${end}`);
+    //    navigate(`/selltokentotot?sell=${start}&get=${end}`);
     //}
-    else {
-      if (end == "Token" || end == "NFT" || end == "Fiat")
-        navigate(`/selltottotoken?sell=${start}&get=${end}`);
-      //else if(end == "Fiat")
-      //  navigate(`/selltottofiat?sell=${start}&get=${end}`);
-      else
-        navigate(`/selltottotot?sell=${start}&get=${end}`);
-    }
+    ////else if(start == "Fiat")
+    ////{
+    ////  if(end == "Token" || end == "NFT")
+    ////    navigate(`/sellfiattotoken?sell=${start}&get=${end}`);
+    ////  else if(end == "Fiat")
+    ////    navigate(`/sellfiattofiat?sell=${start}&get=${end}`);
+    ////  else
+    ////    navigate(`/sellfiattotot?sell=${start}&get=${end}`);
+    ////}
+    //else {
+    //  if (end == "Token" || end == "NFT" || end == "Fiat")
+    //    navigate(`/selltottotoken?sell=${start}&get=${end}`);
+    //  //else if(end == "Fiat")
+    //  //  navigate(`/selltottofiat?sell=${start}&get=${end}`);
+    //  else
+    //    navigate(`/selltottotot?sell=${start}&get=${end}`);
+    //}
   }, [navigate, start, end]);
 
   const onTokenAction = (act: string | undefined, tok: string | undefined, xref: LegacyRef<HTMLButtonElement> | undefined) => {
