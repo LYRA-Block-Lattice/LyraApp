@@ -43,10 +43,10 @@ const OpenWallet: FunctionComponent = () => {
 
   const onOpenWallet = useCallback(() => {
     console.log("names is " + wnames);
-    console.log("selected name is " + name);
+    console.log("selected name is " + wnames[index]);
 
     window.lyraProxy.invokeMethodAsync("OpenWallet", wnames[index], inputRef.current!.value);
-  }, [wnames, name]);
+  }, [wnames, name, index]);
 
   const onSignUpClick = useCallback(() => {
     navigate("/create-wallet");

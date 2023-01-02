@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent, useCallback, useState } from "react";
 import {
   TextField,
   Input,
@@ -11,8 +11,29 @@ import {
 import { useNavigate } from "react-router-dom";
 import "./CreateWallet.css";
 
+interface customWindow extends Window {
+  lyraSetProxy?: any;
+  lyraProxy?: any;
+}
+
+declare const window: customWindow;
+
 const CreateWallet: FunctionComponent = () => {
   const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
+  const [chkkey, setChkkey] = useState("");
+  const [pvk, setPvk] = useState("");
+
+  const onCreateWallet = useCallback(() => {
+    window.lyraProxy.invokeMethodAsync("CreateWallet", name, password, chkkey == "on", pvk)
+      .then((json) => JSON.parse(json))
+      .then((ret) => {
+        if (ret.ret == "Success") navigate("/open-wallet");
+        else window.lyraProxy.invokeMethodAsync("Alert", "Warning", ret.msg);
+      })
+  }, [name, password, password2, chkkey, pvk, navigate]);
 
   const onOpenWalletLinkClick = useCallback(() => {
     navigate("/open-wallet");
@@ -31,6 +52,7 @@ const CreateWallet: FunctionComponent = () => {
         size="medium"
         margin="none"
         required
+        onChange={(e) => setName(e.target.value)}
       />
       <TextField
         className="wallet-name"
@@ -51,6 +73,7 @@ const CreateWallet: FunctionComponent = () => {
         size="medium"
         margin="none"
         required
+        onChange={(e) => setPassword(e.target.value)}
       />
       <TextField
         className="wallet-name"
@@ -71,11 +94,12 @@ const CreateWallet: FunctionComponent = () => {
         size="medium"
         margin="none"
         required
+        onChange={(e) => setPassword2(e.target.value)}
       />
       <FormControlLabel
         label="I want to restore wallet by Private Key"
         labelPlacement="end"
-        control={<Checkbox color="primary" size="medium" />}
+        control={<Checkbox color="primary" size="medium" onChange={(e) => setChkkey(e.target.value)} />}
       />
       <TextField
         className="wallet-name"
@@ -87,8 +111,9 @@ const CreateWallet: FunctionComponent = () => {
         placeholder="Placeholder"
         size="medium"
         margin="none"
+        onChange={(e) => setPvk(e.target.value)}
       />
-      <button className="create-wallet">
+      <button className="create-wallet" onClick={onCreateWallet}>
         <div className="button-shape" />
         <div className="createlabel">Create</div>
       </button>

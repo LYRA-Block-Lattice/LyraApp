@@ -179,6 +179,58 @@ namespace ReactRazor.Pages
             return Task.FromResult($"Opening...");
         }
 
+        [JSInvokable("CreateWallet")]
+        public async Task<string> CreateWalletAsync(string walletName, string password, bool usePvk, string prvKey)
+        {
+            if (string.IsNullOrWhiteSpace(walletName))
+            {
+                return returnError(localizer["Please specify the name of wallet."]);
+            }
+
+            var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
+            var wc = new WalletContainer(wcjson);
+            if (wc.Names.Contains(walletName))
+            {
+                return returnError(localizer["Wallet name exists. Please pick another one."]);
+            }
+
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                return returnError(localizer["Password can't be empty."]);
+            }
+
+            byte[] data;
+            var aib = new AccountInBuffer();
+            if (usePvk)
+            {
+                if (!Signatures.ValidatePrivateKey(prvKey))
+                {
+                    return returnError(localizer["Invalid private key."]);
+                }
+                                
+                Wallet.Create(aib, walletName, password, Configuration["network"], prvKey);
+                data = aib.GetBuffer(password);
+            }
+            else
+            {
+                Wallet.Create(aib, walletName, password, Configuration["network"]);
+                data = aib.GetBuffer(password);
+            }
+
+            var meta = new WalletContainer.WalletData
+            {
+                Name = walletName,
+                Data = data,
+                Backup = false,
+                Note = localizer["Created: {0}", DateTime.Now],
+            };
+            wc.Add(meta);
+
+            await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());
+
+            return returnSuccess("");
+        }
+
         [JSInvokable("GetBalance")]
         public async Task<string> GetBalancesAsync()
         {
