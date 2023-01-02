@@ -28,7 +28,6 @@ const CreateWallet: FunctionComponent = () => {
         variant="standard"
         type="text"
         label="Wallet Name"
-        placeholder="Placeholder"
         size="medium"
         margin="none"
         required
@@ -49,7 +48,6 @@ const CreateWallet: FunctionComponent = () => {
           ),
         }}
         label="Password"
-        placeholder="Placeholder"
         size="medium"
         margin="none"
         required
@@ -70,13 +68,12 @@ const CreateWallet: FunctionComponent = () => {
           ),
         }}
         label="Confirm password"
-        placeholder="Placeholder"
         size="medium"
         margin="none"
         required
       />
       <FormControlLabel
-        label="Label"
+        label="I want to restore wallet by Private Key"
         labelPlacement="end"
         control={<Checkbox color="primary" size="medium" />}
       />
