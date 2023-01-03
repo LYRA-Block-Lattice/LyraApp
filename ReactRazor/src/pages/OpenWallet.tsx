@@ -16,10 +16,9 @@ import { useNavigate } from "react-router-dom";
 import "./OpenWallet.css";
 
 interface customWindow extends Window {
-  lyraSetProxy?: any;
-  lyraProxy?: any;
+  rrComponent?: any;
+  rrProxy?: any;
 }
-
 declare const window: customWindow;
 
 const OpenWallet: FunctionComponent = () => {
@@ -28,9 +27,15 @@ const OpenWallet: FunctionComponent = () => {
   const [index, setIndex] = useState<number>(0);
   const navigate = useNavigate();
 
-  async function getWalletName() {
-    let wnames = await window.lyraProxy.invokeMethodAsync("GetWalletNames");
-    setwnames(wnames);
+  function getWalletName() {
+    window.rrProxy.ReactRazor.Pages.Home.Interop.GetWalletNamesAsync(window.rrComponent)
+      .then((json) => JSON.parse(json))
+      .then((ret) => {
+        if (ret.ret == "Success") {
+          var wnames = ret.result;
+          setwnames(wnames);
+        }
+      });
   }
 
   useEffect(() => {
@@ -45,7 +50,7 @@ const OpenWallet: FunctionComponent = () => {
     console.log("names is " + wnames);
     console.log("selected name is " + wnames[index]);
 
-    window.lyraProxy.invokeMethodAsync("OpenWallet", wnames[index], inputRef.current!.value);
+    window.rrProxy.ReactRazor.Pages.Home.Interop.OpenWalletAsync(window.rrComponent, wnames[index], inputRef.current!.value);
   }, [wnames, name, index]);
 
   const onSignUpClick = useCallback(() => {

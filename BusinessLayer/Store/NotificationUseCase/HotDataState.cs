@@ -70,7 +70,7 @@ namespace BusinessLayer.Store.NotificationUseCase
             try
             {
                 var feeder = connmgr.GetPriceFeeder();
-                if (connmgr.IsConnected && feeder != null)
+                if (feeder != null && connmgr.IsConnected)
                 {
                     var lps = await feeder.GetPricesAsync();
                     dispatcher.Dispatch(new HotUpdateResultAction

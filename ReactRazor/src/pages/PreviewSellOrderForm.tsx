@@ -4,8 +4,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import "./PreviewSellOrderForm.css";
 
 interface customWindow extends Window {
-  lyraSetProxy?: any;
-  lyraProxy?: any;
+  rrComponent?: any;
+  rrProxy?: any;
 }
 declare const window: customWindow;
 
@@ -16,14 +16,14 @@ const PreviewSellOrderForm: FunctionComponent = () => {
   const obj = JSON.parse(data);
 
   const onPrepareSellOrderButtonClick = useCallback(() => {
-    window.lyraProxy.invokeMethodAsync("CreateOrder", data)
+    window.rrProxy.ReactRazor.Pages.Home.Interop.CreateOrderAsync(window.rrComponent, data)
       .then(function (response) {
         var ret = JSON.parse(response);
         if (ret.ret == "Success") {
           navigate("/createordersuccessform?tx=" + ret.txhash);
         }
         else {
-          window.lyraProxy.invokeMethodAsync("Alert", "Warning", ret.msg);
+          window.rrProxy.ReactRazor.Pages.Home.Interop.AlertAsync(window.rrComponent, "Warning", ret.msg);
         }
       })
   }, [navigate]);

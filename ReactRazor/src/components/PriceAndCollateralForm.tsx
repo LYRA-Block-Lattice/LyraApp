@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import "./PriceAndCollateralForm.css";
 
 interface customWindow extends Window {
-  lyraSetProxy?: any;
-  lyraProxy?: any;
+  rrComponent?: any;
+  rrProxy?: any;
 }
 declare const window: customWindow;
 
@@ -34,7 +34,7 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
   const [dealerid, setDealerid] = useState("");
 
   async function init() {
-    let dlr = await window.lyraProxy.invokeMethodAsync("GetCurrentDealer");
+    let dlr = await window.rrProxy.ReactRazor.Pages.Home.Interop.GetCurrentDealerAsync(window.rrComponent);
     setDealerid(dlr);
   }
 
@@ -43,7 +43,7 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
   }, []);
 
   const searchDao = (searchTerm) => {
-    window.lyraProxy.invokeMethodAsync("SearchDao", searchTerm)
+    window.rrProxy.ReactRazor.Pages.Home.Interop.SearchDaoAsync(window.rrComponent, searchTerm)
       .then(function (response) {
         return JSON.parse(response);
       })

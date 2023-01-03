@@ -12,10 +12,9 @@ import { useNavigate } from "react-router-dom";
 import "./CreateWallet.css";
 
 interface customWindow extends Window {
-  lyraSetProxy?: any;
-  lyraProxy?: any;
+  rrComponent?: any;
+  rrProxy?: any;
 }
-
 declare const window: customWindow;
 
 const CreateWallet: FunctionComponent = () => {
@@ -27,11 +26,11 @@ const CreateWallet: FunctionComponent = () => {
   const [pvk, setPvk] = useState("");
 
   const onCreateWallet = useCallback(() => {
-    window.lyraProxy.invokeMethodAsync("CreateWallet", name, password, chkkey == "on", pvk)
+    window.rrProxy.ReactRazor.Pages.Home.Interop.CreateWalletAsync(window.rrComponent, name, password, chkkey == "on", pvk)
       .then((json) => JSON.parse(json))
       .then((ret) => {
         if (ret.ret == "Success") navigate("/open-wallet");
-        else window.lyraProxy.invokeMethodAsync("Alert", "Warning", ret.msg);
+        else window.rrProxy.ReactRazor.Pages.Home.Interop.AlertAsync(window.rrComponent, "Warning", ret.msg);
       })
   }, [name, password, password2, chkkey, pvk, navigate]);
 

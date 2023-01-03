@@ -125,7 +125,7 @@ namespace Dealer.Server.Services
             if(_db.NetworkId == "mainnet")
                 url = $"https://seed1.mainnet.lyra.live:5504/events";
             else if(_db.NetworkId == "devnet")
-                url = $"https://devnet.lyra.live:4504/events";
+                url = $"https://devnet.lyra.live/events";
 
             _logger.LogInformation($"Lyra event on {_db.NetworkId} using {url}");
 

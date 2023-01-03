@@ -3,8 +3,8 @@ import { Autocomplete, TextField } from "@mui/material";
 import "./SearchTokenInput.css";
 
 interface customWindow extends Window {
-  lyraSetProxy?: any;
-  lyraProxy?: any;
+  rrComponent?: any;
+  rrProxy?: any;
 }
 declare const window: customWindow;
 
@@ -29,7 +29,7 @@ function SearchTokenInput({ dir, cat, ownOnly, onTokenSelect, val }) {
   const [selbalance, setSelbalance] = useState<number | undefined>(0);
 
   async function getTokens() {
-    let str = await window.lyraProxy.invokeMethodAsync("GetBalance");
+    let str = await window.rrProxy.ReactRazor.Pages.Home.Interop.GetBalanceAsync(window.rrComponent);
     var ret = JSON.parse(str);
     if (ret.ret == "Success") {
       var tkns = ret.result;
@@ -42,18 +42,24 @@ function SearchTokenInput({ dir, cat, ownOnly, onTokenSelect, val }) {
   }, []);
 
   const searchToken = (searchTerm, cat) => {
-    let method = "SearchToken";
     if (ownOnly && cat != "Fiat") { // search in wallet/balance
-      method = "SearchTokenForAccount";
+      window.rrProxy.ReactRazor.Pages.Home.Interop.SearchTokenForAccountAsync(window.rrComponent, searchTerm, cat)
+        .then(function (response) {
+          return JSON.parse(response);
+        })
+        .then(function (ret) {
+          setOptions(ret);
+        });
     }
-
-    window.lyraProxy.invokeMethodAsync(method, searchTerm, cat)
-      .then(function (response) {
-        return JSON.parse(response);
-      })
-      .then(function (ret) {
-        setOptions(ret);
-      });
+    else {
+      window.rrProxy.ReactRazor.Pages.Home.Interop.SearchTokenAsync(window.rrComponent, searchTerm, cat)
+        .then(function (response) {
+          return JSON.parse(response);
+        })
+        .then(function (ret) {
+          setOptions(ret);
+        });
+    }
   };
 
   const onGetTokenInputChange = useCallback((event, value, reason) => {

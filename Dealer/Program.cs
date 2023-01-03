@@ -35,11 +35,11 @@ builder.Services.AddScoped<ILyraAPI>(provider =>
 
                     string url;
                     if (networkid == "mainnet")
-                        url = $"https://mainnet.lyra.live:5504/api/Node/";
+                        url = $"https://mainnet.lyra.live/api/Node/";
                     else if (networkid == "testnet")
-                        url = $"https://testnet.lyra.live:4504/api/Node/";
+                        url = $"https://testnet.lyra.live/api/Node/";
                     else
-                        url = $"https://devnet.lyra.live:4504/api/Node/";
+                        url = $"https://devnet.lyra.live/api/Node/";
 
                     if (!string.IsNullOrWhiteSpace(nodeAddr))
                     {
@@ -104,7 +104,8 @@ app.UseCors(builder =>
     .AllowAnyMethod()
     );
 
-app.UseHttpsRedirection();
+// disable to allow reverse proxy
+//app.UseHttpsRedirection();
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 

@@ -4,8 +4,8 @@ import OrderCard from "../components/OrderCard";
 import "./ViewOrdersForm.css";
 
 interface customWindow extends Window {
-  lyraSetProxy?: any;
-  lyraProxy?: any;
+  rrComponent?: any;
+  rrProxy?: any;
 }
 declare const window: customWindow;
 
@@ -48,14 +48,14 @@ const ViewOrdersForm: FunctionComponent = () => {
   const [orders, setOrders] = useState<IOrder[]>([]);
 
   useEffect(() => {
-    window.lyraProxy.invokeMethodAsync("GetOrders")
+    window.rrProxy.ReactRazor.Pages.Home.Interop.GetOrdersAsync(window.rrComponent)
       .then(function (resp) {
         var ret = JSON.parse(resp);
         if (ret.ret == "Success") {
           setOrders(ret.result);
         }
         else {
-          window.lyraProxy.invokeMethodAsync("Alert", "Warning", ret.msg);
+          window.rrProxy.ReactRazor.Pages.Home.Interop.AlertAsync(window.rrComponent, "Warning", ret.msg);
         }
       })
   }, []);

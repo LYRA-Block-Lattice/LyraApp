@@ -4,13 +4,16 @@ import TxInfoBar from "../components/TxInfoBar";
 import "./Market.css";
 
 interface customWindow extends Window {
-  lyraSetProxy?: any;
-  lyraProxy?: any;
+  rrComponent?: any;
+  rrProxy?: any;
 }
 declare const window: customWindow;
 
 const Market: FunctionComponent = () => {
   const navigate = useNavigate();
+
+  const [lyrbns, setLyrbns] = useState(0);
+  const [usdt, setUsdt] = useState(0);
 
   const [nftcnt, setNftcnt] = useState(0);
   const [totcnt, setTotcnt] = useState(0);
@@ -18,12 +21,16 @@ const Market: FunctionComponent = () => {
   const [bidcnt, setBidcnt] = useState(0);
 
   useEffect(() => {
-    window.lyraProxy.invokeMethodAsync("GetBalance")
+    window.rrProxy.ReactRazor.Pages.Home.Interop.GetBalancesAsync(window.rrComponent)
       .then((json) => JSON.parse(json))
       .then((ret) => {
         console.log(ret);
-        setNftcnt(ret.result.filter((a) => a.token.startsWith("nft/")).length);
-        setTotcnt(ret.result.filter((a) => a.token.startsWith("tot/") || a.token.startsWith("svc/")).length);
+        if (ret.result != null) {
+          setNftcnt(ret.result.filter((a) => a.token.startsWith("nft/")).length);
+          setTotcnt(ret.result.filter((a) => a.token.startsWith("tot/") || a.token.startsWith("svc/")).length);
+          setLyrbns(ret.result.find(a => a.token == "LYR")?.balance ?? 0);
+          setUsdt(ret.result.find(a => a.token == "tether/USDT")?.balance ?? 0);
+        }
       });
   }, []);
 
@@ -99,10 +106,10 @@ const Market: FunctionComponent = () => {
             <div className="maps-parent">
               <img className="maps-icon" alt="" src="_content/ReactRazor/asserts/maps.svg" />
               <a className="balance-display-zone">
-                <b className="lyrbalance">120,000</b>
+                <b className="lyrbalance">{lyrbns}</b>
                 <b className="lyrlabel">LYR</b>
                 <div className="balance-display-zone-child" />
-                <b className="usdtbalance">5,000</b>
+                <b className="usdtbalance">{usdt}</b>
                 <b className="lyrlabel">USDT</b>
               </a>
               <div className="token-lists">

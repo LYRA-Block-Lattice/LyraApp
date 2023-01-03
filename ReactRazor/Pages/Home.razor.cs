@@ -38,6 +38,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Versioning;
 using System.Text.Json.Serialization.Metadata;
 using System.Text.Json.Serialization;
+using System.ComponentModel;
 
 namespace ReactRazor.Pages
 {
@@ -62,7 +63,6 @@ namespace ReactRazor.Pages
 
         private string LastAccountId { get; set; }
 
-        private DotNetObjectReference<Home>? objRef;
         protected override async Task OnInitializedAsync()
         {
             if (OperatingSystem.IsBrowser())
@@ -88,543 +88,530 @@ namespace ReactRazor.Pages
             internal static void OnResults([JSMarshalAs<JSType.Any>] object component, string json)
             {
                 Home detectHands = (Home)component;
+
+                Console.WriteLine("called from js to dotnet!");
                 //detectHands.DetectionResult = JsonSerializer.Deserialize<DetectionResult>(json, DetectionResult.SerializeOptions);
                 //Console.WriteLine("OnResults " + detectHands.DetectionResult!.Hands.Count);
                 detectHands.StateHasChanged();
             }
-        }
 
-        //protected override async Task OnInitializedAsync()
-        //{
-        //    objRef = DotNetObjectReference.Create(this);
-
-        //    try
-        //    {
-        //        LastAccountId = await localStorage.GetItemAsync<string>(_consts.AccountIdStorName);
-        //        await JS.InvokeVoidAsync("loadScript", "_content/ReactRazor/static/js/main.js");
-        //        await JS.InvokeAsync<string>("lyraSetProxy", objRef);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"Error loadScript: {ex.Message}");
-        //    }
-
-        //    await base.OnInitializedAsync();
-        //}
-
-        //protected override async Task OnAfterRenderAsync(bool firstRender)
-        //{
-        //    if (firstRender)
-        //    {
-        //        //try
-        //        //{
-        //        //    LastAccountId = await localStorage.GetItemAsync<string>(_consts.AccountIdStorName);
-        //        //    await JS.InvokeVoidAsync("loadScript", "_content/ReactRazor/static/js/main.js");
-        //        //    await JS.InvokeAsync<string>("lyraSetProxy", objRef);
-        //        //}
-        //        //catch (Exception ex)
-        //        //{
-        //        //    Console.WriteLine($"Error loadScript: {ex.Message}");
-        //        //}
-        //    //await JS.InvokeVoidAsync("bruic.openwallet", _react);
-        //    }
-
-        //    await base.OnAfterRenderAsync(firstRender);
-        //}
-
-        // standard api return
-        private string returnError(string errorMsg)
-        {
-            return JsonConvert.SerializeObject(
-            new
+            [JSExport]
+            public static Task<string> RedirAsync([JSMarshalAs<JSType.Any>] object component, string path)
             {
-                ret = "Error",
-                msg = errorMsg
-            });
-        }
-
-        private string returnSuccess(object result)
-        {
-            return JsonConvert.SerializeObject(
-            new
-            {
-                ret = "Success",
-                result
-            });
-        }
-
-        private string returnApiResult(APIResult result)
-        {
-            return JsonConvert.SerializeObject(
-            new
-            {
-                ret = result.Successful() ? "Success" : "Error",
-                msg = result.ResultMessage ?? result.ResultCode.Humanize(),
-            });
-        }
-
-        private string returnApiResult(APIResult result, object payload)
-        {
-            return JsonConvert.SerializeObject(
-            new
-            {
-                ret = result.Successful() ? "Success" : "Error",
-                msg = result.ResultMessage ?? result.ResultCode.Humanize(),
-                result = payload,
-            });
-        }
-
-        private Wallet GetOpeningWallet()
-        {
-            if(!walletState.Value.IsOpening || GetOpeningWallet() == null)
-            {
-                Navigation.NavigateTo("/open-wallet");
-                return null;
-            }
-            else
-            {
-                return GetOpeningWallet();
-            }
-        }
-
-        [JSInvokable("Redir")]
-        public Task<string> RedirAsync(string path)
-        {
-            navigator.NavigateTo($"/{path}", false, true);
-            return Task.FromResult($"wanna redirect to Blazor url /{path}?");
-        }
-
-        [JSInvokable("Alert")]
-        public Task<string> AlertAsync(string severity, string message)
-        {
-            var svt = Severity.Info;
-            if (Enum.TryParse(severity, out Severity svtx))
-                svt = svtx;
-
-            Snackbar.Add(message, svt);
-            return Task.FromResult("");
-        }
-
-        [JSInvokable("GetWalletNames")]
-        public async Task<string[]> GetWalletNamesAsync()
-        {
-            var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
-            var wc = new WalletContainer(wcjson);
-
-            var walletNames = wc.Names;
-            //if (walletNames.Length == 1)
-            //    curname = walletNames[0];
-            //else if (walletNames.Contains(localizer["Default"]))
-            //    curname = localizer["Default"];
-
-            return walletNames;
-        }
-
-        [JSInvokable("OpenWallet")]
-        public Task<string> OpenWalletAsync(string name, string password)
-        {
-            Dispatcher.Dispatch(new WebWalletOpenAction{store = _consts.NebulaStorName, name = name, password = password});
-            return Task.FromResult($"Opening...");
-        }
-
-        [JSInvokable("CreateWallet")]
-        public async Task<string> CreateWalletAsync(string walletName, string password, bool usePvk, string prvKey)
-        {
-            if (string.IsNullOrWhiteSpace(walletName))
-            {
-                return returnError(localizer["Please specify the name of wallet."]);
+                var home = (Home)component;
+                home.navigator.NavigateTo($"/{path}", false, true);
+                return Task.FromResult($"wanna redirect to Blazor url /{path}?");
             }
 
-            var wcjson = await localStorage.GetItemAsync<string>(_consts.NebulaStorName);
-            var wc = new WalletContainer(wcjson);
-            if (wc.Names.Contains(walletName))
+            [JSExport]
+            public static Task<string> AlertAsync([JSMarshalAs<JSType.Any>] object component, string severity, string message)
             {
-                return returnError(localizer["Wallet name exists. Please pick another one."]);
+                var home = (Home)component;
+                var svt = Severity.Info;
+                if (Enum.TryParse(severity, out Severity svtx))
+                    svt = svtx;
+
+                home.Snackbar.Add(message, svt);
+                return Task.FromResult("");
             }
 
-            if (string.IsNullOrWhiteSpace(password))
+            [JSExport]
+            public static async Task<string> GetBalancesAsync([JSMarshalAs<JSType.Any>] object component)
             {
-                return returnError(localizer["Password can't be empty."]);
-            }
+                var home = (Home)component;
+                var LastAccountId = await home.localStorage.GetItemAsync<string>(home._consts.AccountIdStorName);
 
-            byte[] data;
-            var aib = new AccountInBuffer();
-            if (usePvk)
-            {
-                if (!Signatures.ValidatePrivateKey(prvKey))
+                if (string.IsNullOrWhiteSpace(LastAccountId))
+                    return returnError("Wallet not exists");
+
+                var lasttx = await home.lyraApi.GetLastBlockAsync(LastAccountId);
+                if (lasttx.Successful())
                 {
-                    return returnError(localizer["Invalid private key."]);
+                    var balances = lasttx.As<TransactionBlock>().Balances.ToDecimalDict();
+                    return returnSuccess(balances.Select(kvp => new { token = kvp.Key, balance = kvp.Value }));
                 }
-                                
-                Wallet.Create(aib, walletName, password, Configuration["network"], prvKey);
-                data = aib.GetBuffer(password);
-            }
-            else
-            {
-                Wallet.Create(aib, walletName, password, Configuration["network"]);
-                data = aib.GetBuffer(password);
+                else
+                    return returnError(lasttx.ResultCode.Humanize());
             }
 
-            var meta = new WalletContainer.WalletData
+            [JSExport]
+            public static async Task<string> GetWalletNamesAsync([JSMarshalAs<JSType.Any>] object component)
             {
-                Name = walletName,
-                Data = data,
-                Backup = false,
-                Note = localizer["Created: {0}", DateTime.Now],
-            };
-            wc.Add(meta);
+                var home = (Home)component;
+                var wcjson = await home.localStorage.GetItemAsync<string>(home._consts.NebulaStorName);
+                var wc = new WalletContainer(wcjson);
 
-            await localStorage.SetItemAsync(_consts.NebulaStorName, wc.ToString());
+                var walletNames = wc.Names;
+                //if (walletNames.Length == 1)
+                //    curname = walletNames[0];
+                //else if (walletNames.Contains(localizer["Default"]))
+                //    curname = localizer["Default"];
 
-            return returnSuccess("");
-        }
-
-        [JSInvokable("GetBalance")]
-        public async Task<string> GetBalancesAsync()
-        {
-            if (string.IsNullOrWhiteSpace(LastAccountId))
-                return returnError("Wallet not exists");
-
-            var lasttx = await lyraApi.GetLastBlockAsync(LastAccountId);
-            if (lasttx.Successful())
-            {
-                var balances = lasttx.As<TransactionBlock>().Balances.ToDecimalDict();
-                return returnSuccess(balances.Select(kvp => new { token = kvp.Key, balance = kvp.Value }));
+                return returnSuccess(walletNames);
             }
-            else
-                return returnError(lasttx.ResultCode.Humanize());            
-        }
 
-        [JSInvokable("SearchDao")]
-        public async Task<string> SearchDaoAsync(string q)
-        {
-            var daos = await lyraApi.FindDaosAsync(q);
-            return daos;
-        }
-
-        [JSInvokable("SearchToken")]
-        public async Task<string?> SearchTokenAsync(string? q, string? cat)
-        {
-            var tokens = await lyraApi.FindTokensAsync(q, cat);
-            return tokens;
-        }
-
-        [JSInvokable("SearchTokenForAccount")]
-        public async Task<string?> SearchTokenForAccountAsync(string? q, string? cat)
-        {
-            var tokens = await lyraApi.FindTokensForAccountAsync(LastAccountId, q, cat);
-            return tokens;
-        }
-
-        [JSInvokable("GetCurrentDealer")]
-        public async Task<string?> GetCurrentDealerAsync()
-        {
-            var storStr = await localStorage.GetItemAsync<string>(_consts.PrefStorName) ?? "{}";
-            var pc = JsonConvert.DeserializeObject<PreferenceContainer>(storStr);
-            return pc.PriceFeedingDealerID;
-        }
-
-        [JSInvokable("CreateOrder")]
-        public async Task<string?> CreateOrderAsync(string json)
-        {
-            try
+            [JSExport]
+            public static Task<string> OpenWalletAsync([JSMarshalAs<JSType.Any>] object component, string name, string password)
             {
-                var wallet = GetOpeningWallet();
-                var argsObj = JObject.Parse(json);
-                var argsDict = argsObj.ToObject<Dictionary<string, string>>();
-                if (argsDict != null)
+                var home = (Home)component;
+                home.Dispatcher.Dispatch(new WebWalletOpenAction { store = home._consts.NebulaStorName, name = name, password = password });
+                return Task.FromResult($"Opening...");
+            }
+
+            [JSExport]
+            public static async Task<string> CreateWalletAsync([JSMarshalAs<JSType.Any>] object component, string walletName, string password, bool usePvk, string prvKey)
+            {
+                var home = (Home)component;
+                if (string.IsNullOrWhiteSpace(walletName))
                 {
-                    var order = new UniOrder
+                    return returnError(home.localizer["Please specify the name of wallet."]);
+                }
+
+                var wcjson = await home.localStorage.GetItemAsync<string>(home._consts.NebulaStorName);
+                var wc = new WalletContainer(wcjson);
+                if (wc.Names.Contains(walletName))
+                {
+                    return returnError(home.localizer["Wallet name exists. Please pick another one."]);
+                }
+
+                if (string.IsNullOrWhiteSpace(password))
+                {
+                    return returnError(home.localizer["Password can't be empty."]);
+                }
+
+                byte[] data;
+                var aib = new AccountInBuffer();
+                if (usePvk)
+                {
+                    if (!Signatures.ValidatePrivateKey(prvKey))
                     {
-                        daoId = argsDict["daoid"],
-                        dealerId = argsDict["dealerid"],
-                        offerby = LyraGlobal.GetHoldTypeFromTicker(argsDict["selltoken"]),
-                        offering = argsDict["selltoken"],
-                        bidby = LyraGlobal.GetHoldTypeFromTicker(argsDict["gettoken"]),
-                        biding = argsDict["gettoken"],
-                        price = decimal.Parse(argsDict["price"]),
-                        cltamt = decimal.Parse(argsDict["collateral"]),
-                        payBy = new string[0],
+                        return returnError(home.localizer["Invalid private key."]);
+                    }
 
-                        amount = decimal.Parse(argsDict["count"]),
-                        limitMin = decimal.Parse(argsDict["limitmin"]),
-                        limitMax = decimal.Parse(argsDict["limitmax"]),
-                    };
-
-                    var ret = await wallet.CreateUniOrderAsync(order);
-                    return returnApiResult(ret, ret.TxHash);
+                    Wallet.Create(aib, walletName, password, home.Configuration["network"], prvKey);
+                    data = aib.GetBuffer(password);
                 }
                 else
                 {
-                    throw new Exception("Invalid order data");
-                }
-            }
-            catch(Exception ex)
-            {
-                return returnError(ex.Message);
-            }
-        }
-
-        public string ShortToken(string addr)
-        {
-            if (string.IsNullOrWhiteSpace(addr) || addr.Length < 12)
-            {
-                return addr;
-            }
-
-            return addr.Substring(0, 4) + "..." + addr.Substring(addr.Length - 6, 6);
-        }
-
-        [JSInvokable("GetOrders")]
-        public async Task<string?> GetOrdersAsync()
-        {
-            // get all current trades
-            var ret = await lyraApi.GetUniOrdersByOwnerAsync(LastAccountId);
-            if (ret.Successful())
-            {
-                var blocks = ret.GetBlocks().Cast<TransactionBlock>();
-                var orders = blocks
-                    .Where(a => a.BlockType == BlockTypes.UniOrderGenesis)
-                    .Select(a => new
-                    {
-                        gens = a as IUniOrder,
-                        latest = blocks.FirstOrDefault(x => x.BlockType != BlockTypes.UniOrderGenesis && x.AccountID == a.AccountID) as IUniOrder ?? a as IUniOrder,
-                    })                    
-                    .OrderByDescending(a => a.gens.TimeStamp)
-                    .Select(a => new
-                    {
-                        orderid = a.gens.AccountID,
-                        status = (a.latest ?? a.gens).UOStatus.ToString(),
-                        offering = ShortToken(a.gens.Order.offering),
-                        biding = ShortToken(a.gens.Order.biding),
-                        a.gens.Order.amount,
-                        a.gens.Order.price,
-                        limitmin = a.gens.Order.limitMin, 
-                        limitmax = a.gens.Order.limitMax,
-                        time = a.gens.TimeStamp.ToString(),
-                        sold = a.gens.Order.amount - (a.latest ?? a.gens).Order.amount,
-                        shelf = (a.latest ?? a.gens).Order.amount,
-                    });
-
-                return returnApiResult(ret, orders);
-            }
-            else
-            {
-                return returnApiResult(ret);
-            }
-        }
-
-        [JSInvokable("GetTrades")]
-        public async Task<string?> GetTradesAsync(string orderid)
-        {
-            // get all current trades
-            var ret = await lyraApi.FindUniTradeForOrderAsync(orderid);
-            if (ret.Successful())
-            {
-                var blocks = ret.GetBlocks().Cast<TransactionBlock>();
-                var trades = blocks
-                    .Where(a => a.BlockType == BlockTypes.UniTradeGenesis)
-                    .Select(a => new
-                    {
-                        gens = a as IUniTrade,
-                        latest = blocks.FirstOrDefault(x => x.BlockType != BlockTypes.UniTradeGenesis && x.AccountID == a.AccountID) as IUniTrade ?? a as IUniTrade,
-                    })
-                    .OrderByDescending(a => a.gens.TimeStamp)
-                    .Select(a => new
-                    {
-                        //orderid = orderid.Shorten(),
-                        buyer = a.gens.AccountID.Shorten(),
-                        time = a.gens.TimeStamp.ToString(),
-                        a.gens.Trade.amount,
-                        status = (a.latest ?? a.gens).UTStatus.ToString(),                     
-                    });
-
-                return returnApiResult(ret, trades);
-            }
-
-            return returnApiResult(ret);
-        }
-
-        [JSInvokable("MintToken")]
-        public async Task<string?> MintToken(string name, string domain, string desc, decimal supply)
-        {
-            var ret = await GetOpeningWallet().CreateTokenAsync(name, domain, desc, 8, supply, true,
-                null, null, null, ContractTypes.Cryptocurrency, null);
-
-            return returnApiResult(ret, ret.TxHash);
-        }
-
-        [JSInvokable("UploadFile")]
-        public async Task<string?> UploadFileAsync(string fileName, string type, byte[] data)
-        {
-            var dealer = connMgr.GetDealer(null);
-            var wallet = GetOpeningWallet();
-
-            try
-            {
-                int MAXALLOWEDSIZE = 5 * 1024 * 1024;      // 5MB
-
-                if (data.Length > MAXALLOWEDSIZE)
-                {
-                    return returnError($"File too big. Max size {MAXALLOWEDSIZE}");
+                    Wallet.Create(aib, walletName, password, home.Configuration["network"]);
+                    data = aib.GetBuffer(password);
                 }
 
-                var imageData = data;
-
-                string hash, signature;
-                using (var sha = SHA256.Create())
+                var meta = new WalletContainer.WalletData
                 {
-                    byte[] hash_bytes = sha.ComputeHash(imageData);
-                    hash = Base58Encoding.Encode(hash_bytes);
-                }
-                signature = PortableSignatures.GetSignature(wallet.PrivateKey, hash);
+                    Name = walletName,
+                    Data = data,
+                    Backup = false,
+                    Note = home.localizer["Created: {0}", DateTime.Now],
+                };
+                wc.Add(meta);
 
-                var ret = await dealer.UploadImageAsync(wallet.AccountId, signature, "-"/*tradeid*/,
-                    fileName, imageData, type);
-                if (ret.Successful())
-                {
-                    return returnSuccess(ret.Url);
-                }
-                else
-                {
-                    return returnError(ret.ResultCode.Humanize());
-                }
-            }
-            catch (Exception ex)
-            {
-                return returnError(ex.Message);
-            }
-        }
+                await home.localStorage.SetItemAsync(home._consts.NebulaStorName, wc.ToString());
 
-        [JSInvokable("MintNFT")]
-        public async Task<string?> MintNFTAsync(string name, string desc, int supply, string metaDataUrl)
-        {
-            var wallet = GetOpeningWallet();
-
-            var ret = await wallet.CreateNFTAsync(name, desc, supply, metaDataUrl);
-            if(ret.Successful())
-            {
-                // get ticker
-                var gens = wallet.GetLastSyncBlock() as TokenGenesisBlock;
-                return returnSuccess(gens.Ticker);
+                return returnSuccess("");
             }
 
-            return returnError(ret.ResultCode.Humanize());
-        }
-
-        // meta: one nft one meta
-        // NFT genesis: one genesis multiple nft/meta
-        // let's begin with the simplest.
-        [JSInvokable("CreateNFTMetaData")]
-        public async Task<string> CreateNFTMetaDataAsync(string name, string desc, string imageUrl)
-        {
-            try
+            [JSExport]
+            public static async Task<string> SearchDaoAsync([JSMarshalAs<JSType.Any>] object component, string q)
             {
-                var lsb = await lyraApi.GetLastServiceBlockAsync();
-                var acac = new AcademyClient(Configuration["network"]);
-                var wallet = GetOpeningWallet();
-                var input = $"{wallet.AccountId}:{lsb.GetBlock().Hash}:{imageUrl}";
-                var signatures = Signatures.GetSignature(wallet.PrivateKey, input, wallet.AccountId);
-                var ret = await acac.CreateNFTMetaHostedAsync(wallet.AccountId, signatures,
-                    name, desc, imageUrl);
-                dynamic qs = JObject.Parse(ret);
-                if (qs.ret == "Success")
+                var home = (Home)component;
+                var daos = await home.lyraApi.FindDaosAsync(q);
+                return daos;
+            }
+
+            [JSExport]
+            public static async Task<string?> SearchTokenAsync([JSMarshalAs<JSType.Any>] object component, string? q, string? cat)
+            {
+                var home = (Home)component;
+                var tokens = await home.lyraApi.FindTokensAsync(q, cat);
+                return tokens;
+            }
+
+            [JSExport]
+            public static async Task<string?> SearchTokenForAccountAsync([JSMarshalAs<JSType.Any>] object component, string? q, string? cat)
+            {
+                var home = (Home)component;
+                var tokens = await home.lyraApi.FindTokensForAccountAsync(home.LastAccountId, q, cat);
+                return tokens;
+            }
+
+            [JSExport]
+            public static async Task<string?> GetCurrentDealerAsync([JSMarshalAs<JSType.Any>] object component)
+            {
+                var home = (Home)component;
+                var storStr = await home.localStorage.GetItemAsync<string>(home._consts.PrefStorName) ?? "{}";
+                var pc = JsonConvert.DeserializeObject<PreferenceContainer>(storStr);
+                return pc.PriceFeedingDealerID;
+            }
+
+            [JSExport]
+            public static async Task<string?> CreateOrderAsync([JSMarshalAs<JSType.Any>] object component, string json)
+            {
+                var home = (Home)component;
+                try
                 {
-                    Snackbar.Add($"Metadata created.", Severity.Success);
-
-                    var url = qs.result.ToString();
-
-                    // then we can submit a NFT genesis block.
-                    var crret = await wallet.CreateNFTAsync(name, desc, 1, url);
-                    if (crret.Successful())
+                    var wallet = GetOpeningWallet(component);
+                    var argsObj = JObject.Parse(json);
+                    var argsDict = argsObj.ToObject<Dictionary<string, string>>();
+                    if (argsDict != null)
                     {
-                        return returnSuccess(url);
+                        var order = new UniOrder
+                        {
+                            daoId = argsDict["daoid"],
+                            dealerId = argsDict["dealerid"],
+                            offerby = LyraGlobal.GetHoldTypeFromTicker(argsDict["selltoken"]),
+                            offering = argsDict["selltoken"],
+                            bidby = LyraGlobal.GetHoldTypeFromTicker(argsDict["gettoken"]),
+                            biding = argsDict["gettoken"],
+                            price = decimal.Parse(argsDict["price"]),
+                            cltamt = decimal.Parse(argsDict["collateral"]),
+                            payBy = new string[0],
+
+                            amount = decimal.Parse(argsDict["count"]),
+                            limitMin = decimal.Parse(argsDict["limitmin"]),
+                            limitMax = decimal.Parse(argsDict["limitmax"]),
+                        };
+
+                        var ret = await wallet.CreateUniOrderAsync(order);
+                        return returnApiResult(ret, ret.TxHash);
                     }
                     else
-                        throw new Exception($"Error mint NFT: {crret.error}");
+                    {
+                        throw new Exception("Invalid order data");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return returnError(ex.Message);
+                }
+            }
+
+            public static string ShortToken(string addr)
+            {
+                if (string.IsNullOrWhiteSpace(addr) || addr.Length < 12)
+                {
+                    return addr;
+                }
+
+                return addr.Substring(0, 4) + "..." + addr.Substring(addr.Length - 6, 6);
+            }
+
+            [JSExport]
+            public static async Task<string?> GetOrdersAsync([JSMarshalAs<JSType.Any>] object component)
+            {
+                // get all current trades
+                var home = (Home)component;
+                var ret = await home.lyraApi.GetUniOrdersByOwnerAsync(home.LastAccountId);
+                if (ret.Successful())
+                {
+                    var blocks = ret.GetBlocks().Cast<TransactionBlock>();
+                    var orders = blocks
+                        .Where(a => a.BlockType == BlockTypes.UniOrderGenesis)
+                        .Select(a => new
+                        {
+                            gens = a as IUniOrder,
+                            latest = blocks.FirstOrDefault(x => x.BlockType != BlockTypes.UniOrderGenesis && x.AccountID == a.AccountID) as IUniOrder ?? a as IUniOrder,
+                        })
+                        .OrderByDescending(a => a.gens.TimeStamp)
+                        .Select(a => new
+                        {
+                            orderid = a.gens.AccountID,
+                            status = (a.latest ?? a.gens).UOStatus.ToString(),
+                            offering = ShortToken(a.gens.Order.offering),
+                            biding = ShortToken(a.gens.Order.biding),
+                            a.gens.Order.amount,
+                            a.gens.Order.price,
+                            limitmin = a.gens.Order.limitMin,
+                            limitmax = a.gens.Order.limitMax,
+                            time = a.gens.TimeStamp.ToString(),
+                            sold = a.gens.Order.amount - (a.latest ?? a.gens).Order.amount,
+                            shelf = (a.latest ?? a.gens).Order.amount,
+                        });
+
+                    return returnApiResult(ret, orders);
                 }
                 else
                 {
-                    throw new Exception($"Error create metadata: {qs.error}");
+                    return returnApiResult(ret);
                 }
             }
-            catch(Exception ex)
+
+            [JSExport]
+            public static async Task<string?> GetTradesAsync([JSMarshalAs<JSType.Any>] object component, string orderid)
             {
-                return returnError(ex.Message);
-            }
-        }
-
-        [JSInvokable("PrintFiat")]
-        public async Task<string?> PrintFiatAsync(string fiatTicker, long amount)
-        {
-            var wallet = GetOpeningWallet();
-
-            var ret = await wallet.PrintFiatAsync(fiatTicker, amount);
-            if (ret.Successful())
-            {
-                return returnSuccess(fiatTicker);
-            }
-
-            return returnError(ret.ResultCode.Humanize());
-        }
-
-        [JSInvokable("CreateTOT")]
-        public async Task<string> CreateTotAsync(string type,
-            string name,
-            string description,
-            int supply,
-            string tradeSecretSignature
-            )
-        {
-            var acac = new AcademyClient(Configuration["network"]);
-            var wallet = GetOpeningWallet();
-
-            // try to sign the request
-            var lsb = await lyraApi.GetLastServiceBlockAsync();
-            var input = $"{wallet.AccountId}:{lsb.GetBlock().Hash}:{name}:{description}";
-            var signature = Signatures.GetSignature(wallet.PrivateKey, input, wallet.AccountId);
-            var totType = Enum.Parse<HoldTypes>(type);
-            var retJson = await acac.CreateTotMetaAsync(wallet.AccountId, signature, totType, name, description);
-            // the result format is compatible
-            var dynret = JsonConvert.DeserializeObject<dynamic>(retJson);
-
-            if(dynret.ret == "Success")
-            {
-                var metaUrl = dynret.result.ToString();
-                APIResult ctret = await wallet.CreateTOTAsync(totType, name, description, supply, metaUrl, tradeSecretSignature);
-                if(ctret.Successful())
+                // get all current trades
+                var home = (Home)component;
+                var ret = await home.lyraApi.FindUniTradeForOrderAsync(orderid);
+                if (ret.Successful())
                 {
-                    var totgen = wallet.GetLastSyncBlock() as TokenGenesisBlock;
-                    return returnApiResult(ctret, totgen.Ticker);
+                    var blocks = ret.GetBlocks().Cast<TransactionBlock>();
+                    var trades = blocks
+                        .Where(a => a.BlockType == BlockTypes.UniTradeGenesis)
+                        .Select(a => new
+                        {
+                            gens = a as IUniTrade,
+                            latest = blocks.FirstOrDefault(x => x.BlockType != BlockTypes.UniTradeGenesis && x.AccountID == a.AccountID) as IUniTrade ?? a as IUniTrade,
+                        })
+                        .OrderByDescending(a => a.gens.TimeStamp)
+                        .Select(a => new
+                        {
+                            //orderid = orderid.Shorten(),
+                            buyer = a.gens.AccountID.Shorten(),
+                            time = a.gens.TimeStamp.ToString(),
+                            a.gens.Trade.amount,
+                            status = (a.latest ?? a.gens).UTStatus.ToString(),
+                        });
+
+                    return returnApiResult(ret, trades);
+                }
+
+                return returnApiResult(ret);
+            }
+
+            [JSExport]
+            public static async Task<string?> MintToken([JSMarshalAs<JSType.Any>] object component, string name, string domain, string desc, double supply)
+            {
+                var home = (Home)component;
+                var ret = await GetOpeningWallet(component).CreateTokenAsync(name, domain, desc, 8, (decimal)supply, true,
+                    null, null, null, ContractTypes.Cryptocurrency, null);
+
+                return returnApiResult(ret, ret.TxHash);
+            }
+
+            [JSExport]
+            public static async Task<string?> UploadFileAsync([JSMarshalAs<JSType.Any>] object component, string fileName, string type, byte[] data)
+            {
+                var home = (Home)component;
+                var dealer = home.connMgr.GetDealer(null);
+                var wallet = GetOpeningWallet(component);
+
+                try
+                {
+                    int MAXALLOWEDSIZE = 5 * 1024 * 1024;      // 5MB
+
+                    if (data.Length > MAXALLOWEDSIZE)
+                    {
+                        return returnError($"File too big. Max size {MAXALLOWEDSIZE}");
+                    }
+
+                    var imageData = data;
+
+                    string hash, signature;
+                    using (var sha = SHA256.Create())
+                    {
+                        byte[] hash_bytes = sha.ComputeHash(imageData);
+                        hash = Base58Encoding.Encode(hash_bytes);
+                    }
+                    signature = PortableSignatures.GetSignature(wallet.PrivateKey, hash);
+
+                    var ret = await dealer.UploadImageAsync(wallet.AccountId, signature, "-"/*tradeid*/,
+                        fileName, imageData, type);
+                    if (ret.Successful())
+                    {
+                        return returnSuccess(ret.Url);
+                    }
+                    else
+                    {
+                        return returnError(ret.ResultCode.Humanize());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return returnError(ex.Message);
+                }
+            }
+
+            [JSExport]
+            public static async Task<string?> MintNFTAsync([JSMarshalAs<JSType.Any>] object component, string name, string desc, int supply, string metaDataUrl)
+            {
+                var home = (Home)component;
+                var wallet = GetOpeningWallet(component);
+
+                var ret = await wallet.CreateNFTAsync(name, desc, supply, metaDataUrl);
+                if (ret.Successful())
+                {
+                    // get ticker
+                    var gens = wallet.GetLastSyncBlock() as TokenGenesisBlock;
+                    return returnSuccess(gens.Ticker);
+                }
+
+                return returnError(ret.ResultCode.Humanize());
+            }
+
+            // meta: one nft one meta
+            // NFT genesis: one genesis multiple nft/meta
+            // let's begin with the simplest.
+            [JSExport]
+            public static async Task<string> CreateNFTMetaDataAsync([JSMarshalAs<JSType.Any>] object component, string name, string desc, string imageUrl)
+            {
+                var home = (Home)component;
+                try
+                {
+                    var lsb = await home.lyraApi.GetLastServiceBlockAsync();
+                    var acac = new AcademyClient(home.Configuration["network"]);
+                    var wallet = GetOpeningWallet(component);
+                    var input = $"{wallet.AccountId}:{lsb.GetBlock().Hash}:{imageUrl}";
+                    var signatures = Signatures.GetSignature(wallet.PrivateKey, input, wallet.AccountId);
+                    var ret = await acac.CreateNFTMetaHostedAsync(wallet.AccountId, signatures,
+                        name, desc, imageUrl);
+                    dynamic qs = JObject.Parse(ret);
+                    if (qs.ret == "Success")
+                    {
+                        home.Snackbar.Add($"Metadata created.", Severity.Success);
+
+                        var url = qs.result.ToString();
+
+                        // then we can submit a NFT genesis block.
+                        var crret = await wallet.CreateNFTAsync(name, desc, 1, url);
+                        if (crret.Successful())
+                        {
+                            return returnSuccess(url);
+                        }
+                        else
+                            throw new Exception($"Error mint NFT: {crret.error}");
+                    }
+                    else
+                    {
+                        throw new Exception($"Error create metadata: {qs.error}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return returnError(ex.Message);
+                }
+            }
+
+            [JSExport]
+            public static async Task<string?> PrintFiatAsync([JSMarshalAs<JSType.Any>] object component, string fiatTicker, double amount)
+            {
+                var home = (Home)component;
+                var wallet = GetOpeningWallet(component);
+
+                var ret = await wallet.PrintFiatAsync(fiatTicker, (long)amount);
+                if (ret.Successful())
+                {
+                    return returnSuccess(fiatTicker);
+                }
+
+                return returnError(ret.ResultCode.Humanize());
+            }
+
+            [JSExport]
+            public static async Task<string> CreateTotAsync([JSMarshalAs<JSType.Any>] object component, string type,
+                string name,
+                string description,
+                int supply,
+                string tradeSecretSignature
+                )
+            {
+                var home = (Home)component;
+                var acac = new AcademyClient(home.Configuration["network"]);
+                var wallet = GetOpeningWallet(component);
+
+                // try to sign the request
+                var lsb = await home.lyraApi.GetLastServiceBlockAsync();
+                var input = $"{wallet.AccountId}:{lsb.GetBlock().Hash}:{name}:{description}";
+                var signature = Signatures.GetSignature(wallet.PrivateKey, input, wallet.AccountId);
+                var totType = Enum.Parse<HoldTypes>(type);
+                var retJson = await acac.CreateTotMetaAsync(wallet.AccountId, signature, totType, name, description);
+                // the result format is compatible
+                var dynret = JsonConvert.DeserializeObject<dynamic>(retJson);
+
+                if (dynret.ret == "Success")
+                {
+                    var metaUrl = dynret.result.ToString();
+                    APIResult ctret = await wallet.CreateTOTAsync(totType, name, description, supply, metaUrl, tradeSecretSignature);
+                    if (ctret.Successful())
+                    {
+                        var totgen = wallet.GetLastSyncBlock() as TokenGenesisBlock;
+                        return returnApiResult(ctret, totgen.Ticker);
+                    }
+                    else
+                    {
+                        return returnApiResult(ctret);
+                    }
                 }
                 else
                 {
-                    return returnApiResult(ctret);
+                    return retJson;
                 }
             }
-            else
+
+            [JSExport]
+            public static Task<string> SignTradeSecretAsync([JSMarshalAs<JSType.Any>] object component, string tradeSecret)
             {
-                return retJson;
-            }    
-        }
+                var home = (Home)component;
+                var wallet = GetOpeningWallet(component);
+                var sign = Signatures.GetSignature(wallet.PrivateKey, tradeSecret, wallet.AccountId);
+                return Task.FromResult(returnSuccess(sign));
+            }
 
-        [JSInvokable("SignTradeSecret")]
-        public Task<string> SignTradeSecretAsync(string tradeSecret)
-        {
-            var wallet = GetOpeningWallet();
-            var sign = Signatures.GetSignature(wallet.PrivateKey, tradeSecret, wallet.AccountId);
-            return Task.FromResult(returnSuccess(sign));
-        }
+            [JSExport]
+            public static Task<string> VerifyTradeSecretAsync([JSMarshalAs<JSType.Any>] object component, string tradeSecret, string signature)
+            {
+                var home = (Home)component;
+                var wallet = GetOpeningWallet(component);
+                var ok = Signatures.VerifyAccountSignature(tradeSecret, signature, wallet.AccountId);
+                if (ok)
+                    return Task.FromResult(returnSuccess(ok));
+                else
+                    return Task.FromResult(returnError("Bad signature or wrong trade secret."));
+            }
 
-        [JSInvokable("VerifyTradeSecret")]
-        public Task<string> VerifyTradeSecretAsync(string tradeSecret, string signature)
-        {
-            var wallet = GetOpeningWallet();
-            var ok = Signatures.VerifyAccountSignature(tradeSecret, signature, wallet.AccountId);
-            if (ok)
-                return Task.FromResult(returnSuccess(ok));
-            else
-                return Task.FromResult(returnError("Bad signature or wrong trade secret."));
+            private static Wallet GetOpeningWallet([JSMarshalAs<JSType.Any>] object component)
+            {
+                var home = (Home)component;
+                if (!home.walletState.Value.IsOpening || GetOpeningWallet(component) == null)
+                {
+                    home.Navigation.NavigateTo("/open-wallet");
+                    return null;
+                }
+                else
+                {
+                    return GetOpeningWallet(component);
+                }
+            }
+
+            private static string returnError(string errorMsg)
+            {
+                return JsonConvert.SerializeObject(
+                new
+                {
+                    ret = "Error",
+                    msg = errorMsg
+                });
+            }
+
+            private static string returnSuccess(object result)
+            {
+                return JsonConvert.SerializeObject(
+                new
+                {
+                    ret = "Success",
+                    result
+                });
+            }
+
+            private static string returnApiResult(APIResult result)
+            {
+                return JsonConvert.SerializeObject(
+                new
+                {
+                    ret = result.Successful() ? "Success" : "Error",
+                    msg = result.ResultMessage ?? result.ResultCode.Humanize(),
+                });
+            }
+
+            private static string returnApiResult(APIResult result, object payload)
+            {
+                return JsonConvert.SerializeObject(
+                new
+                {
+                    ret = result.Successful() ? "Success" : "Error",
+                    msg = result.ResultMessage ?? result.ResultCode.Humanize(),
+                    result = payload,
+                });
+            }
         }
     }
 }

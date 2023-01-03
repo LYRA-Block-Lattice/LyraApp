@@ -27,13 +27,6 @@ import OldV1UI from "./pages/OldV1UI";
 import RedirBlazor from "./pages/RedirBlazor";
 import { useEffect } from "react";
 
-interface customWindow extends Window {
-    lyraSetProxy?: any;
-    lyraProxy?: any;
-}
-
-declare const window: customWindow;
-
 function App() {
   const action = useNavigationType();
   const location = useLocation();

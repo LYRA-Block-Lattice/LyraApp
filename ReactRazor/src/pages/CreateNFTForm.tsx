@@ -3,10 +3,9 @@ import { TextField } from "@mui/material";
 import "./CreateNFTForm.css";
 
 interface customWindow extends Window {
-  lyraSetProxy?: any;
-  lyraProxy?: any;
+  rrComponent?: any;
+  rrProxy?: any;
 }
-
 declare const window: customWindow;
 
 type TokenMintProps = {
@@ -47,14 +46,14 @@ const CreateNFTForm: FunctionComponent<TokenMintProps> = props => {
         console.log(value);
         var data = new Uint8Array(value);
         console.log(data);
-        window.lyraProxy.invokeMethodAsync("UploadFile", event.target.files[0].name, event.target.files[0].type, data)
+        window.rrProxy.ReactRazor.Pages.Home.Interop.UploadFileAsync(window.rrComponent, event.target.files[0].name, event.target.files[0].type, data)
           .then(function (response) {
             return JSON.parse(response);
           })
           .then(function (result) {
             if (result.ret == "Success") {
               // we got image url. so we create metadata for it.
-              window.lyraProxy.invokeMethodAsync("CreateNFTMetaData", name, desc, result.result)
+              window.rrProxy.ReactRazor.Pages.Home.Interop.CreateNFTMetaDataAsync(window.rrComponent, name, desc, result.result)
                 .then(function (response) {
                   return JSON.parse(response);
                 })
@@ -63,12 +62,12 @@ const CreateNFTForm: FunctionComponent<TokenMintProps> = props => {
                     setUrl(result.result);
                   }
                   else {
-                    window.lyraProxy.invokeMethodAsync("Alert", "Error", result.msg);
+                    window.rrProxy.ReactRazor.Pages.Home.Interop.AlertAsync(window.rrComponent, "Error", result.msg);
                   }
                 })              
             }
             else {
-              window.lyraProxy.invokeMethodAsync("Alert", "Warning", result.msg);
+              window.rrProxy.ReactRazor.Pages.Home.Interop.AlertAsync(window.rrComponent, "Warning", result.msg);
             }
           });
       })
@@ -79,18 +78,18 @@ const CreateNFTForm: FunctionComponent<TokenMintProps> = props => {
 
   const onMintClick = useCallback(() => {
     console.log("mint NFT.");
-    window.lyraProxy.invokeMethodAsync("MintNFT", name, desc, supply, url)
+    window.rrProxy.ReactRazor.Pages.Home.Interop.MintNFTAsync(window.rrComponent, name, desc, supply, url)
       .then(function (response) {
         return JSON.parse(response);
       })
       .then(function (result) {
         if (result.ret == "Success") {
           let tickr = result.result;
-          window.lyraProxy.invokeMethodAsync("Alert", "Success", tickr + " is ready for use.");
+          window.rrProxy.ReactRazor.Pages.Home.Interop.AlertAsync(window.rrComponent, "Success", tickr + " is ready for use.");
           props.onClose!(tickr);
         }
         else {
-          window.lyraProxy.invokeMethodAsync("Alert", "Warning", result.msg);
+          window.rrProxy.ReactRazor.Pages.Home.Interop.AlertAsync(window.rrComponent, "Warning", result.msg);
           props.onClose!();
         }
       });

@@ -5,8 +5,8 @@ import "./OrderCard.css";
 import TableComponent, {TableComponentProps} from "../components/TableComponent";
 
 interface customWindow extends Window {
-  lyraSetProxy?: any;
-  lyraProxy?: any;
+  rrComponent?: any;
+  rrProxy?: any;
 }
 declare const window: customWindow;
 
@@ -50,13 +50,13 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
 
   const toggle = useCallback(async () => {
     if (!showTradeTable) {
-      var tt = await window.lyraProxy.invokeMethodAsync("GetTrades", orderid);
+      var tt = await window.rrProxy.ReactRazor.Pages.Home.Interop.GetTradesAsync(window.rrComponent, orderid);
       var ret = JSON.parse(tt);
       if (ret.ret == "Success") {
         setTrades(ret.trades);
       }
       else {
-        window.lyraProxy.invokeMethodAsync("Alert", "Warning", ret.msg);
+        window.rrProxy.ReactRazor.Pages.Home.Interop.AlertAsync(window.rrComponent, "Warning", ret.msg);
       }      
     }
     setShowTradeTable(!showTradeTable);

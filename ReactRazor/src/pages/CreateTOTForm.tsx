@@ -12,10 +12,9 @@ import PortalPopup from "../components/PortalPopup";
 import "./CreateTOTForm.css";
 
 interface customWindow extends Window {
-  lyraSetProxy?: any;
-  lyraProxy?: any;
+  rrComponent?: any;
+  rrProxy?: any;
 }
-
 declare const window: customWindow;
 
 type TokenMintProps = {
@@ -57,18 +56,18 @@ const CreateTOTForm: FunctionComponent<TokenMintProps> = props => {
 
   const onMintClick = useCallback(() => {
     console.log("Creating TOT...");
-    window.lyraProxy.invokeMethodAsync("CreateTOT", holdTypes[tott], name, desc, supply, tssign)
+    window.rrProxy.ReactRazor.Pages.Home.Interop.CreateTOTAsync(window.rrComponent, holdTypes[tott], name, desc, supply, tssign)
       .then(function (response) {
         return JSON.parse(response);
       })
       .then(function (result) {
         if (result.ret == "Success") {
           let tickr = result.result;
-          window.lyraProxy.invokeMethodAsync("Alert", "Success", tickr + " is ready for use.");
+          window.rrProxy.ReactRazor.Pages.Home.Interop.AlertAsync(window.rrComponent, "Success", tickr + " is ready for use.");
           props.onClose!(tickr);
         }
         else {
-          window.lyraProxy.invokeMethodAsync("Alert", "Warning", result.msg);
+          window.rrProxy.ReactRazor.Pages.Home.Interop.AlertAsync(window.rrComponent, "Warning", result.msg);
           props.onClose!();
         }
       });

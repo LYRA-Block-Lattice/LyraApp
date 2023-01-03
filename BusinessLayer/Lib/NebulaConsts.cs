@@ -31,7 +31,7 @@ namespace BusinessLayer.Lib
             },
             "devnet" => new[]
                 {
-                "L86h6zfhjC1crPnRwXwAdiLkazrmU85viDHLgXyw6jhow8CWswThiSJAAX5PDSFBWovqU3HuULzEHWs3UzsWM33XuVG1uL",
+                "LACbpXEdp85NFbyu6gH9Z4XDDHPRdugBXE7dwbomkiUaZoWkitJ1PFP9hTqPc3qdR1d7xo594TST8xQwW5EEfNZgZ2bxru",
                 },
             _ => throw new Exception($"unknown network id: {_config["network"]}")
         };            

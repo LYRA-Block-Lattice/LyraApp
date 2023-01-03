@@ -8,8 +8,8 @@ import "./SellTokenToToken.css";
 import SearchTokenInput from "../dup/SearchTokenInput";
 
 interface customWindow extends Window {
-  lyraSetProxy?: any;
-  lyraProxy?: any;
+  rrComponent?: any;
+  rrProxy?: any;
 }
 declare const window: customWindow;
 

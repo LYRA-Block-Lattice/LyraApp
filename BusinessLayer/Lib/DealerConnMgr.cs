@@ -99,7 +99,7 @@ namespace BusinessLayer.Lib
         /// <returns></returns>
         public DealerClient? GetPriceFeeder()
         {
-            if(_dealerClients.ContainsKey(_priceFeeder))
+            if(_dealerClients != null && _priceFeeder != null && _dealerClients.ContainsKey(_priceFeeder))
                 return _dealerClients[_priceFeeder];
 
             return null;

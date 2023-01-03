@@ -3,10 +3,9 @@ import { Autocomplete, TextField } from "@mui/material";
 import "./MintFiatToken.css";
 
 interface customWindow extends Window {
-  lyraSetProxy?: any;
-  lyraProxy?: any;
+  rrComponent?: any;
+  rrProxy?: any;
 }
-
 declare const window: customWindow;
 
 interface IToken {
@@ -28,7 +27,7 @@ const MintFiatToken: FunctionComponent<TokenMintProps> = props => {
   const [options, setOptions] = useState<IToken[]>([]);
 
   async function getTokens() {
-    let t = await window.lyraProxy.invokeMethodAsync("SearchToken", "fiat/", "Fiat");
+    let t = await window.rrProxy.ReactRazor.Pages.Home.Interop.SearchTokenAsync(window.rrComponent, "fiat/", "Fiat");
     var tkns = JSON.parse(t);
     setOptions(tkns);
   }
@@ -39,18 +38,18 @@ const MintFiatToken: FunctionComponent<TokenMintProps> = props => {
 
   const onMintClick = useCallback(() => {
     console.log("printing fiat...");
-    window.lyraProxy.invokeMethodAsync("PrintFiat", name, supply)
+    window.rrProxy.ReactRazor.Pages.Home.Interop.PrintFiatAsync(window.rrComponent, name, supply)
       .then(function (response) {
         return JSON.parse(response);
       })
       .then(function (result) {
         if (result.ret == "Success") {
           let tickr = name;
-          window.lyraProxy.invokeMethodAsync("Alert", "Success", tickr + " is ready for use.");
+          window.rrProxy.ReactRazor.Pages.Home.Interop.AlertAsync(window.rrComponent, "Success", tickr + " is ready for use.");
           props.onClose!(tickr);
         }
         else {
-          window.lyraProxy.invokeMethodAsync("Alert", "Warning", result.msg);
+          window.rrProxy.ReactRazor.Pages.Home.Interop.AlertAsync(window.rrComponent, "Warning", result.msg);
           props.onClose!();
         }
       });
