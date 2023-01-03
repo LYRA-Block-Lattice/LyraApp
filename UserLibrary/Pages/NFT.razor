@@ -195,7 +195,7 @@ else if (walletState.Value.wallet == null)
 		var wallet = walletState.Value.wallet;
 		var input = $"{wallet.AccountId}:{lsb.GetBlock().Hash}:{ipfscid}";
 		var signatures = Signatures.GetSignature(wallet.PrivateKey, input, wallet.AccountId);
-		var ret = await acac.CreateNFTMetaAsync(wallet.AccountId, signatures,
+		var ret = await acac.CreateNFTMetaIpfsAsync(wallet.AccountId, signatures,
 			name, desc, ipfscid);
 		dynamic qs = JObject.Parse(ret);
 		if(qs.ok == "true")

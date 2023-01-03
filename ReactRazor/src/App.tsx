@@ -147,10 +147,6 @@ function App() {
     }
   }, [pathname]);
 
-  window.lyraSetProxy = (dotnetHelper) => {
-    window.lyraProxy = dotnetHelper;
-  };
-
   return (
     <Routes>
       <Route path="/" element={<Empty />} />

@@ -6,6 +6,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<AddRazorSupportForMvc>true</AddRazorSupportForMvc>
 		<PackageOutputPath>C:\working\lyra-tools\UserLibrary</PackageOutputPath>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -29,6 +30,17 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Home.razor.js">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="wwwroot\" />
+	</ItemGroup>
+	
 	<!--<Target Name="npm restore" BeforeTargets="BeforeBuild">
 		<Exec Command="npm install" />
 	</Target>-->

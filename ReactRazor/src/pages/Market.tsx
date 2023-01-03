@@ -1,10 +1,31 @@
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent, useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import TxInfoBar from "../components/TxInfoBar";
 import "./Market.css";
 
+interface customWindow extends Window {
+  lyraSetProxy?: any;
+  lyraProxy?: any;
+}
+declare const window: customWindow;
+
 const Market: FunctionComponent = () => {
   const navigate = useNavigate();
+
+  const [nftcnt, setNftcnt] = useState(0);
+  const [totcnt, setTotcnt] = useState(0);
+  const [sellcnt, setSellcnt] = useState(0);
+  const [bidcnt, setBidcnt] = useState(0);
+
+  useEffect(() => {
+    window.lyraProxy.invokeMethodAsync("GetBalance")
+      .then((json) => JSON.parse(json))
+      .then((ret) => {
+        console.log(ret);
+        setNftcnt(ret.result.filter((a) => a.token.startsWith("nft/")).length);
+        setTotcnt(ret.result.filter((a) => a.token.startsWith("tot/") || a.token.startsWith("svc/")).length);
+      });
+  }, []);
 
   const onNFTCountClick = useCallback(() => {
     navigate("/redir");
@@ -87,13 +108,13 @@ const Market: FunctionComponent = () => {
               <div className="token-lists">
                 <button className="go-nft-button" onClick={onGoNFTButtonClick}>
                   <button className="nft-count" onClick={onNFTCountClick}>
-                    12
+                    {nftcnt}
                   </button>
                   <b className="nft-label">NFT</b>
                 </button>
                 <button className="go-nft-button" onClick={onGoTOTButtonClick}>
                   <button className="nft-count" onClick={onTOTCountClick}>
-                    3
+                    {totcnt}
                   </button>
                   <b className="nft-label">TOT</b>
                 </button>
@@ -102,7 +123,7 @@ const Market: FunctionComponent = () => {
                   onClick={onGoSellingButtonClick}
                 >
                   <button className="nft-count" onClick={onSellingCountClick}>
-                    0
+                    {sellcnt}
                   </button>
                   <b className="nft-label">Selling</b>
                 </button>
@@ -111,7 +132,7 @@ const Market: FunctionComponent = () => {
                   onClick={onGoBuyingButtonClick}
                 >
                   <button className="nft-count" onClick={onBuyingCountClick}>
-                    0
+                    {bidcnt}
                   </button>
                   <b className="nft-label">Buying</b>
                 </button>

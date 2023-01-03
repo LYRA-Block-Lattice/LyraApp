@@ -33,6 +33,11 @@ using System.Reflection.Metadata.Ecma335;
 using static MudBlazor.Colors;
 using Microsoft.Extensions.Configuration;
 using static MudBlazor.CategoryTypes;
+using System.Runtime.InteropServices.JavaScript;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Versioning;
+using System.Text.Json.Serialization.Metadata;
+using System.Text.Json.Serialization;
 
 namespace ReactRazor.Pages
 {
@@ -58,31 +63,74 @@ namespace ReactRazor.Pages
         private string LastAccountId { get; set; }
 
         private DotNetObjectReference<Home>? objRef;
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            objRef = DotNetObjectReference.Create(this);
-            base.OnInitialized();
+            if (OperatingSystem.IsBrowser())
+            {
+                await JSHost.ImportAsync("ReactRazor", "../_content/ReactRazor/Pages/Home.razor.js");
+                await Interop.OnInit(this);
+            }
         }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        [SupportedOSPlatform("browser")]
+        public partial class Interop
         {
-            if (firstRender)
+            [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, typeof(JsonTypeInfo))]
+            [DynamicDependency(DynamicallyAccessedMemberTypes.PublicMethods, typeof(JsonSerializerContext))]
+            static Interop()
             {
-                try
-                {
-                    LastAccountId = await localStorage.GetItemAsync<string>(_consts.AccountIdStorName);
-                    await JS.InvokeVoidAsync("loadScript", "_content/ReactRazor/static/js/main.js");
-                    await JS.InvokeAsync<string>("lyraSetProxy", objRef);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error loadScript: {ex.Message}");
-                }
-            //await JS.InvokeVoidAsync("bruic.openwallet", _react);
             }
 
-            await base.OnAfterRenderAsync(firstRender);
+            [JSImport("onInit", "ReactRazor")]
+            internal static partial Task OnInit([JSMarshalAs<JSType.Any>] object component);
+
+            [JSExport]
+            internal static void OnResults([JSMarshalAs<JSType.Any>] object component, string json)
+            {
+                Home detectHands = (Home)component;
+                //detectHands.DetectionResult = JsonSerializer.Deserialize<DetectionResult>(json, DetectionResult.SerializeOptions);
+                //Console.WriteLine("OnResults " + detectHands.DetectionResult!.Hands.Count);
+                detectHands.StateHasChanged();
+            }
         }
+
+        //protected override async Task OnInitializedAsync()
+        //{
+        //    objRef = DotNetObjectReference.Create(this);
+
+        //    try
+        //    {
+        //        LastAccountId = await localStorage.GetItemAsync<string>(_consts.AccountIdStorName);
+        //        await JS.InvokeVoidAsync("loadScript", "_content/ReactRazor/static/js/main.js");
+        //        await JS.InvokeAsync<string>("lyraSetProxy", objRef);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error loadScript: {ex.Message}");
+        //    }
+
+        //    await base.OnInitializedAsync();
+        //}
+
+        //protected override async Task OnAfterRenderAsync(bool firstRender)
+        //{
+        //    if (firstRender)
+        //    {
+        //        //try
+        //        //{
+        //        //    LastAccountId = await localStorage.GetItemAsync<string>(_consts.AccountIdStorName);
+        //        //    await JS.InvokeVoidAsync("loadScript", "_content/ReactRazor/static/js/main.js");
+        //        //    await JS.InvokeAsync<string>("lyraSetProxy", objRef);
+        //        //}
+        //        //catch (Exception ex)
+        //        //{
+        //        //    Console.WriteLine($"Error loadScript: {ex.Message}");
+        //        //}
+        //    //await JS.InvokeVoidAsync("bruic.openwallet", _react);
+        //    }
+
+        //    await base.OnAfterRenderAsync(firstRender);
+        //}
 
         // standard api return
         private string returnError(string errorMsg)
