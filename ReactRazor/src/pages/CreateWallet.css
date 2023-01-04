@@ -30,7 +30,7 @@
   letter-spacing: 0.41px;
   line-height: 22px;
   font-weight: 600;
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
   color: var(--color-white1);
   text-align: center;
   display: inline-block;
@@ -49,14 +49,14 @@
 .open-wallet-link {
   position: relative;
   text-align: center;
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
 }
 .open-wallet-link {
   cursor: pointer;
   border: 0;
   padding: 0;
   background-color: transparent;
-  font-size: var(--body-s-size);
+  font-size: var(--body-b-size);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 600;

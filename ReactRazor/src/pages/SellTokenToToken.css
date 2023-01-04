@@ -4,7 +4,7 @@
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
   display: inline-block;
 }
 .to-sell-token {

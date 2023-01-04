@@ -18,11 +18,11 @@ import CreateOrderSuccessForm from "./pages/CreateOrderSuccessForm";
 import PreviewSellOrderForm from "./pages/PreviewSellOrderForm";
 import CreateNFTForm from "./pages/CreateNFTForm";
 import StartToCreateOrder from "./pages/StartToCreateOrder";
-import TransactionHistory from "./pages/TransactionHistory";
 import Redir from "./pages/Redir";
 import Market from "./pages/Market";
 import CreateWallet from "./pages/CreateWallet";
 import OpenWallet from "./pages/OpenWallet";
+import TransactionHistory from "./pages/TransactionHistory";
 import OldV1UI from "./pages/OldV1UI";
 import RedirBlazor from "./pages/RedirBlazor";
 import { useEffect } from "react";
@@ -100,10 +100,6 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/transactionhistory":
-        title = "";
-        metaDescription = "";
-        break;
       case "/redir":
         title = "";
         metaDescription = "";
@@ -117,6 +113,10 @@ function App() {
         metaDescription = "";
         break;
       case "/open-wallet":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/transactionhistory":
         title = "";
         metaDescription = "";
         break;
@@ -182,6 +182,8 @@ function App() {
       <Route path="/create-wallet" element={<CreateWallet />} />
 
       <Route path="/open-wallet" element={<OpenWallet />} />
+
+      <Route path="/transactionhistory" element={<TransactionHistory />} />
 
       <Route path="/oldv1ui" element={<OldV1UI />} />
     </Routes>

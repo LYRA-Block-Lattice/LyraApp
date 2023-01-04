@@ -17,11 +17,8 @@
   justify-content: center;
   gap: 22px;
 }
-.div,
-.rectangle {
+.rectangle2 {
   position: absolute;
-}
-.rectangle {
   height: 100%;
   width: 100%;
   top: 0;
@@ -31,7 +28,8 @@
   border-radius: var(--br-lg);
   background-color: var(--sell1);
 }
-.div {
+.div6 {
+  position: absolute;
   top: calc(50% - 9px);
   left: 38.81%;
   letter-spacing: 0.41px;
@@ -58,7 +56,7 @@
   flex-shrink: 0;
   overflow: hidden;
 }
-.rectangle1 {
+.rectangle3 {
   position: absolute;
   height: 100%;
   width: 100%;
@@ -69,7 +67,7 @@
   border-radius: var(--br-lg);
   background-color: rgba(223, 224, 229, 0.5);
 }
-.div1 {
+.div7 {
   position: absolute;
   top: calc(50% - 9px);
   left: 27.96%;
@@ -104,7 +102,7 @@
   width: 93px;
   height: 24px;
   flex-shrink: 0;
-  color: var(--color-gray-11);
+  color: var(--color-gray-1);
 }
 .group-parent {
   height: 46px;
@@ -137,7 +135,7 @@
   justify-content: flex-start;
   font-size: var(--headline-s1-size);
 }
-.rectangle2 {
+.rectangle4 {
   position: absolute;
   height: 100%;
   width: 100%;
@@ -164,7 +162,7 @@
   top: calc(50% + 2px);
   font-size: var(--caption1-size);
   font-weight: 500;
-  color: var(--color-gray-11);
+  color: var(--color-gray-1);
 }
 .group2 {
   position: absolute;
@@ -175,7 +173,7 @@
   bottom: 50.88%;
   left: 4.66%;
   overflow: hidden;
-  font-size: var(--body-s-size);
+  font-size: var(--body-b-size);
 }
 .successful {
   position: absolute;
@@ -208,7 +206,7 @@
   left: 4.66%;
   overflow: hidden;
 }
-.div2 {
+.div8 {
   position: absolute;
   top: calc(50% - 9px);
   left: 23.4%;
@@ -229,7 +227,7 @@
   overflow: hidden;
   max-height: 100%;
 }
-.div3,
+.div9,
 .parent {
   position: absolute;
 }
@@ -242,7 +240,7 @@
   left: 39.36%;
   overflow: hidden;
 }
-.div3 {
+.div9 {
   top: calc(50% - 9px);
   left: 39.29%;
   letter-spacing: 0.41px;
@@ -320,7 +318,7 @@
 .receivedetailcard-parent {
   align-items: flex-start;
   gap: var(--gap-lg);
-  font-size: var(--regular-body-size);
+  font-size: var(--other-m-size);
 }
 .transactionhistory {
   position: relative;
@@ -334,5 +332,5 @@
   text-align: left;
   font-size: var(--caption1-size);
   color: var(--color-black1);
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
 }

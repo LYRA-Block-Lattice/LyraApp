@@ -7,13 +7,13 @@
   width: 119px;
 }
 .catalogselection,
-.tradecatalog {
+.tradecatalog1 {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
-.tradecatalog {
+.tradecatalog1 {
   background-color: var(--color-white1);
   width: 110px;
   overflow: hidden;
@@ -24,7 +24,7 @@
 .catalogselection {
   gap: var(--gap-4xs);
   text-align: center;
-  font-size: var(--body-s-size);
+  font-size: var(--body-b-size);
   color: var(--black-000000100);
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
 }
