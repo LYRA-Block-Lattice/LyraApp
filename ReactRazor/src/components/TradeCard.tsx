@@ -36,7 +36,7 @@ const TradeCard: FunctionComponent<TradeCardType> = ({
               <img
                 className="order-image-item"
                 alt=""
-                src="../asserts/arrow-1.svg"
+                src="_content/ReactRazor/asserts/arrow-1.svg"
               />
               <img
                 className="icbaseline-generating-tokens-icon2"
@@ -53,7 +53,7 @@ const TradeCard: FunctionComponent<TradeCardType> = ({
           <div className="trade-parent">
             <b className="trade">Trade</b>
             <b className="trade">{biding}</b>
-            <img className="frame-item" alt="" src="../asserts/arrow-2.svg" />
+            <img className="frame-item" alt="" src="_content/ReactRazor/asserts/arrow-2.svg" />
             <b className="tetherusdt1">{offering}</b>
           </div>
           <div className="title-section-item" />
