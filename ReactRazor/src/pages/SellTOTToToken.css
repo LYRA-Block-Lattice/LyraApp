@@ -1,6 +1,6 @@
 .selecttypeoftot,
-.tot-description2,
-.tot-name3 {
+.tot-description1,
+.tot-name2 {
   background-color: var(--color-beige);
   border-radius: var(--br-sm);
   width: 301px;
@@ -17,17 +17,17 @@
 .selecttypeoftot {
   gap: var(--gap-lg);
 }
-.tot-description2,
-.tot-name3 {
+.tot-description1,
+.tot-name2 {
   border: 0;
   font-family: var(--headline-s1);
   font-size: var(--body-b-size);
 }
-.tot-description2 {
+.tot-description1 {
   height: 124px;
   align-items: flex-start;
 }
-.utility-button3 {
+.utility-button2 {
   position: relative;
   font-size: var(--font-size-base);
   letter-spacing: 0.41px;
@@ -38,7 +38,7 @@
   text-align: center;
   display: inline-block;
 }
-.prepare-sell-order-button8 {
+.prepare-sell-order-button5 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-lg);
@@ -53,34 +53,34 @@
   align-items: center;
   justify-content: center;
 }
-.note-i-need-to-send-trade-sec3,
-.secondary-button5 {
+.note-i-need-to-send-trade-sec2,
+.secondary-button3 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
   font-family: var(--headline-s1);
   display: inline-block;
 }
-.note-i-need-to-send-trade-sec3 {
+.note-i-need-to-send-trade-sec2 {
   font-size: var(--font-size-base);
   color: var(--black-000000100);
   text-align: left;
   width: 292px;
 }
-.secondary-button5 {
+.secondary-button3 {
   font-size: var(--body-b-size);
   font-weight: 500;
   color: var(--color-white1);
   text-align: center;
 }
 .createtottosellform1,
-.prepare-sell-order-button9 {
+.prepare-sell-order-button6 {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
   align-items: center;
 }
-.prepare-sell-order-button9 {
+.prepare-sell-order-button6 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-3xl);
@@ -110,7 +110,7 @@
   display: inline-block;
   width: 296px;
 }
-.searchtokenbyname1,
+.searchtokenbyname,
 .selltottotoken {
   background-color: var(--color-white1);
   overflow: hidden;

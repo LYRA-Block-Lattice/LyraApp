@@ -5,21 +5,21 @@ import {
   useLocation,
 } from "react-router-dom";
 import Empty from "./pages/Empty";
+import ViewTradesForm from "./pages/ViewTradesForm";
 import MintFiatToken from "./pages/MintFiatToken";
-import CreateTokenForm from "./pages/CreateTokenForm";
 import CreateTOTForm from "./pages/CreateTOTForm";
-import SellTokenToTOT from "./pages/SellTokenToTOT";
 import SellTOTToTOT from "./pages/SellTOTToTOT";
 import SellTOTToToken from "./pages/SellTOTToToken";
+import SellTokenToTOT from "./pages/SellTokenToTOT";
 import SellTokenToToken from "./pages/SellTokenToToken";
-import ViewTradesForm from "./pages/ViewTradesForm";
 import ViewOrdersForm from "./pages/ViewOrdersForm";
+import CreateNFTForm from "./pages/CreateNFTForm";
 import CreateOrderSuccessForm from "./pages/CreateOrderSuccessForm";
 import PreviewSellOrderForm from "./pages/PreviewSellOrderForm";
-import CreateNFTForm from "./pages/CreateNFTForm";
+import CreateTokenForm from "./pages/CreateTokenForm";
 import StartToCreateOrder from "./pages/StartToCreateOrder";
-import Redir from "./pages/Redir";
 import Market from "./pages/Market";
+import Redir from "./pages/Redir";
 import CreateWallet from "./pages/CreateWallet";
 import OpenWallet from "./pages/OpenWallet";
 import TransactionHistory from "./pages/TransactionHistory";
@@ -47,19 +47,15 @@ function App() {
         title = "";
         metaDescription = "";
         break;
+      case "/viewtradesform":
+        title = "";
+        metaDescription = "";
+        break;
       case "/mint-fiat-token":
         title = "";
         metaDescription = "";
         break;
-      case "/createtokenform":
-        title = "";
-        metaDescription = "";
-        break;
       case "/createtotform":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/selltokentotot":
         title = "";
         metaDescription = "";
         break;
@@ -71,15 +67,19 @@ function App() {
         title = "";
         metaDescription = "";
         break;
+      case "/selltokentotot":
+        title = "";
+        metaDescription = "";
+        break;
       case "/selltokentotoken":
         title = "";
         metaDescription = "";
         break;
-      case "/viewtradesform":
+      case "/viewordersform":
         title = "";
         metaDescription = "";
         break;
-      case "/viewordersform":
+      case "/createnftform":
         title = "";
         metaDescription = "";
         break;
@@ -91,7 +91,7 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/createnftform":
+      case "/createtokenform":
         title = "";
         metaDescription = "";
         break;
@@ -99,11 +99,11 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/redir":
+      case "/market":
         title = "";
         metaDescription = "";
         break;
-      case "/market":
+      case "/redir":
         title = "";
         metaDescription = "";
         break;
@@ -143,23 +143,23 @@ function App() {
     <Routes>
       <Route path="/" element={<Empty />} />
 
+      <Route path="/viewtradesform" element={<ViewTradesForm />} />
+
       <Route path="/mint-fiat-token" element={<MintFiatToken />} />
 
-      <Route path="/createtokenform" element={<CreateTokenForm />} />
-
       <Route path="/createtotform" element={<CreateTOTForm />} />
-
-      <Route path="/selltokentotot" element={<SellTokenToTOT />} />
 
       <Route path="/selltottotot" element={<SellTOTToTOT />} />
 
       <Route path="/selltottotoken" element={<SellTOTToToken />} />
 
+      <Route path="/selltokentotot" element={<SellTokenToTOT />} />
+
       <Route path="/selltokentotoken" element={<SellTokenToToken />} />
 
-      <Route path="/viewtradesform" element={<ViewTradesForm />} />
-
       <Route path="/viewordersform" element={<ViewOrdersForm />} />
+
+      <Route path="/createnftform" element={<CreateNFTForm />} />
 
       <Route
         path="/createordersuccessform"
@@ -168,13 +168,13 @@ function App() {
 
       <Route path="/previewsellorderform" element={<PreviewSellOrderForm />} />
 
-      <Route path="/createnftform" element={<CreateNFTForm />} />
+      <Route path="/createtokenform" element={<CreateTokenForm />} />
 
       <Route path="/starttocreateorder" element={<StartToCreateOrder />} />
 
-      <Route path="/redir" element={<Redir />} />
-
       <Route path="/market" element={<Market />} />
+
+      <Route path="/redir" element={<Redir />} />
 
       <Route path="/create-wallet" element={<CreateWallet />} />
 

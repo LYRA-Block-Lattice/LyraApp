@@ -1,7 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Myriad+Pro:wght@400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@100;400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=SF+Pro+Text:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Myriad+Pro:wght@400&display=swap");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
 body {
@@ -10,10 +10,10 @@ body {
 }
 :root {
   /* fonts */
-  --font-myriad-pro: "Myriad Pro";
-  --headline-s1: "SF Pro Display";
   --font-calibri: Calibri;
+  --headline-s1: "SF Pro Display";
   --font-sf-pro-text: "SF Pro Text";
+  --font-myriad-pro: "Myriad Pro";
 
   /* font sizes */
   --font-size-2xs: 10px;
@@ -30,11 +30,6 @@ body {
 
   /* Colors */
   --color-white1: #fff;
-  --black-000000100: #000;
-  --sell1: #fa7268;
-  --secondary: #ff4081;
-  --tertiary: #1ec8a5;
-  --primary: #594ae2;
   --color-gray-100: #dfdfdf;
   --color-gray-200: #b6e0ff;
   --color-gray-300: #979797;
@@ -43,8 +38,13 @@ body {
   --color-black1: #1b2749;
   --color-gray-700: rgba(255, 255, 255, 0);
   --text-secondary1: rgba(0, 0, 0, 0.54);
-  --color-beige: #f6ffde;
+  --black-000000100: #000;
   --buy1: #7ed321;
+  --sell1: #fa7268;
+  --secondary: #ff4081;
+  --tertiary: #1ec8a5;
+  --primary: #594ae2;
+  --color-beige: #f6ffde;
 
   /* Gaps */
   --gap-0: 0px;

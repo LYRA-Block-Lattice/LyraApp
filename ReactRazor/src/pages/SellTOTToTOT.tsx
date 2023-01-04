@@ -19,26 +19,26 @@ const SellTOTToTOT: FunctionComponent = () => {
   return (
     <>
       <div className="selltottotot">
-        <form className="togettotform1">
-          <div className="to-get-totskusvc1">To get [TOT/SKU/SVC]</div>
-          <input className="tot-name2" type="text" placeholder="Name" />
+        <form className="togettotform">
+          <div className="to-get-totskusvc">To get [TOT/SKU/SVC]</div>
+          <input className="tot-name1" type="text" placeholder="Name" />
           <input
-            className="tot-description1"
+            className="tot-description"
             type="text"
             placeholder="Public Description, seen by everyone"
           />
           <button
-            className="prepare-sell-order-button6"
+            className="prepare-sell-order-button3"
             onClick={openSignTradeSecretPopup}
           >
-            <div className="utility-button2">Sign trade secret</div>
+            <div className="utility-button1">Sign trade secret</div>
           </button>
-          <div className="note-i-need-to-send-trade-sec2">
+          <div className="note-i-need-to-send-trade-sec1">
             Note: This [tot/sku/svc] share the same trade secret of selling
             item.
           </div>
-          <button className="prepare-sell-order-button7">
-            <div className="secondary-button4">Create TOT</div>
+          <button className="prepare-sell-order-button4">
+            <div className="secondary-button2">Create TOT</div>
           </button>
         </form>
         <PriceAndCollateralForm offering="offering" biding="biding" />

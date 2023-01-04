@@ -25,7 +25,7 @@
   text-align: center;
   display: inline-block;
 }
-.prepare-sell-order-button2 {
+.prepare-sell-order-button1 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-lg);
@@ -41,7 +41,7 @@
   justify-content: center;
 }
 .note-i-need-to-send-trade-sec,
-.secondary-button2 {
+.secondary-button1 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
@@ -54,7 +54,7 @@
   text-align: left;
   width: 292px;
 }
-.secondary-button2 {
+.secondary-button1 {
   font-size: var(--body-b-size);
   font-weight: 500;
   color: var(--color-white1);
@@ -62,13 +62,13 @@
 }
 .createtotform,
 .createtottosellform,
-.prepare-sell-order-button3 {
+.prepare-sell-order-button2 {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
   align-items: center;
 }
-.prepare-sell-order-button3 {
+.prepare-sell-order-button2 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-3xl);

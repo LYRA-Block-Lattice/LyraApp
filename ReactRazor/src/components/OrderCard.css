@@ -1,17 +1,17 @@
-.icbaseline-generating-tokens-icon3 {
+.icbaseline-generating-tokens-icon4 {
   position: relative;
   width: 32px;
   height: 32px;
   flex-shrink: 0;
   overflow: hidden;
 }
-.order-image-inner {
+.arrow-icon {
   position: relative;
   width: 19.5px;
   height: 7.36px;
   flex-shrink: 0;
 }
-.order-image2 {
+.order-image3 {
   cursor: pointer;
   border: 0;
   padding: 0;
@@ -27,7 +27,7 @@
   justify-content: center;
   gap: var(--gap-xs);
 }
-.open2 {
+.open3 {
   position: relative;
   font-size: var(--caption1-size);
   display: inline-block;
@@ -35,7 +35,7 @@
   color: var(--color-white1);
   text-align: center;
 }
-.order-status2 {
+.order-status3 {
   align-self: stretch;
   border-radius: 0 0 var(--br-md) var(--br-md);
   background-color: var(--info1);
@@ -46,39 +46,39 @@
   align-items: center;
   justify-content: center;
 }
-.banner-image2,
-.order-banner2 {
+.banner-image3,
+.order-banner3 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
-.order-banner2 {
+.order-banner3 {
   gap: var(--gap-0);
 }
-.banner-image2 {
+.banner-image3 {
   cursor: pointer;
   border: 0;
   padding: 0;
   background-color: transparent;
 }
-.sell2 {
+.sell3 {
   position: relative;
   display: inline-block;
 }
-.frame-inner {
+.frame-child1 {
   position: relative;
   width: 12.5px;
   height: 7.36px;
   flex-shrink: 0;
 }
-.tetherusdt2 {
+.tetherusdt3 {
   position: relative;
   display: inline-block;
   text-align: left;
 }
-.sell-group {
+.sell-container {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -86,7 +86,7 @@
   gap: var(--gap-md);
   font-size: var(--font-size-xl);
 }
-.title-section-inner {
+.line-div {
   position: relative;
   border-top: 1px solid var(--text-secondary1);
   box-sizing: border-box;
@@ -94,37 +94,37 @@
   height: 1px;
   flex-shrink: 0;
 }
-.am-frame,
-.block12,
-.block22 {
+.block13,
+.block23,
+.frame-div {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.am-frame {
+.frame-div {
   align-self: stretch;
   background-color: var(--color-white1);
   overflow: hidden;
   flex-direction: row;
   text-align: left;
 }
-.block12,
-.block22 {
+.block13,
+.block23 {
   flex-direction: column;
   gap: var(--gap-0);
 }
-.block22 {
+.block23 {
   overflow: hidden;
   align-items: flex-end;
 }
-.details-section-inner {
+.details-section-child1 {
   position: relative;
   width: 4px;
   height: 15px;
   flex-shrink: 0;
   overflow: hidden;
 }
-.block32 {
+.block33 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -132,31 +132,31 @@
   justify-content: flex-start;
   gap: var(--gap-0);
 }
-.details-section2,
-.title-section2 {
+.details-section3,
+.title-section3 {
   display: flex;
   justify-content: flex-start;
   gap: var(--gap-sm);
 }
-.details-section2 {
+.details-section3 {
   align-self: stretch;
   overflow: hidden;
   flex-direction: row;
   align-items: center;
 }
-.title-section2 {
+.title-section3 {
   border-radius: var(--br-xs) var(--br-xs) 0 0;
   flex-direction: column;
   align-items: flex-start;
 }
-.order-brief-section2 {
+.order-brief-section3 {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
   gap: var(--gap-xl);
 }
-.width-controller2 {
+.width-controller3 {
   position: relative;
   border-top: 1px solid var(--color-gray-700);
   box-sizing: border-box;
@@ -164,19 +164,19 @@
   height: 1px;
   flex-shrink: 0;
 }
-.ordercard2,
-.trades-section2 {
+.ordercard3,
+.trades-section3 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.trades-section2 {
+.trades-section3 {
   align-self: stretch;
   flex-shrink: 0;
   overflow: hidden;
 }
-.ordercard2 {
+.ordercard3 {
   border-radius: var(--br-md);
   background-color: var(--color-white1);
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);

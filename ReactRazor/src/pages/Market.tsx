@@ -335,6 +335,76 @@ const Market: FunctionComponent = () => {
             <div className="width-controller" />
           </div>
         </div>
+        <div className="ordercard">
+          <div className="order-brief-section">
+            <button className="banner-image">
+              <div className="order-banner">
+                <button className="order-image">
+                  <img
+                    className="icbaseline-generating-tokens-icon"
+                    alt=""
+                    src="_content/ReactRazor/asserts/icbaselinegeneratingtokens6.svg"
+                  />
+                  <img
+                    className="order-image-child"
+                    alt=""
+                    src="_content/ReactRazor/asserts/arrow-1.svg"
+                  />
+                  <img
+                    className="icbaseline-generating-tokens-icon"
+                    alt=""
+                    src="_content/ReactRazor/asserts/carbonuserservicedesk6.svg"
+                  />
+                </button>
+                <div className="order-status">
+                  <b className="open">Open</b>
+                </div>
+              </div>
+            </button>
+            <div className="title-section">
+              <div className="sell-parent">
+                <b className="btc">Sell</b>
+                <b className="btc">BTC</b>
+                <img
+                  className="frame-child"
+                  alt=""
+                  src="_content/ReactRazor/asserts/arrow-2.svg"
+                />
+                <b className="tetherusdt">tether/USDT</b>
+              </div>
+              <div className="title-section-child" />
+              <div className="am-wrapper">
+                <div className="btc">12/29/2022 10:25:37 AM</div>
+              </div>
+              <div className="details-section">
+                <div className="block1">
+                  <div className="btc">Price</div>
+                  <div className="btc">Limit Min</div>
+                  <div className="btc">Sold</div>
+                </div>
+                <div className="block2">
+                  <div className="btc">10,323</div>
+                  <div className="btc">3.2</div>
+                  <div className="btc">123</div>
+                </div>
+                <div className="details-section-child" />
+                <div className="block3">
+                  <div className="btc">Amount</div>
+                  <div className="btc">Limit Max</div>
+                  <div className="btc">Shelf</div>
+                </div>
+                <div className="block2">
+                  <div className="btc">1113.2</div>
+                  <div className="btc">3.2</div>
+                  <div className="btc">123</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="trades-section">
+            <div className="width-controller" />
+          </div>
+        </div>
       </div>
     </div>
   );
