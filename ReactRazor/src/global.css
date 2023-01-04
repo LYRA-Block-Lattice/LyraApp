@@ -11,17 +11,16 @@ body {
 :root {
   /* fonts */
   --font-myriad-pro: "Myriad Pro";
-  --caption1: "SF Pro Display";
+  --headline-s1: "SF Pro Display";
   --font-calibri: Calibri;
   --font-sf-pro-text: "SF Pro Text";
 
   /* font sizes */
-  --font-size-3xs: 10px;
-  --other-11-size: 11px;
+  --font-size-2xs: 10px;
   --caption1-size: 12px;
-  --regular-body-size: 13px;
+  --other-m-size: 13px;
   --font-size-base: 14px;
-  --body-s-size: 15px;
+  --body-b-size: 15px;
   --font-size-xl: 16px;
   --headline-s1-size: 17px;
   --font-size-3xl: 18px;
@@ -39,14 +38,13 @@ body {
   --color-gray-100: #dfdfdf;
   --color-gray-200: #b6e0ff;
   --color-gray-300: #979797;
-  --color-gray-11: #7f8592;
+  --color-gray-1: #7f8592;
   --info1: #2196f3;
   --color-black1: #1b2749;
   --color-gray-700: rgba(255, 255, 255, 0);
   --text-secondary1: rgba(0, 0, 0, 0.54);
   --color-beige: #f6ffde;
   --buy1: #7ed321;
-  --color-green-200: #55b944;
 
   /* Gaps */
   --gap-0: 0px;

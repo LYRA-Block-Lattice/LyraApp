@@ -1,29 +1,29 @@
-.icbaseline-generating-tokens-icon2 {
+.icbaseline-generating-tokens-icon4 {
   position: relative;
   width: 32px;
   height: 32px;
   flex-shrink: 0;
   overflow: hidden;
 }
-.token {
+.token1 {
   position: relative;
   font-size: var(--font-size-3xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
   color: var(--color-white1);
   text-align: center;
   width: 71px;
 }
-.select-token-catalog-button,
-.token-wrapper {
+.select-token-catalog-button5,
+.token-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
-.select-token-catalog-button {
+.select-token-catalog-button5 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-7xl) var(--padding-4xl);

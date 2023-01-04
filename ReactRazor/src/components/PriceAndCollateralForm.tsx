@@ -39,7 +39,7 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
         size="medium"
         margin="none"
       />
-      <div className="amount">Amount:</div>
+      <div className="collateral-in-lyr">Amount:</div>
       <TextField
         className="sellatprice"
         sx={{ width: 301 }}
@@ -76,7 +76,7 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
           margin="none"
         />
       </div>
-      <div className="amount">Collateral (in LYR):</div>
+      <div className="collateral-in-lyr">Collateral (in LYR):</div>
       <div className="collateral-section">
         <TextField
           className="sellatprice"
@@ -94,7 +94,7 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
           <div className="set-the-price-one">$103</div>
         </div>
       </div>
-      <div className="amount">Create order in DAO:</div>
+      <div className="collateral-in-lyr">Create order in DAO:</div>
       <Autocomplete
         sx={{ width: 301 }}
         disablePortal
@@ -112,7 +112,7 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
         )}
         size="medium"
       />
-      <div className="amount">
+      <div className="collateral-in-lyr">
         Current dealer is [dealer name]. You will contact buyers through the
         dealer.
       </div>

@@ -22,19 +22,19 @@ const SelectTokenCatalogButton: FunctionComponent<
     disabled,
   ]);
   return (
-    <button className="select-token-catalog-button"
+    <button className="select-token-catalog-button5"
       onClick={e => tokenClicked(token)}
       style={selectTokenButtonStyle} 
       ref={xref}
       id={`${act}-${token}`}
       >
       <img
-        className="icbaseline-generating-tokens-icon2"
+        className="icbaseline-generating-tokens-icon4"
         alt=""
         src={icbaselineGeneratingToken}
       />
-      <div className="token-wrapper">
-        <b className="token">{token}</b>
+      <div className="token-container">
+        <b className="token1">{token}</b>
       </div>
     </button>
   );

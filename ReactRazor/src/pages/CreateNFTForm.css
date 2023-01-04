@@ -12,7 +12,7 @@
 }
 .or {
   position: relative;
-  font-size: var(--body-s-size);
+  font-size: var(--body-b-size);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
@@ -34,11 +34,11 @@
 }
 .secondary-button7 {
   position: relative;
-  font-size: var(--body-s-size);
+  font-size: var(--body-b-size);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
   color: var(--color-white1);
   text-align: center;
   display: inline-block;
@@ -72,5 +72,5 @@
   text-align: left;
   font-size: var(--font-size-5xl);
   color: var(--black-000000100);
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
 }

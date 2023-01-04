@@ -12,7 +12,7 @@ const CreateOrderSuccessForm: FunctionComponent = () => {
   return (
     <div className="createordersuccessform">
       <div className="success">Success!</div>
-      <img className="illus8-icon" alt="" src="_content/ReactRazor/asserts/illus8.svg" />
+      <img className="illus8-icon" alt="" src="../asserts/illus8.svg" />
       <div className="you-order-tx-hash-is">You order TX Hash is:</div>
       <div className="blvm6g1jjkwuz8ocens7fuuswjqdr3">
         BLVm6g1JJkWUZ8oCenS7FuusWJQdR3deCwtRk6U7Rt8L

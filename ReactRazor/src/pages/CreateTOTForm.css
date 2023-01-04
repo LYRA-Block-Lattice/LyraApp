@@ -4,7 +4,7 @@
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
   color: var(--black-000000100);
   text-align: left;
   display: inline-block;
@@ -20,7 +20,7 @@
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
   color: var(--color-white1);
   text-align: center;
   display: inline-block;
@@ -45,7 +45,7 @@
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
   display: inline-block;
 }
 .note-i-need-to-send-trade-sec {
@@ -55,7 +55,7 @@
   width: 292px;
 }
 .secondary-button2 {
-  font-size: var(--body-s-size);
+  font-size: var(--body-b-size);
   font-weight: 500;
   color: var(--color-white1);
   text-align: center;

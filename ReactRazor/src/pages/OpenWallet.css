@@ -39,7 +39,7 @@
   letter-spacing: 0.41px;
   line-height: 22px;
   font-weight: 600;
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
   color: var(--color-white1);
   text-align: center;
   display: inline-block;
@@ -62,14 +62,14 @@
 .sign-up1 {
   letter-spacing: 0.41px;
   line-height: 18px;
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
   text-align: center;
   display: inline-block;
 }
 .sign-up1 {
-  font-size: var(--body-s-size);
+  font-size: var(--body-b-size);
   font-weight: 600;
-  color: var(--color-gray-11);
+  color: var(--color-gray-1);
 }
 .forgot-password-copy-2 {
   font-size: var(--caption1-size);
@@ -97,5 +97,5 @@
   text-align: center;
   font-size: var(--large-title-size);
   color: var(--sell1);
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
 }

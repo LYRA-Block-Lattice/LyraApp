@@ -24,8 +24,8 @@
 .tot-description4 {
   border: 0;
   background-color: var(--color-beige);
-  font-family: var(--caption1);
-  font-size: var(--body-s-size);
+  font-family: var(--headline-s1);
+  font-size: var(--body-b-size);
   border-radius: var(--br-sm);
   width: 301px;
   height: 124px;
@@ -47,7 +47,7 @@
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
   color: var(--color-white1);
   text-align: center;
   display: inline-block;
@@ -81,5 +81,5 @@
   text-align: left;
   font-size: var(--font-size-5xl);
   color: var(--black-000000100);
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
 }

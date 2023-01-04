@@ -41,7 +41,7 @@
 .secondary-button6 {
   font-size: var(--font-size-3xl);
   font-weight: 500;
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
   color: var(--color-white1);
   text-align: center;
 }
@@ -74,5 +74,5 @@
   text-align: center;
   font-size: var(--font-size-base);
   color: var(--black-000000100);
-  font-family: var(--caption1);
+  font-family: var(--headline-s1);
 }

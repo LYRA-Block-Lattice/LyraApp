@@ -15,8 +15,8 @@ const ViewTradesForm: FunctionComponent = () => {
         time="12/29/2022 10:25:37 AM"
         price="10,323"
         amount="1113.2"
-        bidingImg="_content/ReactRazor/asserts/icbaselinegeneratingtokens.svg"
-        offeringImg="_content/ReactRazor/asserts/carbonuserservicedesk.svg"
+        bidingImg="../asserts/icbaselinegeneratingtokens.svg"
+        offeringImg="../asserts/carbonuserservicedesk.svg"
       />
     </div>
   );
