@@ -65,6 +65,7 @@ namespace ReactRazor.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            LastAccountId = await localStorage.GetItemAsync<string>(_consts.AccountIdStorName);
             if (OperatingSystem.IsBrowser())
             {
                 await JSHost.ImportAsync("ReactRazor", "../_content/ReactRazor/Pages/Home.razor.js");
@@ -83,17 +84,6 @@ namespace ReactRazor.Pages
 
             [JSImport("onInit", "ReactRazor")]
             internal static partial Task OnInit([JSMarshalAs<JSType.Any>] object component);
-
-            [JSExport]
-            internal static void OnResults([JSMarshalAs<JSType.Any>] object component, string json)
-            {
-                Home detectHands = (Home)component;
-
-                Console.WriteLine("called from js to dotnet!");
-                //detectHands.DetectionResult = JsonSerializer.Deserialize<DetectionResult>(json, DetectionResult.SerializeOptions);
-                //Console.WriteLine("OnResults " + detectHands.DetectionResult!.Hands.Count);
-                detectHands.StateHasChanged();
-            }
 
             [JSExport]
             public static Task<string> RedirAsync([JSMarshalAs<JSType.Any>] object component, string path)
@@ -119,12 +109,11 @@ namespace ReactRazor.Pages
             public static async Task<string> GetBalancesAsync([JSMarshalAs<JSType.Any>] object component)
             {
                 var home = (Home)component;
-                var LastAccountId = await home.localStorage.GetItemAsync<string>(home._consts.AccountIdStorName);
 
-                if (string.IsNullOrWhiteSpace(LastAccountId))
+                if (string.IsNullOrWhiteSpace(home.LastAccountId))
                     return returnError("Wallet not exists");
 
-                var lasttx = await home.lyraApi.GetLastBlockAsync(LastAccountId);
+                var lasttx = await home.lyraApi.GetLastBlockAsync(home.LastAccountId);
                 if (lasttx.Successful())
                 {
                     var balances = lasttx.As<TransactionBlock>().Balances.ToDecimalDict();
@@ -231,6 +220,10 @@ namespace ReactRazor.Pages
             public static async Task<string?> SearchTokenForAccountAsync([JSMarshalAs<JSType.Any>] object component, string? q, string? cat)
             {
                 var home = (Home)component;
+
+                if (string.IsNullOrWhiteSpace(home.LastAccountId))
+                    return returnError("Wallet not exists");
+
                 var tokens = await home.lyraApi.FindTokensForAccountAsync(home.LastAccountId, q, cat);
                 return tokens;
             }
@@ -301,6 +294,10 @@ namespace ReactRazor.Pages
             {
                 // get all current trades
                 var home = (Home)component;
+
+                if (string.IsNullOrWhiteSpace(home.LastAccountId))
+                    return returnError("Wallet not exists");
+
                 var ret = await home.lyraApi.GetUniOrdersByOwnerAsync(home.LastAccountId);
                 if (ret.Successful())
                 {

@@ -53,7 +53,7 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
       var tt = await window.rrProxy.ReactRazor.Pages.Home.Interop.GetTradesAsync(window.rrComponent, orderid);
       var ret = JSON.parse(tt);
       if (ret.ret == "Success") {
-        setTrades(ret.trades);
+        setTrades(ret.result);
       }
       else {
         window.rrProxy.ReactRazor.Pages.Home.Interop.AlertAsync(window.rrComponent, "Warning", ret.msg);

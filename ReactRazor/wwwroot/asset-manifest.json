@@ -6,11 +6,11 @@
     "static/media/pxl@3x.png": "/static/media/pxl202103092034547561@3x.8ac2278a1bec86cbf1d0.png",
     "index.html": "/index.html",
     "main.css.map": "/static/css/main.5924da52.css.map",
-    "main.js.map": "/static/js/main.1ab593c9.js.map",
+    "main.js.map": "/static/js/main.da6b89cd.js.map",
     "988.e4a0a3b5.chunk.js.map": "/static/js/988.e4a0a3b5.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.5924da52.css",
-    "static/js/main.1ab593c9.js"
+    "static/js/main.da6b89cd.js"
   ]
 }
