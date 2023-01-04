@@ -46,13 +46,13 @@
   text-align: center;
 }
 .createordersuccessform,
-.prepare-sell-order-button12 {
+.prepare-sell-order-button13 {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
   align-items: center;
 }
-.prepare-sell-order-button12 {
+.prepare-sell-order-button13 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-3xl);

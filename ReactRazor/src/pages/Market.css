@@ -31,6 +31,7 @@
 }
 .balance-display-zone,
 .usdtbalance {
+  width: 228px;
   flex-shrink: 0;
   display: flex;
   align-items: flex-end;
@@ -38,7 +39,6 @@
 .usdtbalance {
   position: relative;
   letter-spacing: 0.3px;
-  width: 73px;
   height: 29px;
   text-shadow: 0 2px 3px rgba(0, 0, 0, 0.24);
 }
@@ -48,7 +48,6 @@
   position: absolute;
   top: 58.5px;
   right: 147px;
-  width: 228px;
   overflow: hidden;
   flex-direction: column;
   padding: var(--padding-5xs) 0 var(--padding-5xs) var(--padding-3xs);
@@ -568,7 +567,7 @@
   overflow: hidden;
   padding: var(--padding-xs) var(--padding-4xs);
   box-sizing: border-box;
-  gap: var(--gap-xl);
+  gap: var(--gap-lg);
   font-size: var(--caption1-size);
   color: var(--black-000000100);
   font-family: var(--font-calibri);

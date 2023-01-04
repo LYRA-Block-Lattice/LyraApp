@@ -1,17 +1,17 @@
-.icbaseline-generating-tokens-icon2 {
+.icbaseline-generating-tokens-icon3 {
   position: relative;
   width: 32px;
   height: 32px;
   flex-shrink: 0;
   overflow: hidden;
 }
-.order-image-item {
+.order-image-inner {
   position: relative;
   width: 19.5px;
   height: 7.36px;
   flex-shrink: 0;
 }
-.order-image1 {
+.order-image2 {
   cursor: pointer;
   border: 0;
   padding: 0;
@@ -27,7 +27,7 @@
   justify-content: center;
   gap: var(--gap-xs);
 }
-.open1 {
+.open2 {
   position: relative;
   font-size: var(--caption1-size);
   display: inline-block;
@@ -35,7 +35,7 @@
   color: var(--color-white1);
   text-align: center;
 }
-.order-status1 {
+.order-status2 {
   align-self: stretch;
   border-radius: 0 0 var(--br-md) var(--br-md);
   background-color: var(--info1);
@@ -46,18 +46,18 @@
   align-items: center;
   justify-content: center;
 }
-.banner-image1,
-.order-banner1 {
+.banner-image2,
+.order-banner2 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
-.order-banner1 {
+.order-banner2 {
   gap: var(--gap-0);
 }
-.banner-image1 {
+.banner-image2 {
   cursor: pointer;
   border: 0;
   padding: 0;
@@ -67,13 +67,13 @@
   position: relative;
   display: inline-block;
 }
-.frame-item {
+.frame-inner {
   position: relative;
   width: 12.5px;
   height: 7.36px;
   flex-shrink: 0;
 }
-.tetherusdt1 {
+.tetherusdt2 {
   position: relative;
   display: inline-block;
   text-align: left;
@@ -86,7 +86,7 @@
   gap: var(--gap-md);
   font-size: var(--font-size-xl);
 }
-.title-section-item {
+.title-section-inner {
   position: relative;
   border-top: 1px solid var(--text-secondary1);
   box-sizing: border-box;
@@ -94,67 +94,67 @@
   height: 1px;
   flex-shrink: 0;
 }
-.am-container,
-.block11,
-.block21 {
+.am-frame,
+.block12,
+.block22 {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.am-container {
+.am-frame {
   align-self: stretch;
   background-color: var(--color-white1);
   overflow: hidden;
   flex-direction: row;
   text-align: left;
 }
-.block11,
-.block21 {
+.block12,
+.block22 {
   flex-direction: column;
 }
-.block21 {
+.block22 {
   overflow: hidden;
   align-items: flex-end;
 }
-.details-section-item {
+.details-section-inner {
   position: relative;
   width: 4px;
   height: 15px;
   flex-shrink: 0;
   overflow: hidden;
 }
-.block31 {
+.block32 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.details-section1,
-.title-section1 {
+.details-section2,
+.title-section2 {
   display: flex;
   justify-content: flex-start;
   gap: var(--gap-sm);
 }
-.details-section1 {
+.details-section2 {
   align-self: stretch;
   overflow: hidden;
   flex-direction: row;
   align-items: center;
 }
-.title-section1 {
+.title-section2 {
   border-radius: var(--br-xs) var(--br-xs) 0 0;
   flex-direction: column;
   align-items: flex-start;
 }
-.order-brief-section1 {
+.order-brief-section2 {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
   gap: var(--gap-xl);
 }
-.width-controller1 {
+.width-controller2 {
   position: relative;
   border-top: 1px solid var(--black-000000100);
   box-sizing: border-box;
@@ -162,20 +162,20 @@
   height: 1px;
   flex-shrink: 0;
 }
-.ordercard1,
-.trades-section1 {
+.ordercard2,
+.trades-section2 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.trades-section1 {
+.trades-section2 {
   align-self: stretch;
   height: 0;
   flex-shrink: 0;
   overflow: hidden;
 }
-.ordercard1 {
+.ordercard2 {
   border-radius: var(--br-md);
   background-color: var(--color-white1);
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);

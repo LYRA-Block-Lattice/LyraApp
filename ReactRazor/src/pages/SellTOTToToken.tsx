@@ -27,31 +27,31 @@ const SellTOTToToken: FunctionComponent = () => {
             <option value="svc">Service</option>
             <option value="tot">Generic Trade only TOken</option>
           </select>
-          <input className="tot-name3" type="text" placeholder="TOT Name" />
+          <input className="tot-name2" type="text" placeholder="TOT Name" />
           <input
-            className="tot-description2"
+            className="tot-description1"
             type="text"
             placeholder="Public Description, seen by everyone"
           />
           <input
-            className="tot-name3"
+            className="tot-name2"
             type="number"
             placeholder="Total Supply"
           />
           <button
-            className="prepare-sell-order-button8"
+            className="prepare-sell-order-button5"
             onClick={openSignTradeSecretPopup}
           >
-            <div className="utility-button3">Sign trade secret</div>
+            <div className="utility-button2">Sign trade secret</div>
           </button>
-          <div className="note-i-need-to-send-trade-sec3">
+          <div className="note-i-need-to-send-trade-sec2">
             Note: I need to send trade secret privately to buyer(s).
           </div>
-          <button className="prepare-sell-order-button9">
-            <div className="secondary-button5">Create TOT</div>
+          <button className="prepare-sell-order-button6">
+            <div className="secondary-button3">Create TOT</div>
           </button>
         </form>
-        <form className="searchtokenbyname1">
+        <form className="searchtokenbyname">
           <div className="to-get-tokennft">To get Token/NFT</div>
           <Autocomplete
             sx={{ width: 301 }}

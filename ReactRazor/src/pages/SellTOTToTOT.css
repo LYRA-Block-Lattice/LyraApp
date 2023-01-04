@@ -1,4 +1,4 @@
-.to-get-totskusvc1 {
+.to-get-totskusvc {
   position: relative;
   font-size: var(--font-size-5xl);
   letter-spacing: 0.41px;
@@ -10,8 +10,8 @@
   display: inline-block;
   width: 296px;
 }
-.tot-description1,
-.tot-name2 {
+.tot-description,
+.tot-name1 {
   border: 0;
   font-family: var(--headline-s1);
   font-size: var(--body-b-size);
@@ -28,11 +28,11 @@
   align-items: center;
   justify-content: flex-start;
 }
-.tot-description1 {
+.tot-description {
   height: 124px;
   align-items: flex-start;
 }
-.utility-button2 {
+.utility-button1 {
   position: relative;
   font-size: var(--font-size-base);
   letter-spacing: 0.41px;
@@ -43,7 +43,7 @@
   text-align: center;
   display: inline-block;
 }
-.prepare-sell-order-button6 {
+.prepare-sell-order-button3 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-lg);
@@ -58,35 +58,35 @@
   align-items: center;
   justify-content: center;
 }
-.note-i-need-to-send-trade-sec2,
-.secondary-button4 {
+.note-i-need-to-send-trade-sec1,
+.secondary-button2 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
   font-family: var(--headline-s1);
   display: inline-block;
 }
-.note-i-need-to-send-trade-sec2 {
+.note-i-need-to-send-trade-sec1 {
   font-size: var(--font-size-base);
   color: var(--black-000000100);
   text-align: left;
   width: 292px;
 }
-.secondary-button4 {
+.secondary-button2 {
   font-size: var(--body-b-size);
   font-weight: 500;
   color: var(--color-white1);
   text-align: center;
 }
-.prepare-sell-order-button7,
+.prepare-sell-order-button4,
 .selltottotot,
-.togettotform1 {
+.togettotform {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
   align-items: center;
 }
-.prepare-sell-order-button7 {
+.prepare-sell-order-button4 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-3xl);
@@ -98,7 +98,7 @@
   justify-content: center;
 }
 .selltottotot,
-.togettotform1 {
+.togettotform {
   background-color: var(--color-white1);
   flex-direction: column;
   padding: var(--padding-xl) var(--padding-sm);

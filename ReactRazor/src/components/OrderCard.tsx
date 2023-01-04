@@ -69,70 +69,66 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
   }, [orderStatusBackgroundColor]);
 
   return (
-    <div className="ordercard2">
-      <div className="order-brief-section2">
-        <button className="banner-image2" onClick={toggle}>
-          <div className="order-banner2">
-            <button className="order-image2">
+    <div className="ordercard3">
+      <div className="order-brief-section3">
+        <button className="banner-image3" onClick={toggle}>
+          <div className="order-banner3">
+            <button className="order-image3">
               <img
-                className="icbaseline-generating-tokens-icon3"
+                className="icbaseline-generating-tokens-icon4"
                 alt=""
                 src={offeringImg}
               />
+              <img className="arrow-icon" alt="" src="_content/ReactRazor/asserts/arrow-1.svg" />
               <img
-                className="order-image-inner"
-                alt=""
-                src="_content/ReactRazor/asserts/arrow-1.svg"
-              />
-              <img
-                className="icbaseline-generating-tokens-icon3"
+                className="icbaseline-generating-tokens-icon4"
                 alt=""
                 src={bidingImg}
               />
             </button>
-            <div className="order-status2" style={orderStatusStyle}>
-              <b className="open2">{orderStatus}</b>
+            <div className="order-status3" style={orderStatusStyle}>
+              <b className="open3">{orderStatus}</b>
             </div>
           </div>
         </button>
-        <div className="title-section2">
-          <div className="sell-group">
-            <b className="sell2">Sell</b>
-            <b className="sell2">{offering}</b>
-            <img className="frame-inner" alt="" src="_content/ReactRazor/asserts/arrow-2.svg" />
-            <b className="tetherusdt2">{biding}</b>
+        <div className="title-section3">
+          <div className="sell-container">
+            <b className="sell3">Sell</b>
+            <b className="sell3">{offering}</b>
+            <img className="frame-child1" alt="" src="_content/ReactRazor/asserts/arrow-2.svg" />
+            <b className="tetherusdt3">{biding}</b>
           </div>
-          <div className="title-section-inner" />
-          <div className="am-frame">
-            <div className="sell2">{time}</div>
+          <div className="line-div" />
+          <div className="frame-div">
+            <div className="sell3">{time}</div>
           </div>
-          <div className="details-section2">
-            <div className="block12">
-              <div className="sell2">Price</div>
-              <div className="sell2">Limit Min</div>
-              <div className="sell2">Sold</div>
+          <div className="details-section3">
+            <div className="block13">
+              <div className="sell3">Price</div>
+              <div className="sell3">Limit Min</div>
+              <div className="sell3">Sold</div>
             </div>
-            <div className="block22">
-              <div className="sell2">{price}</div>
-              <div className="sell2">{limitMin}</div>
-              <div className="sell2">{sold}</div>
+            <div className="block23">
+              <div className="sell3">{price}</div>
+              <div className="sell3">{limitMin}</div>
+              <div className="sell3">{sold}</div>
             </div>
-            <div className="details-section-inner" />
-            <div className="block32">
-              <div className="sell2">Amount</div>
-              <div className="sell2">Limit Max</div>
-              <div className="sell2">Shelf</div>
+            <div className="details-section-child1" />
+            <div className="block33">
+              <div className="sell3">Amount</div>
+              <div className="sell3">Limit Max</div>
+              <div className="sell3">Shelf</div>
             </div>
-            <div className="block22">
-              <div className="sell2">{amount}</div>
-              <div className="sell2">{limitMax}</div>
-              <div className="sell2">{shelf}</div>
+            <div className="block23">
+              <div className="sell3">{amount}</div>
+              <div className="sell3">{limitMax}</div>
+              <div className="sell3">{shelf}</div>
             </div>
           </div>
         </div>
       </div>
-      <div className="trades-section2">
-        <div className="width-controller2">          
+      <div className="trades-section3">
+        <div className="width-controller3">          
         </div>
         {showTradeTable ? <TableComponent data={trades} /> : null}
       </div>
