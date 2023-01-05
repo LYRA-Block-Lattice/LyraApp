@@ -20,6 +20,10 @@ const Market: FunctionComponent = () => {
   const [sellcnt, setSellcnt] = useState(0);
   const [bidcnt, setBidcnt] = useState(0);
 
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [items, setItems] = useState([]);
+
   useEffect(() => {
     window.rrProxy.ReactRazor.Pages.Home.Interop.GetBalancesAsync(window.rrComponent)
       .then((json) => JSON.parse(json))
@@ -33,7 +37,21 @@ const Market: FunctionComponent = () => {
         }
       });
 
-
+    fetch("https://devnet.lyra.live/api/EC/Orders")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setItems(result);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
   }, []);
 
   const onNFTCountClick = useCallback(() => {
@@ -296,24 +314,25 @@ const Market: FunctionComponent = () => {
             </button>
           </div>
         </div>
-        {/*{orders.map((order) =>*/}
-        {/*  <OrderCard*/}
-        {/*    orderid={order.orderid}*/}
-        {/*    offering={order.offering}*/}
-        {/*    biding={order.biding}*/}
-        {/*    orderStatus={order.status}*/}
-        {/*    offeringImg={geticon(order.offering)}*/}
-        {/*    bidingImg={geticon(order.biding)}*/}
-        {/*    time={order.time}*/}
-        {/*    price={order.price.toString()}*/}
-        {/*    amount={order.amount.toString()}*/}
-        {/*    limitMin={order.limitmin.toString()}*/}
-        {/*    limitMax={order.limitmax.toString()}*/}
-        {/*    sold={order.sold.toString()}*/}
-        {/*    shelf={order.shelf.toString()}*/}
-        {/*    orderStatusBackgroundColor={order.status == "Open" ? "#2196F3" : "gray"}*/}
-        {/*  />*/}
-        {/*)}*/}
+        {items.map((blk) =>
+          <div>offering={(blk as any).order.offering}</div>
+          //<OrderCard
+          //  orderid={blk.order.orderid}
+          //  offering={blk.order.offering}
+          //  biding={blk.order.biding}
+          //  orderStatus={blk.order.status}
+          //  offeringImg={geticon(blk.order.offering)}
+          //  bidingImg={geticon(blk.order.biding)}
+          //  time={blk.order.time}
+          //  price={blk.order.price.toString()}
+          //  amount={blk.order.amount.toString()}
+          //  limitMin={blk.order.limitmin.toString()}
+          //  limitMax={blk.order.limitmax.toString()}
+          //  sold={blk.order.sold.toString()}
+          //  shelf={blk.order.shelf.toString()}
+          //  orderStatusBackgroundColor={blk.order.status == "Open" ? "#2196F3" : "gray"}
+          ///>
+        )}
       </div>
     </div>
   );
