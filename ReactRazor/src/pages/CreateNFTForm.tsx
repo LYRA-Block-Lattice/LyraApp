@@ -135,7 +135,7 @@ const CreateNFTForm: FunctionComponent<TokenMintProps> = props => {
       />
       <div className="or">or</div>
       <input className="select-nft-image" type="file" onChange={changeHandler} />
-      <button className="prepare-sell-order-button15" onClick={onMintClick}>
+      <button className="prepare-sell-order-button16" onClick={onMintClick}>
         <div className="secondary-button7">Create NFT</div>
       </button>
     </div>

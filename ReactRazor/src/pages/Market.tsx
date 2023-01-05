@@ -123,7 +123,7 @@ const Market: FunctionComponent = () => {
             <div className="maps-parent">
               <img className="maps-icon" alt="" src="_content/ReactRazor/asserts/maps.svg" />
               <a className="balance-display-zone">
-                <b className="lyrbalance">{lyrbns}</b>
+                <b className="usdtbalance">{lyrbns}</b>
                 <b className="lyrlabel">LYR</b>
                 <div className="balance-display-zone-child" />
                 <b className="usdtbalance">{usdt}</b>

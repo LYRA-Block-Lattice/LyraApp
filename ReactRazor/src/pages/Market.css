@@ -5,18 +5,11 @@
   flex-shrink: 0;
   z-index: 0;
 }
-.lyrbalance,
-.lyrlabel {
+.lyrlabel,
+.usdtbalance {
   position: relative;
   letter-spacing: 0.3px;
   text-shadow: 0 2px 3px rgba(0, 0, 0, 0.24);
-}
-.lyrbalance {
-  display: flex;
-  align-items: flex-end;
-  width: 228px;
-  height: 29px;
-  flex-shrink: 0;
 }
 .lyrlabel {
   font-size: var(--font-size-2xs);
@@ -375,7 +368,6 @@
 .market {
   position: relative;
   width: 100%;
-  height: 865px;
   text-align: right;
   font-size: var(--font-size-5xl);
   color: var(--color-white1);

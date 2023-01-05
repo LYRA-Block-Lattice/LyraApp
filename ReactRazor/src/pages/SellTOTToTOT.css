@@ -18,15 +18,17 @@
   background-color: var(--color-beige);
   border-radius: var(--br-sm);
   width: 301px;
-  height: 40px;
   flex-shrink: 0;
   overflow: hidden;
   display: flex;
   flex-direction: row;
   padding: var(--padding-4xs);
   box-sizing: border-box;
-  align-items: center;
   justify-content: flex-start;
+}
+.tot-name2 {
+  height: 40px;
+  align-items: center;
 }
 .tot-description1 {
   height: 124px;
@@ -42,7 +44,7 @@
   color: var(--color-white1);
   text-align: center;
 }
-.prepare-sell-order-button6 {
+.prepare-sell-order-button7 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-lg);
@@ -77,7 +79,7 @@
   color: var(--color-white1);
   text-align: center;
 }
-.prepare-sell-order-button7 {
+.prepare-sell-order-button8 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-3xl);
@@ -98,9 +100,11 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-xl) var(--padding-sm);
   align-items: center;
   justify-content: flex-start;
+}
+.togettotform1 {
+  padding: var(--padding-xl) var(--padding-sm);
   gap: var(--gap-2xl);
 }
 .selltottotot {

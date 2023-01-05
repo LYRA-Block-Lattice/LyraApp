@@ -1,4 +1,5 @@
 import { FunctionComponent } from "react";
+import { Link } from "react-router-dom";
 import "./SellItem.css";
 
 type SellItemType = {
@@ -57,7 +58,7 @@ const SellItem: FunctionComponent<SellItemType> = ({
             </div>
           </div>
         </button>
-        <a className="title-section2">
+        <Link className="title-section2" to="/assertdetailview">
           <div className="a-big-seller-parent">
             <b className="a-big-seller">{sellerName}</b>
             <b className="b">{sellerRating}</b>
@@ -95,7 +96,7 @@ const SellItem: FunctionComponent<SellItemType> = ({
               <div className="a-big-seller">{shelf}</div>
             </div>
           </div>
-        </a>
+        </Link>
       </div>
       <div className="trades-section2">
         <div className="width-controller2" />

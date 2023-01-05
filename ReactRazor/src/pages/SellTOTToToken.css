@@ -1,18 +1,24 @@
+.selecttypeoftot {
+  height: 40px;
+  align-items: center;
+}
 .selecttypeoftot,
 .tot-description2,
 .tot-name3 {
   background-color: var(--color-beige);
   border-radius: var(--br-sm);
   width: 301px;
-  height: 40px;
   flex-shrink: 0;
   overflow: hidden;
   display: flex;
   flex-direction: row;
   padding: var(--padding-4xs);
   box-sizing: border-box;
-  align-items: center;
   justify-content: flex-start;
+}
+.tot-name3 {
+  height: 40px;
+  align-items: center;
 }
 .selecttypeoftot {
   gap: var(--gap-md);
@@ -37,7 +43,7 @@
   color: var(--color-white1);
   text-align: center;
 }
-.prepare-sell-order-button8 {
+.prepare-sell-order-button9 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-lg);
@@ -72,7 +78,7 @@
   color: var(--color-white1);
   text-align: center;
 }
-.prepare-sell-order-button9 {
+.prepare-sell-order-button10 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-3xl);
