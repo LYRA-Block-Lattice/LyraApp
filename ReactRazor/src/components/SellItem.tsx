@@ -68,7 +68,7 @@ const SellItem: FunctionComponent<SellItemType> = ({
             <b className="a-big-seller">Sell</b>
             <b className="a-big-seller">{offering}</b>
             <img className="frame-inner" alt="" src="_content/ReactRazor/asserts/arrow-2.svg" />
-            <b className="tetherusdt2">{biding}</b>
+            <b className="tetherusdt3">{biding}</b>
           </div>
           <div className="am-frame">
             <div className="a-big-seller">{lastUpdated}</div>

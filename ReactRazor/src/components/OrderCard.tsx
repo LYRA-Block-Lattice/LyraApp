@@ -87,7 +87,7 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
             <b className="limit-min">Sell</b>
             <b className="limit-min">{offering}</b>
             <img className="frame-item" alt="" src="_content/ReactRazor/asserts/arrow-2.svg" />
-            <b className="tetherusdt1">{biding}</b>
+            <b className="tetherusdt2">{biding}</b>
           </div>
           <div className="title-section-item" />
           <div className="am-container">
