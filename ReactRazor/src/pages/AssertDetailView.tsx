@@ -9,7 +9,7 @@ const AssertDetailView: FunctionComponent = () => {
 
   return (
     <div className="assertdetailview">
-      <div className="buysection">
+      <div className="assertdetailview1">
         <div className="asserttitleregion">
           <div className="assertauthorsection">
             <div className="a-legend-nft">A legend NFT author</div>
@@ -74,6 +74,25 @@ const AssertDetailView: FunctionComponent = () => {
           </div>
         </div>
       </div>
+      <div className="descriptiontitle">
+        <img
+          className="material-symbolsshare-icon"
+          alt=""
+          src="_content/ReactRazor/asserts/fluenttextdescription20filled.svg"
+        />
+        <div className="meka-legends">Description</div>
+      </div>
+      <div className="descriptiondetails">
+        <div className="meka-legends">By A great designer</div>
+      </div>
+      <div className="descriptiontitle">
+        <img
+          className="material-symbolsshare-icon"
+          alt=""
+          src="_content/ReactRazor/asserts/icoutlinepricechange.svg"
+        />
+        <div className="meka-legends">Price and payment</div>
+      </div>
       <div className="buysection">
         <div className="priceandbuyregion">
           <div className="pricelabel">
@@ -125,12 +144,16 @@ const AssertDetailView: FunctionComponent = () => {
           <img
             className="material-symbolsshare-icon"
             alt=""
-            src="_content/ReactRazor/asserts/fluenttextdescription20filled.svg"
+            src="_content/ReactRazor/asserts/galasecure.svg"
           />
-          <div className="meka-legends">Description</div>
+          <div className="meka-legends">Trading protection</div>
         </div>
         <div className="descriptiondetails">
-          <div className="meka-legends">By A great designer</div>
+          <div className="a-legend-nft">
+            This order is protected by staking of 100,000 LYR, or $1,000 in USD,
+            from the seller. This order belongs to DAO ‘A good shop’ which has a
+            total staking of 30,000,000 LYR.
+          </div>
         </div>
       </div>
     </div>

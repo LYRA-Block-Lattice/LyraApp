@@ -40,7 +40,7 @@
   background-color: var(--info1);
   display: flex;
   flex-direction: row;
-  padding: var(--padding-7xs) var(--padding-8xs);
+  padding: var(--padding-9xs) var(--padding-10xs);
   align-items: center;
   justify-content: center;
 }
@@ -144,11 +144,11 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
-  gap: var(--gap-lg);
+  gap: var(--gap-xl);
 }
 .width-controller1 {
   position: relative;
-  border-top: 1px solid var(--color-gray-700);
+  border-top: 1px solid var(--color-gray-800);
   box-sizing: border-box;
   width: 365px;
   height: 1px;
@@ -170,8 +170,8 @@
   border-radius: var(--br-md);
   background-color: var(--color-white1);
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  border: 1px solid var(--color-gray-300);
-  padding: var(--padding-4xs);
+  border: 1px solid var(--color-gray-400);
+  padding: var(--padding-5xs);
   gap: var(--gap-4xs);
   text-align: right;
   font-size: var(--caption1-size);
