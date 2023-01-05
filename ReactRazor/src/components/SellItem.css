@@ -89,7 +89,7 @@
   height: 7.36px;
   flex-shrink: 0;
 }
-.tetherusdt2 {
+.tetherusdt3 {
   position: relative;
   text-align: left;
 }
@@ -101,13 +101,10 @@
   gap: var(--gap-sm);
 }
 .am-frame,
-.block12 {
-  align-items: flex-start;
-}
-.am-frame,
 .block12,
 .block22 {
   display: flex;
+  align-items: flex-start;
   justify-content: flex-start;
 }
 .am-frame {
