@@ -21,7 +21,7 @@ const Empty: FunctionComponent = () => {
           className="pxl-20210309-203454756-1"
           onClick={openMatterhornPopup}
         />
-        <div className="should-not-see-me">Should not see me</div>
+        <div className="should-not-see">Should not see me</div>
       </div>
       {isMatterhornPopupOpen && (
         <PortalPopup

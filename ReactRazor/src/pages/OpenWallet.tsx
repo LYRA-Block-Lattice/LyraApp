@@ -113,7 +113,7 @@ const OpenWallet: FunctionComponent = () => {
         <button className="sign-up1" onClick={onSignUpClick}>
           Create Wallet
         </button>
-        <button className="forgot-password-copy-2">Forgot password?</button>
+        <button className="forgot-password-copy">Forgot password?</button>
       </div>
     </div>
   );

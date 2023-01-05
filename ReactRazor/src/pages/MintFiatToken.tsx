@@ -67,6 +67,8 @@ const MintFiatToken: FunctionComponent<TokenMintProps> = props => {
   return (
     <div className="mint-fiat-token">
       <div className="print-fiat-for-free">Print Fiat for free</div>
+    <form className="mint-fiat-token">
+      <div className="print-fiat-for">Print Fiat for free</div>
       <Autocomplete
         sx={{ width: 301 }}
         disablePortal

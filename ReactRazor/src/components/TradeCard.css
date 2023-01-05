@@ -1,17 +1,17 @@
-.icbaseline-generating-tokens-icon3 {
+.icbaseline-generating-tokens-icon1 {
   position: relative;
   width: 32px;
   height: 32px;
   flex-shrink: 0;
   overflow: hidden;
 }
-.order-image-inner {
+.order-image-child {
   position: relative;
   width: 19.5px;
   height: 7.36px;
   flex-shrink: 0;
 }
-.order-image2 {
+.order-image {
   cursor: pointer;
   border: 0;
   padding: 0;
@@ -25,57 +25,50 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-xs);
+  gap: var(--gap-2xs);
 }
-.open2 {
+.open {
   position: relative;
   font-size: var(--caption1-size);
-  display: inline-block;
   font-family: var(--font-calibri);
   color: var(--color-white1);
   text-align: center;
 }
-.order-status2 {
+.order-status {
   align-self: stretch;
   border-radius: 0 0 var(--br-md) var(--br-md);
   background-color: var(--info1);
   display: flex;
   flex-direction: row;
   padding: var(--padding-7xs) var(--padding-8xs);
-  box-sizing: border-box;
   align-items: center;
   justify-content: center;
 }
-.banner-image2,
-.order-banner2 {
+.banner-image,
+.order-banner {
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
-.order-banner2 {
-  gap: var(--gap-0);
-}
-.banner-image2 {
+.banner-image {
   cursor: pointer;
   border: 0;
   padding: 0;
   background-color: transparent;
 }
+.frame-child,
 .trade {
   position: relative;
-  display: inline-block;
 }
-.frame-inner {
-  position: relative;
+.frame-child {
   width: 12.5px;
   height: 7.36px;
   flex-shrink: 0;
 }
-.tetherusdt2 {
+.tetherusdt {
   position: relative;
-  display: inline-block;
   text-align: left;
 }
 .trade-parent {
@@ -83,10 +76,10 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-md);
+  gap: var(--gap-sm);
   font-size: var(--font-size-xl);
 }
-.title-section-inner {
+.title-section-child {
   position: relative;
   border-top: 1px solid var(--text-secondary1);
   box-sizing: border-box;
@@ -94,67 +87,67 @@
   height: 1px;
   flex-shrink: 0;
 }
-.am-frame,
-.block12,
-.block22 {
+.am-wrapper,
+.block1,
+.block2 {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.am-frame {
+.am-wrapper {
   align-self: stretch;
   background-color: var(--color-white1);
   overflow: hidden;
   flex-direction: row;
   text-align: left;
 }
-.block12,
-.block22 {
+.block1,
+.block2 {
   flex-direction: column;
 }
-.block22 {
+.block2 {
   overflow: hidden;
   align-items: flex-end;
 }
-.details-section-inner {
+.details-section-child {
   position: relative;
   width: 4px;
   height: 15px;
   flex-shrink: 0;
   overflow: hidden;
 }
-.block32 {
+.block3 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.details-section2,
-.title-section2 {
+.details-section,
+.title-section {
   display: flex;
   justify-content: flex-start;
-  gap: var(--gap-sm);
+  gap: var(--gap-xs);
 }
-.details-section2 {
+.details-section {
   align-self: stretch;
   overflow: hidden;
   flex-direction: row;
   align-items: center;
 }
-.title-section2 {
+.title-section {
   border-radius: var(--br-xs) var(--br-xs) 0 0;
   flex-direction: column;
   align-items: flex-start;
 }
-.order-brief-section2 {
+.order-brief-section {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
-  gap: var(--gap-xl);
+  gap: var(--gap-lg);
 }
-.width-controller2 {
+.width-controller {
   position: relative;
   border-top: 1px solid var(--black-000000100);
   box-sizing: border-box;
@@ -162,27 +155,26 @@
   height: 1px;
   flex-shrink: 0;
 }
-.ordercard2,
-.trades-section2 {
+.ordercard,
+.trades-section {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.trades-section2 {
+.trades-section {
   align-self: stretch;
   height: 0;
   flex-shrink: 0;
   overflow: hidden;
 }
-.ordercard2 {
+.ordercard {
   border-radius: var(--br-md);
   background-color: var(--color-white1);
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border: 1px solid var(--color-gray-300);
-  box-sizing: border-box;
   padding: var(--padding-4xs);
-  gap: var(--gap-3xs);
+  gap: var(--gap-4xs);
   text-align: right;
   font-size: var(--caption1-size);
   color: var(--black-000000100);

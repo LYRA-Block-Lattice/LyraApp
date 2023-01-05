@@ -14,7 +14,7 @@
   height: 209px;
   flex-shrink: 0;
 }
-.you-order-tx-hash-is {
+.you-order-tx {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
@@ -27,15 +27,15 @@
 }
 .blvm6g1jjkwuz8ocens7fuuswjqdr3,
 .secondary-button6,
-.view-on-block-explorer {
+.view-on-block {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
-  display: inline-block;
 }
-.view-on-block-explorer {
+.view-on-block {
   text-decoration: underline;
   color: inherit;
+  display: inline-block;
   width: 292px;
 }
 .secondary-button6 {
@@ -46,13 +46,13 @@
   text-align: center;
 }
 .createordersuccessform,
-.prepare-sell-order-button13 {
+.prepare-sell-order-button12 {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
   align-items: center;
 }
-.prepare-sell-order-button13 {
+.prepare-sell-order-button12 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-3xl);
@@ -70,7 +70,7 @@
   flex-direction: column;
   padding: var(--padding-xl) var(--padding-xs);
   justify-content: flex-start;
-  gap: var(--gap-3xl);
+  gap: var(--gap-2xl);
   text-align: center;
   font-size: var(--font-size-base);
   color: var(--black-000000100);

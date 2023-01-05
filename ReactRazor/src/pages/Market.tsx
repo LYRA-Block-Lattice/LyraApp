@@ -1,6 +1,7 @@
 import { FunctionComponent, useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import OrderCard from "../components/OrderCard";
+import SellItem from "../components/SellItem";
 import "./Market.css";
 
 interface customWindow extends Window {
@@ -333,6 +334,34 @@ const Market: FunctionComponent = () => {
           //  orderStatusBackgroundColor={blk.order.status == "Open" ? "#2196F3" : "gray"}
           ///>
         )}
+        <SellItem
+          sellerName="A big seller"
+          offering="BTC"
+          biding="tether/USDT"
+          sellerRating="98%"
+          lastUpdated="12/29/2022 10:25:37 AM"
+          orderStatus="Open"
+          price="10,323"
+          amount="1113.2"
+          limitMin="3.2"
+          limitMax="3.2"
+          sold="123"
+          shelf="123"
+        />
+        <SellItem
+          sellerName="A big seller"
+          offering="BTC"
+          biding="tether/USDT"
+          sellerRating="98%"
+          lastUpdated="12/29/2022 10:25:37 AM"
+          orderStatus="Open"
+          price="10,323"
+          amount="1113.2"
+          limitMin="3.2"
+          limitMax="3.2"
+          sold="123"
+          shelf="123"
+        />
       </div>
     </div>
   );

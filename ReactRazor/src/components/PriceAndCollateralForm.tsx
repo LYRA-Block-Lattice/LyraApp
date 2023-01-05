@@ -86,11 +86,11 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
     <div className="priceandcollateralform">
       <div className="price-and-collateral">Price and Collateral</div>
       <div className="set-the-price-one-parent">
-        <div className="set-the-price-one">Set the price, one</div>
-        <div className="set-the-price-one">{offering}</div>
-        <div className="set-the-price-one">for</div>
-        <div className="set-the-price-one">{biding}</div>
-        <div className="set-the-price-one">:</div>
+        <div className="set-the-price">Set the price, one</div>
+        <div className="set-the-price">{offering}</div>
+        <div className="set-the-price">for</div>
+        <div className="set-the-price">{biding}</div>
+        <div className="set-the-price">:</div>
       </div>
       <TextField
         className="sellatprice"
@@ -104,7 +104,7 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
         margin="none"
         onChange={(e) => setPrice(+e.target.value)}
       />
-      <div className="collateral-in-lyr">Amount:</div>
+      <div className="amount">Amount:</div>
       <TextField
         className="sellatprice"
         sx={{ width: 301 }}
@@ -130,7 +130,7 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
           margin="none"
           onChange={(e) => setLimitmin(+e.target.value)}
         />
-        <div className="set-the-price-one">-</div>
+        <div className="set-the-price">-</div>
         <TextField
           className="sellatprice"
           sx={{ width: 138 }}
@@ -144,7 +144,7 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
           onChange={(e) => setLimitmax(+e.target.value)}
         />
       </div>
-      <div className="collateral-in-lyr">Collateral (in LYR):</div>
+      <div className="amount">Collateral (in LYR):</div>
       <div className="collateral-section">
         <TextField
           className="sellatprice"
@@ -159,11 +159,11 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
           onChange={(e) => setCollateral(+e.target.value)}
         />
         <div className="collateral-worth-label">
-          <div className="set-the-price-one">Total worth in USD:</div>
-          <div className="set-the-price-one">$103</div>
+          <div className="set-the-price">Total worth in USD:</div>
+          <div className="set-the-price">$103</div>
         </div>
       </div>
-      <div className="collateral-in-lyr">Create order in DAO:</div>
+      <div className="amount">Create order in DAO:</div>
       <Autocomplete
         sx={{ width: 301 }}
         disablePortal
@@ -184,7 +184,7 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
         )}
         size="medium"
       />
-      <div className="collateral-in-lyr">
+      <div className="amount">
         Current dealer is [dealer name]. You will contact buyers through the
         dealer.
       </div>

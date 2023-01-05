@@ -76,11 +76,9 @@ const CreateTOTForm: FunctionComponent<TokenMintProps> = props => {
 
   return (
     <>
-      <div className="create-tot-form">
+      <div className="createtotform">
         <div className="createtottosellform">
-          <div className="create-and-sell-totsku">
-            Create and Sell [TOT/SKU]
-          </div>
+          <div className="create-and-sell">Create and Sell [TOT/SKU]</div>
           <FormControl sx={{ width: 301 }} variant="outlined">
             <InputLabel color="primary">Select Type of TOT</InputLabel>
             <Select color="primary" size="medium" label="Select Type of TOT"
@@ -129,16 +127,16 @@ const CreateTOTForm: FunctionComponent<TokenMintProps> = props => {
             onChange={(e) => setSupply(+e.target.value)}
           />
           <button
-            className="prepare-sell-order-button1"
+            className="prepare-sell-order-button2"
             onClick={openSignTradeSecretPopup}
           >
             <div className="utility-button">Sign trade secret</div>
           </button>
-          <div className="note-i-need-to-send-trade-sec">
+          <div className="note-i-need">
             Note: I need to send trade secret privately to buyer(s).
           </div>
-          <button className="prepare-sell-order-button2" onClick={onMintClick}>
-            <div className="secondary-button1">Create TOT</div>
+          <button className="prepare-sell-order-button3" onClick={onMintClick}>
+            <div className="secondary-button2">Create TOT</div>
           </button>
         </div>
       </div>

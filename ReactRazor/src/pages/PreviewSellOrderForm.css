@@ -13,7 +13,7 @@
 .ill-send-trade {
   margin: 0;
 }
-.ill-sell-count-type-of-t {
+.ill-sell-count-container {
   position: relative;
   font-size: var(--font-size-base);
   letter-spacing: 0.41px;
@@ -50,7 +50,6 @@
   font-family: var(--headline-s1);
   color: var(--color-white1);
   text-align: center;
-  display: inline-block;
 }
 .prepare-sell-order-button14,
 .previewsellorderform {
@@ -77,7 +76,7 @@
   flex-direction: column;
   padding: var(--padding-xl) var(--padding-md);
   justify-content: flex-start;
-  gap: var(--gap-3xl);
+  gap: var(--gap-2xl);
   text-align: left;
   font-size: var(--font-size-5xl);
   color: var(--black-000000100);

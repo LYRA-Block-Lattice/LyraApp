@@ -64,7 +64,7 @@ const SellTokenToToken: FunctionComponent = () => {
         <div className="searchtokenbyname2">
           <SearchTokenInput key="tosell" val={val} dir="Sell" cat={catsell} ownOnly={true} onTokenSelect={onSellChange} />
           <button
-            className="prepare-sell-order-button9"
+            className="prepare-sell-order-button10"
             onClick={openGeneralPopup}
           >
             <div className="utility-button4">Mint to sell</div>

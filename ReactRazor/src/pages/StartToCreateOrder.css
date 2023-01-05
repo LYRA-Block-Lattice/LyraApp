@@ -34,7 +34,6 @@
   font-family: var(--headline-s1);
   color: var(--color-white1);
   text-align: center;
-  display: inline-block;
 }
 .prepare-sell-order-button16 {
   cursor: pointer;
