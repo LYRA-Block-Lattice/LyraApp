@@ -316,52 +316,21 @@ const Market: FunctionComponent = () => {
           </div>
         </div>
         {items.map((blk) =>
-          <div>offering={(blk as any).order.offering}</div>
-          //<OrderCard
-          //  orderid={blk.order.orderid}
-          //  offering={blk.order.offering}
-          //  biding={blk.order.biding}
-          //  orderStatus={blk.order.status}
-          //  offeringImg={geticon(blk.order.offering)}
-          //  bidingImg={geticon(blk.order.biding)}
-          //  time={blk.order.time}
-          //  price={blk.order.price.toString()}
-          //  amount={blk.order.amount.toString()}
-          //  limitMin={blk.order.limitmin.toString()}
-          //  limitMax={blk.order.limitmax.toString()}
-          //  sold={blk.order.sold.toString()}
-          //  shelf={blk.order.shelf.toString()}
-          //  orderStatusBackgroundColor={blk.order.status == "Open" ? "#2196F3" : "gray"}
-          ///>
+          <SellItem
+            sellerName="A big seller"
+            offering={(blk as any).Order.offering}
+            biding={(blk as any).Order.biding}
+            sellerRating="98%"
+            lastUpdated={(blk as any).TimeStamp}
+            orderStatus={(blk as any).UOStatus}
+            price={(blk as any).Order.price}
+            amount="1113.2"
+            limitMin="3.2"
+            limitMax="3.2"
+            sold="123"
+            shelf="123"
+          />
         )}
-        <SellItem
-          sellerName="A big seller"
-          offering="BTC"
-          biding="tether/USDT"
-          sellerRating="98%"
-          lastUpdated="12/29/2022 10:25:37 AM"
-          orderStatus="Open"
-          price="10,323"
-          amount="1113.2"
-          limitMin="3.2"
-          limitMax="3.2"
-          sold="123"
-          shelf="123"
-        />
-        <SellItem
-          sellerName="A big seller"
-          offering="BTC"
-          biding="tether/USDT"
-          sellerRating="98%"
-          lastUpdated="12/29/2022 10:25:37 AM"
-          orderStatus="Open"
-          price="10,323"
-          amount="1113.2"
-          limitMin="3.2"
-          limitMax="3.2"
-          sold="123"
-          shelf="123"
-        />
       </div>
     </div>
   );
