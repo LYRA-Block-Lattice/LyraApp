@@ -12,7 +12,7 @@ const AssertDetailView: FunctionComponent = () => {
       <div className="buysection">
         <div className="asserttitleregion">
           <div className="assertauthorsection">
-            <div className="a-legend-token">A legend token seller</div>
+            <div className="a-legend-nft">A legend NFT author</div>
             <div className="material-symbolsshare-parent">
               <img
                 className="material-symbolsshare-icon"

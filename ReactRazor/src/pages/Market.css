@@ -20,7 +20,7 @@
   position: relative;
   background-color: transparent;
   width: 22px;
-  height: 20px;
+  height: 8px;
   flex-shrink: 0;
 }
 .balance-display-zone {
