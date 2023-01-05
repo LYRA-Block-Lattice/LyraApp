@@ -20,7 +20,7 @@
   align-items: center;
 }
 .material-symbolsshare-parent {
-  padding: var(--padding-2xs);
+  padding: var(--padding-3xs);
   justify-content: flex-end;
   gap: 24px;
 }
@@ -30,7 +30,7 @@
   height: 48px;
   flex-shrink: 0;
   justify-content: center;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
 }
 .meka-legends {
   position: relative;
@@ -51,7 +51,7 @@
   height: 48px;
   display: flex;
   justify-content: flex-start;
-  font-size: var(--font-size-6xl);
+  font-size: var(--font-size-7xl);
 }
 .assertownersection {
   height: 24px;
@@ -68,16 +68,16 @@
 .asserttitleregion {
   border-radius: var(--br-md);
   flex-direction: column;
-  padding: var(--padding-4xs);
+  padding: var(--padding-5xs);
   align-items: flex-start;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
 }
 .icon-park-solidblockchain-wrapper {
   height: 38px;
   flex-shrink: 0;
   overflow: hidden;
   flex-direction: row;
-  padding: var(--padding-4xs) 0;
+  padding: var(--padding-5xs) 0;
   box-sizing: border-box;
   align-items: center;
 }
@@ -88,32 +88,64 @@
   max-height: 100%;
   object-fit: cover;
 }
-.assertstatssection,
-.icoutline-remove-red-eye-parent,
-.pricelabel {
+.icoutline-remove-red-eye-parent {
   background-color: var(--color-white1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--gap-sm);
+}
+.assertdetailview1,
+.assertstatssection {
+  align-self: stretch;
+  display: flex;
+  justify-content: flex-start;
+}
+.assertstatssection {
+  border-radius: var(--br-md) var(--br-md) 0 0;
+  background-color: var(--color-white1);
+  overflow: hidden;
+  flex-direction: row;
+  padding: var(--padding-5xs);
+  align-items: center;
+  gap: 20px;
+}
+.assertdetailview1 {
+  flex-direction: column;
+  align-items: flex-start;
+}
+.descriptiondetails,
+.descriptiontitle,
+.pricelabel {
+  align-self: stretch;
   overflow: hidden;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
 }
-.icoutline-remove-red-eye-parent {
+.descriptiontitle {
+  border-radius: var(--br-md);
+  background-color: var(--color-gray-100);
+  padding: var(--padding-2xs) var(--padding-md);
   align-items: center;
-  gap: var(--gap-sm);
+  gap: var(--gap-lg);
+  font-size: var(--font-size-6xl);
 }
-.assertstatssection,
+.descriptiondetails,
 .pricelabel {
-  align-self: stretch;
-}
-.assertstatssection {
-  border-radius: var(--br-md) var(--br-md) 0 0;
-  padding: var(--padding-4xs);
-  align-items: center;
-  gap: 20px;
-}
-.pricelabel {
-  padding: 0 var(--padding-4xs);
+  background-color: var(--color-white1);
   align-items: flex-start;
+}
+.descriptiondetails {
+  height: 93px;
+  flex-shrink: 0;
+  padding: var(--padding-lg) var(--padding-5xl);
+  box-sizing: border-box;
+}
+.pricelabel {
+  padding: 0 var(--padding-5xs);
 }
 .div {
   position: relative;
@@ -134,10 +166,10 @@
   overflow: hidden;
   flex-direction: row;
   padding: var(--padding-sm) var(--padding-sm) var(--padding-sm)
-    var(--padding-3xs);
+    var(--padding-4xs);
   align-items: flex-end;
-  gap: var(--gap-md);
-  font-size: var(--font-size-6xl);
+  gap: var(--gap-lg);
+  font-size: var(--font-size-7xl);
 }
 .priceandbuyregion,
 .pricelabel1 {
@@ -146,7 +178,7 @@
 .priceandbuyregion {
   border-radius: var(--br-md);
   flex-direction: column;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
 }
 .pricelabel1 {
   overflow: hidden;
@@ -165,14 +197,14 @@
   background-color: var(--color-white1);
   display: flex;
   justify-content: flex-start;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
 }
 .priceandvaluelabel1 {
   overflow: hidden;
   flex-direction: row;
-  padding: var(--padding-4xs) 0;
+  padding: var(--padding-5xs) 0;
   align-items: flex-end;
-  font-size: var(--font-size-5xl);
+  font-size: var(--font-size-6xl);
 }
 .setlimitsection {
   flex-direction: column;
@@ -186,7 +218,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
   text-align: center;
   font-size: var(--font-size-4xl);
 }
@@ -196,7 +228,7 @@
   align-self: stretch;
   background-color: var(--color-white1);
   display: flex;
-  padding: var(--padding-4xs);
+  padding: var(--padding-5xs);
 }
 .selectedamount {
   border: 0;
@@ -223,7 +255,6 @@
   color: var(--color-white1);
   text-align: center;
 }
-.descriptiontitle,
 .makeofferbutton,
 .prepare-sell-order-button {
   align-self: stretch;
@@ -235,60 +266,39 @@
 .prepare-sell-order-button {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs) var(--padding-5xl);
+  padding: var(--padding-5xs) var(--padding-6xl);
   background-color: var(--primary);
   border-radius: var(--br-xl);
   height: 50px;
   flex-shrink: 0;
   flex-direction: row;
   box-sizing: border-box;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
 }
 .prepare-sell-order-button:hover {
   background-color: #766ae7;
 }
-.descriptiontitle,
 .makeofferbutton {
   background-color: var(--color-white1);
   flex-direction: column;
-  padding: var(--padding-2xs);
-}
-.descriptiontitle {
-  flex-direction: row;
-  padding: 13px var(--padding-md);
-  justify-content: flex-start;
-  gap: var(--gap-md);
-  font-size: var(--font-size-5xl);
+  padding: var(--padding-3xs);
 }
 .assertdetailview,
-.buysection,
-.descriptiondetails {
+.buysection {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.descriptiondetails {
-  align-self: stretch;
-  background-color: var(--color-white1);
-  height: 93px;
-  flex-shrink: 0;
-  overflow: hidden;
-  flex-direction: row;
-  padding: 17px var(--padding-4xl);
-  box-sizing: border-box;
-}
-.assertdetailview,
-.buysection {
-  flex-direction: column;
-}
 .buysection {
   align-self: stretch;
+  padding: var(--padding-5xs) 0 0;
 }
 .assertdetailview {
   position: relative;
   background-color: var(--color-white1);
   width: 100%;
-  padding: var(--padding-4xs);
+  padding: var(--padding-5xs);
   box-sizing: border-box;
   text-align: left;
   font-size: var(--font-size-xl);

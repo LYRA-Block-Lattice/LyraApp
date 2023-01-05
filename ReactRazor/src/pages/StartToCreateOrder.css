@@ -38,7 +38,7 @@
 .prepare-sell-order-button17 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs) var(--padding-5xl);
+  padding: var(--padding-5xs) var(--padding-6xl);
   background-color: var(--primary);
   border-radius: var(--br-xl);
   height: 50px;
@@ -54,7 +54,7 @@
   background-color: #8277e8;
 }
 .prepare-sell-order-button17:disabled {
-  background-color: var(--color-gray-100);
+  background-color: var(--color-gray-200);
 }
 .starttocreateorder {
   position: relative;
@@ -63,13 +63,13 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-2xl) 66px var(--padding-xl);
+  padding: var(--padding-3xl) 66px var(--padding-2xl);
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
   gap: 21px;
   text-align: left;
-  font-size: var(--font-size-5xl);
+  font-size: var(--font-size-6xl);
   color: var(--black-000000100);
   font-family: var(--headline-s1);
 }

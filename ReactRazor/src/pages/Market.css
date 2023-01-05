@@ -13,7 +13,7 @@
 }
 .lyrlabel {
   font-size: var(--font-size-2xs);
-  color: var(--color-gray-200);
+  color: var(--color-gray-300);
   text-align: left;
 }
 .balance-display-zone-child {
@@ -34,7 +34,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-5xs) 0 var(--padding-5xs) var(--padding-3xs);
+  padding: var(--padding-6xs) 0 var(--padding-6xs) var(--padding-4xs);
   box-sizing: border-box;
   align-items: flex-end;
   justify-content: center;
@@ -63,7 +63,7 @@
 }
 .nft-label {
   font-size: var(--font-size-2xs);
-  color: var(--color-gray-200);
+  color: var(--color-gray-300);
 }
 .go-nft-button,
 .tot-count {
@@ -107,7 +107,7 @@
   overflow: hidden;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-xl);
+  gap: var(--gap-2xl);
   z-index: 2;
 }
 .maps-parent {
@@ -116,12 +116,12 @@
   width: 423px;
   height: 247px;
   flex-shrink: 0;
-  padding: var(--padding-4xs);
+  padding: var(--padding-5xs);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
   position: relative;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
   z-index: 0;
 }
 .wallet-name-label {
@@ -277,12 +277,12 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: var(--gap-4xl);
+  gap: var(--gap-5xl);
 }
 .iconssection {
   display: flex;
   flex-direction: column;
-  padding: var(--padding-6xs);
+  padding: var(--padding-7xs);
   align-items: center;
   justify-content: center;
 }
@@ -314,7 +314,7 @@
 .select-token-catalog-button {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-7xl) var(--padding-4xl);
+  padding: var(--padding-8xl) var(--padding-5xl);
   background-color: var(--tertiary);
   border-radius: var(--br-sm);
   box-shadow: 0 4px 23px rgba(0, 0, 0, 0.12);
@@ -342,8 +342,8 @@
 .tradecatalog {
   background-color: var(--color-white1);
   overflow: hidden;
-  padding: var(--padding-4xs);
-  gap: var(--gap-md);
+  padding: var(--padding-5xs);
+  gap: var(--gap-lg);
 }
 .catalogselectionhorizontal,
 .tradecatalog {
@@ -362,14 +362,14 @@
 }
 .catalogselectionhorizontal-parent {
   overflow: hidden;
-  padding: var(--padding-xs) var(--padding-4xs);
-  gap: var(--gap-md);
+  padding: var(--padding-xs) var(--padding-5xs);
+  gap: var(--gap-lg);
 }
 .market {
   position: relative;
   width: 100%;
   text-align: right;
-  font-size: var(--font-size-5xl);
+  font-size: var(--font-size-6xl);
   color: var(--color-white1);
   font-family: var(--font-sf-pro-text);
 }

@@ -1,6 +1,6 @@
 .print-fiat-for {
   position: relative;
-  font-size: var(--font-size-5xl);
+  font-size: var(--font-size-6xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
@@ -34,7 +34,7 @@
 .prepare-sell-order-button1 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs) var(--padding-3xl);
+  padding: var(--padding-5xs) var(--padding-4xl);
   background-color: var(--secondary);
   border-radius: var(--br-xl);
   height: 40px;
@@ -47,7 +47,7 @@
   background-color: var(--color-white1);
   width: 100%;
   flex-direction: column;
-  padding: var(--padding-xl) var(--padding-md);
+  padding: var(--padding-2xl) var(--padding-md);
   justify-content: flex-start;
-  gap: var(--gap-2xl);
+  gap: var(--gap-3xl);
 }
