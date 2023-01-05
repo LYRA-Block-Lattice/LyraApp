@@ -1,4 +1,4 @@
-.a-legend-token {
+.a-legend-nft {
   flex: 1;
   position: relative;
   letter-spacing: 0.41px;
@@ -286,7 +286,10 @@
 }
 .assertdetailview {
   position: relative;
+  background-color: var(--color-white1);
   width: 100%;
+  padding: var(--padding-4xs);
+  box-sizing: border-box;
   text-align: left;
   font-size: var(--font-size-xl);
   color: var(--black-000000100);
