@@ -17,12 +17,12 @@
   background-color: var(--color-white1);
   width: 110px;
   overflow: hidden;
-  padding: var(--padding-3xl) var(--padding-4xs) var(--padding-5xs);
+  padding: var(--padding-2xl) var(--padding-3xs) var(--padding-4xs);
   box-sizing: border-box;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
 }
 .catalogselection {
-  gap: var(--gap-6xs);
+  gap: var(--gap-5xs);
   text-align: center;
   font-size: var(--body-b-size);
   color: var(--black-000000100);

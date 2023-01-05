@@ -10,24 +10,19 @@
   display: inline-block;
   width: 296px;
 }
-.searchtokenbyname {
-  align-items: center;
-}
 .searchtokenbyname,
 .tot-description,
 .tot-name1 {
   overflow: hidden;
   display: flex;
-  justify-content: flex-start;
-}
-.tot-name1 {
   align-items: center;
+  justify-content: flex-start;
 }
 .searchtokenbyname {
   background-color: var(--color-white1);
   flex-direction: column;
-  padding: var(--padding-2xl) var(--padding-xs);
-  gap: var(--gap-4xl);
+  padding: var(--padding-xl) var(--padding-xs);
+  gap: var(--gap-3xl);
 }
 .tot-description,
 .tot-name1 {
@@ -37,13 +32,11 @@
   background-color: var(--color-beige);
   border-radius: var(--br-sm);
   width: 301px;
+  height: 40px;
   flex-shrink: 0;
   flex-direction: row;
-  padding: var(--padding-5xs);
+  padding: var(--padding-4xs);
   box-sizing: border-box;
-}
-.tot-name1 {
-  height: 40px;
 }
 .tot-description {
   height: 124px;
@@ -62,7 +55,7 @@
 .prepare-sell-order-button5 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-5xs) var(--padding-xl);
+  padding: var(--padding-4xs) var(--padding-lg);
   background-color: var(--tertiary);
   border-radius: var(--br-xl);
   height: 30px;
@@ -97,7 +90,7 @@
 .prepare-sell-order-button6 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-5xs) var(--padding-4xl);
+  padding: var(--padding-4xs) var(--padding-3xl);
   background-color: var(--secondary);
   border-radius: var(--br-xl);
   height: 40px;
@@ -115,17 +108,15 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  padding: var(--padding-xl) var(--padding-sm);
   align-items: center;
   justify-content: flex-start;
-}
-.togettotform {
-  padding: var(--padding-2xl) var(--padding-sm);
-  gap: var(--gap-xl);
+  gap: var(--gap-2xl);
 }
 .selltokentotot {
   position: relative;
   width: 100%;
-  padding: var(--padding-6xl) var(--padding-7xl);
+  padding: var(--padding-5xl) var(--padding-6xl);
   box-sizing: border-box;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
 }

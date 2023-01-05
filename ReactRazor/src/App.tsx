@@ -23,7 +23,6 @@ import Redir from "./pages/Redir";
 import Market from "./pages/Market";
 import CreateWallet from "./pages/CreateWallet";
 import OpenWallet from "./pages/OpenWallet";
-import AssertDetailView1 from "./pages/AssertDetailView1";
 import TransactionHistory from "./pages/TransactionHistory";
 import OldV1UI from "./pages/OldV1UI";
 import { useEffect } from "react";
@@ -120,10 +119,6 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/assertdetailview":
-        title = "";
-        metaDescription = "";
-        break;
       case "/transactionhistory":
         title = "";
         metaDescription = "";
@@ -190,8 +185,6 @@ function App() {
       <Route path="/create-wallet" element={<CreateWallet />} />
 
       <Route path="/open-wallet" element={<OpenWallet />} />
-
-      <Route path="/assertdetailview" element={<AssertDetailView1 />} />
 
       <Route path="/transactionhistory" element={<TransactionHistory />} />
 

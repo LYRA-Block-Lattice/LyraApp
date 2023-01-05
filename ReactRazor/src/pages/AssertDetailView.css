@@ -20,9 +20,9 @@
   align-items: center;
 }
 .material-symbolsshare-parent {
-  padding: var(--padding-3xs);
+  padding: var(--padding-2xs);
   justify-content: flex-end;
-  gap: var(--gap-3xl);
+  gap: 24px;
 }
 .assertauthorsection {
   align-self: stretch;
@@ -30,7 +30,7 @@
   height: 48px;
   flex-shrink: 0;
   justify-content: center;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
 }
 .meka-legends {
   position: relative;
@@ -68,16 +68,16 @@
 .asserttitleregion {
   border-radius: var(--br-md);
   flex-direction: column;
-  padding: var(--padding-5xs);
+  padding: var(--padding-4xs);
   align-items: flex-start;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
 }
 .icon-park-solidblockchain-wrapper {
   height: 38px;
   flex-shrink: 0;
   overflow: hidden;
   flex-direction: row;
-  padding: var(--padding-5xs) 0;
+  padding: var(--padding-4xs) 0;
   box-sizing: border-box;
   align-items: center;
 }
@@ -98,13 +98,13 @@
   justify-content: flex-start;
 }
 .icoutline-remove-red-eye-parent {
-  gap: var(--gap-xs);
+  gap: var(--gap-sm);
 }
 .assertstatssection {
   align-self: stretch;
   border-radius: var(--br-md) var(--br-md) 0 0;
-  padding: var(--padding-5xs);
-  gap: var(--gap-2xl);
+  padding: var(--padding-4xs);
+  gap: 20px;
 }
 .assertdetailview1,
 .pricelabel {
@@ -121,7 +121,7 @@
   background-color: var(--color-white1);
   overflow: hidden;
   flex-direction: row;
-  padding: 0 var(--padding-5xs);
+  padding: 0 var(--padding-4xs);
 }
 .div {
   position: relative;
@@ -142,9 +142,9 @@
   overflow: hidden;
   flex-direction: row;
   padding: var(--padding-sm) var(--padding-sm) var(--padding-sm)
-    var(--padding-4xs);
+    var(--padding-3xs);
   align-items: flex-end;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
   font-size: var(--font-size-6xl);
 }
 .priceandbuyregion,
@@ -155,7 +155,7 @@
   border-radius: var(--br-md);
   width: 414px;
   flex-direction: column;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
 }
 .pricelabel1 {
   align-self: stretch;
@@ -175,12 +175,12 @@
   background-color: var(--color-white1);
   display: flex;
   justify-content: flex-start;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
 }
 .priceandvaluelabel1 {
   overflow: hidden;
   flex-direction: row;
-  padding: var(--padding-5xs) 0;
+  padding: var(--padding-4xs) 0;
   align-items: flex-end;
   font-size: var(--font-size-5xl);
 }
@@ -196,7 +196,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
   text-align: center;
   font-size: var(--font-size-4xl);
 }
@@ -206,7 +206,7 @@
   align-self: stretch;
   background-color: var(--color-white1);
   display: flex;
-  padding: var(--padding-5xs);
+  padding: var(--padding-4xs);
 }
 .selectedamount {
   border: 0;
@@ -240,40 +240,35 @@
   display: flex;
   box-sizing: border-box;
   align-items: center;
-}
-.makeofferbutton,
-.prepare-sell-order-button {
   justify-content: center;
 }
 .prepare-sell-order-button {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-5xs) var(--padding-6xl);
-  background-color: var(--color-indigo-200);
+  padding: var(--padding-4xs) var(--padding-5xl);
+  background-color: var(--primary);
   align-self: stretch;
   border-radius: var(--br-xl);
   height: 50px;
   flex-shrink: 0;
   flex-direction: row;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
 }
 .prepare-sell-order-button:hover {
-  background-color: var(--color-indigo-100);
+  background-color: #766ae7;
 }
 .descriptiontitle,
 .makeofferbutton {
   background-color: var(--color-white1);
   width: 414px;
-}
-.makeofferbutton {
   flex-direction: column;
-  padding: var(--padding-3xs);
+  padding: var(--padding-2xs);
 }
 .descriptiontitle {
   flex-direction: row;
-  padding: var(--padding-2xs) var(--padding-md);
+  padding: 13px var(--padding-md);
   justify-content: flex-start;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
   font-size: var(--font-size-5xl);
 }
 .assertdetailview,
@@ -290,7 +285,7 @@
   flex-shrink: 0;
   overflow: hidden;
   flex-direction: row;
-  padding: var(--padding-lg) var(--padding-5xl);
+  padding: 17px var(--padding-4xl);
   box-sizing: border-box;
 }
 .assertdetailview,

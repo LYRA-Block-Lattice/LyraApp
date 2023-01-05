@@ -26,7 +26,7 @@
 .select-token-catalog-button5 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-8xl) var(--padding-5xl);
+  padding: var(--padding-7xl) var(--padding-4xl);
   background-color: var(--tertiary);
   border-radius: var(--br-sm);
   box-shadow: 0 4px 23px rgba(0, 0, 0, 0.12);
@@ -34,5 +34,5 @@
   height: 80px;
   flex-shrink: 0;
   box-sizing: border-box;
-  gap: var(--gap-3xs);
+  gap: var(--gap-2xs);
 }

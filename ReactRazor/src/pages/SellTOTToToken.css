@@ -1,27 +1,21 @@
-.selecttypeoftot {
-  height: 40px;
-  align-items: center;
-}
 .selecttypeoftot,
 .tot-description2,
 .tot-name3 {
   background-color: var(--color-beige);
   border-radius: var(--br-sm);
   width: 301px;
+  height: 40px;
   flex-shrink: 0;
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-5xs);
+  padding: var(--padding-4xs);
   box-sizing: border-box;
+  align-items: center;
   justify-content: flex-start;
 }
-.tot-name3 {
-  height: 40px;
-  align-items: center;
-}
 .selecttypeoftot {
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
 }
 .tot-description2,
 .tot-name3 {
@@ -46,7 +40,7 @@
 .prepare-sell-order-button9 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-5xs) var(--padding-xl);
+  padding: var(--padding-4xs) var(--padding-lg);
   background-color: var(--tertiary);
   border-radius: var(--br-xl);
   height: 30px;
@@ -81,7 +75,7 @@
 .prepare-sell-order-button10 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-5xs) var(--padding-4xl);
+  padding: var(--padding-4xs) var(--padding-3xl);
   background-color: var(--secondary);
   border-radius: var(--br-xl);
   height: 40px;
@@ -98,10 +92,10 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-2xl) var(--padding-sm);
+  padding: var(--padding-xl) var(--padding-sm);
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-xl);
+  gap: var(--gap-2xl);
 }
 .to-get-tokennft {
   position: relative;
@@ -121,15 +115,15 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-2xl) var(--padding-xs);
+  padding: var(--padding-xl) var(--padding-xs);
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-4xl);
+  gap: var(--gap-3xl);
 }
 .selltottotoken {
   position: relative;
   width: 100%;
-  padding: var(--padding-6xl) var(--padding-7xl);
+  padding: var(--padding-5xl) var(--padding-6xl);
   box-sizing: border-box;
-  gap: var(--gap-sm);
+  gap: var(--gap-md);
 }
