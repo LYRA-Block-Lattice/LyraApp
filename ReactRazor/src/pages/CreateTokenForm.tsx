@@ -47,7 +47,7 @@ const CreateTokenForm: FunctionComponent = () => {
         size="medium"
         margin="none"
       />
-      <button className="prepare-sell-order-button1">
+      <button className="prepare-sell-order-button2">
         <div className="secondary-button1">Mint Token</div>
       </button>
     </form>

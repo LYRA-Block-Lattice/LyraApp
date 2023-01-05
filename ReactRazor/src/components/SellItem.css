@@ -101,10 +101,13 @@
   gap: var(--gap-sm);
 }
 .am-frame,
+.block12 {
+  align-items: flex-start;
+}
+.am-frame,
 .block12,
 .block22 {
   display: flex;
-  align-items: flex-start;
   justify-content: flex-start;
 }
 .am-frame {
@@ -151,6 +154,7 @@
   font-size: var(--caption1-size);
 }
 .title-section2 {
+  cursor: pointer;
   text-decoration: none;
   border-radius: var(--br-xs) var(--br-xs) 0 0;
   flex-direction: column;

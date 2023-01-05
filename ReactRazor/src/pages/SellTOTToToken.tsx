@@ -39,7 +39,7 @@ const SellTOTToToken: FunctionComponent = () => {
             placeholder="Total Supply"
           />
           <button
-            className="prepare-sell-order-button8"
+            className="prepare-sell-order-button9"
             onClick={openSignTradeSecretPopup}
           >
             <div className="utility-button3">Sign trade secret</div>
@@ -47,7 +47,7 @@ const SellTOTToToken: FunctionComponent = () => {
           <div className="note-i-need3">
             Note: I need to send trade secret privately to buyer(s).
           </div>
-          <button className="prepare-sell-order-button9">
+          <button className="prepare-sell-order-button10">
             <div className="secondary-button5">Create TOT</div>
           </button>
         </form>

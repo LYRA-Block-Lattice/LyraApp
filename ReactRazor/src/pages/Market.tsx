@@ -74,10 +74,10 @@ const Market: FunctionComponent = () => {
             <div className="maps-parent">
               <img className="maps-icon" alt="" src="_content/ReactRazor/asserts/maps.svg" />
               <a className="balance-display-zone">
-                <b className="lyrbalance">120,000</b>
+                <b className="usdtbalance">1,025,000</b>
                 <b className="lyrlabel">LYR</b>
                 <div className="balance-display-zone-child" />
-                <b className="lyrbalance">5,000</b>
+                <b className="usdtbalance">5,000</b>
                 <b className="lyrlabel">USDT</b>
               </a>
               <div className="token-lists">
@@ -266,20 +266,6 @@ const Market: FunctionComponent = () => {
             </button>
           </div>
         </div>
-        <SellItem
-          sellerName="A big seller"
-          offering="BTC"
-          biding="tether/USDT"
-          sellerRating="98%"
-          lastUpdated="12/29/2022 10:25:37 AM"
-          orderStatus="Open"
-          price="10,323"
-          amount="1113.2"
-          limitMin="3.2"
-          limitMax="3.2"
-          sold="123"
-          shelf="123"
-        />
         <SellItem
           sellerName="A big seller"
           offering="BTC"

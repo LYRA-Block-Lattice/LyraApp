@@ -117,7 +117,7 @@ const PriceAndCollateralForm: FunctionComponent<PriceAndCollateralFormType> = ({
         dealer.
       </div>
       <button className="reviewtheorder" onClick={onReviewTheOrderClick}>
-        <div className="primary-button2">Review the Order</div>
+        <div className="primary-button3">Review the Order</div>
       </button>
     </div>
   );

@@ -5,6 +5,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import Empty from "./pages/Empty";
+import AssertDetailView from "./pages/AssertDetailView";
 import MintFiatToken from "./pages/MintFiatToken";
 import CreateTokenForm from "./pages/CreateTokenForm";
 import CreateTOTForm from "./pages/CreateTOTForm";
@@ -43,6 +44,10 @@ function App() {
 
     switch (pathname) {
       case "/":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/assertdetailview":
         title = "";
         metaDescription = "";
         break;
@@ -141,6 +146,8 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Empty />} />
+
+      <Route path="/assertdetailview" element={<AssertDetailView />} />
 
       <Route path="/mint-fiat-token" element={<MintFiatToken />} />
 

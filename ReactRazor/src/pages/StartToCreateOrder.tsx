@@ -76,11 +76,11 @@ const StartToCreateOrder: FunctionComponent = () => {
         </Xwrapper>
       </div>
       <button
-        className="prepare-sell-order-button16"
+        className="prepare-sell-order-button17"
         disabled={isDisabled}
         onClick={onPrepareSellOrderButtonClick}
       >
-        <div className="primary-button1">Specify Token</div>
+        <div className="primary-button2">Specify Token</div>
       </button>
     </div>
   );

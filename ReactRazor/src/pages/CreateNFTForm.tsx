@@ -38,7 +38,7 @@ const CreateNFTForm: FunctionComponent = () => {
       />
       <div className="or">or</div>
       <input className="select-nft-image" type="file" />
-      <button className="prepare-sell-order-button15">
+      <button className="prepare-sell-order-button16">
         <div className="secondary-button7">Create NFT</div>
       </button>
     </div>
