@@ -1,14 +1,14 @@
 .price-and-collateral {
   font-size: var(--font-size-5xl);
   font-weight: 500;
+  display: inline-block;
   width: 296px;
 }
 .price-and-collateral,
-.set-the-price-one {
+.set-the-price {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
-  display: inline-block;
 }
 .set-the-price-one-parent {
   width: 321px;
@@ -19,11 +19,18 @@
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: var(--gap-sm);
+  gap: var(--gap-xs);
 }
 .sellatprice {
   border: 0;
   background-color: transparent;
+}
+.amount {
+  position: relative;
+  letter-spacing: 0.41px;
+  line-height: 18px;
+  display: inline-block;
+  width: 292px;
 }
 .limitoftrade {
   width: 322px;
@@ -34,21 +41,13 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-lg);
+  gap: var(--gap-md);
   font-size: var(--body-b-size);
-}
-.collateral-in-lyr {
-  position: relative;
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  display: inline-block;
-  width: 292px;
 }
 .collateral-section,
 .collateral-worth-label {
   overflow: hidden;
   display: flex;
-  box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
 }
@@ -56,12 +55,13 @@
   width: 314px;
   flex-direction: row;
   padding: 0 var(--padding-4xs);
-  gap: var(--gap-lg);
+  box-sizing: border-box;
+  gap: var(--gap-md);
 }
 .collateral-section {
   flex-direction: column;
   padding: var(--padding-4xs);
-  gap: var(--gap-4xs);
+  gap: var(--gap-5xs);
 }
 .primary-button2 {
   position: relative;
@@ -72,7 +72,6 @@
   font-family: var(--headline-s1);
   color: var(--color-white1);
   text-align: center;
-  display: inline-block;
 }
 .reviewtheorder {
   cursor: pointer;
@@ -102,7 +101,7 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-3xl);
+  gap: var(--gap-2xl);
   text-align: left;
   font-size: var(--font-size-base);
   color: var(--black-000000100);

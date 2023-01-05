@@ -5,7 +5,7 @@ import "./MintFiatToken.css";
 const MintFiatToken: FunctionComponent = () => {
   return (
     <form className="mint-fiat-token">
-      <div className="print-fiat-for-free">Print Fiat for free</div>
+      <div className="print-fiat-for">Print Fiat for free</div>
       <Autocomplete
         sx={{ width: 301 }}
         disablePortal

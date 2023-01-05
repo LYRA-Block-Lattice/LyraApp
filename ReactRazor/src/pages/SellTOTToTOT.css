@@ -1,4 +1,4 @@
-.to-get-totskusvc {
+.to-get-totskusvc1 {
   position: relative;
   font-size: var(--font-size-5xl);
   letter-spacing: 0.41px;
@@ -10,8 +10,8 @@
   display: inline-block;
   width: 296px;
 }
-.tot-description,
-.tot-name1 {
+.tot-description1,
+.tot-name2 {
   border: 0;
   font-family: var(--headline-s1);
   font-size: var(--body-b-size);
@@ -28,11 +28,11 @@
   align-items: center;
   justify-content: flex-start;
 }
-.tot-description {
+.tot-description1 {
   height: 124px;
   align-items: flex-start;
 }
-.utility-button1 {
+.utility-button2 {
   position: relative;
   font-size: var(--font-size-base);
   letter-spacing: 0.41px;
@@ -41,9 +41,8 @@
   font-family: var(--headline-s1);
   color: var(--color-white1);
   text-align: center;
-  display: inline-block;
 }
-.prepare-sell-order-button3 {
+.prepare-sell-order-button6 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-lg);
@@ -58,35 +57,27 @@
   align-items: center;
   justify-content: center;
 }
-.note-i-need-to-send-trade-sec1,
-.secondary-button2 {
+.note-i-need2,
+.secondary-button4 {
   position: relative;
   letter-spacing: 0.41px;
   line-height: 18px;
   font-family: var(--headline-s1);
-  display: inline-block;
 }
-.note-i-need-to-send-trade-sec1 {
+.note-i-need2 {
   font-size: var(--font-size-base);
   color: var(--black-000000100);
   text-align: left;
+  display: inline-block;
   width: 292px;
 }
-.secondary-button2 {
+.secondary-button4 {
   font-size: var(--body-b-size);
   font-weight: 500;
   color: var(--color-white1);
   text-align: center;
 }
-.prepare-sell-order-button4,
-.selltottotot,
-.togettotform {
-  overflow: hidden;
-  display: flex;
-  box-sizing: border-box;
-  align-items: center;
-}
-.prepare-sell-order-button4 {
+.prepare-sell-order-button7 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-3xl);
@@ -94,20 +85,28 @@
   border-radius: var(--br-xl);
   height: 40px;
   flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
   flex-direction: row;
+  box-sizing: border-box;
+  align-items: center;
   justify-content: center;
 }
 .selltottotot,
-.togettotform {
+.togettotform1 {
   background-color: var(--color-white1);
+  overflow: hidden;
+  display: flex;
   flex-direction: column;
   padding: var(--padding-xl) var(--padding-sm);
+  align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-3xl);
+  gap: var(--gap-2xl);
 }
 .selltottotot {
   position: relative;
   width: 100%;
   padding: var(--padding-5xl) var(--padding-6xl);
-  gap: var(--gap-lg);
+  box-sizing: border-box;
+  gap: var(--gap-md);
 }

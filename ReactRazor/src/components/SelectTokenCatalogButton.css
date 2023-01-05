@@ -1,4 +1,4 @@
-.icbaseline-generating-tokens-icon5 {
+.icbaseline-generating-tokens-icon3 {
   position: relative;
   width: 32px;
   height: 32px;
@@ -34,5 +34,5 @@
   height: 80px;
   flex-shrink: 0;
   box-sizing: border-box;
-  gap: var(--gap-xs);
+  gap: var(--gap-2xs);
 }

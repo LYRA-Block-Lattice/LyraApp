@@ -2,7 +2,6 @@
   position: relative;
   letter-spacing: 0.41px;
   line-height: 41px;
-  display: inline-block;
 }
 .illus5-copy-icon {
   position: relative;
@@ -44,7 +43,7 @@
   text-align: center;
   display: inline-block;
 }
-.forgot-password-copy-2,
+.forgot-password-copy,
 .open-wallet-button,
 .sign-up1 {
   cursor: pointer;
@@ -58,7 +57,7 @@
   height: 50px;
   flex-shrink: 0;
 }
-.forgot-password-copy-2,
+.forgot-password-copy,
 .sign-up1 {
   letter-spacing: 0.41px;
   line-height: 18px;
@@ -71,7 +70,7 @@
   font-weight: 600;
   color: var(--color-gray-1);
 }
-.forgot-password-copy-2 {
+.forgot-password-copy {
   font-size: var(--caption1-size);
   font-weight: 500;
   color: rgba(127, 133, 146, 0.5);
@@ -82,7 +81,6 @@
   display: flex;
   flex-direction: row;
   padding: var(--padding-2xs) 40px;
-  box-sizing: border-box;
   align-items: center;
   justify-content: center;
   gap: 82px;
@@ -93,6 +91,7 @@
   width: 100%;
   flex-direction: column;
   padding: var(--padding-xs) var(--padding-md);
+  box-sizing: border-box;
   gap: 39px;
   text-align: center;
   font-size: var(--large-title-size);

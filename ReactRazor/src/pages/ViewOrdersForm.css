@@ -4,9 +4,9 @@
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
-  display: inline-block;
 }
 .view-orders {
+  display: inline-block;
   width: 168px;
   flex-shrink: 0;
 }
@@ -16,7 +16,7 @@
   color: var(--color-white1);
   text-align: center;
 }
-.prepare-sell-order-button10 {
+.prepare-sell-order-button11 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-lg);
@@ -53,7 +53,7 @@
   overflow: hidden;
   flex-direction: column;
   justify-content: flex-start;
-  gap: var(--gap-2xl);
+  gap: var(--gap-xl);
   text-align: left;
   font-size: var(--font-size-5xl);
   color: var(--black-000000100);

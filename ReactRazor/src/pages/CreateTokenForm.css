@@ -14,7 +14,7 @@
   border: 0;
   background-color: transparent;
 }
-.secondary-button7 {
+.secondary-button1 {
   position: relative;
   font-size: var(--body-b-size);
   letter-spacing: 0.41px;
@@ -23,16 +23,15 @@
   font-family: var(--headline-s1);
   color: var(--color-white1);
   text-align: center;
-  display: inline-block;
 }
 .createtokenform,
-.prepare-sell-order-button15 {
+.prepare-sell-order-button1 {
   overflow: hidden;
   display: flex;
   box-sizing: border-box;
   align-items: center;
 }
-.prepare-sell-order-button15 {
+.prepare-sell-order-button1 {
   cursor: pointer;
   border: 0;
   padding: var(--padding-4xs) var(--padding-3xl);
@@ -50,5 +49,5 @@
   flex-direction: column;
   padding: var(--padding-xl) var(--padding-md);
   justify-content: flex-start;
-  gap: var(--gap-3xl);
+  gap: var(--gap-2xl);
 }

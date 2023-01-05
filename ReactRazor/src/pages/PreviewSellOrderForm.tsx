@@ -13,7 +13,7 @@ const PreviewSellOrderForm: FunctionComponent = () => {
   return (
     <div className="previewsellorderform">
       <div className="preview-sell-order">Preview Sell Order</div>
-      <div className="ill-sell-count-type-of-t">
+      <div className="ill-sell-count-container">
         <p className="ill-sell-count">I’ll sell (count) (type) of (token).</p>
         <p className="ill-sell-count">
           I want buyer pay me by (type) via (way)

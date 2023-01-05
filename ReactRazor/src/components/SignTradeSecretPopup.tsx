@@ -41,7 +41,7 @@ const SignTradeSecretPopup: FunctionComponent<SignTradeSecretPopupType> = ({
   return (
     <div className="signtradesecretpopup" data-animate-on-scroll>
       <div className="sign-trade-secret">Sign Trade Secret</div>
-      <div className="to-protect-privacy-lyra-block">
+      <div className="to-protect-privacy">
         To protect privacy, Lyra blockchain never record trade secret. What the
         blockchain needed is a digital signature of the trade secret.
       </div>
@@ -52,7 +52,7 @@ const SignTradeSecretPopup: FunctionComponent<SignTradeSecretPopupType> = ({
 Bank of America
 1234 1234 1234 1234`}
       />
-      <button className="prepare-sell-order-button11" onClick={onClose}>
+      <button className="prepare-sell-order-button13" onClick={onClose}>
         <div className="utility-button6">Sign and return</div>
       </button>
     </div>
