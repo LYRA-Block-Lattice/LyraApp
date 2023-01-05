@@ -32,7 +32,8 @@ const SellTokenToToken: FunctionComponent = () => {
 
   const [val, setVal] = useState<IToken>();
 
-  const onSellChange = useCallback((event, value, reason) => {
+  const onSellChange = useCallback((value) => {
+    console.log("onSellChange: " + value);
     if (value) {
       setTosell(value);
     } else {
@@ -71,7 +72,7 @@ const SellTokenToToken: FunctionComponent = () => {
           <div className="searchtokenbyname-child" />
           <SearchTokenInput key="toget" val={val} dir="Get" cat={catget} ownOnly={false} onTokenSelect={setToget} />
         </div>
-        <PriceAndCollateralForm offering="offering" biding="biding" />
+        <PriceAndCollateralForm offering={tosell} biding={toget} />
       </div>
       {isGeneralPopupOpen && (
         <PortalPopup

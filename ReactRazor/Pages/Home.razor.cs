@@ -558,14 +558,14 @@ namespace ReactRazor.Pages
             private static Wallet GetOpeningWallet([JSMarshalAs<JSType.Any>] object component)
             {
                 var home = (Home)component;
-                if (!home.walletState.Value.IsOpening || GetOpeningWallet(component) == null)
+                if (!home.walletState.Value.IsOpening || home.walletState.Value.wallet == null)
                 {
                     home.Navigation.NavigateTo("/open-wallet");
                     return null;
                 }
                 else
                 {
-                    return GetOpeningWallet(component);
+                    return home.walletState.Value.wallet;
                 }
             }
 

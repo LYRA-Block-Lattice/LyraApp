@@ -29,7 +29,7 @@ function SearchTokenInput({ dir, cat, ownOnly, onTokenSelect, val }) {
   const [selbalance, setSelbalance] = useState<number | undefined>(0);
 
   async function getTokens() {
-    let str = await window.rrProxy.ReactRazor.Pages.Home.Interop.GetBalanceAsync(window.rrComponent);
+    let str = await window.rrProxy.ReactRazor.Pages.Home.Interop.GetBalancesAsync(window.rrComponent);
     var ret = JSON.parse(str);
     if (ret.ret == "Success") {
       var tkns = ret.result;
