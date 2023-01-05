@@ -89,39 +89,31 @@
   object-fit: cover;
 }
 .assertstatssection,
-.icoutline-remove-red-eye-parent {
+.icoutline-remove-red-eye-parent,
+.pricelabel {
   background-color: var(--color-white1);
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  align-items: center;
   justify-content: flex-start;
 }
 .icoutline-remove-red-eye-parent {
+  align-items: center;
   gap: var(--gap-sm);
 }
-.assertstatssection {
+.assertstatssection,
+.pricelabel {
   align-self: stretch;
+}
+.assertstatssection {
   border-radius: var(--br-md) var(--br-md) 0 0;
   padding: var(--padding-4xs);
+  align-items: center;
   gap: 20px;
 }
-.assertdetailview1,
 .pricelabel {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-}
-.assertdetailview1 {
-  width: 414px;
-  flex-direction: column;
-}
-.pricelabel {
-  align-self: stretch;
-  background-color: var(--color-white1);
-  overflow: hidden;
-  flex-direction: row;
   padding: 0 var(--padding-4xs);
+  align-items: flex-start;
 }
 .div {
   position: relative;
@@ -133,12 +125,12 @@
 .priceandbuyregion,
 .priceandvaluelabel,
 .pricelabel1 {
+  align-self: stretch;
   background-color: var(--color-white1);
   display: flex;
   justify-content: flex-start;
 }
 .priceandvaluelabel {
-  align-self: stretch;
   overflow: hidden;
   flex-direction: row;
   padding: var(--padding-sm) var(--padding-sm) var(--padding-sm)
@@ -153,12 +145,10 @@
 }
 .priceandbuyregion {
   border-radius: var(--br-md);
-  width: 414px;
   flex-direction: column;
   gap: var(--gap-md);
 }
 .pricelabel1 {
-  align-self: stretch;
   overflow: hidden;
   flex-direction: row;
 }
@@ -236,9 +226,9 @@
 .descriptiontitle,
 .makeofferbutton,
 .prepare-sell-order-button {
+  align-self: stretch;
   overflow: hidden;
   display: flex;
-  box-sizing: border-box;
   align-items: center;
   justify-content: center;
 }
@@ -247,11 +237,11 @@
   border: 0;
   padding: var(--padding-4xs) var(--padding-5xl);
   background-color: var(--primary);
-  align-self: stretch;
   border-radius: var(--br-xl);
   height: 50px;
   flex-shrink: 0;
   flex-direction: row;
+  box-sizing: border-box;
   gap: var(--gap-md);
 }
 .prepare-sell-order-button:hover {
@@ -260,7 +250,6 @@
 .descriptiontitle,
 .makeofferbutton {
   background-color: var(--color-white1);
-  width: 414px;
   flex-direction: column;
   padding: var(--padding-2xs);
 }
@@ -279,8 +268,8 @@
   justify-content: flex-start;
 }
 .descriptiondetails {
+  align-self: stretch;
   background-color: var(--color-white1);
-  width: 414px;
   height: 93px;
   flex-shrink: 0;
   overflow: hidden;
@@ -291,6 +280,9 @@
 .assertdetailview,
 .buysection {
   flex-direction: column;
+}
+.buysection {
+  align-self: stretch;
 }
 .assertdetailview {
   position: relative;

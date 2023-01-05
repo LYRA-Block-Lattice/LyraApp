@@ -9,7 +9,7 @@ const AssertDetailView: FunctionComponent = () => {
 
   return (
     <div className="assertdetailview">
-      <div className="assertdetailview1">
+      <div className="buysection">
         <div className="asserttitleregion">
           <div className="assertauthorsection">
             <div className="a-legend-token">A legend token seller</div>
