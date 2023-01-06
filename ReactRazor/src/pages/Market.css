@@ -13,7 +13,7 @@
 }
 .lyrlabel {
   font-size: var(--font-size-2xs);
-  color: var(--color-gray-400);
+  color: var(--secondary);
   text-align: left;
 }
 .balance-display-zone-child {
@@ -63,7 +63,7 @@
 }
 .nft-label {
   font-size: var(--font-size-2xs);
-  color: var(--color-gray-400);
+  color: var(--secondary);
 }
 .go-nft-button,
 .tot-count {
@@ -133,8 +133,9 @@
   top: 21.5px;
   left: 71px;
   font-size: var(--font-size-4xl);
+  font-weight: 700;
   font-family: var(--font-sf-pro-text);
-  color: var(--color-white1);
+  color: var(--secondary);
   text-align: right;
   display: inline-block;
   width: 206px;
@@ -150,7 +151,7 @@
   bottom: 0;
   left: 0;
   border-radius: 32.5px;
-  background-color: #dfe0e5;
+  background-color: rgba(209, 190, 190, 0.47);
   opacity: 0.5;
   mix-blend-mode: normal;
   cursor: pointer;

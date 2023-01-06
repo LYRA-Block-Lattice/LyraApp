@@ -88,13 +88,10 @@
   flex-shrink: 0;
 }
 .am-wrapper,
-.block1 {
-  align-items: flex-start;
-}
-.am-wrapper,
 .block1,
 .block2 {
   display: flex;
+  align-items: flex-start;
   justify-content: flex-start;
 }
 .am-wrapper {
@@ -175,7 +172,7 @@
   border-radius: var(--br-md);
   background-color: var(--color-white1);
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  border: 1px solid var(--color-gray-500);
+  border: 1px solid var(--color-gray-400);
   padding: var(--padding-5xs);
   gap: var(--gap-4xs);
   text-align: right;
