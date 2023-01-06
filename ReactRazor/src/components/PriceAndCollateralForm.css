@@ -1,5 +1,5 @@
 .price-and-collateral {
-  font-size: var(--font-size-6xl);
+  font-size: var(--font-size-5xl);
   font-weight: 500;
   display: inline-block;
   width: 296px;
@@ -15,7 +15,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-5xs);
+  padding: var(--padding-4xs);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
@@ -37,11 +37,11 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-5xs);
+  padding: var(--padding-4xs);
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-lg);
+  gap: var(--gap-md);
   font-size: var(--body-b-size);
 }
 .collateral-section,
@@ -54,13 +54,13 @@
 .collateral-worth-label {
   width: 314px;
   flex-direction: row;
-  padding: 0 var(--padding-5xs);
+  padding: 0 var(--padding-4xs);
   box-sizing: border-box;
-  gap: var(--gap-lg);
+  gap: var(--gap-md);
 }
 .collateral-section {
   flex-direction: column;
-  padding: var(--padding-5xs);
+  padding: var(--padding-4xs);
   gap: var(--gap-5xs);
 }
 .primary-button3 {
@@ -76,7 +76,7 @@
 .reviewtheorder {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-5xs) var(--padding-6xl);
+  padding: var(--padding-4xs) var(--padding-5xl);
   background-color: var(--primary);
   border-radius: var(--br-xl);
   height: 50px;
@@ -89,7 +89,7 @@
   justify-content: center;
 }
 .reviewtheorder:disabled {
-  background-color: var(--color-gray-200);
+  background-color: var(--color-gray-100);
 }
 .priceandcollateralform {
   background-color: var(--color-white1);
@@ -97,11 +97,11 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-2xl) 0;
+  padding: var(--padding-xl) 0;
   box-sizing: border-box;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-3xl);
+  gap: var(--gap-2xl);
   text-align: left;
   font-size: var(--font-size-base);
   color: var(--black-000000100);
