@@ -211,74 +211,32 @@ const Market: FunctionComponent = () => {
           </button>
         </div>
       </div>
-      <div className="catalogselectionhorizontal-parent">
-        <div className="catalogselectionhorizontal">
-          <div className="tradecatalog">
-            <button className="select-token-catalog-button">
-              <img
-                className="icbaseline-generating-tokens-icon"
-                alt=""
-                src="_content/ReactRazor/asserts/icbaselinegeneratingtokens4.svg"
-              />
-              <div className="token-wrapper">
-                <b className="token">Token</b>
-              </div>
-            </button>
-            <button className="select-token-catalog-button">
-              <img
-                className="icbaseline-generating-tokens-icon"
-                alt=""
-                src="_content/ReactRazor/asserts/mapartgallery2.svg"
-              />
-              <div className="token-wrapper">
-                <b className="token">NFT</b>
-              </div>
-            </button>
-            <button className="select-token-catalog-button">
-              <img
-                className="icbaseline-generating-tokens-icon"
-                alt=""
-                src="_content/ReactRazor/asserts/fluentemojihighcontrastdollarbanknote2.svg"
-              />
-              <div className="token-wrapper">
-                <b className="fiat">Fiat</b>
-              </div>
-            </button>
-            <button className="select-token-catalog-button">
-              <img
-                className="icbaseline-generating-tokens-icon"
-                alt=""
-                src="_content/ReactRazor/asserts/mditruckdelivery2.svg"
-              />
-              <div className="token-wrapper">
-                <b className="goods">Goods</b>
-              </div>
-            </button>
-            <button className="select-token-catalog-button">
-              <img
-                className="icbaseline-generating-tokens-icon"
-                alt=""
-                src="_content/ReactRazor/asserts/carbonuserservicedesk4.svg"
-              />
-              <div className="token-wrapper">
-                <b className="fiat">Service</b>
-              </div>
-            </button>
+      <div className="catalogtab-parent">
+        <div className="catalogtab">
+          <div className="token-wrapper">
+            <b className="token">Token</b>
+          </div>
+          <div className="token-wrapper">
+            <b className="token">NFT</b>
+          </div>
+          <div className="token-wrapper">
+            <b className="token">Fiat</b>
+          </div>
+          <div className="token-wrapper">
+            <b className="token">Goods</b>
+          </div>
+          <div className="token-wrapper">
+            <b className="token">Service</b>
           </div>
         </div>
         <SellItem
-          sellerName="A big seller"
           offering="BTC"
           biding="tether/USDT"
-          sellerRating="98%"
-          lastUpdated="12/29/2022 10:25:37 AM"
           orderStatus="Open"
           price="10,323"
           amount="1113.2"
           limitMin="3.2"
           limitMax="3.2"
-          sold="123"
-          shelf="123"
         />
       </div>
     </div>

@@ -62,7 +62,7 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
           <div className="order-banner1">
             <button className="order-image1">
               <img
-                className="icbaseline-generating-tokens-icon2"
+                className="icbaseline-generating-tokens-icon1"
                 alt=""
                 src={offeringImg}
               />
@@ -72,7 +72,7 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
                 src="_content/ReactRazor/asserts/arrow-1.svg"
               />
               <img
-                className="icbaseline-generating-tokens-icon2"
+                className="icbaseline-generating-tokens-icon1"
                 alt=""
                 src={bidingImg}
               />
@@ -87,7 +87,7 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
             <b className="limit-min">Sell</b>
             <b className="limit-min">{offering}</b>
             <img className="frame-item" alt="" src="_content/ReactRazor/asserts/arrow-2.svg" />
-            <b className="tetherusdt1">{biding}</b>
+            <b className="tetherusdt2">{biding}</b>
           </div>
           <div className="title-section-item" />
           <div className="am-container">

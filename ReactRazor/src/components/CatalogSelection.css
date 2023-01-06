@@ -7,19 +7,19 @@
   width: 119px;
 }
 .catalogselection,
-.tradecatalog1 {
+.tradecatalog {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
-.tradecatalog1 {
+.tradecatalog {
   background-color: var(--color-white1);
   width: 110px;
   overflow: hidden;
-  padding: var(--padding-2xl) var(--padding-3xs) var(--padding-4xs);
+  padding: var(--padding-3xl) var(--padding-4xs) var(--padding-5xs);
   box-sizing: border-box;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
 }
 .catalogselection {
   gap: var(--gap-5xs);
