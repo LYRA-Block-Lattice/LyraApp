@@ -1,4 +1,4 @@
-.a-legend-nft {
+.a-legend-token {
   flex: 1;
   position: relative;
   letter-spacing: 0.41px;
@@ -20,7 +20,7 @@
   align-items: center;
 }
 .material-symbolsshare-parent {
-  padding: var(--padding-3xs);
+  padding: var(--padding-2xs);
   justify-content: flex-end;
   gap: 24px;
 }
@@ -30,7 +30,7 @@
   height: 48px;
   flex-shrink: 0;
   justify-content: center;
-  gap: var(--gap-lg);
+  gap: var(--gap-md);
 }
 .meka-legends {
   position: relative;
@@ -51,7 +51,7 @@
   height: 48px;
   display: flex;
   justify-content: flex-start;
-  font-size: var(--font-size-7xl);
+  font-size: var(--font-size-6xl);
 }
 .assertownersection {
   height: 24px;
@@ -68,16 +68,16 @@
 .asserttitleregion {
   border-radius: var(--br-md);
   flex-direction: column;
-  padding: var(--padding-5xs);
+  padding: var(--padding-4xs);
   align-items: flex-start;
-  gap: var(--gap-lg);
+  gap: var(--gap-md);
 }
 .icon-park-solidblockchain-wrapper {
   height: 38px;
   flex-shrink: 0;
   overflow: hidden;
   flex-direction: row;
-  padding: var(--padding-5xs) 0;
+  padding: var(--padding-4xs) 0;
   box-sizing: border-box;
   align-items: center;
 }
@@ -88,64 +88,32 @@
   max-height: 100%;
   object-fit: cover;
 }
-.icoutline-remove-red-eye-parent {
+.assertstatssection,
+.icoutline-remove-red-eye-parent,
+.pricelabel {
   background-color: var(--color-white1);
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  align-items: center;
   justify-content: flex-start;
+}
+.icoutline-remove-red-eye-parent {
+  align-items: center;
   gap: var(--gap-sm);
 }
-.assertdetailview1,
-.assertstatssection {
+.assertstatssection,
+.pricelabel {
   align-self: stretch;
-  display: flex;
-  justify-content: flex-start;
 }
 .assertstatssection {
   border-radius: var(--br-md) var(--br-md) 0 0;
-  background-color: var(--color-white1);
-  overflow: hidden;
-  flex-direction: row;
-  padding: var(--padding-5xs);
+  padding: var(--padding-4xs);
   align-items: center;
   gap: 20px;
 }
-.assertdetailview1 {
-  flex-direction: column;
+.pricelabel {
+  padding: 0 var(--padding-4xs);
   align-items: flex-start;
-}
-.descriptiondetails,
-.descriptiontitle,
-.pricelabel {
-  align-self: stretch;
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-}
-.descriptiontitle {
-  border-radius: var(--br-md);
-  background-color: var(--color-gray-100);
-  padding: var(--padding-2xs) var(--padding-md);
-  align-items: center;
-  gap: var(--gap-lg);
-  font-size: var(--font-size-6xl);
-}
-.descriptiondetails,
-.pricelabel {
-  background-color: var(--color-white1);
-  align-items: flex-start;
-}
-.descriptiondetails {
-  height: 93px;
-  flex-shrink: 0;
-  padding: var(--padding-lg) var(--padding-5xl);
-  box-sizing: border-box;
-}
-.pricelabel {
-  padding: 0 var(--padding-5xs);
 }
 .div {
   position: relative;
@@ -154,96 +122,18 @@
   line-height: 18px;
   font-weight: 500;
 }
-.priceandbuyregion,
-.priceandvaluelabel,
-.pricelabel1 {
+.priceandvaluelabel {
   align-self: stretch;
   background-color: var(--color-white1);
-  display: flex;
-  justify-content: flex-start;
-}
-.priceandvaluelabel {
   overflow: hidden;
+  display: flex;
   flex-direction: row;
   padding: var(--padding-sm) var(--padding-sm) var(--padding-sm)
-    var(--padding-4xs);
+    var(--padding-3xs);
   align-items: flex-end;
-  gap: var(--gap-lg);
-  font-size: var(--font-size-7xl);
-}
-.priceandbuyregion,
-.pricelabel1 {
-  align-items: flex-start;
-}
-.priceandbuyregion {
-  border-radius: var(--br-md);
-  flex-direction: column;
-  gap: var(--gap-lg);
-}
-.pricelabel1 {
-  overflow: hidden;
-  flex-direction: row;
-}
-.div2 {
-  position: relative;
-  font-size: var(--caption1-size);
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  font-weight: 500;
-}
-.priceandvaluelabel1,
-.setlimitsection {
-  align-self: stretch;
-  background-color: var(--color-white1);
-  display: flex;
   justify-content: flex-start;
-  gap: var(--gap-lg);
-}
-.priceandvaluelabel1 {
-  overflow: hidden;
-  flex-direction: row;
-  padding: var(--padding-5xs) 0;
-  align-items: flex-end;
+  gap: var(--gap-md);
   font-size: var(--font-size-6xl);
-}
-.setlimitsection {
-  flex-direction: column;
-  align-items: flex-start;
-}
-.slidercontinuous {
-  flex: 1;
-}
-.limitadjustsection {
-  overflow: hidden;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: var(--gap-lg);
-  text-align: center;
-  font-size: var(--font-size-4xl);
-}
-.limitadjustsection,
-.selectamountsection,
-.selectedamount {
-  align-self: stretch;
-  background-color: var(--color-white1);
-  display: flex;
-  padding: var(--padding-5xs);
-}
-.selectedamount {
-  border: 0;
-  font-weight: 500;
-  font-family: var(--headline-s1);
-  font-size: var(--font-size-4xl);
-  overflow: hidden;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
-.selectamountsection {
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
 }
 .primary-button {
   position: relative;
@@ -255,51 +145,78 @@
   color: var(--color-white1);
   text-align: center;
 }
-.makeofferbutton,
-.prepare-sell-order-button {
-  align-self: stretch;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .prepare-sell-order-button {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-5xs) var(--padding-6xl);
+  padding: var(--padding-4xs) var(--padding-5xl);
   background-color: var(--primary);
+  align-self: stretch;
   border-radius: var(--br-xl);
   height: 50px;
   flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
   flex-direction: row;
   box-sizing: border-box;
-  gap: var(--gap-lg);
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-md);
 }
 .prepare-sell-order-button:hover {
   background-color: #766ae7;
 }
-.makeofferbutton {
+.descriptiontitle,
+.makeofferbutton,
+.priceandbuyregion {
+  align-self: stretch;
   background-color: var(--color-white1);
+  display: flex;
+}
+.makeofferbutton,
+.priceandbuyregion {
   flex-direction: column;
-  padding: var(--padding-3xs);
+}
+.makeofferbutton {
+  overflow: hidden;
+  padding: var(--padding-2xs);
+  align-items: center;
+  justify-content: center;
+}
+.descriptiontitle,
+.priceandbuyregion {
+  justify-content: flex-start;
+  gap: var(--gap-md);
+}
+.priceandbuyregion {
+  align-items: flex-start;
+}
+.descriptiontitle {
+  overflow: hidden;
+  flex-direction: row;
+  padding: 13px var(--padding-md);
+  align-items: center;
+  font-size: var(--font-size-5xl);
 }
 .assertdetailview,
-.buysection {
+.descriptiondetails {
   display: flex;
-  flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.buysection {
+.descriptiondetails {
   align-self: stretch;
-  padding: var(--padding-5xs) 0 0;
+  background-color: var(--color-white1);
+  height: 93px;
+  flex-shrink: 0;
+  overflow: hidden;
+  flex-direction: row;
+  padding: 17px var(--padding-4xl);
+  box-sizing: border-box;
 }
 .assertdetailview {
   position: relative;
-  background-color: var(--color-white1);
   width: 100%;
-  padding: var(--padding-5xs);
-  box-sizing: border-box;
+  flex-direction: column;
   text-align: left;
   font-size: var(--font-size-xl);
   color: var(--black-000000100);
