@@ -146,14 +146,12 @@
 .to-harry-james,
 .transfer-money {
   position: absolute;
+  width: 97.39%;
+  top: calc(50% - 20px);
   left: 0;
   letter-spacing: 0.41px;
   line-height: 18px;
   display: inline-block;
-}
-.transfer-money {
-  width: 97.39%;
-  top: calc(50% - 20px);
 }
 .to-harry-james {
   width: 77.39%;

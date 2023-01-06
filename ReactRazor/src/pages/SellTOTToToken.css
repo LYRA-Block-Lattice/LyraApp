@@ -1,24 +1,18 @@
-.selecttypeoftot {
-  height: 40px;
-  align-items: center;
-}
 .selecttypeoftot,
 .tot-description2,
 .tot-name3 {
   background-color: var(--color-beige);
   border-radius: var(--br-sm);
   width: 301px;
+  height: 40px;
   flex-shrink: 0;
   overflow: hidden;
   display: flex;
   flex-direction: row;
   padding: var(--padding-5xs);
   box-sizing: border-box;
-  justify-content: flex-start;
-}
-.tot-name3 {
-  height: 40px;
   align-items: center;
+  justify-content: flex-start;
 }
 .selecttypeoftot {
   gap: var(--gap-lg);

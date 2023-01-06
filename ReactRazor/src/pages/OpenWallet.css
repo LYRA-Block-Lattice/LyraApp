@@ -79,12 +79,10 @@
 .sign-up-parent {
   overflow: hidden;
   display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.sign-up-parent {
   flex-direction: row;
   padding: var(--padding-3xs) 40px;
+  align-items: center;
+  justify-content: center;
   gap: 82px;
 }
 .openwallet {
