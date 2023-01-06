@@ -13,14 +13,14 @@
 }
 .lyrlabel {
   font-size: var(--font-size-2xs);
-  color: var(--color-gray-200);
+  color: var(--color-gray-400);
   text-align: left;
 }
 .balance-display-zone-child {
   position: relative;
   background-color: transparent;
   width: 22px;
-  height: 20px;
+  height: 8px;
   flex-shrink: 0;
 }
 .balance-display-zone {
@@ -34,7 +34,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-5xs) 0 var(--padding-5xs) var(--padding-3xs);
+  padding: var(--padding-6xs) 0 var(--padding-6xs) var(--padding-4xs);
   box-sizing: border-box;
   align-items: flex-end;
   justify-content: center;
@@ -63,7 +63,7 @@
 }
 .nft-label {
   font-size: var(--font-size-2xs);
-  color: var(--color-gray-200);
+  color: var(--color-gray-400);
 }
 .go-nft-button,
 .tot-count {
@@ -107,21 +107,20 @@
   overflow: hidden;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-xl);
+  gap: var(--gap-2xl);
   z-index: 2;
 }
 .maps-parent {
   border-radius: var(--br-md);
-  background: radial-gradient(50% 50%at 50% 50%, #395851, #0051ed);
   width: 423px;
   height: 247px;
   flex-shrink: 0;
-  padding: var(--padding-4xs);
+  padding: var(--padding-5xs);
   box-sizing: border-box;
   align-items: flex-start;
   justify-content: flex-start;
   position: relative;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
   z-index: 0;
 }
 .wallet-name-label {
@@ -277,99 +276,66 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: var(--gap-4xl);
+  gap: var(--gap-5xl);
 }
 .iconssection {
   display: flex;
   flex-direction: column;
-  padding: var(--padding-6xs);
+  padding: var(--padding-7xs);
   align-items: center;
   justify-content: center;
-}
-.icbaseline-generating-tokens-icon {
-  position: relative;
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
-  overflow: hidden;
 }
 .token {
   position: relative;
-  font-size: var(--font-size-3xl);
   letter-spacing: 0.41px;
   line-height: 18px;
-  display: inline-block;
-  font-family: var(--headline-s1);
-  color: var(--color-white1);
-  text-align: center;
-  width: 71px;
 }
-.select-token-catalog-button,
 .token-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.select-token-catalog-button {
-  cursor: pointer;
-  border: 0;
-  padding: var(--padding-7xl) var(--padding-4xl);
-  background-color: var(--tertiary);
-  border-radius: var(--br-sm);
-  box-shadow: 0 4px 23px rgba(0, 0, 0, 0.12);
+  border-radius: var(--br-lg) var(--br-lg) 0 0;
+  background-color: var(--primary);
   width: 80px;
-  height: 80px;
+  height: 32px;
   flex-shrink: 0;
-  box-sizing: border-box;
-  gap: var(--gap-2xs);
-}
-.fiat,
-.goods {
-  position: relative;
-  font-size: var(--font-size-3xl);
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  display: inline-block;
-  font-family: var(--headline-s1);
-  color: var(--color-white1);
-  text-align: center;
-  width: 73px;
-}
-.goods {
-  width: 74px;
-}
-.tradecatalog {
-  background-color: var(--color-white1);
   overflow: hidden;
-  padding: var(--padding-4xs);
-  gap: var(--gap-md);
-}
-.catalogselectionhorizontal,
-.tradecatalog {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  padding: var(--padding-7xs) 0;
+  box-sizing: border-box;
+  align-items: flex-end;
   justify-content: center;
 }
-.catalogselectionhorizontal-parent,
+.catalogtab,
+.catalogtab-parent,
 .market {
   background-color: var(--color-white1);
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: flex-start;
 }
-.catalogselectionhorizontal-parent {
+.catalogtab {
   overflow: hidden;
-  padding: var(--padding-xs) var(--padding-4xs);
-  gap: var(--gap-md);
+  flex-direction: row;
+  align-items: flex-start;
+}
+.catalogtab-parent,
+.market {
+  flex-direction: column;
+  align-items: center;
+}
+.catalogtab-parent {
+  width: 437px;
+  overflow: hidden;
+  padding: var(--padding-xs) var(--padding-5xs);
+  box-sizing: border-box;
+  gap: var(--gap-lg);
+  text-align: center;
+  font-size: var(--font-size-xl);
+  font-family: var(--headline-s1);
 }
 .market {
   position: relative;
   width: 100%;
   text-align: right;
-  font-size: var(--font-size-5xl);
+  font-size: var(--font-size-6xl);
   color: var(--color-white1);
   font-family: var(--font-sf-pro-text);
 }

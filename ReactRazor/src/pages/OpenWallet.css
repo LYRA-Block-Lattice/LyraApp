@@ -25,7 +25,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: var(--br-xl);
+  border-radius: var(--br-2xl);
   background-color: var(--sell1);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
@@ -84,7 +84,7 @@
 }
 .sign-up-parent {
   flex-direction: row;
-  padding: var(--padding-2xs) 40px;
+  padding: var(--padding-3xs) 40px;
   gap: 82px;
 }
 .openwallet {

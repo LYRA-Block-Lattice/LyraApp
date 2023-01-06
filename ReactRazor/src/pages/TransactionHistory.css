@@ -11,7 +11,7 @@
 .search-bar {
   display: flex;
   flex-direction: row;
-  padding: 0 var(--padding-2xs);
+  padding: 0 var(--padding-3xs);
   align-items: center;
   justify-content: center;
   gap: 22px;
@@ -24,10 +24,10 @@
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: var(--br-lg);
+  border-radius: var(--br-xl);
   background-color: var(--sell1);
 }
-.div1 {
+.div3 {
   position: absolute;
   top: calc(50% - 9px);
   left: 38.81%;
@@ -62,10 +62,10 @@
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: var(--br-lg);
+  border-radius: var(--br-xl);
   background-color: rgba(223, 224, 229, 0.5);
 }
-.div2 {
+.div4 {
   position: absolute;
   top: calc(50% - 9px);
   left: 27.96%;
@@ -111,7 +111,7 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-lg);
+  gap: var(--gap-xl);
   color: var(--color-white1);
 }
 .all-transactions {
@@ -203,7 +203,7 @@
   left: 4.66%;
   overflow: hidden;
 }
-.div3 {
+.div5 {
   position: absolute;
   top: calc(50% - 9px);
   left: 23.4%;
@@ -223,7 +223,7 @@
   overflow: hidden;
   max-height: 100%;
 }
-.div4,
+.div6,
 .parent {
   position: absolute;
 }
@@ -236,7 +236,7 @@
   left: 39.36%;
   overflow: hidden;
 }
-.div4 {
+.div6 {
   top: calc(50% - 9px);
   left: 39.29%;
   letter-spacing: 0.41px;
@@ -312,7 +312,7 @@
 }
 .receivedetailcard-parent {
   align-items: flex-start;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
   font-size: var(--other-m-size);
 }
 .transactionhistory {

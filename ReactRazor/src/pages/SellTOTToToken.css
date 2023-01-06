@@ -12,7 +12,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
-  padding: var(--padding-4xs);
+  padding: var(--padding-5xs);
   box-sizing: border-box;
   justify-content: flex-start;
 }
@@ -21,7 +21,7 @@
   align-items: center;
 }
 .selecttypeoftot {
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
 }
 .tot-description2,
 .tot-name3 {
@@ -46,9 +46,9 @@
 .prepare-sell-order-button9 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs) var(--padding-lg);
+  padding: var(--padding-5xs) var(--padding-xl);
   background-color: var(--tertiary);
-  border-radius: var(--br-xl);
+  border-radius: var(--br-2xl);
   height: 30px;
   flex-shrink: 0;
   overflow: hidden;
@@ -81,9 +81,9 @@
 .prepare-sell-order-button10 {
   cursor: pointer;
   border: 0;
-  padding: var(--padding-4xs) var(--padding-3xl);
+  padding: var(--padding-5xs) var(--padding-4xl);
   background-color: var(--secondary);
-  border-radius: var(--br-xl);
+  border-radius: var(--br-2xl);
   height: 40px;
   flex-shrink: 0;
   overflow: hidden;
@@ -98,14 +98,14 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-xl) var(--padding-sm);
+  padding: var(--padding-2xl) var(--padding-sm);
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-2xl);
+  gap: var(--gap-3xl);
 }
 .to-get-tokennft {
   position: relative;
-  font-size: var(--font-size-5xl);
+  font-size: var(--font-size-6xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
@@ -121,15 +121,15 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: var(--padding-xl) var(--padding-xs);
+  padding: var(--padding-2xl) var(--padding-xs);
   align-items: center;
   justify-content: flex-start;
-  gap: var(--gap-3xl);
+  gap: var(--gap-4xl);
 }
 .selltottotoken {
   position: relative;
   width: 100%;
-  padding: var(--padding-5xl) var(--padding-6xl);
+  padding: var(--padding-6xl) var(--padding-7xl);
   box-sizing: border-box;
-  gap: var(--gap-md);
+  gap: var(--gap-lg);
 }
