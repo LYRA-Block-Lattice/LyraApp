@@ -28,6 +28,9 @@ using Lyra.Core.Accounts;
 using Newtonsoft.Json.Linq;
 using Lyra.Data.API.WorkFlow.UniMarket;
 using BusinessLayer.Lib;
+using RestSharp;
+using System.Threading;
+using OpenSeaClient;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -43,11 +46,12 @@ namespace Dealer.Server.Services
         private DealerDb _db;
         private IHubContext<DealerHub, IHubPushMethods> _hub;
         ILyraAPI _client;
+        RestClient _restc;
 
         private string _myDealerID;
 
         public DealerController(DealerDb db, IHubContext<DealerHub, IHubPushMethods> hub,
-            ILogger<DealerController> logger,
+            ILogger<DealerController> logger, RestClient restc,
             IConfiguration Configuration, Keeper keeper, ILyraAPI client)
         {
             _db = db;
@@ -56,6 +60,7 @@ namespace Dealer.Server.Services
             _logger = logger;
             _keeper = keeper;
             _client = client;
+            _restc = restc;
 
             _myDealerID = Signatures.GetAccountIdFromPrivateKey(_config["DealerKey"]);
         }
@@ -325,39 +330,96 @@ namespace Dealer.Server.Services
             return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidParameterFormat };
         }
 
-        [Route("GetOTC")]
+        [Route("Orders")]
         [HttpGet]
-        public async Task<UPOTCOrders> GetOTCAsync()
+        public async Task<IActionResult> GetOrdersAsync(string? catalog)
         {
             // get tradable orders
-            var tosret = await _client.FindTradableOtcAsync();
-            if (tosret.Successful())
-            {
-                var allblks = tosret.GetBlocks("orders");
-                var odrs = allblks.Cast<IUniOrder>()
-                    //.Where(a => a.Order.dealerId == _myDealerID)
-                    .ToList();
-                var daos = tosret.GetBlocks("daos").Cast<IDao>().ToList();
+            var request = new RestRequest("Orders");
+            var response = await _restc.GetAsync(request);
 
-                Dictionary<string, UserStats?> userStats = new Dictionary<string, UserStats?>();
-                foreach (var o in odrs)
+            if (response.IsSuccessful)
+            {
+                var orders = JsonConvert.DeserializeObject<List<JsonOrder>>(response.Content);
+
+                Dictionary<string, TxUser?> userStats = new Dictionary<string, TxUser?>();
+                foreach (var o in orders)
                 {
-                    if (!userStats.ContainsKey(o.OwnerAccountId))
-                    {
-                        var us = await GetUserByAccountIdAsync(o.OwnerAccountId);
-                        userStats.Add(o.OwnerAccountId, us.Deserialize<UserStats>());
-                    }
+                    if (userStats.ContainsKey(o.OwnerAccountId))
+                        continue;
+
+                    var user = await _db.GetUserByAccountIdAsync(o.OwnerAccountId);
+                    if (user == null)
+                        continue;
+
+                    userStats.Add(o.OwnerAccountId, user);
                 }
 
-                return new UPOTCOrders
+                foreach (var o in orders)
                 {
-                    container = tosret,
-                    users = userStats.Values.ToList()
-                };
+                    if (!userStats.ContainsKey(o.OwnerAccountId))
+                        continue;
+                    
+                    var us = userStats[o.OwnerAccountId];
+
+                    o.UserName = us.User.UserName;
+                    o.Avatar = us.User.AvatarId;
+                }
+
+                var result = JsonConvert.SerializeObject(orders);
+                return Content(result, "application/json");
             }
 
             return null;
         }
+
+        private class JsonOrder
+        {
+            public string OwnerAccountId { get; set; }
+            public string AccountID { get; set; }
+            public UniOrder Order { get; set; }
+            public UniOrderStatus UOStatus { get; set; }
+            public string DaoName { get; set; }
+
+            public string UserName { get; set; } = null;
+            public string Avatar { get; set; } = null;
+            public int Total { get; set; }
+            public int Finished { get; set; }
+        }
+
+        //[Route("GetOTC")]
+        //[HttpGet]
+        //public async Task<UPOTCOrders> GetOTCAsync()
+        //{
+        //    // get tradable orders
+        //    var tosret = await _client.FindTradableOtcAsync();
+        //    if (tosret.Successful())
+        //    {
+        //        var allblks = tosret.GetBlocks("orders");
+        //        var odrs = allblks.Cast<IUniOrder>()
+        //            //.Where(a => a.Order.dealerId == _myDealerID)
+        //            .ToList();
+        //        var daos = tosret.GetBlocks("daos").Cast<IDao>().ToList();
+
+        //        Dictionary<string, UserStats?> userStats = new Dictionary<string, UserStats?>();
+        //        foreach (var o in odrs)
+        //        {
+        //            if (!userStats.ContainsKey(o.OwnerAccountId))
+        //            {
+        //                var us = await GetUserByAccountIdAsync(o.OwnerAccountId);
+        //                userStats.Add(o.OwnerAccountId, us.Deserialize<UserStats>());
+        //            }
+        //        }
+
+        //        return new UPOTCOrders
+        //        {
+        //            container = tosret,
+        //            users = userStats.Values.ToList()
+        //        };
+        //    }
+
+        //    return null;
+        //}
 
         [Route("GetTradeBrief")]
         [HttpGet]

@@ -31,6 +31,7 @@
     "webpack-cli": "^5.0.1"
   },
   "scripts": {
+    "start": "react-scripts start",
     "pack": "webpack",
     "clean": "del-cli wwwroot/scripts/* node_modules",
     "build": "react-scripts build && npm run build-rename",
@@ -68,6 +69,8 @@
   },
   "dependencies": {
     "@types/blazor__javascript-interop": "^3.1.2",
+    "crypto-js": "^4.1.1",
+    "lyra-crypto": "^0.2.2",
     "react-xarrows": "^2.0.2"
   }
 }

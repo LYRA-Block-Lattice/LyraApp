@@ -78,10 +78,27 @@ namespace Dealer.Server.Services
             _dealerHub = dealerHub;
             _db = db;
             _dealer = dealer;
-            _lyraApi = LyraRestClient.Create(config["network"], Environment.OSVersion.ToString(), "Dealer", "1.0");
             _logger = logger;
             Prices = new ConcurrentDictionary<string, decimal>();
             Prices.TryAdd("usd", 1m); // for dumb
+
+            var networkid = _config["network"];
+            var nodeAddr = _config["lyraNode"];
+
+            string url;
+            if (networkid == "mainnet")
+                url = $"https://mainnet.lyra.live/api/Node/";
+            else if (networkid == "testnet")
+                url = $"https://testnet.lyra.live/api/Node/";
+            else
+                url = $"https://devnet.lyra.live/api/Node/";
+
+            if (!string.IsNullOrWhiteSpace(nodeAddr))
+            {
+                url = $"https://{nodeAddr}/api/Node/";
+            }
+            
+            _lyraApi = LyraRestClient.Create(networkid, Environment.OSVersion.ToString(), "Dealer", "1.0", url);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

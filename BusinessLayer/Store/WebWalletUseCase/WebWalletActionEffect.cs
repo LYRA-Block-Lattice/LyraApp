@@ -266,6 +266,7 @@ namespace Nebula.Store.WebWalletUseCase
                 });
 
                 await _localStorage.SetItemAsStringAsync("AccountId_" + config["network"], wallet.AccountId);
+				
             }
             catch (FileNotFoundException ex)
             {

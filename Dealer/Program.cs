@@ -5,8 +5,10 @@ using Lyra.Core.API;
 using Lyra.Data.API;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
+using RestSharp;
 using Serilog;
 using Serilog.Events;
+using System.Net;
 
 var config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false)
@@ -32,7 +34,7 @@ builder.Services.AddScoped<ILyraAPI>(provider =>
                 {
                     var networkid = builder.Configuration["network"];
                     var nodeAddr = builder.Configuration["lyraNode"];
-
+                    
                     string url;
                     if (networkid == "mainnet")
                         url = $"https://mainnet.lyra.live/api/Node/";
@@ -69,6 +71,13 @@ builder.Services.AddResponseCompression(opts =>
         new[] { "application/octet-stream" });
 });
 
+builder.Services.AddSwaggerGen();
+
+var nodeAddr = builder.Configuration["lyraNode"];
+var rc = new RestClient($"https://{nodeAddr}/api/EC");
+ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+builder.Services.AddSingleton(rc);
+
 builder.Services.AddSingleton<Keeper>();
 builder.Services.AddHostedService<Keeper>(provider => provider.GetService<Keeper>());
 
@@ -80,6 +89,8 @@ app.UseResponseCompression();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 else
 {
