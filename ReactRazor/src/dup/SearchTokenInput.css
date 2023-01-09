@@ -1,0 +1,17 @@
+﻿.sell2 {
+    position: relative;
+    font-size: var(--font-size-5xl);
+    letter-spacing: 0.41px;
+    line-height: 18px;
+    font-weight: 500;
+    font-family: var(--caption1);
+    color: var(--black-000000100);
+    text-align: left;
+    display: inline-block;
+    width: 296px;
+    margin-bottom: 25px;
+}
+
+.MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] {
+    background: var(--color-beige);
+}

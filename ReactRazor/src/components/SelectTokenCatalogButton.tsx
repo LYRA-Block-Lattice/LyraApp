@@ -29,12 +29,12 @@ const SelectTokenCatalogButton: FunctionComponent<
       id={`${act}-${token}`}
       >
       <img
-        className="icbaseline-generating-tokens-icon2"
+        className="icbaseline-generating-tokens-icon3"
         alt=""
         src={icbaselineGeneratingToken}
       />
-      <div className="token-container">
-        <b className="token1">{token}</b>
+      <div className="token-wrapper">
+        <b className="token2">{token}</b>
       </div>
     </button>
   );

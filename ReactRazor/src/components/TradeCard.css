@@ -1,22 +1,22 @@
-.icbaseline-generating-tokens-icon {
+.icbaseline-generating-tokens-icon1 {
   position: relative;
   width: 32px;
   height: 32px;
   flex-shrink: 0;
   overflow: hidden;
 }
-.order-image-child {
+.order-image-item {
   position: relative;
   width: 19.5px;
   height: 7.36px;
   flex-shrink: 0;
 }
-.order-image {
+.order-image1 {
   cursor: pointer;
   border: 0;
   padding: 0;
   background-color: var(--buy1);
-  border-radius: var(--br-md) var(--br-md) 0 0;
+  border-radius: var(--br-sm) var(--br-sm) 0 0;
   box-shadow: 0 4px 23px rgba(0, 0, 0, 0.12);
   width: 110px;
   height: 50px;
@@ -27,47 +27,47 @@
   justify-content: center;
   gap: var(--gap-2xs);
 }
-.open {
+.open1 {
   position: relative;
   font-size: var(--caption1-size);
   font-family: var(--font-calibri);
   color: var(--color-white1);
   text-align: center;
 }
-.order-status {
+.order-status1 {
   align-self: stretch;
-  border-radius: 0 0 var(--br-md) var(--br-md);
-  background-color: var(--info1);
+  border-radius: 0 0 var(--br-sm) var(--br-sm);
+  background-color: var(--info);
   display: flex;
   flex-direction: row;
-  padding: var(--padding-9xs) var(--padding-10xs);
+  padding: var(--padding-8xs) var(--padding-9xs);
   align-items: center;
   justify-content: center;
 }
-.banner-image,
-.order-banner {
+.banner-image1,
+.order-banner1 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
-.banner-image {
+.banner-image1 {
   cursor: pointer;
   border: 0;
   padding: 0;
   background-color: transparent;
 }
-.frame-child,
+.arrow-icon,
 .trade {
   position: relative;
 }
-.frame-child {
+.arrow-icon {
   width: 12.5px;
   height: 7.36px;
   flex-shrink: 0;
 }
-.tetherusdt1 {
+.tetherusdt2 {
   position: relative;
   text-align: left;
 }
@@ -88,8 +88,8 @@
   flex-shrink: 0;
 }
 .am-wrapper,
-.block1,
-.block2 {
+.block11,
+.block21 {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -101,53 +101,53 @@
   flex-direction: row;
   text-align: left;
 }
-.block1,
-.block2 {
+.block11,
+.block21 {
   flex-direction: column;
 }
-.block2 {
+.block21 {
   overflow: hidden;
   align-items: flex-end;
 }
-.details-section-child {
+.details-section-item {
   position: relative;
   width: 4px;
   height: 15px;
   flex-shrink: 0;
   overflow: hidden;
 }
-.block3 {
+.block31 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.details-section,
-.title-section {
+.details-section1,
+.title-section1 {
   display: flex;
   justify-content: flex-start;
   gap: var(--gap-xs);
 }
-.details-section {
+.details-section1 {
   align-self: stretch;
   overflow: hidden;
   flex-direction: row;
   align-items: center;
 }
-.title-section {
-  border-radius: var(--br-xs) var(--br-xs) 0 0;
+.title-section1 {
+  border-radius: var(--br-2xs) var(--br-2xs) 0 0;
   flex-direction: column;
   align-items: flex-start;
 }
-.order-brief-section {
+.order-brief-section1 {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
   gap: var(--gap-xl);
 }
-.width-controller {
+.width-controller1 {
   position: relative;
   border-top: 1px solid var(--black-000000100);
   box-sizing: border-box;
@@ -155,24 +155,24 @@
   height: 1px;
   flex-shrink: 0;
 }
-.ordercard,
-.trades-section {
+.ordercard1,
+.trades-section1 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.trades-section {
+.trades-section1 {
   align-self: stretch;
   height: 0;
   flex-shrink: 0;
   overflow: hidden;
 }
-.ordercard {
-  border-radius: var(--br-md);
+.ordercard1 {
+  border-radius: var(--br-sm);
   background-color: var(--color-white1);
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  border: 1px solid var(--color-gray-400);
+  border: 1px solid var(--color-gray-600);
   padding: var(--padding-5xs);
   gap: var(--gap-4xs);
   text-align: right;

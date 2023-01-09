@@ -1,4 +1,5 @@
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent, useCallback, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   FormControl,
   InputLabel,
@@ -10,16 +11,39 @@ import {
   Icon,
   InputAdornment,
   IconButton,
+  SelectChangeEvent
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "./OpenWallet.css";
 
+import * as actionTypes from "../app/actionTypes";
+import { getWalletNamesSelector } from "../app/selectors";
+
 const OpenWallet: FunctionComponent = () => {
   const navigate = useNavigate();
 
-  const onSignUpClick = useCallback(() => {
-    navigate("/create-wallet");
-  }, [navigate]);
+  const [name, setName] = useState("");
+  const [index, setIndex] = useState<number>(0);
+  const [password, setPassword] = useState("");
+  const names = useSelector(getWalletNamesSelector);
+  const dispatch = useDispatch();
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setIndex(+event.target.value);
+  };
+
+  const onOpenWallet = useCallback(() => {
+    console.log("names is " + names);
+    console.log("selected name is " + names[index]);
+
+    dispatch({
+      type: actionTypes.WALLET_OPEN,
+      payload: {
+        name: names[index],
+        password: password
+      }
+    });
+  }, [names, name, index, password, dispatch]);
 
   return (
     <div className="openwallet">
@@ -35,9 +59,18 @@ const OpenWallet: FunctionComponent = () => {
         variant="standard"
       >
         <InputLabel color="primary">Wallet Name</InputLabel>
-        <Select color="primary" size="medium" label="Wallet Name">
-          <MenuItem value="wallet a">wallet a</MenuItem>
-          <MenuItem value="name b">name b</MenuItem>
+        <Select
+          color="primary"
+          size="medium"
+          label="Wallet Name"
+          onChange={handleChange}
+          value={index.toString()}
+        >
+          {names?.map((name: any, index: any) => (
+            <MenuItem key={index} value={index}>
+              {name}
+            </MenuItem>
+          ))}
         </Select>
         <FormHelperText />
       </FormControl>
@@ -54,20 +87,21 @@ const OpenWallet: FunctionComponent = () => {
                 <Icon>visibility</Icon>
               </IconButton>
             </InputAdornment>
-          ),
+          )
         }}
         label="Password"
         placeholder="Placeholder"
         size="medium"
         margin="none"
         required
+        onChange={(e) => setPassword(e.target.value)}
       />
-      <button className="open-wallet-button">
+      <button className="open-wallet-button" onClick={onOpenWallet}>
         <div className="button-shape1" />
         <div className="label">Open</div>
       </button>
       <div className="sign-up-parent">
-        <button className="sign-up1" onClick={onSignUpClick}>
+        <button className="sign-up1" onClick={onOpenWallet}>
           Create Wallet
         </button>
         <button className="forgot-password-copy">Forgot password?</button>

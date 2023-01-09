@@ -1,243 +1,170 @@
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent, useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import SellItem from "../components/SellItem";
+import MarketOrder from "../components/MarketOrder";
+import DisplaySellItems from "../dup/DisplaySellItems";
+
 import "./Market.css";
+
+interface customWindow extends Window {
+  rrComponent?: any;
+  rrProxy?: any;
+}
+declare const window: customWindow;
 
 const Market: FunctionComponent = () => {
   const navigate = useNavigate();
 
-  const onNFTCountClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
+  const [lyrbns, setLyrbns] = useState(0);
+  const [usdt, setUsdt] = useState(0);
 
-  const onGoNFTButtonClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
+  const [nftcnt, setNftcnt] = useState(0);
+  const [totcnt, setTotcnt] = useState(0);
+  const [sellcnt, setSellcnt] = useState(0);
+  const [bidcnt, setBidcnt] = useState(0);
 
-  const onTOTCountClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
+  // function to get json from rest api
+  const getJson = async (url: string) => {
+    const response = await fetch(url);
+    return response.json();
+  };
 
-  const onGoTOTButtonClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
+  // function to get web content from rest api
+  const getWebContent = async (url: string) => {
+    const response = await fetch(url);
+    return response.text();
+  };
 
-  const onSellingCountClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
-
-  const onGoSellingButtonClick = useCallback(() => {
-    navigate("/viewordersform");
-  }, [navigate]);
-
-  const onBuyingCountClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
-
-  const onGoBuyingButtonClick = useCallback(() => {
-    navigate("/viewtradesform");
-  }, [navigate]);
-
-  const onWalletNameLabelClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
-
-  const onQRCodeButtonRoundClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
-
-  const onQRCodeButtonContainerClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
-
-  const onDaoButtonClick = useCallback(() => {
-    navigate("/redir");
+  const onBalanceDisplayZoneClick = useCallback(() => {
+    navigate("/");
   }, [navigate]);
 
   const onSwapButtonClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
-
-  const onInvestButtonClick = useCallback(() => {
-    navigate("/redir");
+    navigate("/starttocreateorder");
   }, [navigate]);
 
   const onSwapButton1Click = useCallback(() => {
-    navigate("/redir");
+    navigate("/viewordersform");
+  }, [navigate]);
+
+  const onDEXButtonClick = useCallback(() => {
+    navigate("/viewtradesform");
   }, [navigate]);
 
   return (
     <div className="market">
-      <div className="bannersection">
-        <div className="walletcard">
-          <div className="mask-group">
-            <div className="maps-parent">
-              <img className="maps-icon" alt="" src="_content/ReactRazor/asserts/maps.svg" />
-              <a className="balance-display-zone">
-                <b className="usdtbalance">1,025,000</b>
-                <b className="lyrlabel">LYR</b>
-                <div className="balance-display-zone-child" />
-                <b className="usdtbalance">5,000</b>
-                <b className="lyrlabel">USDT</b>
-              </a>
-              <div className="token-lists">
-                <button className="go-nft-button" onClick={onGoNFTButtonClick}>
-                  <button className="nft-count" onClick={onNFTCountClick}>
-                    12
-                  </button>
-                  <b className="nft-label">NFT</b>
-                </button>
-                <button className="go-nft-button" onClick={onGoTOTButtonClick}>
-                  <button className="tot-count" onClick={onTOTCountClick}>
-                    3
-                  </button>
-                  <b className="nft-label">TOT</b>
-                </button>
-                <button
-                  className="go-nft-button"
-                  onClick={onGoSellingButtonClick}
-                >
-                  <button className="tot-count" onClick={onSellingCountClick}>
-                    0
-                  </button>
-                  <b className="nft-label">Selling</b>
-                </button>
-                <button
-                  className="go-nft-button"
-                  onClick={onGoBuyingButtonClick}
-                >
-                  <button className="tot-count" onClick={onBuyingCountClick}>
-                    0
-                  </button>
-                  <b className="nft-label">Buying</b>
-                </button>
-              </div>
-            </div>
-            <button
-              className="wallet-name-label"
-              onClick={onWalletNameLabelClick}
-            >
-              My Primary Account
-            </button>
-            <div
-              className="qrcode-button"
-              onClick={onQRCodeButtonContainerClick}
-            >
-              <div
-                className="qrcode-button-round"
-                onClick={onQRCodeButtonRoundClick}
-              />
-              <img
-                className="qrcode-icon"
-                alt=""
-                src="_content/ReactRazor/asserts/qrcode-icon.svg"
-              />
-            </div>
-            <div className="wallet-decoration">LYRA WALLET</div>
-            <div className="rectangle" />
+      <div className="wallet-card1">
+        <div className="wallet-card-child">
+          <div className="rectangle-container">
             <div className="rectangle1" />
           </div>
         </div>
-      </div>
-      <div className="iconssection">
-        <div className="dao-button-parent">
-          <button className="dao-button" onClick={onDaoButtonClick}>
-            <img
-              className="home-icon-interlocution"
-              alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution.svg"
-            />
-            <div className="ranking">DAO</div>
-          </button>
-          <button className="dao-button" onClick={onSwapButtonClick}>
-            <img
-              className="home-icon-interlocution"
-              alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution1.svg"
-            />
-            <div className="ranking">OTC</div>
-          </button>
-          <button className="dao-button" onClick={onInvestButtonClick}>
-            <img
-              className="home-icon-interlocution"
-              alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution2.svg"
-            />
-            <div className="ranking">Invest</div>
-          </button>
-          <button className="dao-button" onClick={onSwapButton1Click}>
-            <img
-              className="home-icon-interlocution"
-              alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution3.svg"
-            />
-            <div className="ranking">Swap</div>
-          </button>
-        </div>
-      </div>
-      <div className="iconssection">
-        <div className="dao-button-parent">
-          <button className="dao-button">
-            <img
-              className="home-icon-interlocution"
-              alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution4.svg"
-            />
-            <div className="ranking">DEX</div>
-          </button>
-          <button className="dao-button">
-            <img
-              className="home-icon-interlocution"
-              alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution5.svg"
-            />
-            <div className="ranking">NFT</div>
-          </button>
-          <button className="dao-button">
-            <img
-              className="home-icon-interlocution"
-              alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution6.svg"
-            />
-            <div className="ranking">Mint</div>
-          </button>
-          <button className="dao-button">
-            <img
-              className="home-icon-interlocution"
-              alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution7.svg"
-            />
-            <div className="ranking">Staking</div>
-          </button>
-        </div>
-      </div>
-      <div className="catalogtab-parent">
-        <div className="catalogtab">
-          <div className="token-wrapper">
-            <b className="token">Token</b>
-          </div>
-          <div className="token-wrapper">
-            <b className="token">NFT</b>
-          </div>
-          <div className="token-wrapper">
-            <b className="token">Fiat</b>
-          </div>
-          <div className="token-wrapper">
-            <b className="token">Goods</b>
-          </div>
-          <div className="token-wrapper">
-            <b className="token">Service</b>
+        <div className="frame-div">
+          <div className="balance-display-zone-group">
+            <button
+              className="balance-display-zone1"
+              onClick={onBalanceDisplayZoneClick}
+            >
+              <b className="wallet-name-label1">My Primary Account</b>
+              <div className="balance-display-zone-inner" />
+              <b className="usdtbalance2">1,025,000</b>
+              <b className="lyrlabel1">LYR</b>
+              <div className="rectangle-div" />
+            </button>
+            <div className="qrcode-button-container">
+              <button className="qrcode-button1">
+                <div className="qrcode-button-round1" />
+                <img
+                  className="qrcode-icon1"
+                  alt=""
+                  src="_content/ReactRazor/asserts/qrcode-icon.svg"
+                />
+              </button>
+            </div>
           </div>
         </div>
-        <SellItem
-          offering="BTC"
-          biding="tether/USDT"
-          orderStatus="Open"
-          price="10,323"
-          amount="1113.2"
-          limitMin="3.2"
-          limitMax="3.2"
+      </div>
+      <div className="iconssection-container">
+        <div className="iconssection1">
+          <div className="swap-button-group">
+            <button className="swap-button2" onClick={onSwapButtonClick}>
+              <img
+                className="home-icon-interlocution6"
+                alt=""
+                src="_content/ReactRazor/asserts/home--icon--interlocution6.svg"
+              />
+              <div className="ranking6">New Sell</div>
+            </button>
+            <button className="swap-button2" onClick={onSwapButton1Click}>
+              <img
+                className="home-icon-interlocution6"
+                alt=""
+                src="_content/ReactRazor/asserts/home--icon--interlocution7.svg"
+              />
+              <div className="ranking6">My Orders</div>
+            </button>
+            <button className="swap-button2" onClick={onDEXButtonClick}>
+              <img
+                className="home-icon-interlocution6"
+                alt=""
+                src="_content/ReactRazor/asserts/home--icon--interlocution8.svg"
+              />
+              <div className="ranking6">My Trades</div>
+            </button>
+            <button className="swap-button2">
+              <img
+                className="home-icon-interlocution6"
+                alt=""
+                src="_content/ReactRazor/asserts/home--icon--interlocution9.svg"
+              />
+              <div className="ranking9">ODR</div>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="searchsection">
+        <input
+          className="searchsection-child"
+          type="search"
+          placeholder="Search products/token/NFT/TOT etc."
         />
+      </div>
+      <div className="orderandcatalog">
+        <div className="tradableorderssection1">
+          <div className="catalogtab1">
+            <div className="token-group">
+              <b className="token1">Token</b>
+              <div className="ellipse-container">
+                <img
+                  className="group-inner"
+                  alt=""
+                  src="_content/ReactRazor/asserts/ellipse-43.svg"
+                />
+                <div className="div2">18</div>
+              </div>
+            </div>
+            <div className="nft-group">
+              <b className="token1">NFT</b>
+              <div className="ellipse-container">
+                <img
+                  className="group-inner"
+                  alt=""
+                  src="_content/ReactRazor/asserts/ellipse-43.svg"
+                />
+                <div className="div2">18</div>
+              </div>
+            </div>
+            <div className="fiat-container">
+              <b className="fiat1">Fiat</b>
+            </div>
+            <div className="fiat-container">
+              <b className="fiat1">Goods</b>
+            </div>
+            <div className="fiat-container">
+              <b className="fiat1">Service</b>
+            </div>
+          </div>
+          <DisplaySellItems />
+        </div>
       </div>
     </div>
   );

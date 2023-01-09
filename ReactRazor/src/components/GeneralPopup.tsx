@@ -1,15 +1,32 @@
 import { FunctionComponent } from "react";
 import "./GeneralPopup.css";
+import MintFiatToken from "../pages/MintFiatToken";
+import CreateTokenForm from "../pages/CreateTokenForm";
+import CreateTOTForm from "../pages/CreateTOTForm";
+import CreateNFTForm from "../pages/CreateNFTForm";
 
 type GeneralPopupType = {
-  onClose?: () => void;
+  onClose?: (ticker?: string) => void;
   children?: React.ReactNode;
+  tag?: string;
 };
 
-const GeneralPopup: FunctionComponent<GeneralPopupType> = props => {
+const GeneralPopup: FunctionComponent<GeneralPopupType> = (props) => {
+  const components: { [index: string]: any } = {
+    Token: CreateTokenForm,
+    Fiat: MintFiatToken,
+    NFT: CreateNFTForm,
+    TOT: CreateTOTForm,
+    Goods: CreateTOTForm,
+    Service: CreateTOTForm
+  };
+
+  const TagName = components[props.tag || "Token"];
+
   return (
     <div className="generalpopup">
-      <div>{props.children}</div>
+      {props.children}
+      <TagName onClose={props.onClose} />
     </div>
   );
 };

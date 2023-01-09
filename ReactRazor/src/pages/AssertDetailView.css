@@ -66,7 +66,7 @@
   justify-content: flex-start;
 }
 .asserttitleregion {
-  border-radius: var(--br-md);
+  border-radius: var(--br-sm);
   flex-direction: column;
   padding: var(--padding-5xs);
   align-items: flex-start;
@@ -98,36 +98,31 @@
   gap: var(--gap-sm);
 }
 .assertdetailview1,
-.assertstatssection {
+.assertstatssection,
+.descriptiontitle {
   align-self: stretch;
   display: flex;
   justify-content: flex-start;
 }
 .assertstatssection {
-  border-radius: var(--br-md) var(--br-md) 0 0;
+  border-radius: var(--br-sm) var(--br-sm) 0 0;
   background-color: var(--color-white1);
   overflow: hidden;
   flex-direction: row;
   padding: var(--padding-5xs);
   align-items: center;
-  gap: 20px;
+  gap: var(--gap-4xl);
 }
-.assertdetailview1 {
+.assertdetailview1,
+.descriptiontitle {
   flex-direction: column;
   align-items: flex-start;
 }
-.descriptiondetails,
-.descriptiontitle,
-.pricelabel {
-  align-self: stretch;
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-}
 .descriptiontitle {
-  border-radius: var(--br-md);
-  background-color: var(--color-gray-200);
+  border-radius: var(--br-sm);
+  background-color: var(--color-gray-400);
+  overflow: hidden;
+  flex-direction: row;
   padding: var(--padding-2xs) var(--padding-md);
   align-items: center;
   gap: var(--gap-lg);
@@ -135,27 +130,26 @@
 }
 .descriptiondetails,
 .pricelabel {
-  background-color: var(--color-white1);
+  overflow: hidden;
+  flex-direction: row;
   align-items: flex-start;
 }
 .descriptiondetails {
+  align-self: stretch;
+  background-color: var(--color-white1);
   height: 93px;
   flex-shrink: 0;
+  display: flex;
   padding: var(--padding-lg) var(--padding-5xl);
   box-sizing: border-box;
+  justify-content: flex-start;
 }
 .pricelabel {
   padding: 0 var(--padding-5xs);
 }
-.div {
-  position: relative;
-  font-size: var(--font-size-xl);
-  letter-spacing: 0.41px;
-  line-height: 18px;
-  font-weight: 500;
-}
 .priceandbuyregion,
 .priceandvaluelabel,
+.pricelabel,
 .pricelabel1 {
   align-self: stretch;
   background-color: var(--color-white1);
@@ -176,7 +170,7 @@
   align-items: flex-start;
 }
 .priceandbuyregion {
-  border-radius: var(--br-md);
+  border-radius: var(--br-sm);
   flex-direction: column;
   gap: var(--gap-lg);
 }
@@ -184,12 +178,16 @@
   overflow: hidden;
   flex-direction: row;
 }
-.div2 {
+.div6,
+.tetherusdt {
   position: relative;
-  font-size: var(--caption1-size);
+  font-size: var(--font-size-xl);
   letter-spacing: 0.41px;
   line-height: 18px;
   font-weight: 500;
+}
+.div6 {
+  font-size: var(--caption1-size);
 }
 .priceandvaluelabel1,
 .setlimitsection {
@@ -268,7 +266,7 @@
   border: 0;
   padding: var(--padding-5xs) var(--padding-6xl);
   background-color: var(--primary);
-  border-radius: var(--br-2xl);
+  border-radius: var(--br-xl);
   height: 50px;
   flex-shrink: 0;
   flex-direction: row;
