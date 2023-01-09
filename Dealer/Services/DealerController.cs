@@ -330,6 +330,34 @@ namespace Dealer.Server.Services
             return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidParameterFormat };
         }
 
+        // for a single order
+        [Route("Order")]
+        [HttpGet]
+        public async Task<IActionResult> GetOrderAsync(string orderId)
+        {
+            // get tradable orders
+            var request = new RestRequest("Order")
+                .AddQueryParameter("orderId", orderId);
+            var response = await _restc.GetAsync(request);
+
+            if (response.IsSuccessful)
+            {
+                var order = JsonConvert.DeserializeObject<JsonOrder>(response.Content);
+
+                var user = await _db.GetUserByAccountIdAsync(order.OwnerAccountId);
+                if(user != null)
+                {
+                    order.UserName = user.User.UserName;
+                    order.Avatar = user.User.AvatarId;
+                }                
+
+                var result = JsonConvert.SerializeObject(order);
+                return Content(result, "application/json");
+            }
+
+            return null;
+        }
+
         [Route("Orders")]
         [HttpGet]
         public async Task<IActionResult> GetOrdersAsync(string? catalog)
@@ -373,7 +401,7 @@ namespace Dealer.Server.Services
             return null;
         }
 
-        private class JsonOrder
+        public class JsonOrder
         {
             public string OwnerAccountId { get; set; }
             public string AccountID { get; set; }

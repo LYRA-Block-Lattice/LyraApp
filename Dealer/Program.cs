@@ -104,8 +104,8 @@ app.UseCors(builder =>
     .WithOrigins(
         "https://dealertestnet.lyra.live",
         "https://dealer.lyra.live",
-        //"https://localhost:8098",
-        //"http://localhost:5098",
+        "https://localhost:8098",
+        "http://localhost:3000",
         "https://lyra.live",
         "https://apptestnet.lyra.live",
         "https://app.lyra.live"

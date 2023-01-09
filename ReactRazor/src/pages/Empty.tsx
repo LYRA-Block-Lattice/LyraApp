@@ -17,9 +17,7 @@ const Empty: FunctionComponent = () => {
     setMatterhornPopupOpen(false);
   }, []);
 
-  useEffect(() => {
-
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <>

@@ -1,6 +1,5 @@
 import { FunctionComponent, useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import OrderCard from "../components/OrderCard";
 import SellItem from "../components/SellItem";
 import "./Market.css";
 
