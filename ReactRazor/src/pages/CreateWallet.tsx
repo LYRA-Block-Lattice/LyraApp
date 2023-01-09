@@ -1,4 +1,6 @@
 import { FunctionComponent, useCallback, useState } from "react";
+import { FunctionComponent, useCallback, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   TextField,
   Input,
@@ -6,9 +8,10 @@ import {
   InputAdornment,
   IconButton,
   FormControlLabel,
-  Checkbox,
+  Checkbox
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import * as actionTypes from "../app/actionTypes";
 import "./CreateWallet.css";
 
 interface customWindow extends Window {
@@ -35,8 +38,31 @@ const CreateWallet: FunctionComponent = () => {
   }, [name, password, password2, chkkey, pvk, navigate]);
 
   const onOpenWalletLinkClick = useCallback(() => {
-    navigate("/open-wallet");
+    navigate("/openwallet");
   }, [navigate]);
+
+  const onWalletCreate = useCallback(() => {
+    // check if password and password2 equal
+    if (name != "" && password === password2) {
+      if (chkkey === "on" && pvk !== "") {
+        dispatch({
+          type: actionTypes.WALLET_RESTORE,
+          payload: {
+            name: name,
+            password: password,
+            privateKey: pvk
+          }
+        });
+      } else
+        dispatch({
+          type: actionTypes.WALLET_CREATE,
+          payload: {
+            name: name,
+            password: password
+          }
+        });
+    }
+  }, [dispatch, name, password, password2, chkkey, pvk]);
 
   return (
     <div className="createwallet">
@@ -66,7 +92,7 @@ const CreateWallet: FunctionComponent = () => {
                 <Icon>visibility</Icon>
               </IconButton>
             </InputAdornment>
-          ),
+          )
         }}
         label="Password"
         size="medium"
@@ -87,7 +113,7 @@ const CreateWallet: FunctionComponent = () => {
                 <Icon>visibility</Icon>
               </IconButton>
             </InputAdornment>
-          ),
+          )
         }}
         label="Confirm password"
         size="medium"
@@ -99,6 +125,13 @@ const CreateWallet: FunctionComponent = () => {
         label="I want to restore wallet by Private Key"
         labelPlacement="end"
         control={<Checkbox color="primary" size="medium" onChange={(e) => setChkkey(e.target.value)} />}
+        control={
+          <Checkbox
+            color="primary"
+            size="medium"
+            onChange={(e) => setChkkey(e.target.value)}
+          />
+        }
       />
       <TextField
         className="wallet-name"
@@ -113,6 +146,7 @@ const CreateWallet: FunctionComponent = () => {
         onChange={(e) => setPvk(e.target.value)}
       />
       <button className="create-wallet" onClick={onCreateWallet}>
+      <button className="create-wallet" onClick={onWalletCreate}>
         <div className="button-shape" />
         <div className="createlabel">Create</div>
       </button>

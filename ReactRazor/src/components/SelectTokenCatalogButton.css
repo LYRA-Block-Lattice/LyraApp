@@ -1,11 +1,11 @@
-.icbaseline-generating-tokens-icon2 {
+.icbaseline-generating-tokens-icon3 {
   position: relative;
   width: 32px;
   height: 32px;
   flex-shrink: 0;
   overflow: hidden;
 }
-.token1 {
+.token2 {
   position: relative;
   font-size: var(--font-size-3xl);
   letter-spacing: 0.41px;
@@ -17,7 +17,7 @@
   width: 71px;
 }
 .select-token-catalog-button,
-.token-container {
+.token-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,7 +28,7 @@
   border: 0;
   padding: var(--padding-8xl) var(--padding-5xl);
   background-color: var(--tertiary);
-  border-radius: var(--br-sm);
+  border-radius: var(--br-xs);
   box-shadow: 0 4px 23px rgba(0, 0, 0, 0.12);
   width: 80px;
   height: 80px;

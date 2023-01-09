@@ -1,7 +1,7 @@
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M16 29.9956C16 29.9956 27.9981 25.9962 27.9981 15.9978" stroke="#272C34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M27.9981 15.9978V3.99969C27.9981 3.99969 23.9988 2 16 2" stroke="#272C34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M16 29.9956C16 29.9956 4.00189 25.9962 4.00189 15.9978" stroke="#272C34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M4.00189 15.9978V3.99969C4.00189 3.99969 8.00127 2 16 2" stroke="#272C34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M23.9988 7.99902C16 13.9981 14.0004 21.9968 14.0004 21.9968C14.0004 21.9968 12.0007 19.61 10.001 17.9975" stroke="#272C34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 29.9956C16 29.9956 4.00186 25.9962 4.00186 15.9978" stroke="#272C34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M4.00186 15.9978V3.99969C4.00186 3.99969 8.00124 2 16 2" stroke="#272C34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M23.9987 7.99902C16 13.9981 14.0003 21.9968 14.0003 21.9968C14.0003 21.9968 12.0006 19.61 10.0009 17.9975" stroke="#272C34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

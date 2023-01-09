@@ -32,37 +32,85 @@ const SellTokenToToken: FunctionComponent = () => {
 
   const [val, setVal] = useState<IToken>();
 
-  const onSellChange = useCallback((value) => {
-    console.log("onSellChange: " + value);
-    if (value) {
-      setTosell(value);
-    } else {
-      setTosell("");
-    }
-  }, [tosell]);
+  const onSellChange = useCallback(
+    (value) => {
+      console.log("onSellChange: " + value);
+      if (value) {
+        setTosell(value);
+      } else {
+        setTosell("");
+      }
+    },
+    [tosell]
+  );
+
+  const [val, setVal] = useState<IToken | null>();
+
+  const onSellChange = useCallback(
+    (value: any) => {
+      console.log("onSellChange: " + value);
+      if (value) {
+        setTosell(value);
+      } else {
+        setTosell("");
+      }
+    },
+    [tosell]
+  );
 
   const openGeneralPopup = useCallback(() => {
     setGeneralPopupOpen(true);
   }, []);
 
-  const closeGeneralPopup = useCallback((ticker) => {
-    if (ticker == null) {
-      console.log("popup closed. nothing happened.");
-    }
-    else {
-      console.log("popup closed!, the ticker is " + ticker);
-      setTosell(ticker);
-      setVal({ "token": ticker, "name": ticker } as IToken);
-    }
+  const closeGeneralPopup = useCallback(
+    (ticker) => {
+      if (ticker == null) {
+        console.log("popup closed. nothing happened.");
+      } else {
+        console.log("popup closed!, the ticker is " + ticker);
+        setTosell(ticker);
+        setVal({ token: ticker, name: ticker } as IToken);
+      }
 
-    setGeneralPopupOpen(false);
-  }, [tosell, val]);
+      setGeneralPopupOpen(false);
+    },
+    [tosell, val]
+  );
+  const closeGeneralPopup = useCallback(
+    (ticker: any) => {
+      if (ticker == null) {
+        console.log("popup closed. nothing happened.");
+      } else {
+        console.log("popup closed!, the ticker is " + ticker);
+        setTosell(ticker);
+        setVal({ token: ticker, name: ticker } as IToken);
+      }
+
+      setGeneralPopupOpen(false);
+    },
+    [tosell, val]
+  );
 
   return (
     <>
       <div className="selltokentotoken">
         <div className="searchtokenbyname2">
-          <SearchTokenInput key="tosell" val={val} dir="Sell" cat={catsell} ownOnly={true} onTokenSelect={onSellChange} />
+          <SearchTokenInput
+            key="tosell"
+            val={val}
+            dir="Sell"
+            cat={catsell}
+            ownOnly={true}
+            onTokenSelect={onSellChange}
+          />
+          <SearchTokenInput
+            key="tosell"
+            val={val!}
+            dir="Sell"
+            cat={catsell}
+            ownOnly={true}
+            onTokenSelect={onSellChange}
+          />
           <button
             className="prepare-sell-order-button11"
             onClick={openGeneralPopup}
@@ -70,7 +118,22 @@ const SellTokenToToken: FunctionComponent = () => {
             <div className="utility-button4">Mint to sell</div>
           </button>
           <div className="searchtokenbyname-child" />
-          <SearchTokenInput key="toget" val={val} dir="Get" cat={catget} ownOnly={false} onTokenSelect={setToget} />
+          <SearchTokenInput
+            key="toget"
+            val={val}
+            dir="Get"
+            cat={catget}
+            ownOnly={false}
+            onTokenSelect={setToget}
+          />
+          <SearchTokenInput
+            key="toget"
+            val={val!}
+            dir="Get"
+            cat={catget}
+            ownOnly={false}
+            onTokenSelect={setToget}
+          />
         </div>
         <PriceAndCollateralForm offering={tosell} biding={toget} />
       </div>
@@ -80,8 +143,14 @@ const SellTokenToToken: FunctionComponent = () => {
           placement="Centered"
           onOutsideClick={() => closeGeneralPopup(null)}
         >
-          <GeneralPopup tag={catsell} onClose={closeGeneralPopup}>
-          </GeneralPopup>
+          <GeneralPopup
+            tag={catsell}
+            onClose={closeGeneralPopup}
+          ></GeneralPopup>
+          <GeneralPopup
+            tag={catsell}
+            onClose={closeGeneralPopup}
+          ></GeneralPopup>
         </PortalPopup>
       )}
     </>

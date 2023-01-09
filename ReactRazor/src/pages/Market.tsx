@@ -1,6 +1,8 @@
 import { FunctionComponent, useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import SellItem from "../components/SellItem";
+import MarketOrder from "../components/MarketOrder";
+import DisplaySellItems from "../dup/DisplaySellItems";
+
 import "./Market.css";
 
 interface customWindow extends Window {
@@ -54,35 +56,39 @@ const Market: FunctionComponent = () => {
       )
   }, []);
 
-  const onNFTCountClick = useCallback(() => {
-    navigate("/redir");
+  const [lyrbns, setLyrbns] = useState(0);
+  const [usdt, setUsdt] = useState(0);
+
+  const [nftcnt, setNftcnt] = useState(0);
+  const [totcnt, setTotcnt] = useState(0);
+  const [sellcnt, setSellcnt] = useState(0);
+  const [bidcnt, setBidcnt] = useState(0);
+
+  // function to get json from rest api
+  const getJson = async (url: string) => {
+    const response = await fetch(url);
+    return response.json();
+  };
+
+  // function to get web content from rest api
+  const getWebContent = async (url: string) => {
+    const response = await fetch(url);
+    return response.text();
+  };
+
+  const onBalanceDisplayZoneClick = useCallback(() => {
+    navigate("/");
   }, [navigate]);
 
-  const onGoNFTButtonClick = useCallback(() => {
-    navigate("/redir");
+  const onSwapButtonClick = useCallback(() => {
+    navigate("/starttocreateorder");
   }, [navigate]);
 
-  const onTOTCountClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
-
-  const onGoTOTButtonClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
-
-  const onSellingCountClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
-
-  const onGoSellingButtonClick = useCallback(() => {
+  const onSwapButton1Click = useCallback(() => {
     navigate("/viewordersform");
   }, [navigate]);
 
-  const onBuyingCountClick = useCallback(() => {
-    navigate("/redir");
-  }, [navigate]);
-
-  const onGoBuyingButtonClick = useCallback(() => {
+  const onDEXButtonClick = useCallback(() => {
     navigate("/viewtradesform");
   }, [navigate]);
 
@@ -161,121 +167,118 @@ const Market: FunctionComponent = () => {
                 </button>
               </div>
             </div>
-            <button
-              className="wallet-name-label"
-              onClick={onWalletNameLabelClick}
-            >
-              My Primary Account
-            </button>
-            <div
-              className="qrcode-button"
-              onClick={onQRCodeButtonContainerClick}
-            >
-              <div
-                className="qrcode-button-round"
-                onClick={onQRCodeButtonRoundClick}
-              />
-              <img
-                className="qrcode-icon"
-                alt=""
-                src="_content/ReactRazor/asserts/qrcode-icon.svg"
-              />
-            </div>
-            <div className="wallet-decoration">LYRA WALLET</div>
-            <div className="rectangle" />
+      <div className="wallet-card1">
+        <div className="wallet-card-child">
+          <div className="rectangle-container">
             <div className="rectangle1" />
           </div>
         </div>
-      </div>
-      <div className="iconssection">
-        <div className="dao-button-parent">
-          <button className="dao-button" onClick={onDaoButtonClick}>
-            <img
-              className="home-icon-interlocution"
-              alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution.svg"
-            />
-            <div className="ranking">DAO</div>
-          </button>
-          <button className="dao-button" onClick={onSwapButtonClick}>
-            <img
-              className="home-icon-interlocution"
-              alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution1.svg"
-            />
-            <div className="ranking">OTC</div>
-          </button>
-          <button className="dao-button" onClick={onInvestButtonClick}>
-            <img
-              className="home-icon-interlocution"
-              alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution2.svg"
-            />
-            <div className="ranking">Invest</div>
-          </button>
-          <button className="dao-button" onClick={onSwapButton1Click}>
-            <img
-              className="home-icon-interlocution"
-              alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution3.svg"
-            />
-            <div className="ranking">Swap</div>
-          </button>
+        <div className="frame-div">
+          <div className="balance-display-zone-group">
+            <button
+              className="balance-display-zone1"
+              onClick={onBalanceDisplayZoneClick}
+            >
+              <b className="wallet-name-label1">My Primary Account</b>
+              <div className="balance-display-zone-inner" />
+              <b className="usdtbalance2">1,025,000</b>
+              <b className="lyrlabel1">LYR</b>
+              <div className="rectangle-div" />
+            </button>
+            <div className="qrcode-button-container">
+              <button className="qrcode-button1">
+                <div className="qrcode-button-round1" />
+                <img
+                  className="qrcode-icon1"
+                  alt=""
+                  src="_content/ReactRazor/asserts/qrcode-icon.svg"
+                />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="iconssection">
-        <div className="dao-button-parent">
-          <button className="dao-button">
-            <img
-              className="home-icon-interlocution"
-              alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution4.svg"
-            />
-            <div className="ranking">DEX</div>
-          </button>
-          <button className="dao-button">
-            <img
-              className="home-icon-interlocution"
-              alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution5.svg"
-            />
-            <div className="ranking">NFT</div>
-          </button>
-          <button className="dao-button">
-            <img
-              className="home-icon-interlocution"
-              alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution6.svg"
-            />
-            <div className="ranking">Mint</div>
-          </button>
-          <button className="dao-button">
-            <img
-              className="home-icon-interlocution"
-              alt=""
-              src="_content/ReactRazor/asserts/home--icon--interlocution7.svg"
-            />
-            <div className="ranking">Staking</div>
-          </button>
+      <div className="iconssection-container">
+        <div className="iconssection1">
+          <div className="swap-button-group">
+            <button className="swap-button2" onClick={onSwapButtonClick}>
+              <img
+                className="home-icon-interlocution6"
+                alt=""
+                src="_content/ReactRazor/asserts/home--icon--interlocution6.svg"
+              />
+              <div className="ranking6">New Sell</div>
+            </button>
+            <button className="swap-button2" onClick={onSwapButton1Click}>
+              <img
+                className="home-icon-interlocution6"
+                alt=""
+                src="_content/ReactRazor/asserts/home--icon--interlocution7.svg"
+              />
+              <div className="ranking6">My Orders</div>
+            </button>
+            <button className="swap-button2" onClick={onDEXButtonClick}>
+              <img
+                className="home-icon-interlocution6"
+                alt=""
+                src="_content/ReactRazor/asserts/home--icon--interlocution8.svg"
+              />
+              <div className="ranking6">My Trades</div>
+            </button>
+            <button className="swap-button2">
+              <img
+                className="home-icon-interlocution6"
+                alt=""
+                src="_content/ReactRazor/asserts/home--icon--interlocution9.svg"
+              />
+              <div className="ranking9">ODR</div>
+            </button>
+          </div>
         </div>
       </div>
-      <div className="catalogtab-parent">
-        <div className="catalogtab">
-          <div className="token-wrapper">
-            <b className="token">Token</b>
+      <div className="searchsection">
+        <input
+          className="searchsection-child"
+          type="search"
+          placeholder="Search products/token/NFT/TOT etc."
+        />
+      </div>
+      <div className="orderandcatalog">
+        <div className="tradableorderssection1">
+          <div className="catalogtab1">
+            <div className="token-group">
+              <b className="token1">Token</b>
+              <div className="ellipse-container">
+                <img
+                  className="group-inner"
+                  alt=""
+                  src="_content/ReactRazor/asserts/ellipse-43.svg"
+                />
+                <div className="div2">18</div>
+              </div>
+            </div>
+            <div className="nft-group">
+              <b className="token1">NFT</b>
+              <div className="ellipse-container">
+                <img
+                  className="group-inner"
+                  alt=""
+                  src="_content/ReactRazor/asserts/ellipse-43.svg"
+                />
+                <div className="div2">18</div>
+              </div>
+            </div>
+            <div className="fiat-container">
+              <b className="fiat1">Fiat</b>
+            </div>
+            <div className="fiat-container">
+              <b className="fiat1">Goods</b>
+            </div>
+            <div className="fiat-container">
+              <b className="fiat1">Service</b>
+            </div>
           </div>
-          <div className="token-wrapper">
-            <b className="token">NFT</b>
-          </div>
-          <div className="token-wrapper">
-            <b className="token">Fiat</b>
-          </div>
-          <div className="token-wrapper">
-            <b className="token">Goods</b>
-          </div>
-          <div className="token-wrapper">
-            <b className="token">Service</b>
-          </div>
+          <DisplaySellItems />
         </div>
         {items.map((blk) =>
           <SellItem

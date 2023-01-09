@@ -1,10 +1,7 @@
-import {
-  Routes,
-  Route,
-  useNavigationType,
-  useLocation,
-} from "react-router-dom";
-import Empty from "./pages/Empty";
+import { Routes, Route } from "react-router-dom";
+import { TypedUseSelectorHook, useSelector, useDispatch } from "react-redux";
+import WalletHome from "./pages/WalletHome";
+import Market from "./pages/Market";
 import AssertDetailView from "./pages/AssertDetailView";
 import MintFiatToken from "./pages/MintFiatToken";
 import CreateTokenForm from "./pages/CreateTokenForm";
@@ -20,17 +17,19 @@ import PreviewSellOrderForm from "./pages/PreviewSellOrderForm";
 import CreateNFTForm from "./pages/CreateNFTForm";
 import StartToCreateOrder from "./pages/StartToCreateOrder";
 import Redir from "./pages/Redir";
-import Market from "./pages/Market";
+import Empty from "./pages/Empty";
 import CreateWallet from "./pages/CreateWallet";
 import OpenWallet from "./pages/OpenWallet";
 import TransactionHistory from "./pages/TransactionHistory";
 import OldV1UI from "./pages/OldV1UI";
 import RedirBlazor from "./pages/RedirBlazor";
 import { useEffect } from "react";
+import { getRouterSelector } from "./app/selectors";
 
 function App() {
-  const action = useNavigationType();
-  const location = useLocation();
+  const router = useSelector(getRouterSelector);
+  const action = router.action;
+  const location = router.location;
   const pathname = location.pathname;
 
   useEffect(() => {
@@ -45,6 +44,10 @@ function App() {
 
     switch (pathname) {
       case "/":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/market":
         title = "";
         metaDescription = "";
         break;
@@ -108,7 +111,7 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/market":
+      case "/empty":
         title = "";
         metaDescription = "";
         break;
@@ -116,7 +119,7 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/open-wallet":
+      case "/openwallet":
         title = "";
         metaDescription = "";
         break;
@@ -146,7 +149,9 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Empty />} />
+      <Route path="/" element={<WalletHome />} />
+
+      <Route path="/market" element={<Market />} />
 
       <Route path="/assertdetailview" element={<AssertDetailView />} />
 
@@ -181,11 +186,11 @@ function App() {
 
       <Route path="/redir/:id" element={<RedirBlazor />} />
 
-      <Route path="/market" element={<Market />} />
+      <Route path="/empty" element={<Empty />} />
 
       <Route path="/create-wallet" element={<CreateWallet />} />
 
-      <Route path="/open-wallet" element={<OpenWallet />} />
+      <Route path="/openwallet" element={<OpenWallet />} />
 
       <Route path="/transactionhistory" element={<TransactionHistory />} />
 

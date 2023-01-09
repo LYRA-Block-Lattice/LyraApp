@@ -16,7 +16,7 @@
   font-family: var(--headline-s1);
   font-size: var(--body-b-size);
   background-color: var(--color-beige);
-  border-radius: var(--br-sm);
+  border-radius: var(--br-xs);
   width: 301px;
   height: 40px;
   flex-shrink: 0;
@@ -47,7 +47,7 @@
   border: 0;
   padding: var(--padding-5xs) var(--padding-xl);
   background-color: var(--tertiary);
-  border-radius: var(--br-2xl);
+  border-radius: var(--br-xl);
   height: 30px;
   flex-shrink: 0;
   overflow: hidden;
@@ -81,8 +81,8 @@
   cursor: pointer;
   border: 0;
   padding: var(--padding-5xs) var(--padding-4xl);
-  background-color: var(--secondary);
-  border-radius: var(--br-2xl);
+  background-color: var(--color-brown-200);
+  border-radius: var(--br-xl);
   height: 40px;
   flex-shrink: 0;
   overflow: hidden;

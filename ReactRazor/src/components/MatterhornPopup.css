@@ -6,7 +6,7 @@
 }
 .matterhorn-popup {
   position: relative;
-  border-radius: var(--br-sm);
+  border-radius: var(--br-xs);
   background-color: var(--color-white1);
   width: 900px;
   display: flex;

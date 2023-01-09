@@ -1,22 +1,22 @@
-.icbaseline-generating-tokens-icon1 {
+.icbaseline-generating-tokens-icon2 {
   position: relative;
   width: 32px;
   height: 32px;
   flex-shrink: 0;
   overflow: hidden;
 }
-.order-image-item {
+.order-image-inner {
   position: relative;
   width: 19.5px;
   height: 7.36px;
   flex-shrink: 0;
 }
-.order-image1 {
+.order-image2 {
   cursor: pointer;
   border: 0;
   padding: 0;
   background-color: var(--sell1);
-  border-radius: var(--br-md) var(--br-md) 0 0;
+  border-radius: var(--br-sm) var(--br-sm) 0 0;
   box-shadow: 0 4px 23px rgba(0, 0, 0, 0.12);
   width: 110px;
   height: 50px;
@@ -27,48 +27,48 @@
   justify-content: center;
   gap: var(--gap-2xs);
 }
-.open1 {
+.open2 {
   position: relative;
   font-size: var(--caption1-size);
   font-family: var(--font-calibri);
   color: var(--color-white1);
   text-align: center;
 }
-.order-status1 {
+.order-status2 {
   align-self: stretch;
-  border-radius: 0 0 var(--br-md) var(--br-md);
-  background-color: var(--info1);
+  border-radius: 0 0 var(--br-sm) var(--br-sm);
+  background-color: var(--info);
   display: flex;
   flex-direction: row;
-  padding: var(--padding-9xs) var(--padding-10xs);
+  padding: var(--padding-8xs) var(--padding-9xs);
   align-items: center;
   justify-content: center;
 }
-.banner-image1,
-.order-banner1 {
+.banner-image2,
+.order-banner2 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
-.banner-image1 {
+.banner-image2 {
   cursor: pointer;
   border: 0;
   padding: 0;
   background-color: transparent;
 }
-.frame-item {
+.frame-child1 {
   position: relative;
   width: 12.5px;
   height: 7.36px;
   flex-shrink: 0;
 }
-.tetherusdt2 {
+.tetherusdt3 {
   position: relative;
   text-align: left;
 }
-.sell-parent {
+.sell-group {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -94,83 +94,83 @@
   justify-content: flex-start;
   text-align: left;
 }
-.limit-min {
+.sold {
   position: relative;
 }
-.block11,
-.block21 {
+.block12,
+.block22 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.block21 {
+.block22 {
   overflow: hidden;
   align-items: flex-end;
 }
-.details-section-item {
+.details-section-inner {
   position: relative;
   width: 4px;
   height: 15px;
   flex-shrink: 0;
   overflow: hidden;
 }
-.block31 {
+.block32 {
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.details-section1,
-.title-section1 {
+.details-section2,
+.title-section2 {
   display: flex;
   justify-content: flex-start;
   gap: var(--gap-xs);
 }
-.details-section1 {
+.details-section2 {
   align-self: stretch;
   overflow: hidden;
   flex-direction: row;
   align-items: center;
 }
-.title-section1 {
-  border-radius: var(--br-xs) var(--br-xs) 0 0;
+.title-section2 {
+  border-radius: var(--br-2xs) var(--br-2xs) 0 0;
   flex-direction: column;
   align-items: flex-start;
 }
-.order-brief-section1 {
+.order-brief-section2 {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
   gap: var(--gap-xl);
 }
-.width-controller1 {
+.width-controller2 {
   position: relative;
-  border-top: 1px solid var(--color-gray-800);
+  border-top: 1px solid var(--color-gray-1200);
   box-sizing: border-box;
   width: 365px;
   height: 1px;
   flex-shrink: 0;
 }
-.ordercard1,
-.trades-section1 {
+.ordercard2,
+.trades-section2 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
 }
-.trades-section1 {
+.trades-section2 {
   align-self: stretch;
   flex-shrink: 0;
   overflow: hidden;
 }
-.ordercard1 {
-  border-radius: var(--br-md);
+.ordercard2 {
+  border-radius: var(--br-sm);
   background-color: var(--color-white1);
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  border: 1px solid var(--color-gray-400);
+  border: 1px solid var(--color-gray-600);
   padding: var(--padding-5xs);
   gap: var(--gap-4xs);
   text-align: right;
