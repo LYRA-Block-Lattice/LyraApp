@@ -402,7 +402,7 @@ namespace Dealer.Server.Hubs
         public async Task<JoinRoomResponse> JoinRoom(JoinRoomRequest req)
         {
             // verify the signature
-            var ok = Signatures.VerifyAccountSignature(req.TradeID, req.UserAccountID, req.Signature);
+            var ok = Signatures.VerifyAccountSignature(req.TradeID, req.UserAccountID, req.Signature, req.SignType);
             if (ok)
             {
                 // check if the client belongs to the room
@@ -495,7 +495,7 @@ namespace Dealer.Server.Hubs
         {
             var lsb = await _lyraApi.GetLastServiceBlockAsync();
 
-            var ok = Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, req.UserAccountID, req.Signature);
+            var ok = Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, req.UserAccountID, req.Signature, req.SignType);
             if(ok)
             {
                 if(_idgrps.ContainsKey(Context.ConnectionId))
@@ -512,7 +512,7 @@ namespace Dealer.Server.Hubs
         {
             var lsb = await _lyraApi.GetLastServiceBlockAsync();
 
-            var ok = Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, req.UserAccountID, req.Signature);
+            var ok = Signatures.VerifyAccountSignature(lsb.GetBlock().Hash, req.UserAccountID, req.Signature, req.SignType);
             if (ok)
             {
                 if (_idgrps.ContainsKey(Context.ConnectionId))

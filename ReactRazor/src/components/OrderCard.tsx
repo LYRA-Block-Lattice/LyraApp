@@ -11,9 +11,6 @@ interface customWindow extends Window {
   rrProxy?: any;
 }
 declare const window: customWindow;
-import TableComponent, {
-  TableComponentProps
-} from "../components/TableComponent";
 
 type OrderCardType = {
   orderid?: string;
@@ -78,10 +75,10 @@ const OrderCard: FunctionComponent<OrderCardType> = ({
   //   setTrades(data);
   // }, []);
 
-  const toggle = () => {
-    setTrades(datasrc);
-    setShowTradeTable(!showTradeTable);
-  };
+  //const toggle = () => {
+  //  setTrades(datasrc);
+  //  setShowTradeTable(!showTradeTable);
+  //};
 
   const orderStatusStyle: CSS.Properties = useMemo(() => {
     return {

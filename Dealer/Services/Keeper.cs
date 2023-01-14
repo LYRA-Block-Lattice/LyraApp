@@ -260,13 +260,13 @@ namespace Dealer.Server.Services
                         else if (act.Value is ContractChangeEvent cce)
                         {
                             // notify only to related account
-                            //await _dealerHub.Clients.Group(act.Key).OnEvent(
-                            //    new NotifyContainer(cce));
+                            await _dealerHub.Clients.Group(act.Key).OnEvent(
+                                new NotifyContainer(cce));
 
                             // or notify to everyone. quick implement. maybe in future only notify related account
                             // related account need to query previous block, or even the genesis block, etc. added more complex.
-                            await _dealerHub.Clients.All.OnEvent(
-                                new NotifyContainer(cce));
+                            //await _dealerHub.Clients.All.OnEvent(
+                            //    new NotifyContainer(cce));
                         }
 
                     }

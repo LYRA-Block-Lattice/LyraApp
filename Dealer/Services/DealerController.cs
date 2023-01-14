@@ -65,6 +65,107 @@ namespace Dealer.Server.Services
             _myDealerID = Signatures.GetAccountIdFromPrivateKey(_config["DealerKey"]);
         }
 
+        [Route("Dealer")]
+        [HttpGet]
+        public Task<ContentResult> GetDealerBriefAsync()
+        {
+            var brief = new
+            {
+                Version = typeof(NebulaConsts).Assembly.GetName().Version.ToString(),
+                Name = _config["DealerName"],
+                AccountId = _myDealerID,
+                TelegramBotUsername = _keeper.BotUserName
+            };
+            return Task.FromResult(Content(JsonConvert.SerializeObject(brief), "application/json"));
+        }
+
+        // for a single order
+        [Route("Order")]
+        [HttpGet]
+        public async Task<IActionResult> GetOrderAsync(string orderId)
+        {
+            // get tradable orders
+            var request = new RestRequest("Order")
+                .AddQueryParameter("orderId", orderId);
+            var response = await _restc.GetAsync(request);
+
+            if (response.IsSuccessful)
+            {
+                var order = JsonConvert.DeserializeObject<JsonOrder>(response.Content);
+
+                var user = await _db.GetUserByAccountIdAsync(order.OwnerAccountId);
+                if (user != null)
+                {
+                    order.UserName = user.User.UserName;
+                    order.Avatar = user.User.AvatarId;
+                }
+
+                var result = JsonConvert.SerializeObject(order);
+                return Content(result, "application/json");
+            }
+
+            return null;
+        }
+
+        [Route("Orders")]
+        [HttpGet]
+        public async Task<IActionResult> GetOrdersAsync(string? catalog)
+        {
+            // get tradable orders
+            var request = new RestRequest("Orders");
+            var response = await _restc.GetAsync(request);
+
+            if (response.IsSuccessful)
+            {
+                var orders = JsonConvert.DeserializeObject<List<JsonOrder>>(response.Content);
+
+                Dictionary<string, TxUser?> userStats = new Dictionary<string, TxUser?>();
+                foreach (var o in orders)
+                {
+                    if (userStats.ContainsKey(o.OwnerAccountId))
+                        continue;
+
+                    var user = await _db.GetUserByAccountIdAsync(o.OwnerAccountId);
+                    if (user == null)
+                        continue;
+
+                    userStats.Add(o.OwnerAccountId, user);
+                }
+
+                foreach (var o in orders)
+                {
+                    if (!userStats.ContainsKey(o.OwnerAccountId))
+                        continue;
+
+                    var us = userStats[o.OwnerAccountId];
+
+                    o.UserName = us.User.UserName;
+                    o.Avatar = us.User.AvatarId;
+                }
+
+                var result = JsonConvert.SerializeObject(orders);
+                return Content(result, "application/json");
+            }
+
+            return null;
+        }
+
+        public class JsonOrder
+        {
+            public string OwnerAccountId { get; set; }
+            public string AccountID { get; set; }
+            public UniOrder Order { get; set; }
+            public UniOrderStatus UOStatus { get; set; }
+            public string DaoName { get; set; }
+
+            public string UserName { get; set; } = null;
+            public string Avatar { get; set; } = null;
+            public int Total { get; set; }
+            public int Finished { get; set; }
+        }
+
+        // bellow old code
+
         [Route("GetBrief")]
         [HttpGet]
         public Task<SimpleJsonAPIResult> GetBriefAsync()
@@ -330,90 +431,6 @@ namespace Dealer.Server.Services
             return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.InvalidParameterFormat };
         }
 
-        // for a single order
-        [Route("Order")]
-        [HttpGet]
-        public async Task<IActionResult> GetOrderAsync(string orderId)
-        {
-            // get tradable orders
-            var request = new RestRequest("Order")
-                .AddQueryParameter("orderId", orderId);
-            var response = await _restc.GetAsync(request);
-
-            if (response.IsSuccessful)
-            {
-                var order = JsonConvert.DeserializeObject<JsonOrder>(response.Content);
-
-                var user = await _db.GetUserByAccountIdAsync(order.OwnerAccountId);
-                if(user != null)
-                {
-                    order.UserName = user.User.UserName;
-                    order.Avatar = user.User.AvatarId;
-                }                
-
-                var result = JsonConvert.SerializeObject(order);
-                return Content(result, "application/json");
-            }
-
-            return null;
-        }
-
-        [Route("Orders")]
-        [HttpGet]
-        public async Task<IActionResult> GetOrdersAsync(string? catalog)
-        {
-            // get tradable orders
-            var request = new RestRequest("Orders");
-            var response = await _restc.GetAsync(request);
-
-            if (response.IsSuccessful)
-            {
-                var orders = JsonConvert.DeserializeObject<List<JsonOrder>>(response.Content);
-
-                Dictionary<string, TxUser?> userStats = new Dictionary<string, TxUser?>();
-                foreach (var o in orders)
-                {
-                    if (userStats.ContainsKey(o.OwnerAccountId))
-                        continue;
-
-                    var user = await _db.GetUserByAccountIdAsync(o.OwnerAccountId);
-                    if (user == null)
-                        continue;
-
-                    userStats.Add(o.OwnerAccountId, user);
-                }
-
-                foreach (var o in orders)
-                {
-                    if (!userStats.ContainsKey(o.OwnerAccountId))
-                        continue;
-                    
-                    var us = userStats[o.OwnerAccountId];
-
-                    o.UserName = us.User.UserName;
-                    o.Avatar = us.User.AvatarId;
-                }
-
-                var result = JsonConvert.SerializeObject(orders);
-                return Content(result, "application/json");
-            }
-
-            return null;
-        }
-
-        public class JsonOrder
-        {
-            public string OwnerAccountId { get; set; }
-            public string AccountID { get; set; }
-            public UniOrder Order { get; set; }
-            public UniOrderStatus UOStatus { get; set; }
-            public string DaoName { get; set; }
-
-            public string UserName { get; set; } = null;
-            public string Avatar { get; set; } = null;
-            public int Total { get; set; }
-            public int Finished { get; set; }
-        }
 
         //[Route("GetOTC")]
         //[HttpGet]

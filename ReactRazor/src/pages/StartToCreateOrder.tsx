@@ -1,4 +1,3 @@
-import { FunctionComponent, useCallback, LegacyRef, useRef, useState, useEffect } from "react";
 import {
   FunctionComponent,
   useCallback,
@@ -10,9 +9,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import CatalogSelection from "../components/CatalogSelection";
 import "./StartToCreateOrder.css";
-import Xarrow, { Xwrapper } from 'react-xarrows';
-
-const boxStyle = { border: "grey solid 2px", borderRadius: "10px", padding: "5px" };
 import Xarrow, { Xwrapper } from "react-xarrows";
 
 const boxStyle = {
@@ -21,13 +17,6 @@ const boxStyle = {
   padding: "5px"
 };
 
-const typeMap = {
-  Token: "Token",
-  NFT: "NFT",
-  Fiat: "Fiat",
-  Goods: "TOT",
-  Service: "TOT"
-};
 const typeMap: { [index: string]: any } = {
   Token: "Token",
   NFT: "NFT",
@@ -78,8 +67,6 @@ const StartToCreateOrder: FunctionComponent = () => {
     //}
   }, [navigate, start, end]);
 
-  const onTokenAction = (act: string | undefined, tok: string | undefined, xref: LegacyRef<HTMLButtonElement> | undefined) => {
-    if (act === "Sell") {
   const onTokenAction = (
     act: string | undefined,
     tok: string | undefined,
@@ -87,8 +74,6 @@ const StartToCreateOrder: FunctionComponent = () => {
   ) => {
     if (act === "Sell") {
       setStart(tok);
-    }
-    else {
     } else {
       setEnd(tok);
     }
@@ -99,13 +84,6 @@ const StartToCreateOrder: FunctionComponent = () => {
     <div className="starttocreateorder">
       <div className="choose-the-catalog">Choose the catalog</div>
       <div className="catalog-section">
-        <Xwrapper>
-          <div style={{ zIndex: 3 }}>
-            <Xarrow showXarrow={start != null && end != null} start={`Sell-${start}`} end={`Get-${end}`} />
-          </div>
-          <CatalogSelection key="sell" iWantTo="Sell" tokenActionClicked={onTokenAction} />
-          <div className="catalog-section-child" />
-          <CatalogSelection key="get" iWantTo="Get" tokenActionClicked={onTokenAction} />
         <Xwrapper>
           <div style={{ zIndex: 3 }}>
             <Xarrow

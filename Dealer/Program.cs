@@ -99,21 +99,26 @@ else
     app.UseHsts();
 }
 
-app.UseCors(builder =>
-    builder
-    .WithOrigins(
-        "https://dealertestnet.lyra.live",
-        "https://dealer.lyra.live",
-        "https://localhost:8098",
-        "http://localhost:3000",
-        "https://lyra.live",
-        "https://apptestnet.lyra.live",
-        "https://app.lyra.live"
-        )
-    .AllowAnyOrigin()
-    .AllowAnyHeader()
-    .AllowAnyMethod()
-    );
+//app.UseCors(builder =>
+//    builder
+//    .WithOrigins(
+//        "https://dealertestnet.lyra.live",
+//        "https://dealer.lyra.live",
+//        "https://localhost:8098",
+//        "http://localhost:3000",
+//        "https://lyra.live",
+//        "https://apptestnet.lyra.live",
+//        "https://app.lyra.live"
+//        )
+//    .AllowAnyOrigin()
+//    .AllowAnyHeader()
+//    .AllowAnyMethod()
+//    );
+app.UseCors(x => x
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .SetIsOriginAllowed(origin => true) // allow any origin
+                    .AllowCredentials()); // allow credentials
 
 // disable to allow reverse proxy
 //app.UseHttpsRedirection();

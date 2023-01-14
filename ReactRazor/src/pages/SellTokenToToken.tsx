@@ -30,20 +30,6 @@ const SellTokenToToken: FunctionComponent = () => {
   const [toget, setToget] = useState("tether/USDT");
   const [isGeneralPopupOpen, setGeneralPopupOpen] = useState(false);
 
-  const [val, setVal] = useState<IToken>();
-
-  const onSellChange = useCallback(
-    (value) => {
-      console.log("onSellChange: " + value);
-      if (value) {
-        setTosell(value);
-      } else {
-        setTosell("");
-      }
-    },
-    [tosell]
-  );
-
   const [val, setVal] = useState<IToken | null>();
 
   const onSellChange = useCallback(
@@ -62,20 +48,6 @@ const SellTokenToToken: FunctionComponent = () => {
     setGeneralPopupOpen(true);
   }, []);
 
-  const closeGeneralPopup = useCallback(
-    (ticker) => {
-      if (ticker == null) {
-        console.log("popup closed. nothing happened.");
-      } else {
-        console.log("popup closed!, the ticker is " + ticker);
-        setTosell(ticker);
-        setVal({ token: ticker, name: ticker } as IToken);
-      }
-
-      setGeneralPopupOpen(false);
-    },
-    [tosell, val]
-  );
   const closeGeneralPopup = useCallback(
     (ticker: any) => {
       if (ticker == null) {
@@ -97,14 +69,6 @@ const SellTokenToToken: FunctionComponent = () => {
         <div className="searchtokenbyname2">
           <SearchTokenInput
             key="tosell"
-            val={val}
-            dir="Sell"
-            cat={catsell}
-            ownOnly={true}
-            onTokenSelect={onSellChange}
-          />
-          <SearchTokenInput
-            key="tosell"
             val={val!}
             dir="Sell"
             cat={catsell}
@@ -118,14 +82,6 @@ const SellTokenToToken: FunctionComponent = () => {
             <div className="utility-button4">Mint to sell</div>
           </button>
           <div className="searchtokenbyname-child" />
-          <SearchTokenInput
-            key="toget"
-            val={val}
-            dir="Get"
-            cat={catget}
-            ownOnly={false}
-            onTokenSelect={setToget}
-          />
           <SearchTokenInput
             key="toget"
             val={val!}
@@ -143,10 +99,6 @@ const SellTokenToToken: FunctionComponent = () => {
           placement="Centered"
           onOutsideClick={() => closeGeneralPopup(null)}
         >
-          <GeneralPopup
-            tag={catsell}
-            onClose={closeGeneralPopup}
-          ></GeneralPopup>
           <GeneralPopup
             tag={catsell}
             onClose={closeGeneralPopup}

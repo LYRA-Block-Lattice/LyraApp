@@ -1,9 +1,6 @@
-import { FunctionComponent, useState, useCallback, useEffect } from "react";
+import { FunctionComponent, useState, useCallback } from "react";
 import MatterhornPopup from "../components/MatterhornPopup";
 import PortalPopup from "../components/PortalPopup";
-import * as NebStore from "../dup/Store";
-import { LyraCrypto } from "lyra-crypto";
-
 import "./Empty.css";
 
 const Empty: FunctionComponent = () => {
@@ -16,8 +13,6 @@ const Empty: FunctionComponent = () => {
   const closeMatterhornPopup = useCallback(() => {
     setMatterhornPopupOpen(false);
   }, []);
-
-  useEffect(() => {}, []);
 
   return (
     <>

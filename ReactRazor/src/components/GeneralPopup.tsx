@@ -11,18 +11,6 @@ type GeneralPopupType = {
   tag?: string;
 };
 
-const GeneralPopup: FunctionComponent<GeneralPopupType> = props => {
-  const components = {
-    "Token": CreateTokenForm,
-    "Fiat": MintFiatToken,
-    "NFT": CreateNFTForm,
-    "TOT": CreateTOTForm,
-    "Goods": CreateTOTForm,
-    "Service": CreateTOTForm
-  };
-
-  const TagName = components[props.tag || 'Token'];
-
 const GeneralPopup: FunctionComponent<GeneralPopupType> = (props) => {
   const components: { [index: string]: any } = {
     Token: CreateTokenForm,

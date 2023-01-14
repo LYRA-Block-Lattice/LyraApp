@@ -3,6 +3,7 @@ using Lyra.Core.Blocks;
 using Lyra.Data.API;
 using Lyra.Data.API.Identity;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace BusinessLayer.Lib
     {
         public string UserAccountID { get; set; } = null!;
         public string Signature { get; set; } = null!;
+        public string SignType { get; set; } = "p1393";     // dotnet default to p1393. bouncyCastle use 'der'.
     }
 
     public class JoinRoomRequest
@@ -23,6 +25,7 @@ namespace BusinessLayer.Lib
         public string TradeID { get; set; } = null!;
         public string UserAccountID { get; set; } = null!;
         public string Signature { get; set; } = null!;
+        public string SignType { get; set; } = "p1393";     // dotnet default to p1393. bouncyCastle use 'der'.
     }
 
     public class JoinRoomResponse : APIResult
@@ -99,16 +102,21 @@ namespace BusinessLayer.Lib
         public string MimeType { get; set; } = null!;  
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum ContractChangeEventTypes { General, Open, Close, Partial }
+    
     public class ContractChangeEvent
     {
+        public string about { get; set; } = "contract";
         public string ContractId { get; set; } = null!;
         public ContractChangeEventTypes ChangeType { get; set; }
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum AccountChangeTypes { Send, Receive, SendReceived, Contract }
     public class AccountChangedEvent
     {
+        public string about { get; set; } = "account";
         public AccountChangeTypes ChangeType { get; set; }
         public string PeerAccountId { get; set; } = null!;
     }
@@ -118,7 +126,10 @@ namespace BusinessLayer.Lib
         public Dictionary<string, decimal> Prices { get; set; } = null!;
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum MessageTypes { Null, Text, Image, File  }
+
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum EventTypes { Null, AccountChanged, WorkflowEvent, Quote, ContractChanged }
     public class RespContainer
     {

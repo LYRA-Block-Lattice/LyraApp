@@ -1,5 +1,4 @@
 import { FunctionComponent, useCallback, useState } from "react";
-import { FunctionComponent, useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   TextField,
@@ -22,6 +21,7 @@ declare const window: customWindow;
 
 const CreateWallet: FunctionComponent = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
@@ -124,7 +124,6 @@ const CreateWallet: FunctionComponent = () => {
       <FormControlLabel
         label="I want to restore wallet by Private Key"
         labelPlacement="end"
-        control={<Checkbox color="primary" size="medium" onChange={(e) => setChkkey(e.target.value)} />}
         control={
           <Checkbox
             color="primary"
@@ -145,7 +144,6 @@ const CreateWallet: FunctionComponent = () => {
         margin="none"
         onChange={(e) => setPvk(e.target.value)}
       />
-      <button className="create-wallet" onClick={onCreateWallet}>
       <button className="create-wallet" onClick={onWalletCreate}>
         <div className="button-shape" />
         <div className="createlabel">Create</div>

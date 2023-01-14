@@ -1,4 +1,3 @@
-import { FunctionComponent, useRef, useState, useEffect, useCallback } from "react";
 import { FunctionComponent, useCallback, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -17,46 +16,11 @@ import {
 import { useNavigate } from "react-router-dom";
 import "./OpenWallet.css";
 
-interface customWindow extends Window {
-  rrComponent?: any;
-  rrProxy?: any;
-}
-declare const window: customWindow;
-
 import * as actionTypes from "../app/actionTypes";
 import { getWalletNamesSelector } from "../app/selectors";
 
 const OpenWallet: FunctionComponent = () => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [wnames, setwnames] = useState([]);
-  const [index, setIndex] = useState<number>(0);
   const navigate = useNavigate();
-
-  function getWalletName() {
-    window.rrProxy.ReactRazor.Pages.Home.Interop.GetWalletNamesAsync(window.rrComponent)
-      .then((json) => JSON.parse(json))
-      .then((ret) => {
-        if (ret.ret == "Success") {
-          var wnames = ret.result;
-          setwnames(wnames);
-        }
-      });
-  }
-
-  useEffect(() => {
-    getWalletName();
-  }, []);
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setIndex(+event.target.value);
-  };
-
-  const onOpenWallet = useCallback(() => {
-    console.log("names is " + wnames);
-    console.log("selected name is " + wnames[index]);
-
-    window.rrProxy.ReactRazor.Pages.Home.Interop.OpenWalletAsync(window.rrComponent, wnames[index], inputRef.current!.value);
-  }, [wnames, name, index]);
 
   const [name, setName] = useState("");
   const [index, setIndex] = useState<number>(0);
@@ -87,7 +51,7 @@ const OpenWallet: FunctionComponent = () => {
       <img
         className="illus5-copy-icon"
         alt=""
-        src="_content/ReactRazor/asserts/illus5-copy.svg"
+        src="../asserts/illus5-copy.svg"
       />
       <FormControl
         className="wallet-name1"
@@ -95,15 +59,6 @@ const OpenWallet: FunctionComponent = () => {
         variant="standard"
       >
         <InputLabel color="primary">Wallet Name</InputLabel>
-        <Select color="primary" size="medium" label="Wallet Name"
-          onChange={handleChange}
-          value={index.toString()}
-        >
-          {wnames.map((name, index) => (
-            <MenuItem value={index}>
-              {name}
-            </MenuItem>
-          ))}
         <Select
           color="primary"
           size="medium"
@@ -121,7 +76,6 @@ const OpenWallet: FunctionComponent = () => {
       </FormControl>
       <TextField
         className="password"
-        inputRef={inputRef}
         sx={{ width: 330 }}
         color="primary"
         variant="standard"
