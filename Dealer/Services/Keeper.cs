@@ -255,11 +255,16 @@ namespace Dealer.Server.Services
                     {
                         //Console.WriteLine($"notify target is {act.Value.GetType().FullName}");
                         if(act.Value is AccountChangedEvent ace && act.Key != null)
+                        {
+                            Console.WriteLine($"Notify account changed: {act.Key}" + ace.ChangeType.ToString());
                             await _dealerHub.Clients.Group(act.Key).OnEvent(
                                 new NotifyContainer(ace));
-                        else if (act.Value is ContractChangeEvent cce)
+                        }
+                        else if (act.Key != null && act.Value is ContractChangeEvent cce)
                         {
+                            Console.WriteLine($"Notify contract changed: {act.Key}" + cce.ChangeType.ToString());
                             // notify only to related account
+                            // TODO: deal with act.Key null
                             await _dealerHub.Clients.Group(act.Key).OnEvent(
                                 new NotifyContainer(cce));
 
@@ -299,7 +304,9 @@ namespace Dealer.Server.Services
             DealerWallet = Wallet.Open(walletStor2, "xunit", "1234", _lyraApi);
             _logger.LogInformation($"Dealer Wallet Account ID: {DealerWallet.AccountId}");
             DealerWallet.NoConsole = true;
+            // no sync. make sure the first block is dealer genesis.
             await DealerWallet.SyncAsync(null);
+            //await DealerWallet.InitAsync();
 
             // register if necessary
             while(true)

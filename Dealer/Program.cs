@@ -84,7 +84,10 @@ builder.Services.AddHostedService<Keeper>(provider => provider.GetService<Keeper
 var app = builder.Build();
 
 app.UseWebSockets();
-app.UseResponseCompression();
+if (!app.Environment.IsDevelopment()) // response compression currently conflicts with dotnet watch browser reload
+{
+    app.UseResponseCompression();
+}
 
 if (app.Environment.IsDevelopment())
 {

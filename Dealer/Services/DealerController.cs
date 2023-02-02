@@ -67,16 +67,24 @@ namespace Dealer.Server.Services
 
         [Route("Dealer")]
         [HttpGet]
-        public Task<ContentResult> GetDealerBriefAsync()
+        public async Task<ContentResult> GetDealerBriefAsync()
         {
-            var brief = new
+            var ret = await _client.GetDealerByAccountIdAsync(_myDealerID);
+            if (ret.Successful())
             {
-                Version = typeof(NebulaConsts).Assembly.GetName().Version.ToString(),
-                Name = _config["DealerName"],
-                AccountId = _myDealerID,
-                TelegramBotUsername = _keeper.BotUserName
-            };
-            return Task.FromResult(Content(JsonConvert.SerializeObject(brief), "application/json"));
+                var block = ret.As<DealerGenesisBlock>();
+                var brief = new
+                {
+                    Version = typeof(NebulaConsts).Assembly.GetName().Version.ToString(),
+                    Name = _config["DealerName"],
+                    AccountId = _myDealerID,
+                    ServiceId = block.AccountID,       // may null, but Keeper will register it very soon
+                    TelegramBotUsername = _keeper.BotUserName
+                };
+                return Content(JsonConvert.SerializeObject(brief), "application/json");
+            }
+            else                
+                throw new Exception($"Dealer with ID: {_myDealerID} is not registed.");
         }
 
         // for a single order
@@ -84,23 +92,59 @@ namespace Dealer.Server.Services
         [HttpGet]
         public async Task<IActionResult> GetOrderAsync(string orderId)
         {
-            // get tradable orders
-            var request = new RestRequest("Order")
-                .AddQueryParameter("orderId", orderId);
-            var response = await _restc.GetAsync(request);
+            var response = await _client.GetUniOrderByIdAsync(orderId);
 
-            if (response.IsSuccessful)
+            if (response.Successful())
             {
-                var order = JsonConvert.DeserializeObject<JsonOrder>(response.Content);
+                // the array of 3 blocks: order itself, offering gen, bidding gen
+                var blks = response.GetBlocks<TransactionBlock>().ToList();
+                if (blks == null || blks.Count != 3)
+                    return BadRequest("Invalid order data.");
+                
+                var order = blks.FirstOrDefault() as IUniOrder;
+                if(order == null)
+                    return BadRequest("Invalid order data.");
 
                 var user = await _db.GetUserByAccountIdAsync(order.OwnerAccountId);
-                if (user != null)
+                var author = await _db.GetUserByAccountIdAsync(blks[1].AccountID) ?? user;
+                //if (user != null)
+                //{
+                //    order.UserName = user.User.UserName;
+                //    order.Avatar = user.User.AvatarId;
+                //}
+
+                // if nft/tot, get the meta
+                string? meta = null;
+                var og = blks[1] as TokenGenesisBlock;
+                if (og.Custom2 != null) // metadata url
                 {
-                    order.UserName = user.User.UserName;
-                    order.Avatar = user.User.AvatarId;
+                    var hc = new HttpClient();
+                    meta = await hc.GetStringAsync(og.Custom2);
                 }
 
-                var result = JsonConvert.SerializeObject(order);
+                // a quick result
+                var ret = new
+                {
+                    Blocks = blks,
+                    Users = new[] 
+                    { 
+                        new
+                        {
+                            user.User.UserName,
+                            user.User.AccountId,
+                            user.User.AvatarId,
+                        },                        
+                        new
+                        {
+                            author.User.UserName,
+                            author.User.AccountId,
+                            author.User.AvatarId,
+                        }
+                    },
+                    Meta = meta == null ? null : JObject.Parse(meta)
+                };
+
+                var result = JsonConvert.SerializeObject(ret);
                 return Content(result, "application/json");
             }
 
@@ -112,35 +156,35 @@ namespace Dealer.Server.Services
         public async Task<IActionResult> GetOrdersAsync(string? catalog)
         {
             // get tradable orders
-            var request = new RestRequest("Orders");
+            var request = new RestRequest("Orders").AddQueryParameter("catalog", catalog);
             var response = await _restc.GetAsync(request);
 
             if (response.IsSuccessful)
             {
-                var orders = JsonConvert.DeserializeObject<List<JsonOrder>>(response.Content);
+                var orders = JObject.Parse(response.Content);
 
                 Dictionary<string, TxUser?> userStats = new Dictionary<string, TxUser?>();
-                foreach (var o in orders)
+                JArray ostats = (JArray)orders["OwnerStats"];
+                
+                foreach (var o in ostats)
                 {
-                    if (userStats.ContainsKey(o.OwnerAccountId))
+                    var userStat = o as JObject;
+                    var userId = (string)userStat["_id"]["Owner"];
+                    
+                    if (userStats.ContainsKey(userId))
+                    {
+                        userStat["_id"]["Name"] = userStats[userId].User.UserName;
+                        userStat["_id"]["Avatar"] = userStats[userId].User.AvatarId;
                         continue;
+                    }                        
 
-                    var user = await _db.GetUserByAccountIdAsync(o.OwnerAccountId);
+                    var user = await _db.GetUserByAccountIdAsync(userId);
                     if (user == null)
                         continue;
 
-                    userStats.Add(o.OwnerAccountId, user);
-                }
-
-                foreach (var o in orders)
-                {
-                    if (!userStats.ContainsKey(o.OwnerAccountId))
-                        continue;
-
-                    var us = userStats[o.OwnerAccountId];
-
-                    o.UserName = us.User.UserName;
-                    o.Avatar = us.User.AvatarId;
+                    userStats.Add(userId, user);
+                    userStat["_id"]["Name"] = userStats[userId].User.UserName;
+                    userStat["_id"]["Avatar"] = userStats[userId].User.AvatarId;
                 }
 
                 var result = JsonConvert.SerializeObject(orders);
@@ -164,10 +208,94 @@ namespace Dealer.Server.Services
             public int Finished { get; set; }
         }
 
+        [Route("OrdersByOwner")]
+        [HttpGet]
+        public async Task<IActionResult> GetOrdersByOwnerAsync(string ownerId)
+        {
+            var ret = await _client.GetUniOrdersByOwnerAsync(ownerId);
+            if (ret.Successful())
+            {
+                var blocks = ret.GetBlocks().Cast<TransactionBlock>();
+                var orders = blocks
+                    .Where(a => a.BlockType == BlockTypes.UniOrderGenesis)
+                    .Select(a => new
+                    {
+                        gens = a as IUniOrder,
+                        latest = blocks.FirstOrDefault(x => x.BlockType != BlockTypes.UniOrderGenesis && x.AccountID == a.AccountID) as IUniOrder ?? a as IUniOrder,
+                    })
+                    .OrderByDescending(a => a.gens.TimeStamp)
+                    .Select(a => new
+                    {
+                        orderid = a.gens.AccountID,
+                        status = (a.latest ?? a.gens).UOStatus.ToString(),
+                        offering = ShortToken(a.gens.Order.offering),
+                        biding = ShortToken(a.gens.Order.biding),
+                        a.gens.Order.amount,
+                        a.gens.Order.price,
+                        limitmin = a.gens.Order.limitMin,
+                        limitmax = a.gens.Order.limitMax,
+                        time = a.gens.TimeStamp.ToString(),
+                        sold = a.gens.Order.amount - (a.latest ?? a.gens).Order.amount,
+                        shelf = (a.latest ?? a.gens).Order.amount,
+                    });
+
+                var result = JsonConvert.SerializeObject(orders);
+                return Content(result, "application/json");
+            }
+            else
+            {
+                return NotFound(ret.ResultMessage);
+            }
+        }
+
+        [Route("TradesByOwner")]
+        [HttpGet]
+        public async Task<IActionResult> GetTradesByOwnerAsync(string ownerId)
+        {
+            var ret = await _client.FindUniTradeAsync(ownerId, false, 0, 1000);
+            if (ret.Successful())
+            {
+                var blocks = ret.GetBlocks().Cast<IUniTrade>();
+
+                var list = blocks.Select
+                    (
+                    a => new
+                    {
+                        dir = a.Trade.orderOwnerId == ownerId ? "Sell" : "Buy",
+                        tradeId = a.AccountID,
+                        status = a.UTStatus.ToString(),
+                        offering = ShortToken(a.Trade.offering),
+                        biding = ShortToken(a.Trade.biding),
+                        a.Trade.amount,
+                        a.Trade.price,
+                        time = a.TimeStamp.ToString(),
+                    }
+                );
+
+                var result = JsonConvert.SerializeObject(list);
+                return Content(result, "application/json");
+            }
+            else
+            {
+                return NotFound(ret.ResultMessage);
+            }
+        }
+
+        private string ShortToken(string addr)
+        {
+            if (string.IsNullOrWhiteSpace(addr) || addr.Length < 12)
+            {
+                return addr;
+            }
+
+            return addr.Substring(0, 4) + "..." + addr.Substring(addr.Length - 6, 6);
+        }
+
         // bellow old code
 
         [Route("GetBrief")]
         [HttpGet]
+        [Obsolete]
         public Task<SimpleJsonAPIResult> GetBriefAsync()
         {
             var brief = new DealerBrief
@@ -372,7 +500,8 @@ namespace Dealer.Server.Services
             public IFormFile file { get; set; }
             public string accountId { get; set; }
             public string signature { get; set; }
-            public string tradeId { get; set; }
+            public string? signatureType { get; set; } = "p1393";
+            public string? tradeId { get; set; }
         }
 
         [HttpPost]
@@ -393,7 +522,7 @@ namespace Dealer.Server.Services
                             byte[] hash_bytes = sha.ComputeHash(bindata);
                             string hash = Base58Encoding.Encode(hash_bytes);
 
-                            if (Signatures.VerifyAccountSignature(hash, model.accountId, model.signature))
+                            if (Signatures.VerifyAccountSignature(hash, model.accountId, model.signature, model.signatureType))
                             {
                                 // check image hash exists
                                 if (null == await _db.GetImageDataByIdAsync(hash))
@@ -418,6 +547,10 @@ namespace Dealer.Server.Services
                                     Hash = hash,
                                     Url = $"{_config["baseUrl"]}/api/dealer/img?hash={hash}",
                                 };
+                            }
+                            else
+                            {
+                                return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.APISignatureValidationFailed };
                             }
                         }
                     }
