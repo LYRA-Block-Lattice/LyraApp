@@ -152,7 +152,9 @@
         var alldaoret = await lyraApi.GetAllDaosAsync(0, 10);
         if (alldaoret.Successful())
         {
-            alldaos = alldaoret.GetBlocks().Cast<IDao>().ToList();
+            alldaos = alldaoret.GetBlocks().Cast<IDao>()
+                .Where(a => a.AccountID != LyraGlobal.GUILDACCOUNTID)
+            .ToList();
         }
 
         if (walletState.Value.wallet == null)

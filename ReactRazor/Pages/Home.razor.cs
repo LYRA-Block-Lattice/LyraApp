@@ -560,7 +560,7 @@ namespace ReactRazor.Pages
                 var home = (Home)component;
                 if (!home.walletState.Value.IsOpening || home.walletState.Value.wallet == null)
                 {
-                    home.Navigation.NavigateTo("/open-wallet");
+                    home.Navigation.NavigateTo("/login");
                     return null;
                 }
                 else
