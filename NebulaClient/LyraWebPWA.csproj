@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
-	<AssemblyVersion>1.4.0.95</AssemblyVersion>
+	<AssemblyVersion>1.4.0.135</AssemblyVersion>
 	<PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
 
@@ -33,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReactRazor\ReactRazor.csproj" />
     <ProjectReference Include="..\UserLibrary\UserLibrary.csproj" />
   </ItemGroup>
 

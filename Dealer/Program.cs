@@ -89,11 +89,15 @@ if (!app.Environment.IsDevelopment()) // response compression currently conflict
     app.UseResponseCompression();
 }
 
+app.UseWebAssemblyDebugging();
+app.UseSwagger();
+app.UseSwaggerUI();
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseWebAssemblyDebugging();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    //app.UseWebAssemblyDebugging();
+    //app.UseSwagger();
+    //app.UseSwaggerUI();
 }
 else
 {

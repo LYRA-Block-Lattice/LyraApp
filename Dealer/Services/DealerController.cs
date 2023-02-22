@@ -98,7 +98,7 @@ namespace Dealer.Server.Services
             {
                 // the array of 3 blocks: order itself, offering gen, bidding gen
                 var blks = response.GetBlocks<TransactionBlock>().ToList();
-                if (blks == null || blks.Count != 3)
+                if (blks == null || blks.Count != 4)
                     return BadRequest("Invalid order data.");
                 
                 var order = blks.FirstOrDefault() as IUniOrder;
@@ -125,16 +125,23 @@ namespace Dealer.Server.Services
                 // a quick result
                 var ret = new
                 {
-                    Blocks = blks,
-                    Users = new[] 
-                    { 
-                        new
+                    OrderId = order.AccountID,
+                    Blocks = new
+                    {
+                        Order = blks[0],
+                        Offgen = blks[1],
+                        Bidgen = blks[2],
+                        Dao = blks[3]
+                    },
+                    Users = new
+                    {
+                        Seller = new
                         {
                             user.User.UserName,
                             user.User.AccountId,
                             user.User.AvatarId,
-                        },                        
-                        new
+                        },
+                        Author = new
                         {
                             author.User.UserName,
                             author.User.AccountId,
@@ -163,28 +170,31 @@ namespace Dealer.Server.Services
             {
                 var orders = JObject.Parse(response.Content);
 
-                Dictionary<string, TxUser?> userStats = new Dictionary<string, TxUser?>();
-                JArray ostats = (JArray)orders["OwnerStats"];
-                
-                foreach (var o in ostats)
+                if(orders.Count > 0)
                 {
-                    var userStat = o as JObject;
-                    var userId = (string)userStat["_id"]["Owner"];
-                    
-                    if (userStats.ContainsKey(userId))
+                    Dictionary<string, TxUser?> userStats = new Dictionary<string, TxUser?>();
+                    JArray ostats = (JArray)orders["OwnerStats"];
+
+                    foreach (var o in ostats)
                     {
+                        var userStat = o as JObject;
+                        var userId = (string)userStat["_id"]["Owner"];
+
+                        if (userStats.ContainsKey(userId))
+                        {
+                            userStat["_id"]["Name"] = userStats[userId].User.UserName;
+                            userStat["_id"]["Avatar"] = userStats[userId].User.AvatarId;
+                            continue;
+                        }
+
+                        var user = await _db.GetUserByAccountIdAsync(userId);
+                        if (user == null)
+                            continue;
+
+                        userStats.Add(userId, user);
                         userStat["_id"]["Name"] = userStats[userId].User.UserName;
                         userStat["_id"]["Avatar"] = userStats[userId].User.AvatarId;
-                        continue;
-                    }                        
-
-                    var user = await _db.GetUserByAccountIdAsync(userId);
-                    if (user == null)
-                        continue;
-
-                    userStats.Add(userId, user);
-                    userStat["_id"]["Name"] = userStats[userId].User.UserName;
-                    userStat["_id"]["Avatar"] = userStats[userId].User.AvatarId;
+                    }
                 }
 
                 var result = JsonConvert.SerializeObject(orders);
@@ -226,6 +236,7 @@ namespace Dealer.Server.Services
                     .OrderByDescending(a => a.gens.TimeStamp)
                     .Select(a => new
                     {
+                        daoid = a.gens.Order.daoId,
                         orderid = a.gens.AccountID,
                         status = (a.latest ?? a.gens).UOStatus.ToString(),
                         offering = ShortToken(a.gens.Order.offering),
