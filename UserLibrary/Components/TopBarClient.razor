@@ -232,7 +232,7 @@
 
         SubscribeToAction<AccountChangedEvent>(achgevt =>
             {
-                if (achgevt.ChangeType == AccountChangeTypes.Receive)
+                if (achgevt.ChangeType == AccountChangeTypes.SendToMe)
                 {
                     Dispatcher.Dispatch(new WebWalletGotSendToMeAction());
 
@@ -254,11 +254,11 @@
                         });
                     }
                 }
-                else if (achgevt.ChangeType == AccountChangeTypes.SendReceived)
+                else if (achgevt.ChangeType == AccountChangeTypes.ReceiveFromMe)
                 {
                     Snackbar.Add(localizer["Your send to: {0} is received.", achgevt.PeerAccountId.Shorten()], Severity.Success);
                 }
-                else if (achgevt.ChangeType == AccountChangeTypes.Contract)
+                else if (achgevt.ChangeType == AccountChangeTypes.MyContract)
                 {
                     Snackbar.Add(localizer["Your contract {0} is changed.", achgevt.PeerAccountId.Shorten()], Severity.Success);
                 }

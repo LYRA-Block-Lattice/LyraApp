@@ -113,7 +113,7 @@ namespace BusinessLayer.Lib
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum AccountChangeTypes { Send, Receive, SendReceived, Contract }
+    public enum AccountChangeTypes { Genesis, SendToMe, ReceiveFromMe, MeSend, MeReceive, MyContract, OtherContract }
     public class AccountChangedEvent
     {
         public string about { get; set; } = "account";

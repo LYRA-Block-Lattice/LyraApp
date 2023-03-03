@@ -191,7 +191,7 @@ namespace Dealer.Server.Services
                         {
                             notifyTarget.Add(new KeyValuePair<string, object>(brkr.OwnerAccountId, new AccountChangedEvent
                             {
-                                ChangeType = AccountChangeTypes.Contract,
+                                ChangeType = AccountChangeTypes.MyContract,
                                 PeerAccountId = (brkr as TransactionBlock).AccountID,
                             }));
 
@@ -216,12 +216,12 @@ namespace Dealer.Server.Services
                         {
                             notifyTarget.Add(new KeyValuePair<string, object>(send.AccountID, new AccountChangedEvent
                             {
-                                ChangeType = AccountChangeTypes.Send,
+                                ChangeType = AccountChangeTypes.MeSend,
                                 PeerAccountId = send.DestinationAccountId,
                             }));
                             notifyTarget.Add(new KeyValuePair<string, object>(send.DestinationAccountId, new AccountChangedEvent
                             {
-                                ChangeType = AccountChangeTypes.Receive,
+                                ChangeType = AccountChangeTypes.SendToMe,
                                 PeerAccountId = send.AccountID,
                             }));
                         }
@@ -231,7 +231,7 @@ namespace Dealer.Server.Services
                             {
                                 notifyTarget.Add(new KeyValuePair<string, object>(recv.AccountID, new AccountChangedEvent
                                 {
-                                    ChangeType = AccountChangeTypes.Receive,
+                                    ChangeType = AccountChangeTypes.Genesis,
                                 }));
                             }
                             else
@@ -244,12 +244,12 @@ namespace Dealer.Server.Services
                                     {
                                         notifyTarget.Add(new KeyValuePair<string, object>(sendblk.AccountID, new AccountChangedEvent
                                         {
-                                            ChangeType = AccountChangeTypes.SendReceived,
+                                            ChangeType = AccountChangeTypes.ReceiveFromMe,
                                             PeerAccountId = sendblk.DestinationAccountId,
                                         }));
                                         notifyTarget.Add(new KeyValuePair<string, object>(recv.AccountID, new AccountChangedEvent
                                         {
-                                            ChangeType = AccountChangeTypes.Receive,
+                                            ChangeType = AccountChangeTypes.MeReceive,
                                             PeerAccountId = sendblk.AccountID,
                                         }));
                                     }
