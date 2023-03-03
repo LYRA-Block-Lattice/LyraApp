@@ -69,6 +69,7 @@ namespace Dealer.Server.Services
 
         public static Keeper Singleton { get; private set; } = null!;
         public string? LastSvcHash { get => _lastSvcHash; }
+        private string _nodeAddr;
 
         public Keeper(IHubContext<DealerHub, IHubPushMethods> dealerHub, IConfiguration config,
             DealerDb db, Dealeamon dealer, ILogger<Keeper> logger)
@@ -83,7 +84,7 @@ namespace Dealer.Server.Services
             Prices.TryAdd("usd", 1m); // for dumb
 
             var networkid = _config["network"];
-            var nodeAddr = _config["lyraNode"];
+            _nodeAddr = _config["lyraNode"];
 
             string url;
             if (networkid == "mainnet")
@@ -93,9 +94,10 @@ namespace Dealer.Server.Services
             else
                 url = $"https://devnet.lyra.live/api/Node/";
 
-            if (!string.IsNullOrWhiteSpace(nodeAddr))
+            if (!string.IsNullOrWhiteSpace(_nodeAddr))
             {
-                url = $"https://{nodeAddr}/api/Node/";
+                var port = _db.NetworkId == "mainnet" ? 5504 : 4504;
+                url = $"https://{_nodeAddr}:{port}/api/Node/";
             }
             
             _lyraApi = LyraRestClient.Create(networkid, Environment.OSVersion.ToString(), "Dealer", "1.0", url);
@@ -139,10 +141,16 @@ namespace Dealer.Server.Services
             //var url = LyraGlobal.SelectNode(_db.NetworkId).Replace("/api/", "/events");
             //var url = $"https://192.168.3.62:4504/events";
             var url = $"https://seed1.testnet.lyra.live:4504/events";
-            if(_db.NetworkId == "mainnet")
+            if (_db.NetworkId == "mainnet")
                 url = $"https://seed1.mainnet.lyra.live:5504/events";
-            else if(_db.NetworkId == "devnet")
+            else if (_db.NetworkId == "devnet")
                 url = $"https://devnet.lyra.live/events";
+
+            if (!string.IsNullOrWhiteSpace(_nodeAddr))
+            {
+                var port = _db.NetworkId == "mainnet" ? 5504 : 4504;
+                url = $"https://{_nodeAddr}:{port}/events";
+            }
 
             _logger.LogInformation($"Lyra event on {_db.NetworkId} using {url}");
 

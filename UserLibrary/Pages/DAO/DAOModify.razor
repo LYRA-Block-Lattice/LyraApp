@@ -97,8 +97,8 @@ else
         desc = dao.Description;
         pftShare = dao.ShareRito * 100;
         pftSeats = dao.Seats;
-        sellerFee = dao.SellerFeeRatio;
-        buyerFee = dao.BuyerFeeRatio;
+        sellerFee = dao.SellerFeeRatio*100;
+        buyerFee = dao.BuyerFeeRatio*100;
         sellerPar = dao.SellerPar;
         buyerPar = dao.BuyerPar;
         needVote = dao.Treasure.Count > 0;
@@ -118,8 +118,8 @@ else
                 {
                     { "ShareRito", $"{pftShare / 100}" },
                     { "Seats", $"{pftSeats}" },
-                    { "SellerFeeRatio", $"{sellerFee}" },
-                    { "BuyerFeeRatio", $"{buyerFee}" },
+                    { "SellerFeeRatio", $"{sellerFee/100}" },
+                    { "BuyerFeeRatio", $"{buyerFee/100}" },
                     { "SellerPar", $"{sellerPar}" },
                     { "BuyerPar", $"{buyerPar}" },
                     { "Description", $"{desc}" },

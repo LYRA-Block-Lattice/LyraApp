@@ -118,7 +118,12 @@ namespace Dealer.Server.Services
                 var og = blks[1] as TokenGenesisBlock;
                 if (og.Custom2 != null) // metadata url
                 {
-                    var hc = new HttpClient();
+                    var handler = new HttpClientHandler()
+                    {
+                        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    };
+
+                    var hc = new HttpClient(handler);
                     meta = await hc.GetStringAsync(og.Custom2);
                 }
 

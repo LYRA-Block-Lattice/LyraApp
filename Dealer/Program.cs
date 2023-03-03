@@ -30,6 +30,15 @@ builder.Logging.AddSerilog(Log.Logger);
 builder.Services.Configure<DealerDbSettings>(
     builder.Configuration.GetSection("DealerDb"));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
 builder.Services.AddScoped<ILyraAPI>(provider =>
                 {
                     var networkid = builder.Configuration["network"];
@@ -45,7 +54,8 @@ builder.Services.AddScoped<ILyraAPI>(provider =>
 
                     if (!string.IsNullOrWhiteSpace(nodeAddr))
                     {
-                        url = $"https://{nodeAddr}/api/Node/";
+                        var port = networkid == "mainnet" ? 5504 : 4504;
+                        url = $"https://{nodeAddr}:{port}/api/Node/";
                         return LyraRestClient.Create(networkid, Environment.OSVersion.ToString(), "Dealer", "1.0", url);
                     }
 
@@ -73,8 +83,7 @@ builder.Services.AddResponseCompression(opts =>
 
 builder.Services.AddSwaggerGen();
 
-var nodeAddr = builder.Configuration["lyraNode"];
-var rc = new RestClient($"https://{nodeAddr}/api/EC");
+var rc = new RestClient($"https://{builder.Configuration["network"]}.lyra.live/api/EC");
 ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
 builder.Services.AddSingleton(rc);
 
@@ -106,9 +115,16 @@ else
     app.UseHsts();
 }
 
+app.UseCors(x => x
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .SetIsOriginAllowed(origin => true) // allow any origin
+                    .AllowCredentials()); // allow credentials
+
 //app.UseCors(builder =>
 //    builder
 //    .WithOrigins(
+//        "https://web3testnet.lyra.live",
 //        "https://dealertestnet.lyra.live",
 //        "https://dealer.lyra.live",
 //        "https://localhost:8098",
@@ -117,15 +133,11 @@ else
 //        "https://apptestnet.lyra.live",
 //        "https://app.lyra.live"
 //        )
-//    .AllowAnyOrigin()
 //    .AllowAnyHeader()
 //    .AllowAnyMethod()
+//    .AllowCredentials()
 //    );
-app.UseCors(x => x
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .SetIsOriginAllowed(origin => true) // allow any origin
-                    .AllowCredentials()); // allow credentials
+//app.UseCors("AllowAll");
 
 // disable to allow reverse proxy
 //app.UseHttpsRedirection();
