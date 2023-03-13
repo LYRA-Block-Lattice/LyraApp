@@ -17,8 +17,10 @@ namespace Lyra.Data.API.Identity
     {
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
+        [JsonIgnore]
         public string? Id { get; set; }
 
+        public string OriginJson { get; set; } = null!;
         public string TradeID { get; set; } = null!;
 
         // reference LyraUser
@@ -84,12 +86,15 @@ namespace Lyra.Data.API.Identity
 
         public override string GetHashInput()
         {
-            return Height.ToString() + "|" +
-                             DateTimeToString(TimeStamp) + "|" +
-                             this.Version + "|" +
-                             this.MessageType.ToString() + "|" +
-                             this.PreviousHash + "|" +
-                             this.GetExtraData();
+            var json = JsonConvert.SerializeObject(this, Lyra.Data.Utils.JsonUtils.Settings);
+
+            return json;
+            //return Height.ToString() + "|" +
+            //                 DateTimeToString(TimeStamp) + "|" +
+            //                 this.Version + "|" +
+            //                 this.MessageType.ToString() + "|" +
+            //                 this.PreviousHash + "|" +
+            //                 this.GetExtraData();
         }
 
         // should be overriden in specific instance to get the correct hash claculated from the entire TxMessage data 

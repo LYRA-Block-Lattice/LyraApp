@@ -87,7 +87,7 @@ namespace Dealer.Server.Services
         private async Task StartupAsync()
         {
             // migrate old lyraUser to new TxUser
-            var oldUsers = await _usersCollection.Find(_ => true).ToListAsync();
+            var oldUsers = await _usersCollection.Find(new BsonDocument()).ToListAsync();
             foreach(var oldUser in oldUsers)
             {
                 var txu = new TxUser

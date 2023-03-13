@@ -21,7 +21,7 @@
             </MudItem>
         }
 
-             <MudItem xs="4">
+@*             <MudItem xs="4">
                  <a href="/nft">
                 <MudPaper Class="d-flex align-center justify-center mud-width-full py-8 rounded-xl"
                           Style="@($"color:{Theme.Palette.Primary}; background:{Theme.Palette.GrayLighter};")">
@@ -32,7 +32,7 @@
                     </div>
                 </MudPaper>
                 </a>
-            </MudItem>
+            </MudItem>*@
 
              <MudItem xs="4">
                  <a href="https://nebula.lyra.live">
@@ -74,7 +74,7 @@
         Apps = new (string name, string link, string icon)[]
             {
                 (localizer["swap"], "/swap", Icons.Filled.SwapCalls),
-                (localizer["otc"], "/otc", @Icons.Filled.OfflineShare),                
+                //(localizer["otc"], "/otc", @Icons.Filled.OfflineShare),                
                 (localizer["dex"], "/dex", Icons.Filled.Money),
                 (localizer["staking"], "/staking", Icons.Filled.WhereToVote),
                 (localizer["dao"], "/dao", @Icons.Filled.Groups),

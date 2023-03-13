@@ -22,7 +22,7 @@ using System.Linq.Expressions;
 using System.Timers;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
-using Telegram.Bot.Extensions.Polling;
+using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using UserLibrary.Data;
@@ -388,7 +388,7 @@ namespace Dealer.Server.Services
             };
             _botClient.StartReceiving(
                 updateHandler: HandleUpdateAsync, 
-                errorHandler: HandlePollingErrorAsync,
+                pollingErrorHandler: HandlePollingErrorAsync,
                 receiverOptions: receiverOptions
             );
 

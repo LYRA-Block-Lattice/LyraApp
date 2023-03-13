@@ -2,6 +2,7 @@
 using Lyra.Core.Blocks;
 using Lyra.Data.API;
 using Lyra.Data.API.Identity;
+using MongoDB.Bson;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -25,7 +26,7 @@ namespace BusinessLayer.Lib
         public string TradeID { get; set; } = null!;
         public string UserAccountID { get; set; } = null!;
         public string Signature { get; set; } = null!;
-        public string SignType { get; set; } = "p1393";     // dotnet default to p1393. bouncyCastle use 'der'.
+        public long TimeStamp { get; set; }
     }
 
     public class JoinRoomResponse : APIResult
@@ -48,7 +49,10 @@ namespace BusinessLayer.Lib
 
         public override string GetHashInput()
         {
-            return $"{PrevHash}|{DateTimeToString(TimeStamp)}|{TradeId}|{AccountId}";
+            //return $"{PrevHash}|{DateTimeToString(TimeStamp)}|{TradeId}|{AccountId}";
+            var json = JsonConvert.SerializeObject(this, Lyra.Data.Utils.JsonUtils.Settings);
+
+            return json;
         }
 
         protected override string GetExtraData()
@@ -60,11 +64,6 @@ namespace BusinessLayer.Lib
     public class ChatMessage : DealMessage
     {
         public string Text { get; set; } = null!;
-
-        public override string GetHashInput()
-        {
-            return base.GetHashInput() + $"|{Text}";
-        }
     }
 
     public interface IChatResp
@@ -84,11 +83,6 @@ namespace BusinessLayer.Lib
     public class FileMessage : DealMessage
     {
         public string FileHash { get; set; } = null!;
-
-        public override string GetHashInput()
-        {
-            return base.GetHashInput() + $"|{FileHash}";
-        }
     }
 
     public class RespFile : IChatResp

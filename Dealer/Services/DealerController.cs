@@ -337,6 +337,35 @@ namespace Dealer.Server.Services
             return Task.FromResult(SimpleJsonAPIResult.Create(_keeper.GetFiat(symbol)));
         }
 
+        [Route("WalletCreated")]
+        [HttpGet]
+        public async Task<APIResult> WalletCreatedAsync(string accountId, string signature)
+        {
+            if(_config["network"] == "testnet" || _config["network"] == "devnet")
+            {
+                //var lsb = await _client.GetLastServiceBlockAsync();
+                //var msg = $"{_config["network"]}_{accountId}_WalletCreated";
+                //if (!Signatures.VerifyAccountSignature(msg, accountId, signature))
+                //    return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Unauthorized };
+
+                var result = new InMemWallet();
+                var restore_result_code = await result.RestoreAsync(_config["network"], null, _config["RewardRepoKey"]);
+                if (restore_result_code == APIResultCodes.Success)
+                {
+                    await result.Wallet.SendExAsync(accountId,
+                        new Dictionary<string, decimal> { 
+                            { "LYR", 100000m },
+                            { "tether/USDT", 100m }
+                        },
+                        null, null);
+                }
+
+                return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Success, ResultMessage = "Enjoy!" };
+            }
+
+            return new APIResult { ResultCode = Lyra.Core.Blocks.APIResultCodes.Success };
+        }
+
         [Route("GetUserByAccountId")]
         [HttpGet]
         public async Task<SimpleJsonAPIResult> GetUserByAccountIdAsync(string accountId)

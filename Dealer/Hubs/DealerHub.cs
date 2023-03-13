@@ -79,7 +79,7 @@ namespace Dealer.Server.Hubs
                     var room = await _db.GetRoomByTradeAsync(msg.TradeId);
                     if (room.Members.Any(a => a.AccountId == msg.AccountId))
                     {
-                        await SendResponseToRoomAsync(room.TradeId, msg.AccountId, msg.Text);
+                        await SendResponseToRoomAsync(room.TradeId, msg.AccountId, msg.Text, msg.GetHashInput());
 
                         await ProcessInputAsync(msg);
                     }
@@ -106,6 +106,8 @@ namespace Dealer.Server.Hubs
                                 AccountId = fm.AccountId,
                                 TradeID = fm.TradeId,
                                 FileName = img.FileName,
+
+                                OriginJson = fm.GetHashInput(),
                             };
 
                             await SendFileToRoomAsync(tximg);
@@ -120,12 +122,13 @@ namespace Dealer.Server.Hubs
             InConsumer = false;
         }
 
-        private async Task SendResponseToRoomAsync(string tradeid, string speakerAccountId, string text)
+        private async Task SendResponseToRoomAsync(string tradeid, string speakerAccountId, string text, string originalJson)
         {
             var txmsg = new TxMessage
             {
                 TradeID = tradeid,
                 AccountId = speakerAccountId,
+                OriginJson = originalJson,
 
                 Text = text,
             };
@@ -221,7 +224,7 @@ namespace Dealer.Server.Hubs
         {
             var text = @$"Supported commands: {string.Join(",", BotCommands.Keys.ToArray())}";
 
-            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
+            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text, null);
         }
 
         #endregion
@@ -254,7 +257,7 @@ namespace Dealer.Server.Hubs
             //}
 
             var text = $"Dealer can't confirm FiaT send. Please try again.";
-            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
+            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text, null);
         }
 
         private async Task CommandFiatSent(ChatMessage msg)
@@ -278,7 +281,7 @@ namespace Dealer.Server.Hubs
             }
 
             var text = $"Dealer can't confirm FIAT send. Please try again.";
-            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
+            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text, null);
         }
 
         private async Task CommandStatus(ChatMessage msg)
@@ -298,7 +301,7 @@ namespace Dealer.Server.Hubs
             };
             var text = $"Current status of trade: {tradeblk.UTStatus}. Next step: {next}";
 
-            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
+            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text, null);
         }
 
         // print peer info
@@ -307,7 +310,7 @@ namespace Dealer.Server.Hubs
             var tradeblk = (await _lyraApi.GetLastBlockAsync(msg.TradeId)).As<IUniTrade>();
             var text = $"Trade ID: {(tradeblk as TransactionBlock).AccountID}";
 
-            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
+            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text, null);
         }
 
         // cancel trade
@@ -332,7 +335,7 @@ namespace Dealer.Server.Hubs
             }
 
             var text = $"Dealer can't confirm FIAT send. Please try again.";
-            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text);
+            await SendResponseToRoomAsync(msg.TradeId, _dealerOwnerAccountId, text, null);
         }
         #endregion
 
@@ -376,6 +379,7 @@ namespace Dealer.Server.Hubs
             }
             else
             {
+                Console.WriteLine($"Hash input: {msg.GetHashInput()}");
                 _logger.LogInformation("Message signature verify failed.");
             }
         }
@@ -402,7 +406,13 @@ namespace Dealer.Server.Hubs
         public async Task<JoinRoomResponse> JoinRoom(JoinRoomRequest req)
         {
             // verify the signature
-            var ok = Signatures.VerifyAccountSignature(req.TradeID, req.UserAccountID, req.Signature, req.SignType);
+            var time = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(req.TimeStamp).ToUniversalTime();
+            if(time < DateTime.UtcNow.AddMinutes(-1) || time > DateTime.UtcNow.AddMinutes(1))
+            {
+                return new JoinRoomResponse { ResultCode = APIResultCodes.InvalidTimeRange };
+            }
+            var msg = $"{req.TradeID}:{req.TimeStamp}";
+            var ok = Signatures.VerifyAccountSignature(msg, req.UserAccountID, req.Signature);
             if (ok)
             {
                 // check if the client belongs to the room
